@@ -1,0 +1,279 @@
+import { Helmet } from 'react-helmet-async';
+import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAllUsers, useToggleUserStatus, useDeleteUser } from '@/hooks';
+import { buildPath } from '@/routes/routePaths';
+import Breadcrumb from '@/components/layout/Breadcrumb';
+import Skeleton from '@/components/ui/Skeleton';
+import Avatar from '@/components/ui/Avatar';
+import Modal from '@/components/overlay/Modal';
+import Button from '@/components/ui/Button';
+import { getErrorMessage } from '@/utils/apiErrorParser';
+import { cn } from '@/utils/cn';
+import {
+  FiSearch,
+  FiEye,
+  FiTrash2,
+  FiCheckCircle,
+  FiXCircle,
+  FiShield,
+  FiUser,
+  FiUsers,
+} from 'react-icons/fi';
+
+export default function UsersListPage() {
+  const navigate = useNavigate();
+  const { data: usersData, isLoading, isError, error } = useAllUsers();
+  const toggleStatus = useToggleUserStatus();
+  const deleteUser = useDeleteUser();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState('');
+  const [filterEnabled, setFilterEnabled] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+
+  const filteredUsers = useMemo(() => {
+    if (!usersData) return [];
+    let list = usersData;
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      list = list.filter(
+        (u) =>
+          `${u.firstName} ${u.lastName}`.toLowerCase().includes(term) ||
+          u.email?.toLowerCase().includes(term) ||
+          u.phoneNumber?.toLowerCase().includes(term),
+      );
+    }
+
+    if (filterRole) {
+      list = list.filter((u) => u.role === filterRole);
+    }
+
+    if (filterEnabled === 'active') {
+      list = list.filter((u) => u.enabled);
+    } else if (filterEnabled === 'inactive') {
+      list = list.filter((u) => !u.enabled);
+    }
+
+    return list;
+  }, [usersData, searchTerm, filterRole, filterEnabled]);
+
+  const handleConfirmDelete = async () => {
+    if (deleteTarget) {
+      deleteUser.mutate(deleteTarget.id, {
+        onSuccess: () => setDeleteTarget(null),
+      });
+    }
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Devotee Users - Admin - Krishana Poshak</title>
+      </Helmet>
+
+      <div className="space-y-6 font-display">
+        <Breadcrumb />
+
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-5">
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+              Devotees & User Directory ({filteredUsers.length})
+            </h1>
+            <p className="mt-1 text-xs text-slate-500">
+              Registered customers, administrators, and account permissions
+            </p>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="relative">
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search name, email, phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+              />
+            </div>
+
+            <select
+              value={filterRole}
+              onChange={(e) => setFilterRole(e.target.value)}
+              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none"
+            >
+              <option value="">All Roles</option>
+              <option value="ADMIN">ADMIN Only</option>
+              <option value="CUSTOMER">CUSTOMER Only</option>
+            </select>
+
+            <select
+              value={filterEnabled}
+              onChange={(e) => setFilterEnabled(e.target.value)}
+              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none"
+            >
+              <option value="">All Statuses</option>
+              <option value="active">Active Accounts</option>
+              <option value="inactive">Disabled Accounts</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+          {isLoading ? (
+            <div className="p-6 space-y-3" role="status" aria-label="Loading users">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-4 py-2">
+                  <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
+                  <Skeleton variant="text" className="w-48" />
+                  <Skeleton variant="text" className="w-24" />
+                </div>
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="p-8 text-center text-rose-500 font-semibold">
+              Error loading users: {getErrorMessage(error)}
+            </div>
+          ) : filteredUsers.length > 0 ? (
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left text-xs" aria-label="Users list">
+                <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+                  <tr>
+                    <th scope="col" className="py-3.5 px-4">Devotee User</th>
+                    <th scope="col" className="py-3.5 px-4">Contact</th>
+                    <th scope="col" className="py-3.5 px-4 text-center">Role</th>
+                    <th scope="col" className="py-3.5 px-4 text-center">Verified</th>
+                    <th scope="col" className="py-3.5 px-4 text-center">Status</th>
+                    <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredUsers.map((user) => {
+                    const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'User';
+
+                    return (
+                      <tr
+                        key={user.id}
+                        onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                        className="hover:bg-slate-50 cursor-pointer transition-colors"
+                      >
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <Avatar
+                              name={name}
+                              src={user.profileImageUrl || user.avatarUrl}
+                              size="sm"
+                            />
+                            <div>
+                              <p className="font-bold text-slate-900">{name}</p>
+                              <p className="text-[10px] text-slate-400 font-mono">{user.email}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 text-slate-500 font-mono">
+                          {user.phoneNumber || '—'}
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
+                          <span
+                            className={cn(
+                              'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                              user.role === 'ADMIN'
+                                ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
+                                : 'bg-slate-100 text-slate-700 border border-slate-200'
+                            )}
+                          >
+                            {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600" />}
+                            {user.role || 'CUSTOMER'}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
+                          <span
+                            className={cn(
+                              'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold',
+                              user.emailVerified ? 'bg-emerald-500/10 text-emerald-700' : 'bg-amber-500/10 text-amber-700'
+                            )}
+                          >
+                            {user.emailVerified ? 'Verified' : 'Unverified'}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={() => toggleStatus.mutate(user.id)}
+                            className={cn(
+                              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
+                              user.enabled
+                                ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                                : 'bg-rose-500/10 text-rose-700 hover:bg-rose-500/20'
+                            )}
+                          >
+                            {user.enabled ? <FiCheckCircle className="h-3 w-3" /> : <FiXCircle className="h-3 w-3" />}
+                            <span>{user.enabled ? 'Active' : 'Disabled'}</span>
+                          </button>
+                        </td>
+                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1">
+                            <button
+                              type="button"
+                              onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                              className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                              title="View user details"
+                            >
+                              <FiEye className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(user)}
+                              className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
+                              title="Delete user"
+                            >
+                              <FiTrash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-12 text-center text-slate-400">
+              <FiUsers className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
+              <p className="text-sm font-bold text-slate-700">No users found</p>
+              <p className="text-xs text-slate-400 mt-1">Try clearing search filters</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Delete User Modal */}
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete Devotee User"
+        size="sm"
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button variant="outline" size="sm" onClick={() => setDeleteTarget(null)} isDisabled={deleteUser.isPending}>
+              Cancel
+            </Button>
+            <Button variant="danger" size="sm" onClick={handleConfirmDelete} isLoading={deleteUser.isPending}>
+              Delete User
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Are you sure you want to delete user <span className="font-bold text-slate-900">&quot;{deleteTarget?.firstName} {deleteTarget?.lastName}&quot;</span> ({deleteTarget?.email})? This action cannot be undone.
+        </p>
+      </Modal>
+    </>
+  );
+}

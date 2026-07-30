@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Krishna Poshak</title>
+</head>
+<body>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2>Hello, [[${user.firstName}]]!</h2>
+        <p>Welcome to Krishna Poshak! We're thrilled to have you as part of our community.</p>
+        <p>Now that your email is verified, you can enjoy:</p>
+        <ul>
+            <li>Secure shopping with your account</li>
+            <li>Order tracking and history</li>
+            <li>Exclusive offers and updates</li>
+        </ul>
+        <a href="http://localhost:3000/shop" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Start Shopping</a>
+        <hr>
+        <p style="font-size: 0.9em; color: #777;">This is an automated message, please do not reply.</p>
+    </div>
+</body>
+</html>

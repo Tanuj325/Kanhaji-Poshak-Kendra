@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /auth/
+Disallow: /account/
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /cart/
+
+Sitemap: https://krishanaposhak.com/sitemap.xml
+

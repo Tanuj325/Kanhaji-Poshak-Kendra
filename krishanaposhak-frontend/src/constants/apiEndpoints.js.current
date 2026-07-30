@@ -1,0 +1,179 @@
+/** Path helpers for every backend controller endpoint. */
+
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090').replace(/\/+$/, '') + '/api';
+
+export const API_BASE_URL = API_BASE;
+
+export const API_ENDPOINTS = {
+  AUTH: {
+    REGISTER: 'auth/register',
+    LOGIN: 'auth/login',
+    REFRESH_TOKEN: 'auth/refresh-token',
+    LOGOUT: (userId) => `auth/logout/${userId}`,
+    VERIFY_EMAIL: 'auth/verify-email',
+    FORGOT_PASSWORD: 'auth/forgot-password',
+    RESET_PASSWORD: 'auth/reset-password',
+  },
+
+  USERS: {
+    ME: 'users/me',
+    BY_ID: (userId) => `users/${userId}`,
+    UPDATE: (userId) => `users/${userId}`,
+    TOGGLE_STATUS: (userId) => `users/${userId}/status`,
+    DELETE: (userId) => `users/${userId}`,
+    LIST: 'users',
+  },
+
+  ADDRESSES: {
+    BASE: 'addresses',
+    BY_ID: (id) => `addresses/${id}`,
+    UPDATE: (id) => `addresses/${id}`,
+    DELETE: (id) => `addresses/${id}`,
+    SET_DEFAULT: (id) => `addresses/${id}/set-default`,
+  },
+
+  PRODUCTS: {
+    BASE: 'products',
+    BY_ID: (id) => `products/${id}`,
+    BY_SLUG: (slug) => `products/slug/${slug}`,
+    FEATURED: 'products/featured',
+    NEW_ARRIVALS: 'products/new-arrivals',
+    ADMIN_LIST: 'products/admin',
+    ADMIN_UPDATE: (id) => `products/admin/${id}`,
+    ADMIN_DELETE: (id) => `products/admin/${id}`,
+    ADMIN_TOGGLE_STATUS: (id) => `products/admin/${id}/toggle-status`,
+  },
+
+  CATEGORIES: {
+    BASE: 'categories',
+    DROPDOWN: 'categories/dropdown',
+    ROOT: 'categories/root',
+    SUBCATEGORIES: (parentId) => `categories/${parentId}/subcategories`,
+    BY_ID: (id) => `categories/${id}`,
+    BY_SLUG: (slug) => `categories/slug/${slug}`,
+    UPDATE: (id) => `categories/${id}`,
+    DELETE: (id) => `categories/${id}`,
+    TOGGLE_STATUS: (id) => `categories/${id}/toggle-status`,
+  },
+
+  VARIANTS: {
+    BY_PRODUCT: (productId) => `products/${productId}/variants`,
+    BY_ID: (productId, variantId) => `products/${productId}/variants/${variantId}`,
+    UPDATE: (productId, variantId) => `products/${productId}/variants/${variantId}`,
+    DELETE: (productId, variantId) => `products/${productId}/variants/${variantId}`,
+    TOGGLE_STATUS: (productId, variantId) => `products/${productId}/variants/${variantId}/toggle-status`,
+    UPDATE_STOCK: (productId, variantId) => `products/${productId}/variants/${variantId}/stock`,
+  },
+
+  IMAGES: {
+    BY_PRODUCT: (productId) => `products/${productId}/images`,
+    BY_ID: (productId, imageId) => `products/${productId}/images/${imageId}`,
+    UPDATE: (productId, imageId) => `products/${productId}/images/${imageId}`,
+    DELETE: (productId, imageId) => `products/${productId}/images/${imageId}`,
+    SET_THUMBNAIL: (productId, imageId) =>
+      `products/${productId}/images/${imageId}/thumbnail`,
+  },
+
+  BANNERS: {
+    ACTIVE: 'banners',
+    ALL: 'banners/all',
+    BASE: 'banners',
+    UPDATE: (id) => `banners/${id}`,
+    DELETE: (id) => `banners/${id}`,
+    TOGGLE_STATUS: (id) => `banners/${id}/toggle-status`,
+  },
+
+  REVIEWS: {
+    BASE: 'reviews',
+    BY_PRODUCT: (productId) => `reviews/product/${productId}`,
+    AVERAGE_RATING: (productId) => `reviews/product/${productId}/average-rating`,
+    UPDATE: (reviewId) => `reviews/${reviewId}`,
+    DELETE: (reviewId) => `reviews/${reviewId}`,
+  },
+
+  CART: {
+    BASE: 'cart',
+    ITEMS: 'cart/items',
+    UPDATE_ITEM: (cartItemId) => `cart/items/${cartItemId}`,
+    REMOVE_ITEM: (cartItemId) => `cart/items/${cartItemId}`,
+  },
+
+  WISHLIST: {
+    BASE: 'wishlist',
+    REMOVE_ITEM: (productVariantId) => `wishlist/${productVariantId}`,
+    CHECK_ITEM: (productVariantId) => `wishlist/${productVariantId}/check`,
+  },
+
+  ORDERS: {
+    BASE: 'orders',
+    RAZORPAY: 'orders/razorpay',
+    BY_ID: (orderId) => `orders/${orderId}`,
+    BY_NUMBER: (orderNumber) => `orders/number/${orderNumber}`,
+    CANCEL: (orderId) => `orders/${orderId}/cancel`,
+    ADMIN_LIST: 'orders/admin',
+    ADMIN_UPDATE_STATUS: (orderId) => `orders/admin/${orderId}/status`,
+  },
+
+  PAYMENTS: {
+    BASE: 'payments',
+    RAZORPAY_ORDER: (orderId) => `payments/razorpay/order/${orderId}`,
+    INITIATE: 'payments/initiate',
+    VERIFY_RAZORPAY: 'payments/razorpay/verify',
+    BY_ORDER: (orderId) => `payments/order/${orderId}`,
+    BY_ID: (paymentId) => `payments/${paymentId}`,
+    UPDATE: (paymentId) => `payments/${paymentId}`,
+  },
+
+  WEBHOOKS: {
+    RAZORPAY: 'payment/webhook/razorpay',
+  },
+
+  COUPONS: {
+    BASE: 'coupons',
+    ACTIVE: 'coupons/active',
+    BY_ID: (id) => `coupons/${id}`,
+    BY_CODE: (code) => `coupons/code/${code}`,
+    VALIDATE: 'coupons/validate',
+    DELETE: (id) => `coupons/${id}`,
+    TOGGLE_STATUS: (id) => `coupons/${id}/toggle-status`,
+  },
+
+  CONTACT: {
+    BASE: 'contact',
+    UNRESOLVED: 'contact/unresolved',
+    RESOLVE: (id) => `contact/${id}/resolve`,
+    DELETE: (id) => `contact/${id}`,
+    REPLY: (id) => `contact/${id}/reply`,
+  },
+
+  NOTIFICATIONS: {
+    BASE: 'notifications',
+    UNREAD: 'notifications/unread',
+    UNREAD_COUNT: 'notifications/unread/count',
+    MARK_READ: (notificationId) => `notifications/${notificationId}`,
+    MARK_ALL_READ: 'notifications/mark-all-as-read',
+    DELETE: (notificationId) => `notifications/${notificationId}`,
+  },
+
+  ANALYTICS: {
+    PRODUCTS_TOP_SELLING: 'admin/analytics/products/top-selling',
+    PRODUCTS_TOP_RATED: 'admin/analytics/products/top-rated',
+    PRODUCTS_MOST_REVIEWED: 'admin/analytics/products/most-reviewed',
+    PRODUCTS_MOST_WISHLISTED: 'admin/analytics/products/most-wishlisted',
+    PRODUCTS_LOW_STOCK: 'admin/analytics/products/low-stock',
+    PRODUCTS_OUT_OF_STOCK: 'admin/analytics/products/out-of-stock',
+    CATEGORIES_TOP_SELLING: 'admin/analytics/categories/top-selling',
+    SALES_DAILY: 'admin/analytics/sales/daily',
+    SALES_WEEKLY: 'admin/analytics/sales/weekly',
+    SALES_MONTHLY: 'admin/analytics/sales/monthly',
+    SALES_YEARLY: 'admin/analytics/sales/yearly',
+    SALES_CUSTOM: 'admin/analytics/sales/custom',
+    CUSTOMERS_OVERVIEW: 'admin/analytics/customers/overview',
+    CUSTOMERS_NEW: 'admin/analytics/customers/new',
+    CUSTOMERS_REPEAT: 'admin/analytics/customers/repeat',
+    CUSTOMERS_INACTIVE: 'admin/analytics/customers/inactive',
+    CUSTOMERS_RECENT: 'admin/analytics/customers/recent',
+    CUSTOMERS_TOP_SPENDERS: 'admin/analytics/customers/top-spenders',
+    ACTIVITY: 'admin/analytics/activity',
+  },
+};
