@@ -124,27 +124,37 @@ public class UserServiceImpl implements UserService {
      * Sends a verification email to the user.
      * <p>
      * This method is called after a user registers to verify their email address.
-     * It generates a verification token, saves it, and sends an email with a verification link.
+     * It generates a verification token, saves it, and sends an email with a
+     * verification link.
      *
      * @param user the user to send the verification email to
      */
     public void sendVerificationEmail(User user) {
+
         String token = UUID.randomUUID().toString();
-        EmailVerificationToken verificationToken = new EmailVerificationToken();
-        verificationToken.setToken(token);
+
+        EmailVerificationToken verificationToken = emailVerificationTokenRepository
+                .findByUser(user)
+                .orElse(new EmailVerificationToken());
+
         verificationToken.setUser(user);
+        verificationToken.setToken(token);
         verificationToken.setExpiryDate(
-                LocalDateTime.now()
-                        .plusMinutes(verificationTokenExpiryMinutes)
-        );
+                LocalDateTime.now().plusMinutes(verificationTokenExpiryMinutes));
+
         emailVerificationTokenRepository.save(verificationToken);
 
-        // Send email
-        String verificationUrl = "http://localhost:9090/api/auth/verify-email?token=" + token;
+        String verificationUrl = "https://kanhaji-poshak-kendra.onrender.com/api/auth/verify-email?token=" + token;
+
         Map<String, Object> model = new HashMap<>();
         model.put("user", user);
         model.put("verificationUrl", verificationUrl);
-        emailService.sendTemplateEmail(user.getEmail(), "Verify your email address", "verify-email", model);
+
+        emailService.sendTemplateEmail(
+                user.getEmail(),
+                "Verify your email address",
+                "verify-email",
+                model);
     }
 
     @Override
@@ -201,7 +211,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Initiates a password reset process for the user with the given email.
      * <p>
-     * If the user exists, a password reset token is generated and saved, and an email with a reset link is sent.
+     * If the user exists, a password reset token is generated and saved, and an
+     * email with a reset link is sent.
      *
      * @param email the email address of the user requesting a password reset
      */
@@ -215,8 +226,7 @@ public class UserServiceImpl implements UserService {
         resetToken.setUser(user);
         resetToken.setExpiryDate(
                 LocalDateTime.now()
-                        .plusMinutes(resetTokenExpiryMinutes)
-        );
+                        .plusMinutes(resetTokenExpiryMinutes));
         passwordResetTokenRepository.save(resetToken);
 
         // Send password reset email
@@ -230,7 +240,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Resets the user's password using the provided token and new password.
      * <p>
-     * If the token is valid and not expired, the user's password is updated and the token is removed.
+     * If the token is valid and not expired, the user's password is updated and the
+     * token is removed.
      *
      * @param token       the password reset token
      * @param newPassword the new password for the user
