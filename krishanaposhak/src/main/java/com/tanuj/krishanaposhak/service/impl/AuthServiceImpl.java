@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.CUSTOMER);
         // Set enabled to false until email is verified
-        user.setEnabled(false);
+        user.setEnabled(true);
 
         user = userRepository.save(user);
 
