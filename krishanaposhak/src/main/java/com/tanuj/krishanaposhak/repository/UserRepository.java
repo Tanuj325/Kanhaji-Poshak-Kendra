@@ -1,7 +1,6 @@
 package com.tanuj.krishanaposhak.repository;
 
 import com.tanuj.krishanaposhak.dto.analytics.*;
-import com.tanuj.krishanaposhak.entity.EmailVerificationToken;
 import com.tanuj.krishanaposhak.entity.User;
 import com.tanuj.krishanaposhak.enums.Role;
 import org.springframework.data.jpa.repository.*;
@@ -34,10 +33,6 @@ public interface UserRepository extends JpaRepository<User, Long>,
     long countByCreatedAtBefore(LocalDateTime endDate);
 
     long countByEmailVerified(boolean emailVerified);
-
-    Optional<EmailVerificationToken> findByUser(User user);
-
-    Optional<EmailVerificationToken> findByToken(String token);
 
     @Query("""
             SELECT COUNT(DISTINCT u)
