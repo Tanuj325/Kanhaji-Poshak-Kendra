@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { tokenService } from '../services/tokenService';
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090').replace(/\/+$/, '') + '/api';
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080').replace(/\/+$/, '') + '/api';
 const TIMEOUT = 30000;
 
 const axiosInstance = axios.create({

@@ -6,6 +6,7 @@ import { cn } from '@/utils/cn';
 import Skeleton from '@/components/ui/Skeleton';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 import { FiChevronLeft, FiChevronRight, FiArrowDown, FiStar, FiShoppingBag } from 'react-icons/fi';
+import { siteConfig } from '@/config/siteConfig';
 
 const SLIDE_DURATION = 5000;
 
@@ -145,7 +146,7 @@ export default function HeroBanner() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/70 to-deep-navy/95" />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-deep-navy/50" />
-        
+
         <div className="text-center text-lotus-white px-4 relative z-10 max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold backdrop-blur-md border border-temple-gold/30">
             <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Craftsmanship
