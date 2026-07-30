@@ -1,6 +1,6 @@
 /** Path helpers for every backend controller endpoint. */
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080').replace(/\/+$/, '') + '/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://kanhaji-poshak-kendra.onrender.com').replace(/\/+$/, '') + '/api';
 
 export const API_BASE_URL = API_BASE;
 

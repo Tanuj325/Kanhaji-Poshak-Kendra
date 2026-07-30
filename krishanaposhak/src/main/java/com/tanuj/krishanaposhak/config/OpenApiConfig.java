@@ -15,29 +15,31 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes("bearerScheme",
-                                new SecurityScheme()
-                                        .name("Bearer Authentication")
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")))
-                .info(new Info()
-                        .title("Krishana Poshak API")
-                        .description("Production Ready REST API for Krishana Poshak E-Commerce Platform")
-                        .version("v1")
-                        .contact(new Contact()
-                                .name("Tanuj Krishana Poshak")
-                                .email("tanuj@example.com")
-                                .url("https://example.com"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("http://springdoc.org")))
-                .servers(List.of(
-                        new Server().description("Production").url("https://api.example.com"),
-                        new Server().description("Local Development").url("http://localhost:8080")));
-    }
+        @Bean
+        public OpenAPI customOpenAPI() {
+                return new OpenAPI()
+                                .components(new Components()
+                                                .addSecuritySchemes("bearerScheme",
+                                                                new SecurityScheme()
+                                                                                .name("Bearer Authentication")
+                                                                                .type(SecurityScheme.Type.HTTP)
+                                                                                .scheme("bearer")
+                                                                                .bearerFormat("JWT")))
+                                .info(new Info()
+                                                .title("Krishana Poshak API")
+                                                .description("Production Ready REST API for Krishana Poshak E-Commerce Platform")
+                                                .version("v1")
+                                                .contact(new Contact()
+                                                                .name("Tanuj Krishana Poshak")
+                                                                .email("tanuj@example.com")
+                                                                .url("https://example.com"))
+                                                .license(new License()
+                                                                .name("Apache 2.0")
+                                                                .url("http://springdoc.org")))
+                                .servers(List.of(
+                                                new Server().description("Production")
+                                                                .url("https://kanhaji-poshak-kendra.onrender.com"),
+                                                new Server().description("Local Development")
+                                                                .url("http://localhost:8080")));
+        }
 }
