@@ -291,5 +291,5 @@ PENDING → CONFIRMED → PACKING → SHIPPED → OUT_FOR_DELIVERY → DELIVERED
 | Mail | `spring.mail.*` | - |
 | Email | `app.email.verification-token-expiry-minutes` | 60 |
 | Email | `app.email.reset-token-expiry-minutes` | 30 |
-| CORS | `app.frontend.allowed-origins` | http://localhost:3000 |
+| CORS | `app.frontend.allowed-origins` | https://kanhajiposhak.vercel.app |
 

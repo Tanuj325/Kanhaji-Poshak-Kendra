@@ -1,7 +1,6 @@
 package com.tanuj.krishanaposhak.repository;
 
 import com.tanuj.krishanaposhak.entity.EmailVerificationToken;
-import com.tanuj.krishanaposhak.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +15,4 @@ public interface EmailVerificationTokenRepository extends JpaRepository<EmailVer
     Optional<EmailVerificationToken> findByToken(String token);
 
     void deleteByUser(com.tanuj.krishanaposhak.entity.User user);
-
-    Optional<EmailVerificationToken> findByUser(User user);
 }

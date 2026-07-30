@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
         passwordResetTokenRepository.save(resetToken);
 
         // Send password reset email
-        String resetUrl = "http://localhost:3000/auth/reset-password?token=" + token;
+        String resetUrl = "https://kanhajiposhak.vercel.app/auth/reset-password?token=" + token;
         Map<String, Object> model = new HashMap<>();
         model.put("user", user);
         model.put("resetUrl", resetUrl);

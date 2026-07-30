@@ -32,5 +32,5 @@ This directory contains a complete reverse-engineered analysis of the Krishana P
 - **API Docs**: OpenAPI/Swagger (springdoc)
 
 ### Key Port: 9090 (configurable via SERVER_PORT)
-### Frontend URL (dev): http://localhost:3000
+### Frontend URL (dev): https://kanhajiposhak.vercel.app
 

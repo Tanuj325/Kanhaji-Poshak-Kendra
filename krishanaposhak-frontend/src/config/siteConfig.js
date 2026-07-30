@@ -4,8 +4,8 @@ export const siteConfig = {
   description:
     'Shop authentic handcrafted Laddu Gopal poshaks, Radha Krishna dresses, designer mukuts, and devotional accessories directly from master artisans in Meerut.',
   url: import.meta.env.PROD
-    ? 'https://krishanaposhak.com'
-    : 'http://localhost:3000',
+    ? 'https://kanhajiposhak.vercel.app'
+    : 'https://kanhajiposhak.vercel.app',
   ogImage: '/og-image.png',
   email: 'support@krishanaposhak.com',
   phone: '+917060785107',
