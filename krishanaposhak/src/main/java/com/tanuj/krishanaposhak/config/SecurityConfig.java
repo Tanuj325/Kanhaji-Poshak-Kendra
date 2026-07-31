@@ -40,61 +40,60 @@ public class SecurityConfig {
         private final Environment environment;
 
         private static final String[] PUBLIC_GET_ENDPOINTS = {
-                "/api/products/**",
-                "/api/categories/**",
-                "/api/banners/**",
-                "/api/reviews/product/**"
+                        "/api/products/**",
+                        "/api/categories/**",
+                        "/api/banners/**",
+                        "/api/reviews/product/**"
         };
 
         private static final String[] PUBLIC_ENDPOINTS = {
-                "/api/auth/**",
-                "/api/contact/**"
+                        "/api/auth/**",
+                        "/api/contact/**",
+                        "/health/**"
         };
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
                 http
-                        .csrf(csrf -> csrf.disable())
+                                .csrf(csrf -> csrf.disable())
 
-                        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                        .sessionManagement(session ->
-                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                        .exceptionHandling(exception ->
-                                exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
-                        .authorizeHttpRequests(auth -> auth
+                                .authorizeHttpRequests(auth -> auth
 
-                                // CORS Preflight
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                // CORS Preflight
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                                // Public APIs
-                                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                                // Public APIs
+                                                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 
-                                // Public GET APIs
-                                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+                                                // Public GET APIs
+                                                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
 
-                                // Protected APIs
-                                .anyRequest().authenticated()
-                        )
+                                                // Protected APIs
+                                                .anyRequest().authenticated())
 
-                        .authenticationProvider(authenticationProvider())
+                                .authenticationProvider(authenticationProvider())
 
-                        .addFilterBefore(
-                                jwtAuthenticationFilter,
-                                UsernamePasswordAuthenticationFilter.class
-                        )
+                                .addFilterBefore(
+                                                jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
 
-                        .headers(headers -> headers
-                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                                .contentTypeOptions(contentType -> {})
-                                .referrerPolicy(referrer -> referrer.policy(
-                                        ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                                .httpStrictTransportSecurity(
-                                        HeadersConfigurer.HstsConfig::disable)
-                        );
+                                .headers(headers -> headers
+                                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                                                .contentTypeOptions(contentType -> {
+                                                })
+                                                .referrerPolicy(referrer -> referrer.policy(
+                                                                ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                                                .httpStrictTransportSecurity(
+                                                                HeadersConfigurer.HstsConfig::disable));
 
                 return http.build();
         }
@@ -102,8 +101,7 @@ public class SecurityConfig {
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
 
-                DaoAuthenticationProvider provider =
-                        new DaoAuthenticationProvider(userDetailsService);
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
 
                 provider.setPasswordEncoder(passwordEncoder());
 
@@ -112,7 +110,7 @@ public class SecurityConfig {
 
         @Bean
         public AuthenticationManager authenticationManager(
-                AuthenticationConfiguration configuration) throws Exception {
+                        AuthenticationConfiguration configuration) throws Exception {
 
                 return configuration.getAuthenticationManager();
         }
@@ -132,42 +130,37 @@ public class SecurityConfig {
                 if (origins != null && !origins.isBlank()) {
 
                         configuration.setAllowedOriginPatterns(
-                                Arrays.stream(origins.split(","))
-                                        .map(String::trim)
-                                        .toList()
-                        );
+                                        Arrays.stream(origins.split(","))
+                                                        .map(String::trim)
+                                                        .toList());
 
                 } else {
 
                         configuration.setAllowedOriginPatterns(List.of(
-                                "http://localhost:3000",
-                                "http://localhost:5173",
-                                "https://kanhajiposhak.vercel.app"
-                        ));
+                                        "http://localhost:3000",
+                                        "http://localhost:5173",
+                                        "https://kanhajiposhak.vercel.app"));
                 }
 
                 configuration.setAllowedMethods(List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "PATCH",
-                        "DELETE",
-                        "OPTIONS"
-                ));
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE",
+                                "OPTIONS"));
 
                 configuration.setAllowedHeaders(List.of("*"));
 
                 configuration.setExposedHeaders(List.of(
-                        "Authorization",
-                        "Content-Disposition"
-                ));
+                                "Authorization",
+                                "Content-Disposition"));
 
                 configuration.setAllowCredentials(true);
 
                 configuration.setMaxAge(3600L);
 
-                UrlBasedCorsConfigurationSource source =
-                        new UrlBasedCorsConfigurationSource();
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
                 source.registerCorsConfiguration("/**", configuration);
 
