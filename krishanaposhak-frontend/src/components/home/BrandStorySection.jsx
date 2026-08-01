@@ -77,10 +77,12 @@ const BrandStorySection = memo(function BrandStorySection() {
           >
             <div className="relative rounded-3xl border border-temple-gold/40 bg-deep-navy/80 p-3 shadow-gold overflow-hidden group">
               <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden">
-                <img
+<img
                   src="/logo2.jpeg"
                   alt="Krishana Poshak Sacred Heritage Craftsmanship"
                   className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-deep-navy/90 border border-temple-gold/30 backdrop-blur-md">

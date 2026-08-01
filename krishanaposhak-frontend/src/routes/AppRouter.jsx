@@ -1,9 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
-import { queryClient } from '@/config/queryConfig';
 import { ROUTE_PATHS } from './routePaths';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
@@ -78,128 +75,98 @@ const LoadingFallback = () => <Loader isFullPage />;
 export default function AppRouter() {
   return (
     <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              {/* Public Layout */}
-              <Route element={<PublicLayout />}>
-                <Route index element={<HomePage />} />
-                <Route path={ROUTE_PATHS.SHOP} element={<ShopPage />} />
-                <Route path={ROUTE_PATHS.PRODUCT_DETAIL} element={<ProductDetailPage />} />
-                <Route path={ROUTE_PATHS.CATEGORY} element={<CategoryPage />} />
-                <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
-                <Route path={ROUTE_PATHS.CONTACT} element={<ContactPage />} />
-                <Route path={ROUTE_PATHS.FAQ} element={<FAQPage />} />
-                <Route path={ROUTE_PATHS.LEGAL} element={<LegalPage />} />
-                <Route path={ROUTE_PATHS.TERMS} element={<LegalPage />} />
-                <Route path={ROUTE_PATHS.PRIVACY} element={<LegalPage />} />
-                <Route path={ROUTE_PATHS.SHIPPING} element={<LegalPage />} />
-                <Route path={ROUTE_PATHS.CART} element={<CartPage />} />
-              </Route>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            {/* Public Layout */}
+            <Route element={<PublicLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path={ROUTE_PATHS.SHOP} element={<ShopPage />} />
+              <Route path={ROUTE_PATHS.PRODUCT_DETAIL} element={<ProductDetailPage />} />
+              <Route path={ROUTE_PATHS.CATEGORY} element={<CategoryPage />} />
+              <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
+              <Route path={ROUTE_PATHS.CONTACT} element={<ContactPage />} />
+              <Route path={ROUTE_PATHS.FAQ} element={<FAQPage />} />
+              <Route path={ROUTE_PATHS.LEGAL} element={<LegalPage />} />
+              <Route path={ROUTE_PATHS.TERMS} element={<LegalPage />} />
+              <Route path={ROUTE_PATHS.PRIVACY} element={<LegalPage />} />
+              <Route path={ROUTE_PATHS.SHIPPING} element={<LegalPage />} />
+              <Route path={ROUTE_PATHS.CART} element={<CartPage />} />
+            </Route>
 
-              {/* Auth Routes accessible to all (Guests & Logged-in users resetting password / verifying email) */}
+            {/* Auth Routes accessible to all (Guests & Logged-in users resetting password / verifying email) */}
+            <Route element={<AuthLayout />}>
+              <Route path={ROUTE_PATHS.VERIFY_EMAIL} element={<VerifyEmailPage />} />
+              <Route path={ROUTE_PATHS.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+              <Route path={ROUTE_PATHS.RESET_PASSWORD} element={<ResetPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+            </Route>
+
+            {/* Guest-only Auth Routes (Login / Register) */}
+            <Route element={<GuestRoute />}>
               <Route element={<AuthLayout />}>
-                <Route path={ROUTE_PATHS.VERIFY_EMAIL} element={<VerifyEmailPage />} />
-                <Route path={ROUTE_PATHS.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-                <Route path={ROUTE_PATHS.RESET_PASSWORD} element={<ResetPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path={ROUTE_PATHS.LOGIN} element={<LoginPage />} />
+                <Route path={ROUTE_PATHS.REGISTER} element={<RegisterPage />} />
               </Route>
+            </Route>
 
-              {/* Guest-only Auth Routes (Login / Register) */}
-              <Route element={<GuestRoute />}>
-                <Route element={<AuthLayout />}>
-                  <Route path={ROUTE_PATHS.LOGIN} element={<LoginPage />} />
-                  <Route path={ROUTE_PATHS.REGISTER} element={<RegisterPage />} />
-                </Route>
+            {/* Protected Customer Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<CustomerLayout />}>
+                <Route path={ROUTE_PATHS.ACCOUNT_DASHBOARD} element={<CustomerDashboardPage />} />
+                <Route path={ROUTE_PATHS.PROFILE} element={<ProfilePage />} />
+                <Route path={ROUTE_PATHS.ADDRESSES} element={<AddressesPage />} />
+                <Route path={ROUTE_PATHS.ORDERS} element={<OrdersPage />} />
+                <Route path={ROUTE_PATHS.ORDER_DETAIL} element={<OrderDetailPage />} />
+                <Route path={ROUTE_PATHS.WISHLIST} element={<WishlistPage />} />
+                <Route path={ROUTE_PATHS.NOTIFICATIONS} element={<NotificationsPage />} />
+                <Route path={ROUTE_PATHS.SETTINGS} element={<SettingsPage />} />
               </Route>
+            </Route>
 
-              {/* Protected Customer Routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route element={<CustomerLayout />}>
-                  <Route path={ROUTE_PATHS.ACCOUNT_DASHBOARD} element={<CustomerDashboardPage />} />
-                  <Route path={ROUTE_PATHS.PROFILE} element={<ProfilePage />} />
-                  <Route path={ROUTE_PATHS.ADDRESSES} element={<AddressesPage />} />
-                  <Route path={ROUTE_PATHS.ORDERS} element={<OrdersPage />} />
-                  <Route path={ROUTE_PATHS.ORDER_DETAIL} element={<OrderDetailPage />} />
-                  <Route path={ROUTE_PATHS.WISHLIST} element={<WishlistPage />} />
-                  <Route path={ROUTE_PATHS.NOTIFICATIONS} element={<NotificationsPage />} />
-                  <Route path={ROUTE_PATHS.SETTINGS} element={<SettingsPage />} />
-                </Route>
+            {/* Protected Public Pages */}
+            <Route element={<ProtectedRoute />}>
+              <Route path={ROUTE_PATHS.CHECKOUT} element={<CheckoutPage />} />
+              <Route path={ROUTE_PATHS.ORDER_CONFIRMATION} element={<OrderConfirmationPage />} />
+            </Route>
+
+            {/* Admin Routes */}
+            <Route element={<AdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route index path={ROUTE_PATHS.ADMIN} element={<DashboardPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_PRODUCT_ANALYTICS} element={<ProductAnalyticsPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_SALES_ANALYTICS} element={<SalesAnalyticsPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_CUSTOMER_ANALYTICS} element={<CustomerAnalyticsPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_PRODUCTS} element={<ProductsListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_PRODUCT_NEW} element={<ProductCreatePage />} />
+                <Route path={ROUTE_PATHS.ADMIN_PRODUCT_EDIT} element={<ProductEditPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_CATEGORIES} element={<CategoriesListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_CATEGORY_NEW} element={<CategoryCreatePage />} />
+                <Route path={ROUTE_PATHS.ADMIN_CATEGORY_EDIT} element={<CategoryEditPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_ORDERS} element={<OrdersListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_ORDER_DETAIL} element={<OrderDetailAdminPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_USERS} element={<UsersListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_USER_DETAIL} element={<UserDetailPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_COUPONS} element={<CouponsListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_COUPON_NEW} element={<CouponCreatePage />} />
+                <Route path={ROUTE_PATHS.ADMIN_COUPON_EDIT} element={<CouponEditPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_BANNERS} element={<BannersListPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_BANNER_NEW} element={<BannerCreatePage />} />
+                <Route path={ROUTE_PATHS.ADMIN_BANNER_EDIT} element={<BannerEditPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_MESSAGES} element={<ContactMessagesPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_ACTIVITY_LOGS} element={<ActivityLogsPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_SETTINGS} element={<SettingsAdminPage />} />
               </Route>
+            </Route>
 
-              {/* Protected Public Pages */}
-              <Route element={<ProtectedRoute />}>
-                <Route path={ROUTE_PATHS.CHECKOUT} element={<CheckoutPage />} />
-                <Route path={ROUTE_PATHS.ORDER_CONFIRMATION} element={<OrderConfirmationPage />} />
-              </Route>
-
-              {/* Admin Routes */}
-              <Route element={<AdminRoute />}>
-                <Route element={<AdminLayout />}>
-                  <Route index path={ROUTE_PATHS.ADMIN} element={<DashboardPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_PRODUCT_ANALYTICS} element={<ProductAnalyticsPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_SALES_ANALYTICS} element={<SalesAnalyticsPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_CUSTOMER_ANALYTICS} element={<CustomerAnalyticsPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_PRODUCTS} element={<ProductsListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_PRODUCT_NEW} element={<ProductCreatePage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_PRODUCT_EDIT} element={<ProductEditPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_CATEGORIES} element={<CategoriesListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_CATEGORY_NEW} element={<CategoryCreatePage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_CATEGORY_EDIT} element={<CategoryEditPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_ORDERS} element={<OrdersListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_ORDER_DETAIL} element={<OrderDetailAdminPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_USERS} element={<UsersListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_USER_DETAIL} element={<UserDetailPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_COUPONS} element={<CouponsListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_COUPON_NEW} element={<CouponCreatePage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_COUPON_EDIT} element={<CouponEditPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_BANNERS} element={<BannersListPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_BANNER_NEW} element={<BannerCreatePage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_BANNER_EDIT} element={<BannerEditPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_MESSAGES} element={<ContactMessagesPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_ACTIVITY_LOGS} element={<ActivityLogsPage />} />
-                  <Route path={ROUTE_PATHS.ADMIN_SETTINGS} element={<SettingsAdminPage />} />
-                </Route>
-              </Route>
-
-              {/* Error Pages */}
-              <Route path={ROUTE_PATHS.FORBIDDEN} element={<ForbiddenPage />} />
-              <Route path={ROUTE_PATHS.SERVER_ERROR} element={<ServerErrorPage />} />
-              <Route path={ROUTE_PATHS.MAINTENANCE} element={<MaintenancePage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#0F1F32',
-              color: '#FFFFFF',
-              border: '1px solid rgba(251, 191, 36, 0.25)',
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
-              borderRadius: '12px',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '13px',
-              padding: '12px 16px',
-            },
-            success: {
-              iconTheme: {
-                primary: '#FBBF24',
-                secondary: '#0F1F32',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#F43F5E',
-                secondary: '#FFFFFF',
-              },
-            },
-          }}
-        />
-      </QueryClientProvider>
+            {/* Error Pages */}
+            <Route path={ROUTE_PATHS.FORBIDDEN} element={<ForbiddenPage />} />
+            <Route path={ROUTE_PATHS.SERVER_ERROR} element={<ServerErrorPage />} />
+            <Route path={ROUTE_PATHS.MAINTENANCE} element={<MaintenancePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
     </HelmetProvider>
   );
 }

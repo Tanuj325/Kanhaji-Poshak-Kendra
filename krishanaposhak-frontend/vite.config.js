@@ -24,15 +24,28 @@ export default defineConfig({
     },
   },
   build: {
+    target: 'es2020',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
+        compact: true,
+        experimentalMinChunkSize: 8192,
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react-router-dom') || id.includes('react-dom') || id.includes('react/')) {
+            if (id.includes('react-dom') || id.includes('react/') || id.includes('react-router') || id.includes('scheduler')) {
               return 'vendor-react';
             }
+            if (id.includes('react-icons/fi')) {
+              return 'vendor-icons-feather';
+            }
+            if (id.includes('react-icons/fa')) {
+              return 'vendor-icons-fa';
+            }
+            if (id.includes('react-icons/hi')) {
+              return 'vendor-icons-hi';
+            }
             if (id.includes('react-icons')) {
-              return 'vendor-icons';
+              return 'vendor-icons-other';
             }
             if (id.includes('@tanstack/react-query')) {
               return 'vendor-query';
@@ -40,21 +53,55 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'vendor-animation';
             }
-            if (id.includes('recharts')) {
+            if (id.includes('recharts') || id.includes('d3')) {
               return 'vendor-charts';
             }
             if (id.includes('react-hook-form') || id.includes('zod') || id.includes('@hookform/resolvers')) {
               return 'vendor-forms';
             }
+            if (id.includes('swiper')) {
+              return 'vendor-swiper';
+            }
+            if (id.includes('axios')) {
+              return 'vendor-http';
+            }
+            if (id.includes('react-hot-toast') || id.includes('react-helmet-async') || id.includes('clsx') || id.includes('tailwind-merge')) {
+              return 'vendor-utils';
+            }
+            return 'vendor-other';
           }
         },
       },
     },
-    target: 'es2020',
-    minify: 'esbuild',
+    sourcemap: false,
+    chunkSizeWarningLimit: 250,
+    reportCompressedSize: false,
   },
   server: {
     port: 3000,
     open: true,
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      'axios',
+      'framer-motion',
+      'react-icons/fi',
+      'react-icons/fa',
+      'react-icons/hi',
+      'react-helmet-async',
+      'react-hot-toast',
+      'react-hook-form',
+      'zod',
+      '@hookform/resolvers',
+      'clsx',
+      'tailwind-merge',
+    ],
+  },
+  css: {
+    devSourcemap: false,
   },
 });

@@ -143,6 +143,7 @@ export default function HeroBanner() {
           src="/ogImage.jpeg"
           alt="Krishana Poshak Divine Attire Banner"
           className="absolute inset-0 h-full w-full object-cover object-center opacity-40 scale-105"
+          fetchpriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/70 to-deep-navy/95" />
         <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-deep-navy/50" />
@@ -200,6 +201,9 @@ export default function HeroBanner() {
               alt={banner.title || 'Krishana Poshak Banner'}
               className="h-full w-full object-cover object-center"
               loading={currentIndex === 0 ? 'eager' : 'lazy'}
+              fetchpriority={currentIndex === 0 ? 'high' : 'auto'}
+              width={1920}
+              height={1080}
             />
             {/* Multi-layered luxury gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/60 to-transparent" />

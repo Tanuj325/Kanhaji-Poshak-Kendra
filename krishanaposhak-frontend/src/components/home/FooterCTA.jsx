@@ -6,11 +6,13 @@ import { FiArrowRight, FiMessageCircle, FiStar } from 'react-icons/fi';
 export default function FooterCTA() {
   return (
     <section className="relative overflow-hidden bg-deep-navy text-lotus-white py-16 sm:py-20 lg:py-24 border-t border-temple-gold/30 select-none">
-      {/* Background Image & Gradient Overlays */}
+{/* Background Image & Gradient Overlays */}
       <img
         src="/logo3.jpeg"
         alt="Krishana Poshak Devotional Craftsmanship"
         className="absolute inset-0 h-full w-full object-cover object-center opacity-30 scale-105"
+        loading="lazy"
+        decoding="async"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/80 to-deep-navy/95" />
       <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-deep-navy/60" />

@@ -1,5 +1,6 @@
 /**
  * Image utility helpers for product images, banners, avatars.
+ * All Cloudinary URLs are optimized with auto-format, auto-quality, and responsive sizing.
  */
 
 /** Backend Cloudinary folder structure */
@@ -61,25 +62,75 @@ export function getUserInitials(firstName, lastName) {
 export const PLACEHOLDER_IMAGE = '/placeholder.png';
 
 /**
- * Build a Cloudinary URL with transformations.
+ * Build an optimized Cloudinary URL with transformations.
+ * Uses f_auto for automatic format selection (WebP/AVIF),
+ * q_auto:eco for eco quality (good balance of quality vs size),
+ * and responsive width/height with c_fill crop.
+ *
  * @param {string} url - Original Cloudinary URL
- * @param {number} width - Desired width
- * @param {number} height - Desired height
+ * @param {number} width - Desired width (default: 400)
+ * @param {number} height - Desired height (default: 500)
  * @returns {string}
  */
 export function getOptimizedImageUrl(url, width = 400, height = 500) {
   if (!url || !url.includes('cloudinary')) return url || PLACEHOLDER_IMAGE;
-  return url.replace('/upload/', `/upload/w_${width},h_${height},c_fill,f_auto,q_auto/`);
+  const upload = '/upload/';
+  const uploadIdx = url.indexOf(upload);
+  if (uploadIdx === -1) return url;
+  const baseUrl = url.substring(0, uploadIdx + upload.length);
+  const path = url.substring(uploadIdx + upload.length);
+  return `${baseUrl}w_${width},h_${height},c_fill,f_auto,q_auto:eco/${path}`;
 }
 
 /**
- * Build a Cloudinary URL for avatar.
+ * Build a Cloudinary URL for avatar with optimization.
  * @param {string} url
  * @param {number} size
- * @returns {string}
+ * @returns {string|null}
  */
 export function getAvatarUrl(url, size = 80) {
   if (!url) return null;
-  return url.replace('/upload/', `/upload/w_${size},h_${size},c_fill,f_auto,q_auto/`);
+  if (!url.includes('cloudinary')) return url;
+  const upload = '/upload/';
+  const uploadIdx = url.indexOf(upload);
+  if (uploadIdx === -1) return url;
+  const baseUrl = url.substring(0, uploadIdx + upload.length);
+  const path = url.substring(uploadIdx + upload.length);
+  return `${baseUrl}w_${size},h_${size},c_fill,f_auto,q_auto:eco/${path}`;
+}
+
+/**
+ * Get responsive srcSet for a Cloudinary image URL.
+ * Generates multiple widths for responsive images.
+ * @param {string} url - Original Cloudinary URL
+ * @param {number[]} widths - Array of widths to generate
+ * @returns {string|null} - srcSet string or null
+ */
+export function getResponsiveSrcSet(url, widths = [320, 480, 640, 800, 1024, 1280]) {
+  if (!url || !url.includes('cloudinary')) return null;
+  const upload = '/upload/';
+  const uploadIdx = url.indexOf(upload);
+  if (uploadIdx === -1) return null;
+  const baseUrl = url.substring(0, uploadIdx + upload.length);
+  const path = url.substring(uploadIdx + upload.length);
+  
+  return widths
+    .map((w) => `${baseUrl}w_${w},c_fill,f_auto,q_auto:eco/${path} ${w}w`)
+    .join(', ');
+}
+
+/**
+ * Get the dominant color or a generated placeholder for blur-up loading.
+ * @param {string} url - Cloudinary URL
+ * @returns {string} - A low-quality image placeholder URL or empty string
+ */
+export function getBlurPlaceholder(url) {
+  if (!url || !url.includes('cloudinary')) return '';
+  const upload = '/upload/';
+  const uploadIdx = url.indexOf(upload);
+  if (uploadIdx === -1) return '';
+  const baseUrl = url.substring(0, uploadIdx + upload.length);
+  const path = url.substring(uploadIdx + upload.length);
+  return `${baseUrl}w_20,c_fill,f_auto,q_auto:low/${path}`;
 }
 
