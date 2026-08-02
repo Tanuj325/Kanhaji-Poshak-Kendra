@@ -109,20 +109,19 @@ export default function AdminTopbar({ title, onMenuToggle }) {
     : unreadNotifications?.content || unreadNotifications?.data || [];
 
   return (
-    <header className="flex h-16 w-full items-center justify-between bg-white px-4 sm:px-6 border-b border-slate-200/80 font-display">
-      {/* Left: Mobile Toggle & Page Title */}
+    <header className="flex h-16 w-full items-center justify-between bg-white/85 px-4 sm:px-6 border-b border-white/70 font-display backdrop-blur-xl">
       <div className="flex items-center gap-3 min-w-0">
         <button
           type="button"
           onClick={onMenuToggle}
-          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden"
           aria-label="Toggle admin navigation menu"
         >
           <FiMenu className="h-5 w-5" />
         </button>
 
         <div className="flex items-center gap-2 min-w-0">
-          <h1 className="font-serif text-base sm:text-lg font-bold text-slate-900 truncate">
+          <h1 className="font-display text-base sm:text-lg font-semibold text-slate-900 truncate">
             {pageTitle}
           </h1>
           <span className="hidden sm:inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -132,13 +131,11 @@ export default function AdminTopbar({ title, onMenuToggle }) {
         </div>
       </div>
 
-      {/* Right: Quick Search, Notifications, Profile */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* Global Search Button */}
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="hidden sm:flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 transition-all"
+          className="hidden sm:flex items-center gap-2.5 rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 transition-all"
         >
           <FiSearch className="h-3.5 w-3.5 text-slate-400" />
           <span>Search catalog...</span>
@@ -147,7 +144,6 @@ export default function AdminTopbar({ title, onMenuToggle }) {
           </kbd>
         </button>
 
-        {/* Notifications Dropdown */}
         <div className="relative" ref={notificationsRef}>
           <button
             type="button"
@@ -155,13 +151,13 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setNotificationsOpen((v) => !v);
               setProfileOpen(false);
             }}
-            className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+            className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
             aria-label={`Admin Notifications (${countDisplay} unread)`}
             aria-expanded={notificationsOpen}
           >
             <FiBell className="h-4 w-4" />
             {countDisplay > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-mono font-bold text-white shadow-xs">
+              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-mono font-bold text-white shadow-[0_10px_20px_rgba(244,63,94,0.2)]">
                 {countDisplay > 99 ? '99+' : countDisplay}
               </span>
             )}
@@ -174,7 +170,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white p-2 shadow-2xl border border-slate-200 ring-1 ring-black/5"
+                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-[24px] bg-white/95 p-2 shadow-[0_20px_50px_rgba(44,40,36,0.14)] border border-white/70 backdrop-blur-xl"
               >
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-slate-100">
                   <span className="font-bold text-xs uppercase tracking-wider text-slate-800">
@@ -206,7 +202,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                             markReadMutation.mutate({ id: notif.id, data: { isRead: true, read: true } });
                           }
                         }}
-                        className="p-3 hover:bg-slate-50 cursor-pointer transition-colors rounded-xl m-1"
+                        className="p-3 hover:bg-slate-50 cursor-pointer transition-colors rounded-2xl m-1"
                       >
                         <p className="text-xs text-slate-900 font-semibold">{notif.title || notif.message}</p>
                         {notif.description && (
@@ -273,9 +269,9 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-2xl bg-white p-2 shadow-2xl border border-slate-200 ring-1 ring-black/5"
+                className="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-[24px] bg-white/95 p-2 shadow-[0_20px_50px_rgba(44,40,36,0.14)] border border-white/70 backdrop-blur-xl"
               >
-                <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50 rounded-xl">
+                <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50 rounded-2xl">
                   <div className="flex items-center gap-1.5">
                     <FiShield className="h-3.5 w-3.5 text-amber-600" />
                     <p className="text-xs font-bold text-slate-900 truncate">
@@ -289,21 +285,21 @@ export default function AdminTopbar({ title, onMenuToggle }) {
 
                 <Link
                   to={ROUTE_PATHS.PROFILE}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
                   <FiUser className="h-4 w-4 text-amber-600" /> My Profile
                 </Link>
                 <Link
                   to={ROUTE_PATHS.ADMIN_SETTINGS}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
                   <FiSettings className="h-4 w-4 text-amber-600" /> Admin Settings
                 </Link>
                 <Link
                   to={ROUTE_PATHS.HOME}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
                   <FiHome className="h-4 w-4 text-amber-600" /> Storefront
@@ -312,7 +308,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 <button
                   type="button"
                   onClick={handleLogoutClick}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors mt-1 border-t border-slate-100 pt-2"
+                  className="flex w-full items-center gap-2 rounded-2xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors mt-1 border-t border-slate-100 pt-2"
                 >
                   <FiLogOut className="h-4 w-4 text-rose-600" /> Logout
                 </button>
@@ -330,7 +326,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg rounded-2xl bg-white p-4 shadow-2xl border border-slate-200"
+              className="w-full max-w-lg rounded-[24px] bg-white/96 p-4 shadow-[0_20px_50px_rgba(44,40,36,0.14)] border border-white/70 backdrop-blur-xl"
             >
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">

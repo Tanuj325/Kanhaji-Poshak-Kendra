@@ -117,7 +117,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
             e.stopPropagation();
             setIsFullscreen(true);
           }}
-          className="absolute right-3.5 top-3.5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-md text-amber-950 border border-amber-900/10 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px]"
+          className="absolute right-3.5 top-3.5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-md text-amber-950 border border-amber-900/10 opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px] md:opacity-0 md:group-hover:opacity-100"
           aria-label="Expand image fullscreen"
         >
           <FiMaximize2 className="h-4.5 w-4.5 text-amber-900" />
@@ -132,7 +132,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-amber-950 shadow-md border border-amber-900/10 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px]"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-amber-950 shadow-md border border-amber-900/10 opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px] md:opacity-0 md:group-hover:opacity-100"
               aria-label="Previous image"
             >
               <FiChevronLeft className="h-6 w-6 text-amber-900" />
@@ -144,7 +144,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
                 e.stopPropagation();
                 handleNext();
               }}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-amber-950 shadow-md border border-amber-900/10 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px]"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-amber-950 shadow-md border border-amber-900/10 opacity-100 hover:scale-110 active:scale-95 transition-all min-h-[44px] min-w-[44px] md:opacity-0 md:group-hover:opacity-100"
               aria-label="Next image"
             >
               <FiChevronRight className="h-6 w-6 text-amber-900" />

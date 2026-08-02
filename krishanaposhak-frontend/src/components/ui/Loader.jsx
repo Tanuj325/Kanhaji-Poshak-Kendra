@@ -14,38 +14,36 @@ export default function Loader({ size = 'md', isFullPage = false, label }) {
       <div
         role="status"
         aria-label={label || 'Loading'}
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#060E1A]"
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_top,rgba(201,154,59,0.18),transparent_28%),linear-gradient(180deg,#0f2440_0%,#081427_100%)]"
       >
-        {/* Animated logo mark */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
           className="relative"
         >
-          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-[2px] shadow-xl shadow-amber-500/20">
-            <div className="flex h-full w-full items-center justify-center rounded-2xl bg-[#0B1728]">
-              <span className="font-serif text-xl font-bold text-amber-300">K</span>
+          <div className="h-14 w-14 rounded-[20px] bg-[linear-gradient(135deg,rgba(232,213,163,0.96),rgba(201,154,59,0.92),rgba(168,125,46,0.98))] p-[2px] shadow-[0_16px_40px_rgba(201,154,59,0.24)]">
+            <div className="flex h-full w-full items-center justify-center rounded-[18px] bg-deep-navy">
+              <span className="font-display text-xl font-bold text-temple-gold-light">K</span>
             </div>
           </div>
           <motion.div
-            className="absolute -inset-3 rounded-2xl bg-amber-400/10 blur-xl"
+            className="absolute -inset-3 rounded-[22px] bg-temple-gold/10 blur-xl"
             animate={{ opacity: [0.2, 0.5, 0.2] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </motion.div>
 
-        {/* Spinner */}
         <div className="relative">
           <motion.div
-            className="h-8 w-8 rounded-full border-2 border-amber-400/20 border-t-amber-400"
+            className="h-8 w-8 rounded-full border-2 border-temple-gold/20 border-t-temple-gold"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           />
         </div>
 
         {label && (
-          <p className="text-xs font-medium text-slate-400">{label}</p>
+          <p className="text-xs font-medium text-lotus-white/70">{label}</p>
         )}
         <span className="sr-only">{label || 'Loading...'}</span>
       </div>
@@ -60,7 +58,7 @@ export default function Loader({ size = 'md', isFullPage = false, label }) {
     >
       <div
         className={cn(
-          'animate-spin rounded-full border-amber-400/20 border-t-amber-400',
+          'animate-spin rounded-full border-temple-gold/20 border-t-temple-gold',
           sizeClasses[size],
         )}
       />

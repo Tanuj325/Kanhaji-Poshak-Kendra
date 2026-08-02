@@ -69,7 +69,7 @@ const AddressForm = memo(function AddressForm({ initial, onSubmit, onCancel, isL
         />
         Set as default address
       </label>
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <Button type="submit" variant="primary" isLoading={isLoading}>
           {initial ? 'Update Address' : 'Add Address'}
         </Button>
@@ -123,7 +123,7 @@ function AddressSelector({ addresses, isLoading, isError, onRetry, selectedId, o
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col items-stretch gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="font-display text-lg font-semibold text-dark-charcoal">Shipping Address</h3>
         {!showForm && !editing && (
           <Button variant="outline" size="sm" onClick={() => setShowForm(true)}>

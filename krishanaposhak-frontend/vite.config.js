@@ -53,8 +53,11 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'vendor-animation';
             }
-            if (id.includes('recharts') || id.includes('d3')) {
+            if (id.includes('recharts')) {
               return 'vendor-charts';
+            }
+            if (id.includes('d3')) {
+              return 'vendor-d3';
             }
             if (id.includes('react-hook-form') || id.includes('zod') || id.includes('@hookform/resolvers')) {
               return 'vendor-forms';

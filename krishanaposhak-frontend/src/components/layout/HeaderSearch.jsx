@@ -8,10 +8,9 @@ import {
   FiTrash2,
   FiFolder,
   FiArrowRight,
-  FiCheckCircle,
-  FiAlertCircle,
-  FiXCircle,
-  FiAward,
+  FiChevronDown,
+  FiGrid,
+  FiTrendingUp,
 } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi';
 import OptimizedImage from '@/components/ui/OptimizedImage';
@@ -23,22 +22,45 @@ import { highlightMatch } from '@/utils/highlightMatch';
 import { formatPrice } from '@/utils/formatPrice';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 
-export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDrawer }) {
+/**
+ * Premium ecommerce search bar.
+ *
+ * Modes:
+ *  - isMobileDrawer: compact inline form used inside the mobile drawer.
+ *  - default: large luxury search bar with category dropdown + gold search
+ *    button. Adapts responsively — on < md it becomes a full-width inline
+ *    bar and suggestions open as a full-screen overlay.
+ *
+ * Backend integrations (unchanged): real product search via useProducts,
+ * real category suggestions via useCategoryDropdown, recent searches via
+ * useRecentSearches, ⌘K + "/" shortcuts, arrow-key navigation.
+ */
+export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDrawer, className = '' }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [selectedCategory, setSelectedCategory] = useState(null); // { id, name }
+  const [catDropdownOpen, setCatDropdownOpen] = useState(false);
 
   const debouncedQuery = useDebounce(query.trim(), 300);
   const containerRef = useRef(null);
   const inputRef = useRef(null);
   const modalInputRef = useRef(null);
+  const catButtonRef = useRef(null);
 
   const { recentSearches, addSearchTerm, removeSearchTerm, clearAllSearches } = useRecentSearches();
 
   // Fetch real backend products matching debounced search term
   const { data: searchData, isLoading: isSearchLoading } = useProducts(
-    debouncedQuery.length >= 2 ? { search: debouncedQuery, page: 0, size: 6 } : null
+    debouncedQuery.length >= 2
+      ? {
+          search: debouncedQuery,
+          page: 0,
+          size: 6,
+          ...(selectedCategory ? { categoryId: selectedCategory.id } : {}),
+        }
+      : null
   );
 
   // Fetch real categories from backend
@@ -51,19 +73,22 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
     return searchData.content || searchData.items || searchData.data || [];
   }, [searchData]);
 
-  // Format backend categories & filter matching ones
-  const matchingCategories = useMemo(() => {
+  // Format backend categories for the category dropdown + suggestions
+  const categoryList = useMemo(() => {
     const categories = Array.isArray(categoriesData)
       ? categoriesData
       : categoriesData?.data || categoriesData?.content || [];
+    return categories;
+  }, [categoriesData]);
 
+  // Filter matching categories for suggestions
+  const matchingCategories = useMemo(() => {
     if (!debouncedQuery || debouncedQuery.length < 2) return [];
-
     const q = debouncedQuery.toLowerCase();
-    return categories
+    return categoryList
       .filter((cat) => cat.name?.toLowerCase().includes(q) || cat.slug?.toLowerCase().includes(q))
       .slice(0, 4);
-  }, [categoriesData, debouncedQuery]);
+  }, [categoryList, debouncedQuery]);
 
   // Combined flat list of focusable interactive items for keyboard navigation
   const selectableItems = useMemo(() => {
@@ -94,17 +119,20 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
   const executeSearch = useCallback(
     (searchTerm) => {
       const q = (searchTerm || query).trim();
+      const params = new URLSearchParams();
       if (q) {
+        params.set('search', encodeURIComponent(q));
         addSearchTerm(q);
-        navigate(`${ROUTE_PATHS.SHOP}?search=${encodeURIComponent(q)}`);
-      } else {
-        navigate(ROUTE_PATHS.SHOP);
       }
+      if (selectedCategory) params.set('categoryId', selectedCategory.id);
+      const qs = params.toString();
+      navigate(qs ? `${ROUTE_PATHS.SHOP}?${qs}` : ROUTE_PATHS.SHOP);
       setIsOpen(false);
       setActiveIndex(-1);
+      setCatDropdownOpen(false);
       if (onCloseMobileDrawer) onCloseMobileDrawer();
     },
-    [query, addSearchTerm, navigate, onCloseMobileDrawer]
+    [query, selectedCategory, addSearchTerm, navigate, onCloseMobileDrawer]
   );
 
   const handleSubmit = (e) => {
@@ -113,7 +141,7 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
       const selected = selectableItems[activeIndex];
       if (selected.type === 'recent') executeSearch(selected.term);
       else if (selected.type === 'category') {
-        navigate(`${ROUTE_PATHS.SHOP}?category=${selected.category.id}`);
+        navigate(`${ROUTE_PATHS.SHOP}?categoryId=${selected.category.id}`);
         setIsOpen(false);
       } else if (selected.type === 'product') {
         navigate(`/product/${selected.product.slug || selected.product.id}`);
@@ -158,6 +186,7 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
     if (e.key === 'Escape') {
       setIsOpen(false);
       setActiveIndex(-1);
+      setCatDropdownOpen(false);
       inputRef.current?.blur();
       modalInputRef.current?.blur();
     } else if (e.key === 'ArrowDown') {
@@ -175,11 +204,24 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setIsOpen(false);
         setActiveIndex(-1);
+        setCatDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Close category dropdown on Escape
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && catDropdownOpen) {
+        setCatDropdownOpen(false);
+        catButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [catDropdownOpen]);
 
   const hasNoResults =
     debouncedQuery.length >= 2 &&
@@ -187,12 +229,391 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
     searchResults.length === 0 &&
     matchingCategories.length === 0;
 
-  // Render Mobile Inline Version for Drawer
+  const activeCategoryName = selectedCategory?.name || 'All';
+
+  /* ─────────────────── Shared suggestion content ─────────────────── */
+
+  const renderSuggestions = ({ isModal = false, onNavigate } = {}) => {
+    const close = () => {
+      setIsOpen(false);
+      setActiveIndex(-1);
+      onNavigate?.();
+    };
+
+    return (
+      <div className="space-y-4">
+        {/* Loading Indicator */}
+        {isSearchLoading && debouncedQuery.length >= 2 && (
+          <div className="flex items-center justify-center gap-2 py-4 text-temple-gold-dark">
+            <div className="h-4 w-4 rounded-full border-2 border-temple-gold border-t-transparent animate-spin" />
+            <span className="text-xs font-semibold">Searching divine catalog...</span>
+          </div>
+        )}
+
+        {/* State 1: Empty Query - Show Recent Searches */}
+        {!debouncedQuery && (
+          <div className="space-y-3">
+            {recentSearches.length > 0 ? (
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-2">
+                  <span className="text-[11px] font-bold text-temple-gold-dark uppercase tracking-wider flex items-center gap-1.5">
+                    <FiClock className="h-3.5 w-3.5" /> Recent Searches
+                  </span>
+                  <button
+                    type="button"
+                    onClick={clearAllSearches}
+                    className="text-[10px] text-natural-wood hover:text-rose-600 flex items-center gap-1"
+                  >
+                    <FiTrash2 className="h-3 w-3" /> Clear All
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  {recentSearches.map((term, idx) => {
+                    const isSelected = activeIndex === idx;
+                    return (
+                      <div
+                        key={term}
+                        className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors cursor-pointer ${
+                          isSelected
+                            ? 'bg-temple-gold/15 text-temple-gold-dark border border-temple-gold/40'
+                            : 'text-dark-charcoal hover:bg-warm-cream/60 hover:text-deep-navy'
+                        }`}
+                        onClick={() => {
+                          executeSearch(term);
+                          close();
+                        }}
+                        role="option"
+                        aria-selected={isSelected}
+                      >
+                        <span className="flex items-center gap-2">
+                          <FiClock className="h-3.5 w-3.5 text-natural-wood" />
+                          <span>{term}</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeSearchTerm(term);
+                          }}
+                          className="text-natural-wood hover:text-rose-600 p-1"
+                          title="Remove term"
+                        >
+                          <FiX className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-6 text-natural-wood space-y-2">
+                <FiSearch className="h-6 w-6 text-temple-gold/40 mx-auto" />
+                <p className="text-xs">
+                  Type a keyword like <strong className="text-temple-gold-dark">Poshak</strong>,{' '}
+                  <strong className="text-temple-gold-dark">Mukut</strong>, or{' '}
+                  <strong className="text-temple-gold-dark">Bansuri</strong> to search.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* State 2: Query active - Show Category & Product Matches */}
+        {debouncedQuery.length >= 2 && !isSearchLoading && (
+          <div className="space-y-4">
+            {/* Category Suggestions */}
+            {matchingCategories.length > 0 && (
+              <div>
+                <div className="text-[11px] font-bold text-temple-gold-dark uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FiFolder className="h-3.5 w-3.5" /> Matching Categories
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {matchingCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        addSearchTerm(cat.name);
+                        navigate(`${ROUTE_PATHS.SHOP}?categoryId=${cat.id}`);
+                        close();
+                      }}
+                      className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-royal-blue hover:border-temple-gold/50 hover:bg-temple-gold/10 transition-colors"
+                    >
+                      <FiFolder className="h-3 w-3 text-temple-gold" />
+                      <span>{highlightMatch(cat.name, debouncedQuery)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Product Suggestions */}
+            {searchResults.length > 0 && (
+              <div>
+                <div className="text-[11px] font-bold text-temple-gold-dark uppercase tracking-wider mb-2 flex items-center justify-between">
+                  <span>Products ({searchResults.length})</span>
+                  <span className="text-[10px] text-natural-wood font-normal">Select to view details</span>
+                </div>
+
+                <div className="space-y-2">
+                  {searchResults.map((product, pIdx) => {
+                    const globalIndex = matchingCategories.length + pIdx;
+                    const isSelected = activeIndex === globalIndex;
+                    const mainVariant = product.variants?.[0] || {};
+                    const price = product.price || mainVariant.price || 0;
+                    const discountPrice = product.discountPrice || mainVariant.discountPrice;
+                    const inStock = (product.stockQuantity ?? mainVariant.stockQuantity ?? 1) > 0;
+
+                    return (
+                      <Link
+                        key={product.id}
+                        to={`/product/${product.slug || product.id}`}
+                        onClick={() => {
+                          addSearchTerm(query);
+                          close();
+                        }}
+                        className={`flex items-center gap-3 rounded-xl p-2.5 transition-all border ${
+                          isSelected
+                            ? 'bg-temple-gold/15 border-temple-gold/50 shadow-md'
+                            : 'border-slate-200/80 bg-white hover:bg-warm-cream/50 hover:border-temple-gold/30'
+                        }`}
+                      >
+                        <OptimizedImage
+                          src={product.imageUrl}
+                          alt={product.name}
+                          aspectRatio="aspect-square"
+                          className="h-12 w-12 rounded-lg object-cover bg-warm-cream border border-slate-200 shrink-0"
+                          width={96}
+                          height={96}
+                        />
+                        <div className="flex-1 min-w-0 space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-dark-charcoal text-xs truncate">
+                              {highlightMatch(product.name, debouncedQuery)}
+                            </span>
+                            {product.isFeatured && (
+                              <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-temple-gold-dark bg-temple-gold/15 px-1.5 py-0.5 rounded-full border border-temple-gold/30 whitespace-nowrap">
+                                <HiSparkles /> Featured
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px]">
+                            {product.categoryName && (
+                              <span className="text-natural-wood">{product.categoryName}</span>
+                            )}
+                            <span className={inStock ? 'text-success font-medium' : 'text-error font-medium'}>
+                              {inStock ? 'In Stock' : 'Out of Stock'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-xs font-bold text-temple-gold-dark">
+                            {formatPrice(discountPrice || price)}
+                          </div>
+                          {discountPrice && discountPrice < price && (
+                            <div className="text-[10px] text-natural-wood line-through">
+                              {formatPrice(price)}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* View All Search Results Button */}
+            {searchResults.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  executeSearch(query);
+                  close();
+                }}
+                className="w-full rounded-xl bg-temple-gold/10 border border-temple-gold/40 py-2.5 px-4 text-xs font-bold text-temple-gold-dark hover:bg-temple-gold hover:text-white transition-all flex items-center justify-center gap-2"
+              >
+                <span>View all matching results for "{query}"</span>
+                <FiArrowRight className="h-4 w-4" />
+              </button>
+            )}
+
+            {/* State 3: Empty Results Illustration */}
+            {hasNoResults && (
+              <div className="text-center py-8 space-y-3">
+                <div className="relative mx-auto h-12 w-12 rounded-full bg-temple-gold/10 flex items-center justify-center border border-temple-gold/25 text-temple-gold">
+                  <FiSearch className="h-6 w-6" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-dark-charcoal">No divine items found</p>
+                  <p className="text-xs text-natural-wood max-w-xs mx-auto">
+                    We couldn't find anything matching "{query}".
+                  </p>
+                </div>
+                <div className="pt-2 text-[11px] text-natural-wood space-y-1 bg-warm-cream/60 p-3 rounded-xl border border-slate-200 max-w-xs mx-auto text-left">
+                  <p className="font-bold text-temple-gold-dark">Search Tips:</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    <li>Check your spelling for typos</li>
+                    <li>Try generic terms like <strong className="text-dark-charcoal">Poshak</strong>, <strong className="text-dark-charcoal">Mukut</strong></li>
+                    <li>Browse shop categories directly</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ─────────────────── Category dropdown trigger ─────────────────── */
+
+  const categoryDropdownTrigger = (
+    <button
+      ref={catButtonRef}
+      type="button"
+      onClick={() => setCatDropdownOpen((v) => !v)}
+      className="flex h-full shrink-0 items-center gap-1.5 rounded-l-full border-r border-slate-200 px-3 sm:px-4 text-xs font-bold text-royal-blue bg-warm-cream/40 hover:bg-warm-cream transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60"
+      aria-expanded={catDropdownOpen}
+      aria-haspopup="listbox"
+      aria-label="Select search category"
+      title="Filter search by category"
+    >
+      <FiGrid className="h-4 w-4 text-temple-gold" />
+      <span className="hidden min-[420px]:inline max-w-[6.5rem] truncate">{activeCategoryName}</span>
+      <FiChevronDown
+        className={`h-3 w-3 text-natural-wood transition-transform duration-200 ${catDropdownOpen ? 'rotate-180' : ''}`}
+      />
+    </button>
+  );
+
+  const categoryDropdownPanel = (
+    <AnimatePresence>
+      {catDropdownOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 6, scale: 0.98 }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
+          className="absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-[0_24px_60px_rgba(15,36,64,0.18)]"
+          role="listbox"
+          aria-label="Search categories"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory(null);
+              setCatDropdownOpen(false);
+            }}
+            className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${
+              !selectedCategory ? 'bg-temple-gold/10 text-temple-gold-dark' : 'text-dark-charcoal hover:bg-warm-cream/60'
+            }`}
+          >
+            <FiGrid className="h-3.5 w-3.5" /> All Categories
+          </button>
+          {categoryList.length === 0 && (
+            <p className="px-3 py-2 text-[10px] text-natural-wood">Loading categories...</p>
+          )}
+          {categoryList.map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => {
+                setSelectedCategory({ id: cat.id, name: cat.name });
+                setCatDropdownOpen(false);
+              }}
+              className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs transition-colors ${
+                selectedCategory?.id === cat.id
+                  ? 'bg-temple-gold/10 text-temple-gold-dark font-bold'
+                  : 'text-dark-charcoal hover:bg-warm-cream/60'
+              }`}
+            >
+              <FiFolder className="h-3.5 w-3.5 text-natural-wood" /> {cat.name}
+            </button>
+          ))}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  /* ─────────────────── Search input bar (shared) ─────────────────── */
+
+  const searchInputBar = (isModal = false) => (
+    <form
+      onSubmit={handleSubmit}
+      role="search"
+      className="group relative flex w-full items-center overflow-hidden rounded-full border border-slate-200 bg-white shadow-[0_2px_12px_rgba(15,36,64,0.06)] transition-all duration-300 focus-within:border-temple-gold focus-within:shadow-[0_8px_28px_rgba(201,154,59,0.16)] focus-within:ring-2 focus-within:ring-temple-gold/30 hover:shadow-[0_4px_18px_rgba(15,36,64,0.1)]"
+    >
+      {/* Category dropdown */}
+      <div className="relative shrink-0">
+        {categoryDropdownTrigger}
+        {categoryDropdownPanel}
+      </div>
+
+      {/* Search input */}
+      <div className="relative flex-1 min-w-0">
+        <FiSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-natural-wood" />
+        <input
+          ref={isModal ? modalInputRef : inputRef}
+          type="search"
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          aria-label="Search products, categories, brands and more"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setIsOpen(true);
+            setActiveIndex(-1);
+          }}
+          onFocus={() => setIsOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder="Search for products, categories, brands and more..."
+          className="h-full w-full min-w-0 border-0 bg-transparent py-2.5 pl-9 pr-9 text-sm text-dark-charcoal placeholder:text-natural-wood/70 focus:outline-none focus:ring-0"
+        />
+        {isSearchLoading && debouncedQuery.length >= 2 ? (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <div className="h-4 w-4 rounded-full border-2 border-temple-gold border-t-transparent animate-spin" />
+          </div>
+        ) : query ? (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('');
+              (isModal ? modalInputRef : inputRef).current?.focus();
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-natural-wood hover:text-rose-600 p-1"
+            aria-label="Clear search query"
+          >
+            <FiX className="h-4 w-4" />
+          </button>
+        ) : null}
+      </div>
+
+      {/* Search button */}
+      <button
+        type="submit"
+        className="flex h-[44px] shrink-0 items-center gap-2 rounded-r-full bg-gradient-to-br from-temple-gold-light via-temple-gold to-temple-gold-dark px-4 sm:px-5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:brightness-105 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60"
+        aria-label="Search"
+      >
+        <FiSearch className="h-4 w-4" />
+        <span className="hidden sm:inline">Search</span>
+      </button>
+    </form>
+  );
+
+  /* ─────────────────── Mobile drawer compact version ─────────────────── */
+
   if (isMobileDrawer) {
     return (
-      <div className="relative w-full my-2 font-display">
-        <form onSubmit={handleSubmit} className="relative flex items-center">
-          <FiSearch className="absolute left-3.5 text-amber-400/80 h-4 w-4 pointer-events-none" />
+      <div className="relative my-2 w-full">
+        <form
+          onSubmit={handleSubmit}
+          className="group relative flex items-center overflow-hidden rounded-full border border-slate-200 bg-white shadow-[0_2px_10px_rgba(15,36,64,0.05)] transition-all duration-300 focus-within:border-temple-gold focus-within:ring-2 focus-within:ring-temple-gold/25"
+        >
+          <FiSearch className="pointer-events-none absolute left-3.5 h-4 w-4 text-temple-gold" />
           <input
             ref={inputRef}
             type="text"
@@ -203,13 +624,15 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
             }}
             onFocus={() => setIsOpen(true)}
             placeholder="Search divine attire, mukuts, accessories..."
-            className="w-full rounded-xl border border-amber-400/25 bg-black/40 pl-10 pr-9 py-2.5 text-xs text-white placeholder:text-slate-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+            className="w-full rounded-full border-0 bg-transparent py-3 pl-10 pr-9 text-sm text-dark-charcoal placeholder:text-natural-wood/70 focus:outline-none focus:ring-0"
+            aria-label="Search catalog"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="absolute right-3 text-slate-400 hover:text-white"
+              className="absolute right-3 text-natural-wood hover:text-rose-600"
+              aria-label="Clear search query"
             >
               <FiX className="h-4 w-4" />
             </button>
@@ -223,21 +646,24 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[#0B1728] p-3 text-xs shadow-2xl space-y-3 max-h-80 overflow-y-auto"
+              className="mt-2 w-full rounded-[24px] border border-slate-200 bg-white p-3 text-xs shadow-[0_20px_48px_rgba(15,36,64,0.18)] space-y-3 max-h-80 overflow-y-auto"
             >
-              {/* Recent Searches */}
               {!debouncedQuery && recentSearches.length > 0 && (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-                    <span className="flex items-center gap-1.5"><FiClock /> Recent Searches</span>
-                    <button onClick={clearAllSearches} className="text-slate-400 hover:text-rose-400">Clear</button>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-temple-gold-dark uppercase tracking-wider">
+                    <span className="flex items-center gap-1.5">
+                      <FiClock /> Recent Searches
+                    </span>
+                    <button onClick={clearAllSearches} className="text-natural-wood hover:text-rose-600">
+                      Clear
+                    </button>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {recentSearches.map((term) => (
                       <button
                         key={term}
                         onClick={() => executeSearch(term)}
-                        className="flex items-center gap-1 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg text-slate-200 hover:bg-amber-400/10 hover:text-amber-300"
+                        className="flex items-center gap-1 bg-temple-gold/10 border border-temple-gold/25 px-2.5 py-1 rounded-lg text-temple-gold-dark hover:bg-temple-gold/20"
                       >
                         <span>{term}</span>
                       </button>
@@ -246,9 +672,14 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
                 </div>
               )}
 
-              {/* Live Search Items */}
               {debouncedQuery.length >= 2 && (
                 <div className="space-y-2">
+                  {isSearchLoading && (
+                    <div className="flex items-center justify-center gap-2 py-3 text-temple-gold-dark text-xs font-semibold">
+                      <div className="h-3.5 w-3.5 rounded-full border-2 border-temple-gold border-t-transparent animate-spin" />
+                      Searching...
+                    </div>
+                  )}
                   {searchResults.map((prod) => (
                     <Link
                       key={prod.id}
@@ -258,17 +689,17 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
                         setIsOpen(false);
                         if (onCloseMobileDrawer) onCloseMobileDrawer();
                       }}
-                      className="flex items-center gap-2.5 p-2 rounded-lg bg-white/5 border border-white/5 hover:border-amber-400/30 text-white"
+                      className="flex items-center gap-2.5 p-2 rounded-lg bg-lotus-white border border-slate-200 hover:border-temple-gold/40 text-dark-charcoal"
                     >
                       <img src={prod.imageUrl || '/placeholder.svg'} alt={prod.name} className="h-9 w-9 object-cover rounded" />
                       <div className="flex-1 min-w-0">
                         <div className="font-bold truncate text-xs">{highlightMatch(prod.name, debouncedQuery)}</div>
-                        <div className="text-[11px] text-amber-300 font-bold">{formatPrice(prod.price)}</div>
+                        <div className="text-[11px] text-temple-gold-dark font-bold">{formatPrice(prod.price)}</div>
                       </div>
                     </Link>
                   ))}
                   {hasNoResults && (
-                    <div className="text-center py-4 text-slate-400 text-xs">
+                    <div className="text-center py-4 text-natural-wood text-xs">
                       No results for "{query}"
                     </div>
                   )}
@@ -281,386 +712,70 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
     );
   }
 
-  // Header Search: Mobile Icon Button (< lg) + Desktop Inline Search Input (≥ lg)
+  /* ─────────────────── Desktop inline + mobile modal ─────────────────── */
+
   return (
-    <div ref={containerRef} className="relative font-body">
-      {/* 1. Mobile/Tablet Icon Button (< lg) */}
-      <button
-        type="button"
-        onClick={() => {
-          setIsOpen(true);
-          setTimeout(() => modalInputRef.current?.focus(), 50);
-        }}
-        className="flex lg:hidden items-center justify-center min-h-[44px] min-w-[44px] h-11 w-11 rounded-full text-muted-sand hover:text-temple-gold hover:bg-white/10 transition-all focus:outline-none"
-        aria-label="Search catalog"
-      >
-        <FiSearch className="h-5 w-5" />
-      </button>
+    <div ref={containerRef} className={`relative w-full ${className}`}>
+      {/* Inline premium search bar (visible at all sizes) */}
+      {searchInputBar(false)}
 
-      {/* 2. Desktop Input Bar (≥ lg) */}
-      <form onSubmit={handleSubmit} className="hidden lg:flex items-center">
-        <div className="relative">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-temple-gold h-4 w-4 pointer-events-none" />
-          <input
-            ref={inputRef}
-            type="search"
-            role="combobox"
-            aria-expanded={isOpen}
-            aria-haspopup="listbox"
-            aria-autocomplete="list"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setIsOpen(true);
-              setActiveIndex(-1);
-            }}
-            onFocus={() => setIsOpen(true)}
-            onKeyDown={handleKeyDown}
-            placeholder="Search..."
-            className="w-28 lg:w-36 xl:w-48 focus:w-44 xl:focus:w-56 rounded-full border border-temple-gold/30 bg-deep-navy/80 pl-8 pr-10 py-2 text-xs text-lotus-white placeholder:text-muted-sand/70 focus:border-temple-gold focus:outline-none focus:ring-1 focus:ring-temple-gold/40 transition-all duration-300 font-body shadow-inner truncate"
-          />
-          {query ? (
-            <button
-              type="button"
-              onClick={() => {
-                setQuery('');
-                inputRef.current?.focus();
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-sand hover:text-lotus-white p-1"
-              aria-label="Clear search query"
-            >
-              <FiX className="h-3.5 w-3.5" />
-            </button>
-          ) : (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 text-[9px] font-mono text-temple-gold-light/70 border border-temple-gold/20 rounded px-1.5 py-0.5 bg-temple-gold/10 pointer-events-none">
-              <span>⌘K</span>
-            </div>
-          )}
-        </div>
-      </form>
-
-      {/* Desktop Floating Suggestions Panel (≥ lg) */}
+      {/* Desktop/Tablet floating suggestions panel (md+) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            initial={{ opacity: 0, y: 10, scale: 0.99 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="hidden lg:block absolute right-0 top-full mt-2 z-50 w-[420px] max-w-[calc(100vw-32px)] rounded-2xl border border-amber-400/30 bg-[#0B1728]/98 backdrop-blur-2xl p-4 text-xs text-slate-200 shadow-2xl space-y-4 max-h-[75vh] overflow-y-auto"
+            exit={{ opacity: 0, y: 8, scale: 0.99 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="hidden md:block absolute left-0 right-0 top-full mt-2 z-50 max-h-[75vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 text-xs text-dark-charcoal shadow-[0_24px_70px_rgba(15,36,64,0.22)]"
             role="listbox"
+            aria-label="Search suggestions"
           >
-            {/* Loading Indicator */}
-            {isSearchLoading && debouncedQuery.length >= 2 && (
-              <div className="flex items-center justify-center gap-2 py-4 text-amber-300">
-                <div className="h-4 w-4 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
-                <span className="text-xs font-semibold">Searching catalog...</span>
-              </div>
-            )}
-
-            {/* State 1: Empty Query - Show Recent Searches */}
-            {!debouncedQuery && (
-              <div className="space-y-3">
-                {recentSearches.length > 0 ? (
-                  <div>
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-                      <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <FiClock className="h-3.5 w-3.5" /> Recent Searches
-                      </span>
-                      <button
-                        type="button"
-                        onClick={clearAllSearches}
-                        className="text-[10px] text-slate-400 hover:text-rose-400 flex items-center gap-1"
-                      >
-                        <FiTrash2 className="h-3 w-3" /> Clear All
-                      </button>
-                    </div>
-
-                    <div className="space-y-1">
-                      {recentSearches.map((term, idx) => {
-                        const isSelected = activeIndex === idx;
-                        return (
-                          <div
-                            key={term}
-                            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors cursor-pointer ${
-                              isSelected
-                                ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
-                                : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                            }`}
-                            onClick={() => executeSearch(term)}
-                          >
-                            <span className="flex items-center gap-2">
-                              <FiClock className="h-3.5 w-3.5 text-slate-400" />
-                              <span>{term}</span>
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeSearchTerm(term);
-                              }}
-                              className="text-slate-400 hover:text-rose-400 p-1"
-                              title="Remove term"
-                            >
-                              <FiX className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-6 text-slate-400 space-y-2">
-                    <FiSearch className="h-6 w-6 text-amber-400/40 mx-auto" />
-                    <p className="text-xs">Type a keyword like <strong className="text-amber-300">Poshak</strong>, <strong className="text-amber-300">Mukut</strong>, or <strong className="text-amber-300">Bansuri</strong> to search.</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* State 2: Query active - Show Category & Product Matches */}
-            {debouncedQuery.length >= 2 && !isSearchLoading && (
-              <div className="space-y-4">
-                {/* Category Suggestions */}
-                {matchingCategories.length > 0 && (
-                  <div>
-                    <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <FiFolder className="h-3.5 w-3.5" /> Matching Categories
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {matchingCategories.map((cat) => (
-                        <Link
-                          key={cat.id}
-                          to={`${ROUTE_PATHS.SHOP}?category=${cat.id}`}
-                          onClick={() => {
-                            addSearchTerm(cat.name);
-                            setIsOpen(false);
-                          }}
-                          className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-amber-200 hover:border-amber-400/40 hover:bg-amber-400/10 transition-colors"
-                        >
-                          <FiFolder className="h-3 w-3 text-amber-400" />
-                          <span>{highlightMatch(cat.name, debouncedQuery)}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Product Suggestions */}
-                {searchResults.length > 0 && (
-                  <div>
-                    <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-                      <span>Products ({searchResults.length})</span>
-                      <span className="text-[10px] text-slate-400 font-normal">Select to view details</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {searchResults.map((product, pIdx) => {
-                        const globalIndex = matchingCategories.length + pIdx;
-                        const isSelected = activeIndex === globalIndex;
-                        const mainVariant = product.variants?.[0] || {};
-                        const price = product.price || mainVariant.price || 0;
-                        const discountPrice = product.discountPrice || mainVariant.discountPrice;
-                        const inStock = (product.stockQuantity ?? mainVariant.stockQuantity ?? 1) > 0;
-
-                        return (
-                          <Link
-                            key={product.id}
-                            to={`/product/${product.slug || product.id}`}
-                            onClick={() => {
-                              addSearchTerm(query);
-                              setIsOpen(false);
-                            }}
-                            className={`flex items-center gap-3 rounded-xl p-2.5 transition-all border ${
-                              isSelected
-                                ? 'bg-amber-400/15 border-amber-400/40 shadow-md'
-                                : 'border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-white/15'
-                            }`}
-                          >
-                            <OptimizedImage
-                              src={product.imageUrl}
-                              alt={product.name}
-                              aspectRatio="aspect-square font-display"
-                              className="h-12 w-12 rounded-lg object-cover bg-black/40 border border-white/10 shrink-0"
-                            />
-                            <div className="flex-1 min-w-0 space-y-0.5">
-                              <div className="flex items-center gap-2">
-                                <span className="font-bold text-white text-xs truncate">
-                                  {highlightMatch(product.name, debouncedQuery)}
-                                </span>
-                                {product.isFeatured && (
-                                  <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-amber-300 bg-amber-400/20 px-1.5 py-0.5 rounded-full border border-amber-400/30">
-                                    <HiSparkles /> Featured
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2 text-[11px]">
-                                {product.categoryName && (
-                                  <span className="text-slate-400">{product.categoryName}</span>
-                                )}
-                                <span className={inStock ? 'text-emerald-400 font-medium' : 'text-rose-400 font-medium'}>
-                                  {inStock ? 'In Stock' : 'Out of Stock'}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <div className="text-xs font-bold text-amber-300">
-                                {formatPrice(discountPrice || price)}
-                              </div>
-                              {discountPrice && discountPrice < price && (
-                                <div className="text-[10px] text-slate-400 line-through">
-                                  {formatPrice(price)}
-                                </div>
-                              )}
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* View All Search Results Button */}
-                {searchResults.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => executeSearch(query)}
-                    className="w-full rounded-xl bg-amber-400/10 border border-amber-400/30 py-2.5 px-4 text-xs font-bold text-amber-300 hover:bg-amber-400 hover:text-black transition-all flex items-center justify-center gap-2"
-                  >
-                    <span>View all matching results for "{query}"</span>
-                    <FiArrowRight className="h-4 w-4" />
-                  </button>
-                )}
-
-                {/* State 3: Empty Results Illustration */}
-                {hasNoResults && (
-                  <div className="text-center py-8 space-y-3">
-                    <div className="relative mx-auto h-12 w-12 rounded-full bg-amber-400/10 flex items-center justify-center border border-amber-400/20 text-amber-400">
-                      <FiSearch className="h-6 w-6" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-bold text-white">No divine items found</p>
-                      <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                        We couldn't find anything matching "<strong className="text-amber-300">{query}</strong>".
-                      </p>
-                    </div>
-                    <div className="pt-2 text-[11px] text-slate-400 space-y-1 bg-white/5 p-3 rounded-xl border border-white/10 max-w-xs mx-auto text-left">
-                      <p className="font-bold text-amber-300">Search Tips:</p>
-                      <ul className="list-disc list-inside space-y-0.5">
-                        <li>Check your spelling for typos</li>
-                        <li>Try generic terms like <strong className="text-white">Poshak</strong>, <strong className="text-white">Mukut</strong></li>
-                        <li>Browse shop categories directly</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            {renderSuggestions()}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mobile/Tablet Full Modal Search Overlay (< lg) */}
+      {/* Mobile full-screen search modal (< md) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-md pt-16 px-4 font-display"
+            className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-deep-navy/85 px-3 pt-[max(1rem,env(safe-area-inset-top))] pb-3 backdrop-blur-md sm:px-4 sm:pt-16 md:hidden"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, y: -10 }}
+              initial={{ scale: 0.96, y: -12 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: -10 }}
-              transition={{ duration: 0.15 }}
+              exit={{ scale: 0.96, y: -12 }}
+              transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg rounded-2xl bg-[#0B1728] border border-amber-400/30 p-4 shadow-2xl space-y-3"
+              className="w-full max-w-lg rounded-[28px] bg-white border border-slate-200 p-4 shadow-[0_28px_70px_rgba(15,36,64,0.34)] space-y-4 max-h-[calc(100dvh-1.5rem)] overflow-y-auto"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-                  Search Krishana Poshak
+                <span className="text-xs font-bold text-royal-blue uppercase tracking-wider flex items-center gap-2">
+                  <FiTrendingUp className="h-4 w-4 text-temple-gold" /> Search Krishana Poshak
                 </span>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-full text-slate-400 hover:text-white"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-slate-200 text-natural-wood transition-colors hover:border-temple-gold/40 hover:bg-warm-cream/60 hover:text-royal-blue"
+                  aria-label="Close search overlay"
                 >
                   <FiX className="h-5 w-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="relative flex items-center">
-                <FiSearch className="absolute left-3.5 text-amber-400/80 h-4 w-4 pointer-events-none" />
-                <input
-                  ref={modalInputRef}
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search divine attire, mukuts..."
-                  className="w-full rounded-xl border border-amber-400/30 bg-black/40 pl-10 pr-9 py-2.5 text-sm text-white placeholder:text-slate-400 focus:border-amber-400 focus:outline-none"
-                  autoFocus
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => setQuery('')}
-                    className="absolute right-3 text-slate-400 hover:text-white"
-                  >
-                    <FiX className="h-4 w-4" />
-                  </button>
-                )}
-              </form>
+              {searchInputBar(true)}
 
-              {/* Mobile Suggestions in Modal */}
               <div className="max-h-[60vh] overflow-y-auto space-y-3 pt-2">
-                {isSearchLoading && debouncedQuery.length >= 2 && (
-                  <div className="text-center py-4 text-amber-300 text-xs font-semibold">Searching...</div>
-                )}
-                {!debouncedQuery && recentSearches.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-amber-400 uppercase">
-                      <span>Recent Searches</span>
-                      <button onClick={clearAllSearches} className="text-slate-400">Clear</button>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {recentSearches.map((term) => (
-                        <button
-                          key={term}
-                          onClick={() => executeSearch(term)}
-                          className="bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg text-slate-200 text-xs"
-                        >
-                          {term}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {debouncedQuery.length >= 2 && !isSearchLoading && (
-                  <div className="space-y-2">
-                    {searchResults.map((prod) => (
-                      <Link
-                        key={prod.id}
-                        to={`/product/${prod.slug || prod.id}`}
-                        onClick={() => {
-                          addSearchTerm(query);
-                          setIsOpen(false);
-                        }}
-                        className="flex items-center gap-3 p-2 rounded-xl bg-white/5 border border-white/10 text-white"
-                      >
-                        <img src={prod.imageUrl || '/placeholder.svg'} alt={prod.name} className="h-10 w-10 object-cover rounded-lg" />
-                        <div className="flex-1 min-w-0">
-                          <div className="font-bold text-xs truncate">{highlightMatch(prod.name, debouncedQuery)}</div>
-                          <div className="text-[11px] text-amber-300 font-bold">{formatPrice(prod.price)}</div>
-                        </div>
-                      </Link>
-                    ))}
-                    {hasNoResults && (
-                      <div className="text-center py-4 text-slate-400 text-xs">No items found matching "{query}"</div>
-                    )}
-                  </div>
-                )}
+                {renderSuggestions({
+                  onNavigate: () => {
+                    if (onCloseMobileDrawer) onCloseMobileDrawer();
+                  },
+                })}
               </div>
             </motion.div>
           </motion.div>
@@ -669,3 +784,4 @@ export default function HeaderSearch({ isMobileDrawer = false, onCloseMobileDraw
     </div>
   );
 }
+

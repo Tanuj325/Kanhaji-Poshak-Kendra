@@ -60,7 +60,7 @@ function Dropdown({
         <div
           onKeyDown={handleKeyDown}
           className={cn(
-            'absolute z-50 min-w-[12rem] overflow-hidden rounded-lg border border-muted-sand/30 bg-white py-1 shadow-elevated animate-scale-in',
+            'absolute z-50 min-w-[12rem] overflow-hidden rounded-[20px] border border-white/10 bg-[#0B1728] py-1.5 shadow-[0_20px_50px_rgba(15,36,64,0.2)] animate-scale-in',
             placementStyles[placement],
           )}
           role="menu"
@@ -70,7 +70,7 @@ function Dropdown({
               return (
                 <div
                   key={`divider-${index}`}
-                  className="my-1 border-t border-muted-sand/30"
+                  className="my-1 border-t border-white/10"
                   role="separator"
                 />
               );
@@ -86,9 +86,9 @@ function Dropdown({
                 disabled={item.isDisabled}
                 role="menuitem"
                 className={cn(
-                  'flex w-full items-center gap-2 px-3 py-2 text-sm text-dark-charcoal transition-colors hover:bg-muted-sand/10',
+                  'flex w-full items-center gap-2 px-3 py-2 text-sm text-lotus-white transition-colors hover:bg-white/5',
                   item.isDisabled && 'cursor-not-allowed opacity-40',
-                  item.isDanger && 'text-error hover:bg-error/5',
+                  item.isDanger && 'text-rose-300 hover:bg-rose-500/10',
                 )}
               >
                 {item.icon && (
@@ -96,7 +96,7 @@ function Dropdown({
                 )}
                 <span className="flex-1 text-left">{item.label}</span>
                 {item.shortcut && (
-                  <span className="text-xs text-natural-wood">{item.shortcut}</span>
+                  <span className="text-xs text-slate-400">{item.shortcut}</span>
                 )}
               </button>
             );

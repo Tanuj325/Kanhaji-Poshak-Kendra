@@ -85,7 +85,7 @@ function Drawer({
   return createPortal(
     <div className="fixed inset-0 z-50">
       <div
-        className="absolute inset-0 bg-dark-charcoal/40 animate-fade-in"
+        className="absolute inset-0 bg-dark-charcoal/60 backdrop-blur-sm animate-fade-in"
         onClick={handleClose}
         aria-hidden="true"
       />
@@ -97,23 +97,23 @@ function Drawer({
         aria-modal="true"
         aria-label={title || 'Drawer'}
         className={cn(
-          'fixed flex flex-col bg-white shadow-modal animate-slide-in-right',
+          'fixed flex flex-col overflow-hidden border border-white/10 bg-[linear-gradient(180deg,#0b1728_0%,#081427_100%)] text-lotus-white shadow-[0_28px_80px_rgba(0,0,0,0.45)] animate-slide-in-right',
           placementStyles[placement],
-          isHorizontal ? sizeStyles[size] : `max-h-[85vh]`,
+          isHorizontal ? `w-[min(100vw-1rem,28rem)] ${sizeStyles[size]}` : `max-h-[90dvh]`,
           isHorizontal ? '' : placement === 'top' ? '' : '',
           className,
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 border-b border-muted-sand/30 px-4 py-3">
+        <div className="flex items-center justify-between gap-4 border-b border-white/10 bg-[#081427]/95 px-4 py-3 backdrop-blur-xl">
           {title && (
-            <h2 className="text-lg font-semibold text-dark-charcoal">{title}</h2>
+            <h2 className="text-lg font-semibold text-lotus-white">{title}</h2>
           )}
           <button
             type="button"
             onClick={handleClose}
             aria-label="Close drawer"
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded text-natural-wood hover:text-dark-charcoal hover:bg-muted-sand/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue"
+            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-slate-300 transition-colors hover:border-temple-gold/30 hover:bg-white/5 hover:text-temple-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -126,7 +126,7 @@ function Drawer({
 
         {/* Footer */}
         {footer && (
-          <div className="border-t border-muted-sand/30 px-4 py-4">
+          <div className="border-t border-white/10 px-4 py-4">
             {footer}
           </div>
         )}

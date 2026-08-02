@@ -2,10 +2,10 @@ import { forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 
 const variantStyles = {
-  default: 'bg-white border border-muted-sand/30',
-  elevated: 'bg-white shadow-card hover:shadow-elevated',
-  bordered: 'bg-white border-2 border-muted-sand',
-  flat: 'bg-muted-sand/10',
+  default: 'bg-white/85 border border-white/60 shadow-[0_12px_30px_rgba(44,40,36,0.08)] backdrop-blur-sm',
+  elevated: 'bg-white shadow-[0_18px_40px_rgba(44,40,36,0.12)]',
+  bordered: 'bg-white border border-muted-sand/50',
+  flat: 'bg-warm-cream/60 border border-transparent',
 };
 
 const paddingStyles = {
@@ -34,10 +34,10 @@ const Card = forwardRef(function Card(
       ref={ref}
       onClick={onClick}
       className={cn(
-        'rounded-2xl transition-all duration-300 text-left w-full shadow-xs',
+        'rounded-[24px] transition-all duration-300 text-left w-full overflow-hidden',
         variantStyles[variant],
         paddingStyles[padding],
-        isHoverable && 'hover:-translate-y-1 hover:shadow-soft cursor-pointer',
+        isHoverable && 'hover:-translate-y-1 hover:shadow-[0_18px_44px_rgba(44,40,36,0.12)] cursor-pointer',
         onClick && 'cursor-pointer',
         className,
       )}

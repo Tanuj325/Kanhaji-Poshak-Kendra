@@ -55,7 +55,7 @@ function Popover({
       {isOpen && (
         <div
           className={cn(
-            'absolute z-50 w-64 rounded-lg border border-muted-sand/30 bg-white p-4 shadow-elevated animate-scale-in',
+            'absolute z-50 w-64 rounded-[20px] border border-white/10 bg-[#0B1728] p-4 text-lotus-white shadow-[0_20px_50px_rgba(15,36,64,0.2)] animate-scale-in',
             placementStyles[placement],
           )}
         >

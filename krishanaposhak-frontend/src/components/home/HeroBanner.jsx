@@ -119,7 +119,7 @@ export default function HeroBanner() {
 
   if (isLoading) {
     return (
-      <section className="relative h-[65vh] sm:h-[75vh] lg:h-[85vh] w-full bg-deep-navy overflow-hidden">
+      <section className="relative h-[min(65svh,42rem)] min-h-[28rem] sm:h-[75vh] lg:h-[85vh] w-full bg-deep-navy overflow-hidden">
         <Skeleton className="h-full w-full bg-deep-navy/80" />
         <div className="absolute inset-0 flex items-center">
           <div className="container-page space-y-4 max-w-xl">
@@ -138,30 +138,30 @@ export default function HeroBanner() {
 
   if (isError || !bannerList.length) {
     return (
-      <section className="relative flex h-[60vh] sm:h-[72vh] lg:h-[82vh] items-center justify-center bg-deep-navy overflow-hidden select-none">
+      <section className="relative flex h-[min(65svh,42rem)] min-h-[28rem] sm:h-[72vh] lg:h-[82vh] items-center justify-center bg-deep-navy overflow-hidden select-none">
         <img
           src="/ogImage.jpeg"
           alt="Krishana Poshak Divine Attire Banner"
           className="absolute inset-0 h-full w-full object-cover object-center opacity-40 scale-105"
           fetchpriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/70 to-deep-navy/95" />
-        <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-deep-navy/50" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,36,64,0.96),rgba(15,36,64,0.7),rgba(15,36,64,0.96))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.9),transparent_42%,rgba(15,36,64,0.9))]" />
 
         <div className="text-center text-lotus-white px-4 relative z-10 max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold backdrop-blur-md border border-temple-gold/30">
             <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Craftsmanship
           </span>
-          <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-lotus-white sm:text-6xl lg:text-7xl leading-tight drop-shadow-md">
+          <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-lotus-white sm:text-6xl lg:text-7xl leading-tight drop-shadow-md text-balance">
             {siteConfig.name}
           </h1>
-          <p className="mt-4 text-base text-lotus-white/90 sm:text-xl font-light leading-relaxed max-w-2xl mx-auto drop-shadow-xs font-body">
+          <p className="mt-4 text-base text-lotus-white/90 sm:text-xl font-light leading-relaxed max-w-2xl mx-auto drop-shadow-xs font-body text-balance">
             Sacred Designer Poshaks, Laddoo Gopal Attire & Devotional Jewellery Crafted with Love & Reverence
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex w-full justify-center gap-4 sm:w-auto">
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-temple-gold via-temple-gold-light to-temple-gold-dark px-8 py-3.5 text-sm font-bold text-dark-charcoal transition-all duration-300 hover:scale-105 shadow-gold"
+              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal transition-all duration-300 hover:scale-[1.02] shadow-[0_14px_30px_rgba(201,154,59,0.22)] sm:w-auto sm:px-8"
             >
               <FiShoppingBag className="h-4 w-4" /> Explore Divine Collection
             </Link>
@@ -186,7 +186,7 @@ export default function HeroBanner() {
       aria-roledescription="carousel"
       aria-label="Featured banners carousel"
     >
-      <div className="relative h-[65vh] sm:h-[75vh] lg:h-[85vh]">
+      <div className="relative h-[min(65svh,42rem)] min-h-[28rem] sm:h-[75vh] lg:h-[85vh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={banner.id || currentIndex}
@@ -206,8 +206,8 @@ export default function HeroBanner() {
               height={1080}
             />
             {/* Multi-layered luxury gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/95 via-deep-navy/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-deep-navy/30" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,36,64,0.95),rgba(15,36,64,0.58),transparent)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.9),transparent_55%,rgba(15,36,64,0.85))]" />
           </motion.div>
         </AnimatePresence>
 
@@ -232,7 +232,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="font-serif text-3xl font-bold text-lotus-white sm:text-5xl lg:text-6xl leading-[1.15] drop-shadow-md"
+                    className="font-display text-3xl font-semibold text-lotus-white sm:text-5xl lg:text-6xl leading-[1.15] drop-shadow-md text-balance"
                   >
                     {banner.title}
                   </motion.h1>
@@ -244,7 +244,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="mt-4 text-base text-lotus-white/90 sm:text-lg lg:text-xl max-w-xl font-light leading-relaxed drop-shadow-xs"
+                    className="mt-4 text-base text-lotus-white/90 sm:text-lg lg:text-xl max-w-xl font-light leading-relaxed drop-shadow-xs text-balance"
                   >
                     {banner.subtitle}
                   </motion.p>
@@ -259,7 +259,7 @@ export default function HeroBanner() {
                 >
                   <Link
                     to={banner.redirectUrl || '/shop'}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-temple-gold to-amber-500 px-8 py-3.5 text-sm font-bold text-dark-charcoal shadow-lg hover:shadow-temple-gold/20 transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold"
+                  className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
                   >
                     Shop Collection
                     <FiChevronRight className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function HeroBanner() {
 
                   <Link
                     to="/about"
-                    className="inline-flex items-center gap-2 rounded-xl border border-lotus-white/30 bg-lotus-white/10 px-7 py-3.5 text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50"
+                  className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-6 py-3.5 text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
                   >
                     Our Heritage Story
                   </Link>
@@ -283,7 +283,7 @@ export default function HeroBanner() {
             <button
               type="button"
               onClick={goPrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-xl"
+              className="absolute left-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:left-4 sm:h-12 sm:w-12"
               aria-label="Previous banner"
             >
               <FiChevronLeft className="h-6 w-6" />
@@ -291,7 +291,7 @@ export default function HeroBanner() {
             <button
               type="button"
               onClick={goNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-xl"
+              className="absolute right-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:right-4 sm:h-12 sm:w-12"
               aria-label="Next banner"
             >
               <FiChevronRight className="h-6 w-6" />

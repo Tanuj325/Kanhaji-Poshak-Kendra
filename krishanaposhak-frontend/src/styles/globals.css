@@ -1,3 +1,78 @@
+/* ─── Premium Header Micro-Interactions ─────────────────────────── */
+
+@keyframes header-slide-down {
+  from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes mega-panel-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(201, 154, 59, 0.25); }
+  50%      { box-shadow: 0 6px 24px rgba(201, 154, 59, 0.45); }
+}
+
+@keyframes badge-pop {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+@keyframes drawer-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes chip-scroll-hint {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 0.15; }
+}
+
+@keyframes shimmer-gold {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@layer utilities {
+  .animate-header-slide-down { animation: header-slide-down 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+  .animate-mega-panel-in   { animation: mega-panel-in 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+  .animate-gold-pulse      { animation: gold-pulse 2.4s ease-in-out infinite; }
+  .animate-badge-pop       { animation: badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  .animate-chip-scroll-hint{ animation: chip-scroll-hint 2s ease-in-out infinite; }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gold-shimmer {
+    background: linear-gradient(110deg, #c99a3b 35%, #f3e2b0 50%, #c99a3b 65%);
+    background-size: 200% 100%;
+    animation: shimmer-gold 2.2s linear infinite;
+  }
+
+  .text-shadow-gold { text-shadow: 0 2px 12px rgba(201, 154, 59, 0.35); }
+
+  .header-focus-ring:focus-visible {
+    outline: 2px solid #C99A3B;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* Hide scrollbar for horizontal category chips on mobile */
+  .chips-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .chips-scroll > * { scroll-snap-align: start; }
+}
+
 /* CSS Custom Properties */
 :root {
   /* Colors */

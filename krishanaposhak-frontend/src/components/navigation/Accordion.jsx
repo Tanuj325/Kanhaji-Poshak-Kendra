@@ -8,7 +8,7 @@ function AccordionItem({ title, content, isOpen, onToggle, variant, index }) {
   return (
     <div
       className={cn(
-        variant === 'bordered' && 'border-b border-muted-sand/30 last:border-b-0',
+        variant === 'bordered' && 'border-b border-white/10 last:border-b-0',
         variant === 'ghost' && '',
       )}
     >
@@ -18,14 +18,14 @@ function AccordionItem({ title, content, isOpen, onToggle, variant, index }) {
         aria-expanded={isOpen}
         aria-controls={contentId}
         className={cn(
-          'flex w-full items-center justify-between gap-2 py-3 text-left font-medium text-dark-charcoal transition-colors hover:text-royal-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue/50',
-          variant === 'ghost' && 'px-2 rounded',
+          'flex w-full items-center justify-between gap-2 py-3 text-left font-medium text-lotus-white transition-colors hover:text-temple-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/50',
+          variant === 'ghost' && 'rounded-2xl px-3 hover:bg-white/5',
         )}
       >
         <span>{title}</span>
         <svg
           className={cn(
-            'h-4 w-4 flex-shrink-0 text-natural-wood transition-transform duration-200',
+            'h-4 w-4 flex-shrink-0 text-slate-400 transition-transform duration-200',
             isOpen && 'rotate-180',
           )}
           fill="none"
@@ -46,7 +46,7 @@ function AccordionItem({ title, content, isOpen, onToggle, variant, index }) {
           isOpen ? 'max-h-96 pb-3' : 'max-h-0',
         )}
       >
-        <div className="text-sm text-natural-wood">{content}</div>
+        <div className="text-sm text-slate-300">{content}</div>
       </div>
     </div>
   );
@@ -80,7 +80,7 @@ function Accordion({
   );
 
   return (
-    <div className={cn('w-full', variant === 'bordered' && 'divide-y divide-muted-sand/30 border-y border-muted-sand/30', className)}>
+    <div className={cn('w-full', variant === 'bordered' && 'divide-y divide-white/10 border-y border-white/10', className)}>
       {items.map((item, index) => (
         <AccordionItem
           key={index}

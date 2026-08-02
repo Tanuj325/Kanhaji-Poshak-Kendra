@@ -106,7 +106,7 @@ function WishlistPage() {
       <div className="space-y-6 w-full max-w-6xl">
         <Breadcrumb items={breadcrumbItems} />
         <Skeleton variant="text" className="h-8 w-48 bg-temple-gold/20" />
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
           {[1, 2, 3, 4].map((n) => (
             <Skeleton key={n} variant="card" className="h-80 w-full rounded-3xl bg-temple-gold/15" />
           ))}
@@ -144,7 +144,7 @@ function WishlistPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         {/* Wishlist Header Banner */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-3xl bg-gradient-to-r from-white via-warm-cream/30 to-temple-gold/10 border border-temple-gold/30 shadow-md">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-white via-warm-cream/30 to-temple-gold/10 border border-temple-gold/30 shadow-md">
           <div>
             <div className="flex items-center gap-3">
               <span className="p-2.5 rounded-2xl bg-temple-gold/20 text-temple-gold border border-temple-gold/30">
@@ -161,7 +161,7 @@ function WishlistPage() {
           </div>
 
           {items.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
               {inStockCount > 0 && (
                 <Button
                   type="button"
@@ -170,7 +170,7 @@ function WishlistPage() {
                   onClick={handleMoveAllToCart}
                   disabled={isMovingAll}
                   leftIcon={<FiShoppingCart className="h-4 w-4" />}
-                  className="font-bold shadow-md"
+                  className="w-full font-bold shadow-md sm:w-auto"
                 >
                   Move All to Cart ({inStockCount})
                 </Button>
@@ -180,7 +180,7 @@ function WishlistPage() {
                   type="button"
                   variant="outline"
                   size="md"
-                  className="font-bold"
+                  className="w-full font-bold sm:w-auto"
                 >
                   Explore Shop <FiArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -203,7 +203,7 @@ function WishlistPage() {
           />
         ) : (
           <AnimatePresence mode="popLayout">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
               {items.map((item) => {
                 const discountPercent = calculateDiscount(item.price, item.discountPrice);
                 const isInStock = item.inStock !== false;

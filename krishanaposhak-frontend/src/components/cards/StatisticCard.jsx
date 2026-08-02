@@ -18,7 +18,7 @@ const StatisticCard = memo(function StatisticCard({
   if (isLoading) {
     return (
       <Card variant="default" padding="md" className={className}>
-        <div className="animate-shimmer space-y-2 bg-gradient-to-r from-muted-sand/20 via-muted-sand/40 to-muted-sand/20 bg-[length:200%_100%]">
+        <div className="animate-shimmer space-y-2 bg-[linear-gradient(90deg,rgba(212,201,184,0.18),rgba(212,201,184,0.32),rgba(212,201,184,0.18))] bg-[length:200%_100%]">
           <div className="h-4 w-24 rounded bg-muted-sand/20" />
           <div className="h-8 w-16 rounded bg-muted-sand/20" />
           <div className="h-3 w-20 rounded bg-muted-sand/20" />
@@ -32,7 +32,7 @@ const StatisticCard = memo(function StatisticCard({
       <div className="flex items-start justify-between">
         <div className="min-w-0">
           <p className="text-sm font-medium text-natural-wood">{title}</p>
-          <p className="mt-1 text-2xl font-bold text-dark-charcoal">{value}</p>
+          <p className="mt-1 text-2xl font-semibold text-dark-charcoal">{value}</p>
           {change !== undefined && (
             <div className="mt-1 flex items-center gap-1">
               <span className={cn(
@@ -49,7 +49,7 @@ const StatisticCard = memo(function StatisticCard({
           )}
         </div>
         {icon && (
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-royal-blue/10 text-royal-blue">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-royal-blue/10 text-royal-blue">
             {icon}
           </div>
         )}

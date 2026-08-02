@@ -39,7 +39,7 @@ const OrderCard = memo(function OrderCard({
       <Card variant="default" padding="md" isHoverable className={cn('', className)}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-sm font-medium text-dark-charcoal">
+            <p className="text-sm font-semibold text-dark-charcoal">
               Order #{orderNumber || id}
             </p>
             <p className="text-xs text-natural-wood">
@@ -52,9 +52,9 @@ const OrderCard = memo(function OrderCard({
         </div>
 
         {displayItems.length > 0 && (
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {displayItems.map((item, i) => (
-              <div key={i} className="h-14 w-14 flex-shrink-0 overflow-hidden rounded bg-muted-sand/10">
+              <div key={i} className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl border border-muted-sand/20 bg-muted-sand/10">
                 {item.image ? (
                   <img
                     src={item.image?.imageUrl || item.image?.url || item.image}

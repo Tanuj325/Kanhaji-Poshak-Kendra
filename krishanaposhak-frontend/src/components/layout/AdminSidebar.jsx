@@ -69,9 +69,9 @@ const NavItem = memo(function NavItem({ item, collapsed }) {
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>
         cn(
-          'group relative flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150',
+          'group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-xs font-medium transition-all duration-150',
           isActive
-            ? 'bg-amber-500/10 text-amber-800 font-bold border border-amber-500/20 shadow-xs'
+            ? 'bg-amber-500/10 text-amber-800 font-bold border border-amber-500/20 shadow-[0_10px_24px_rgba(201,154,59,0.12)]'
             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80',
           collapsed && 'justify-center px-0 py-2.5',
         )
@@ -102,7 +102,7 @@ export default function AdminSidebar({ collapsed = false, onNavigate }) {
       <Link
         to={ROUTE_PATHS.HOME}
         className={cn(
-          'flex items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/50 px-3 py-2 text-xs font-bold text-slate-700 hover:border-amber-400/40 hover:bg-amber-50/50 hover:text-amber-900 transition-all',
+          'flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-slate-50/50 px-3 py-2 text-xs font-bold text-slate-700 hover:border-amber-400/40 hover:bg-amber-50/50 hover:text-amber-900 transition-all',
           collapsed && 'justify-center px-0',
         )}
         onClick={onNavigate}

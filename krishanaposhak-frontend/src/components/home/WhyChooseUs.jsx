@@ -58,7 +58,7 @@ const itemVariants = {
 
 export default function WhyChooseUs() {
   return (
-    <section className="section-padding bg-deep-navy">
+    <section className="section-padding bg-[linear-gradient(180deg,#0f2440_0%,#081427_100%)]">
       <div className="container-page">
         <motion.div
           initial="hidden"
@@ -69,7 +69,7 @@ export default function WhyChooseUs() {
           <span className="text-xs font-medium uppercase tracking-[0.2em] text-temple-gold">
             Why Krishana Poshak
           </span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-lotus-white sm:text-4xl">
+          <h2 className="mt-2 font-display text-3xl font-semibold text-lotus-white sm:text-4xl text-balance">
             Crafted with Tradition, <br />
             Worn with Pride
           </h2>
@@ -89,12 +89,12 @@ export default function WhyChooseUs() {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="group rounded-lg border border-lotus-white/10 bg-lotus-white/5 p-6 text-center transition-all duration-300 hover:bg-lotus-white/10 hover:border-temple-gold/30"
+              className="group rounded-[24px] border border-lotus-white/10 bg-lotus-white/5 p-6 text-center transition-all duration-300 hover:bg-lotus-white/10 hover:border-temple-gold/30"
             >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-temple-gold/10 text-temple-gold transition-colors group-hover:bg-temple-gold/20">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-temple-gold/10 text-temple-gold transition-colors group-hover:bg-temple-gold/20">
                 {feature.icon}
               </div>
-              <h3 className="font-display text-lg font-medium text-lotus-white">
+                <h3 className="font-display text-lg font-semibold text-lotus-white">
                 {feature.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-lotus-white/60">

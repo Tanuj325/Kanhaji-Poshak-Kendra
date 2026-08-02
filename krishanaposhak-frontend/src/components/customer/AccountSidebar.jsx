@@ -136,7 +136,7 @@ function AccountSidebar() {
   return (
     <aside className="w-full space-y-4">
       {/* Mobile Horizontal Pill Navigation Bar */}
-      <div className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white/90 backdrop-blur-md p-2 rounded-2xl border border-temple-gold/20 shadow-xs flex items-center gap-1.5">
+      <div className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white/90 backdrop-blur-md p-2 rounded-[24px] border border-temple-gold/20 shadow-[0_12px_28px_rgba(44,40,36,0.08)] flex items-center gap-1.5">
         {allItems.map((item) => (
           <NavItem
             key={item.key}
@@ -149,7 +149,7 @@ function AccountSidebar() {
 
       {/* Desktop Luxury Sticky Sidebar */}
       <nav
-        className="sticky top-24 hidden md:block rounded-2xl bg-white p-5 shadow-lg border border-temple-gold/20 space-y-6 relative overflow-hidden"
+        className="sticky top-24 hidden md:block rounded-[28px] bg-white/90 p-5 shadow-[0_18px_48px_rgba(44,40,36,0.1)] border border-white/70 space-y-6 relative overflow-hidden backdrop-blur-sm"
         aria-label="Account navigation"
       >
         {/* Subtle Background Luxury Glow Accent */}
@@ -164,7 +164,7 @@ function AccountSidebar() {
               size="lg"
               className="border-2 border-temple-gold shadow-md"
             />
-            <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-xs" title="Online Session" />
+            <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-[0_10px_20px_rgba(16,185,129,0.18)]" title="Online Session" />
           </div>
 
           <div className="min-w-0 flex-1">
@@ -205,7 +205,7 @@ function AccountSidebar() {
             <div className="pt-2">
               <NavLink
                 to={ROUTE_PATHS.ADMIN}
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold text-temple-gold bg-gradient-to-r from-deep-navy to-dark-charcoal hover:from-black hover:to-deep-navy transition-all shadow-md"
+                className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-temple-gold bg-[linear-gradient(135deg,#0f2440,#2c2824)] hover:opacity-95 transition-all shadow-[0_14px_32px_rgba(15,36,64,0.2)]"
               >
                 <FiShield className="h-4 w-4 text-temple-gold flex-shrink-0" />
                 <span>Admin Portal</span>
@@ -218,7 +218,7 @@ function AccountSidebar() {
         <div className="pt-4 border-t border-muted-sand/20 space-y-2 relative z-10">
           <Link
             to={ROUTE_PATHS.CART}
-            className="flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold text-dark-charcoal bg-warm-cream/50 border border-temple-gold/20 hover:bg-warm-cream transition-colors"
+            className="flex items-center justify-between rounded-2xl px-3.5 py-2.5 text-xs font-bold text-dark-charcoal bg-warm-cream/50 border border-temple-gold/20 hover:bg-warm-cream transition-colors"
           >
             <span className="flex items-center gap-2">
               <FiShoppingCart className="h-4 w-4 text-royal-blue flex-shrink-0" /> Shopping Cart
@@ -229,7 +229,7 @@ function AccountSidebar() {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center justify-between rounded-xl px-3.5 py-2 text-xs font-bold text-error hover:bg-error/10 transition-colors"
+            className="flex w-full items-center justify-between rounded-2xl px-3.5 py-2 text-xs font-bold text-error hover:bg-error/10 transition-colors min-h-[44px]"
           >
             <span>Sign Out</span>
             <FiLogOut className="h-4 w-4 flex-shrink-0" />

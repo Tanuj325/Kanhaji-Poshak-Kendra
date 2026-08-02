@@ -45,12 +45,10 @@ const trustBadges = [
 export default function Footer() {
   return (
     <footer className="relative bg-deep-navy text-lotus-white font-body overflow-hidden">
-      {/* ─── Decorative Top Border ─── */}
-      <div className="h-px bg-gradient-to-r from-transparent via-temple-gold/50 to-transparent" />
+      <div className="h-px bg-[linear-gradient(90deg,transparent,rgba(201,154,59,0.65),transparent)]" />
 
-      {/* ─── Trust Badges Bar ─── */}
       <div className="border-b border-white/10 bg-white/[0.02]">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-2 sm:grid-cols-4 gap-4 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-6">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-5 sm:py-6">
           {trustBadges.map((badge) => {
             const Icon = badge.icon;
             return (
@@ -67,18 +65,16 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ─── Main Footer Content ─── */}
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-10 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-12 xl:py-16">
-        {/* Col 1: Brand */}
         <div className="space-y-4 sm:col-span-2 lg:col-span-1">
           <Link
             to={ROUTE_PATHS.HOME}
             className="group inline-flex items-center gap-2.5"
           >
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-temple-gold-light via-temple-gold to-temple-gold-dark p-[1.5px] shadow-gold transition-transform group-hover:scale-105 overflow-hidden">
+            <div className="h-10 w-10 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] p-[1.5px] shadow-[0_10px_24px_rgba(201,154,59,0.2)] transition-transform group-hover:scale-105 overflow-hidden">
               <img src="/logo1.jpeg" alt="Krishana Poshak Logo" className="h-full w-full object-cover rounded-full" />
             </div>
-            <span className="font-display text-xl font-bold tracking-wide text-lotus-white transition-colors group-hover:text-temple-gold">
+            <span className="font-display text-xl font-semibold tracking-wide text-lotus-white transition-colors group-hover:text-temple-gold">
               {siteConfig.name}
             </span>
           </Link>
@@ -106,7 +102,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Col 2: Shop */}
         <div>
           <h3 className="font-heading text-sm font-bold uppercase tracking-[0.15em] text-temple-gold mb-4">
             Shop & Explore
@@ -126,7 +121,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Col 3: Support */}
         <div>
           <h3 className="font-heading text-sm font-bold uppercase tracking-[0.15em] text-temple-gold mb-4">
             Customer Support
@@ -146,7 +140,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Col 4: Contact */}
         <div>
           <h3 className="font-heading text-sm font-bold uppercase tracking-[0.15em] text-temple-gold mb-4">
             Get in Touch
@@ -181,7 +174,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ─── Bottom Bar ─── */}
       <div className="border-t border-white/10 bg-deep-navy">
         <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-4">
           <p className="text-xs text-muted-sand/80">
@@ -196,4 +188,3 @@ export default function Footer() {
     </footer>
   );
 }
-

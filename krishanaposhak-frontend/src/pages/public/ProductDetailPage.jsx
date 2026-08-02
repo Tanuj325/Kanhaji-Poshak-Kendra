@@ -192,7 +192,7 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="container-page section-padding pb-28 md:pb-16 font-display space-y-8 sm:space-y-12">
+      <section className="container-page section-padding pb-32 md:pb-16 font-display space-y-8 sm:space-y-12">
         <Breadcrumb items={breadcrumbItems} />
 
         {/* STAGE 1: Hero Image Gallery */}
@@ -201,7 +201,7 @@ export default function ProductDetailPage() {
         </div>
 
         {/* STAGE 2: Horizontally Wide Purchase Action Card (Positioned BELOW Image Gallery) */}
-        <div className="w-full rounded-3xl bg-white p-6 sm:p-8 xl:p-10 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-6 sm:space-y-8">
+        <div className="w-full rounded-3xl bg-white p-4 sm:p-8 xl:p-10 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-6 sm:space-y-8">
           {/* Header Info: Title, Category, Rating, Material */}
           <ProductInfo
             product={product}
@@ -255,8 +255,8 @@ export default function ProductDetailPage() {
 
       {/* Mobile Sticky Bottom Purchase Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white/95 backdrop-blur-xl p-3.5 sm:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-amber-900/10 shadow-[0_-4px_20px_rgba(44,40,36,0.08)]">
-        <div className="flex items-center justify-between gap-3 max-w-[1600px] mx-auto font-display">
-          <div className="flex flex-col">
+        <div className="flex items-center justify-between gap-3 max-w-[1600px] mx-auto font-display min-w-0">
+          <div className="flex min-w-0 flex-col">
             <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider">Total Price</span>
             <PriceDisplay
               price={activeDiscountPrice || activePrice}
@@ -268,7 +268,7 @@ export default function ProductDetailPage() {
           <Button
             variant="primary"
             size="md"
-            className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3.5 shadow-md border border-amber-500/20 min-h-[44px]"
+            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3.5 shadow-md border border-amber-500/20 min-h-[48px]"
             onClick={handleStickyAddToCart}
             isLoading={isAddingItem}
             disabled={!selectedVariant || selectedVariant.stock === 0}

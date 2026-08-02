@@ -5,7 +5,7 @@ export default function TrustSection() {
   return (
     <section className="py-16 bg-gradient-to-r from-deep-navy via-royal-blue to-deep-navy text-white font-display relative overflow-hidden">
       <div className="container-page relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/10">
+        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-4 gap-5 sm:gap-8 text-center divide-y min-[400px]:divide-y-0 min-[400px]:divide-x divide-white/10">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}

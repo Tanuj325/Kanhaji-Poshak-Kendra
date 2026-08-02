@@ -123,7 +123,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Contact Details Column */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-2xl p-6 border border-muted-sand/20 shadow-xs space-y-6">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 border border-muted-sand/20 shadow-xs space-y-6">
               <h2 className="font-display text-xl font-bold text-dark-charcoal border-b border-muted-sand/15 pb-3">
                 Store & Support Info
               </h2>
@@ -208,7 +208,7 @@ export default function ContactPage() {
 
           {/* Contact Form Column */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-2xl p-6 md:p-8 border border-muted-sand/20 shadow-xs">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 border border-muted-sand/20 shadow-xs">
               <h2 className="font-display text-xl font-bold text-dark-charcoal flex items-center gap-2 mb-2">
                 <FiMessageSquare className="h-5 w-5 text-royal-blue" /> Send Us a Message
               </h2>

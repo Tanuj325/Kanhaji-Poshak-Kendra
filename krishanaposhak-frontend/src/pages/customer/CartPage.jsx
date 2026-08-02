@@ -174,7 +174,7 @@ function CartPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="container-page py-6 sm:py-8 pb-32 lg:pb-16 space-y-6 sm:space-y-8 font-display"
+        className="container-page py-6 sm:py-8 pb-36 lg:pb-16 space-y-6 sm:space-y-8 font-display"
       >
         <Breadcrumb items={breadcrumbItems} />
 
@@ -269,7 +269,7 @@ function CartPage() {
 
       {/* Sticky Mobile Purchase Footer Bar */}
       {items.length > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-amber-900/10 p-3.5 sm:p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] flex items-center justify-between gap-4">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-amber-900/10 p-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] sm:p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
           <div>
             <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider block">Grand Total</span>
             <p className="font-heading font-extrabold text-lg sm:text-xl text-stone-950 leading-tight">

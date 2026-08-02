@@ -3,32 +3,34 @@ import Breadcrumb from './Breadcrumb';
 export function PageHeader({ title, subtitle, actions, breadcrumbs = true }) {
   return (
     <div className="mb-6 sm:mb-8 font-display">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal tracking-tight">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mt-1 text-xs sm:text-sm text-natural-wood max-w-2xl">
-              {subtitle}
-            </p>
+      <div className="surface-panel px-4 py-4 sm:px-6 sm:py-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <span className="premium-label mb-3">Premium Commerce Experience</span>
+            <h1 className="page-heading">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="mt-2 page-subheading max-w-2xl">
+                {subtitle}
+              </p>
+            )}
+          </div>
+
+          {Array.isArray(actions) && actions.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              {actions.map((action, index) => (
+                <div key={index}>{action}</div>
+              ))}
+            </div>
           )}
         </div>
-
-        {Array.isArray(actions) && actions.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-            {actions.map((action, index) => (
-              <div key={index}>{action}</div>
-            ))}
+        {breadcrumbs && (
+          <div className="mt-4 pt-4 border-t border-temple-gold/15">
+            <Breadcrumb />
           </div>
         )}
       </div>
-
-      {breadcrumbs && (
-        <div className="mt-3 pt-3 border-t border-temple-gold/15">
-          <Breadcrumb />
-        </div>
-      )}
     </div>
   );
 }

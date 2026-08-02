@@ -61,7 +61,7 @@ const ProductCard = memo(function ProductCard({
   return (
     <div
       className={cn(
-        'group relative flex flex-col h-full overflow-hidden rounded-2xl bg-white border border-amber-900/10 hover:border-amber-700/40 shadow-xs hover:shadow-[0_4px_20px_rgba(44,40,36,0.06)] transition-all duration-300 font-display',
+        'group relative flex flex-col h-full overflow-hidden rounded-[28px] bg-white/90 border border-white/70 shadow-[0_14px_36px_rgba(44,40,36,0.08)] hover:shadow-[0_20px_48px_rgba(44,40,36,0.12)] hover:border-temple-gold/25 transition-all duration-300 font-display backdrop-blur-sm',
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -69,7 +69,7 @@ const ProductCard = memo(function ProductCard({
     >
       {/* Product Image Stage */}
       <div
-        className="relative aspect-[4/5] w-full overflow-hidden bg-amber-50/30 cursor-pointer"
+        className="relative aspect-[4/5] w-full overflow-hidden bg-[linear-gradient(180deg,rgba(248,246,243,0.94),rgba(240,234,225,0.88))] cursor-pointer"
         onClick={handleCardClick}
       >
         <OptimizedImage
@@ -98,7 +98,7 @@ const ProductCard = memo(function ProductCard({
 
         {/* Top Left Discount Badge Tag */}
         {discount && (
-          <div className="absolute left-2.5 top-2.5 z-10 rounded-lg bg-gradient-to-r from-amber-900 to-amber-800 px-2.5 py-1 text-[10px] sm:text-xs font-bold text-amber-50 uppercase tracking-wider shadow-xs border border-amber-500/20">
+          <div className="absolute left-2.5 top-2.5 z-10 rounded-full bg-deep-navy px-2.5 py-1 text-[10px] sm:text-xs font-bold text-temple-gold-light uppercase tracking-wider shadow-[0_10px_24px_rgba(15,36,64,0.18)] border border-temple-gold/20">
             -{discount}% OFF
           </div>
         )}
@@ -113,7 +113,7 @@ const ProductCard = memo(function ProductCard({
                 onQuickView(product);
               }}
               aria-label="Quick View"
-              className="flex md:hidden h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-xs text-stone-800 active:scale-95 transition-transform min-h-[44px] min-w-[44px]"
+              className="flex md:hidden h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-[0_10px_24px_rgba(44,40,36,0.08)] text-stone-800 active:scale-95 transition-transform min-h-[44px] min-w-[44px]"
             >
               <FiEye className="h-4 w-4 text-amber-900" />
             </button>
@@ -128,7 +128,7 @@ const ProductCard = memo(function ProductCard({
               }}
               aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
               className={cn(
-                'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/95 shadow-xs backdrop-blur-xs transition-all duration-200 hover:scale-110 active:scale-95 border border-amber-900/10 min-h-[44px] min-w-[44px]',
+                'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/95 shadow-[0_10px_24px_rgba(44,40,36,0.08)] backdrop-blur-sm transition-all duration-200 hover:scale-110 active:scale-95 border border-temple-gold/10 min-h-[44px] min-w-[44px]',
                 isInWishlist ? 'text-rose-600 bg-rose-50' : 'text-stone-700 hover:text-rose-600',
               )}
             >
@@ -139,8 +139,8 @@ const ProductCard = memo(function ProductCard({
 
         {/* Out of stock overlay */}
         {isOutOfStock && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs">
-            <span className="rounded-xl bg-white/95 px-3.5 py-1.5 text-xs font-bold text-amber-950 uppercase tracking-wider font-display shadow-md">
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm">
+            <span className="rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-amber-950 uppercase tracking-wider font-display shadow-[0_12px_28px_rgba(0,0,0,0.18)]">
               Out of Stock
             </span>
           </div>
@@ -171,7 +171,7 @@ const ProductCard = memo(function ProductCard({
 
           <h3
             onClick={handleCardClick}
-            className="font-heading text-sm sm:text-base font-bold text-amber-950 leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-amber-700 transition-colors mt-0.5"
+            className="font-heading text-sm sm:text-base font-semibold text-dark-charcoal leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-royal-blue transition-colors mt-0.5"
           >
             {name}
           </h3>
@@ -188,7 +188,7 @@ const ProductCard = memo(function ProductCard({
         {/* Price & Add to Cart Action */}
         <div className="mt-3 pt-2.5 border-t border-amber-900/10">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="font-heading text-base sm:text-lg font-extrabold text-amber-950">
+            <span className="font-heading text-base sm:text-lg font-semibold text-dark-charcoal">
               ₹{Number(finalPrice).toFixed(0)}
             </span>
             {originalPrice && (
@@ -210,7 +210,7 @@ const ProductCard = memo(function ProductCard({
                 e.stopPropagation();
                 onAddToCart(product);
               }}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 hover:from-amber-950 hover:to-stone-950 text-white font-bold py-2.5 sm:py-3 px-3 text-xs sm:text-sm shadow-xs active:scale-95 transition-all focus:outline-none min-h-[44px]"
+              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] hover:opacity-95 text-white font-bold py-2.5 sm:py-3 px-3 text-xs sm:text-sm shadow-[0_12px_28px_rgba(15,36,64,0.2)] active:scale-95 transition-all focus:outline-none min-h-[44px]"
             >
               <FiShoppingBag className="h-4 w-4 flex-shrink-0 text-amber-200" />
               <span className="truncate">Add to Cart</span>

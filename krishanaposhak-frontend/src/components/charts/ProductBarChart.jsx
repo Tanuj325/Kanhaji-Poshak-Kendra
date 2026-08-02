@@ -76,8 +76,8 @@ function ProductBarChart({
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-56 w-full" />
+      <div className="flex h-52 items-center justify-center sm:h-64" role="status" aria-label="Loading chart">
+        <Skeleton variant="rect" className="h-44 w-full sm:h-56" />
         <span className="sr-only">Loading chart data...</span>
       </div>
     );
@@ -89,21 +89,21 @@ function ProductBarChart({
         title="Failed to load data"
         message={error}
         onRetry={onRetry}
-        className="h-64"
+        className="h-52 sm:h-64"
       />
     );
   }
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-sm text-natural-wood" role="status">
+      <div className="flex h-52 items-center justify-center text-sm text-natural-wood sm:h-64" role="status">
         No data available
       </div>
     );
   }
 
   return (
-    <div className="h-64 w-full" role="img" aria-label={`Bar chart showing ${label}`}>
+    <div className="h-52 w-full sm:h-64" role="img" aria-label={`Bar chart showing ${label}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
@@ -123,7 +123,7 @@ function ProductBarChart({
             tick={{ fontSize: 10, fill: '#2D2D2D' }}
             tickLine={false}
             axisLine={false}
-            width={120}
+            width={88}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }} />
           <Bar

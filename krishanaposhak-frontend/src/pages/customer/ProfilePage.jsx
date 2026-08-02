@@ -180,7 +180,7 @@ export default function ProfilePage() {
       <div className="space-y-6 w-full max-w-5xl">
         <Breadcrumb items={breadcrumbItems} />
         <Skeleton variant="text" className="h-8 w-48 bg-temple-gold/20" />
-        <div className="bg-white p-6 rounded-3xl border border-temple-gold/20 flex gap-6">
+        <div className="bg-white p-4 sm:p-6 rounded-3xl border border-temple-gold/20 flex flex-col sm:flex-row gap-4 sm:gap-6">
           <Skeleton variant="circle" className="h-24 w-24 flex-shrink-0 bg-temple-gold/20" />
           <div className="space-y-3 flex-1">
             <Skeleton variant="text" className="h-7 w-1/3 bg-temple-gold/20" />
@@ -311,7 +311,7 @@ export default function ProfilePage() {
         {/* Main Personal Information Form */}
         <form onSubmit={handleSubmit(onSubmitProfile)} className="space-y-6">
           <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-md border border-temple-gold/20 space-y-6">
-            <div className="flex items-center justify-between border-b border-muted-sand/15 pb-4">
+            <div className="flex flex-col gap-2 border-b border-muted-sand/15 pb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 className="font-serif text-lg font-bold text-dark-charcoal flex items-center gap-2">
                   <FiUser className="h-5 w-5 text-royal-blue" /> Personal Details
@@ -418,7 +418,7 @@ export default function ProfilePage() {
 
         {/* Change Password & Security Card */}
         <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-md border border-temple-gold/20 space-y-6">
-          <div className="flex items-center justify-between border-b border-muted-sand/15 pb-4">
+          <div className="flex flex-col gap-2 border-b border-muted-sand/15 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <FiLock className="h-5 w-5 text-royal-blue" />
               <h3 className="font-serif text-lg font-bold text-dark-charcoal">Password & Account Security</h3>

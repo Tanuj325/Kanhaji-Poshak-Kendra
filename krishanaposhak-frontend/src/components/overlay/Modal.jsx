@@ -87,29 +87,29 @@ function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center p-3 sm:items-center sm:p-4"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
-      <div className="absolute inset-0 bg-dark-charcoal/60 backdrop-blur-xs animate-fade-in" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,154,59,0.12),transparent_25%),rgba(15,36,64,0.62)] backdrop-blur-sm animate-fade-in" aria-hidden="true" />
       <div
         ref={modalRef}
         tabIndex={-1}
         onKeyDown={handleKeyDown}
         className={cn(
-          'relative z-10 w-full rounded-2xl bg-white shadow-elevated border border-muted-sand/20 animate-scale-in',
+          'relative z-10 w-full max-h-[calc(100dvh-1.5rem)] overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,246,243,0.98))] shadow-[0_24px_60px_rgba(15,36,64,0.18)] border border-white/70 animate-scale-in sm:max-h-[calc(100dvh-2rem)]',
           sizeStyles[size],
           className,
         )}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+          <div className="flex items-start justify-between gap-4 border-b border-muted-sand/30 px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
             <div className="min-w-0">
               {title && (
-                <h3 id="modal-title" className="text-xl font-semibold text-dark-charcoal font-display">
+                <h3 id="modal-title" className="text-lg font-semibold text-dark-charcoal font-display sm:text-xl">
                   {title}
                 </h3>
               )}
@@ -122,7 +122,7 @@ function Modal({
                 type="button"
                 onClick={handleClose}
                 aria-label="Close modal"
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded text-natural-wood hover:text-dark-charcoal hover:bg-muted-sand/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue"
+                className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-natural-wood hover:text-dark-charcoal hover:bg-muted-sand/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -133,11 +133,11 @@ function Modal({
         )}
 
         {/* Body */}
-        <div className="px-6 py-2 max-h-[60vh] overflow-y-auto">{children}</div>
+        <div className="px-4 py-4 max-h-[calc(100dvh-11rem)] overflow-y-auto sm:px-6 sm:max-h-[60vh]">{children}</div>
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-muted-sand/30 px-6 py-4">
+          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-muted-sand/30 px-4 py-3 sm:px-6 sm:py-4 bg-white/60">
             {footer}
           </div>
         )}

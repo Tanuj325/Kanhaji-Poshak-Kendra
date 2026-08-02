@@ -29,7 +29,6 @@ export default function MobileSidebarDrawer({ isOpen = true, onClose }) {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex font-display lg:hidden">
-          {/* Backdrop Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -39,22 +38,21 @@ export default function MobileSidebarDrawer({ isOpen = true, onClose }) {
             onClick={onClose}
           />
 
-          {/* Slide-out Admin Drawer */}
           <motion.aside
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="relative ml-auto w-72 max-w-[85vw] h-full bg-white border-l border-muted-sand/30 shadow-2xl flex flex-col z-10 overflow-hidden"
+            className="relative ml-auto h-full w-[min(20rem,calc(100vw-1rem))] bg-white/96 border-l border-white/70 shadow-[0_20px_50px_rgba(44,40,36,0.16)] flex flex-col z-10 overflow-hidden backdrop-blur-xl"
           >
             <div className="flex h-16 items-center border-b border-muted-sand/20 px-5 justify-between bg-warm-cream/30">
-              <span className="font-serif text-sm font-bold uppercase tracking-wider text-temple-gold flex items-center gap-2">
+              <span className="font-display text-sm font-semibold uppercase tracking-wider text-temple-gold flex items-center gap-2">
                 <FiGrid className="h-4 w-4" /> Admin Navigation
               </span>
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-full hover:bg-muted-sand/20 text-natural-wood hover:text-dark-charcoal transition-colors"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full hover:bg-muted-sand/20 text-natural-wood hover:text-dark-charcoal transition-colors"
                 aria-label="Close admin drawer"
               >
                 <FiX className="h-5 w-5" />
@@ -72,7 +70,7 @@ export default function MobileSidebarDrawer({ isOpen = true, onClose }) {
                   onClose();
                   logout();
                 }}
-                className="w-full flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-xs font-bold text-error hover:bg-error/10 transition-colors"
+                className="w-full flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-error hover:bg-error/10 transition-colors min-h-[44px]"
               >
                 <FiLogOut className="h-4 w-4 text-error" />
                 <span>Logout Admin</span>

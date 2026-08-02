@@ -211,7 +211,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           {/* Name row */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
             {renderField('firstName', 'First Name', FiUser, 'text', 'Rahul', 1, {
               autoComplete: 'given-name',
             })}
@@ -269,7 +269,7 @@ export default function RegisterPage() {
           )}
 
           {/* Gender & DOB row */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
             {renderField('gender', 'Gender', FiUser, 'select', '', 6, {
               options: [
                 { value: '', label: 'Select' },

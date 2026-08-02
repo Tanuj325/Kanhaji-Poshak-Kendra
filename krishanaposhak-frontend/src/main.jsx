@@ -21,24 +21,24 @@ createRoot(rootElement).render(
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#0F1F32',
-            color: '#FFFFFF',
-            border: '1px solid rgba(251, 191, 36, 0.25)',
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
-            borderRadius: '12px',
+            background: 'rgba(15, 36, 64, 0.96)',
+            color: '#F8F6F3',
+            border: '1px solid rgba(201, 154, 59, 0.24)',
+            boxShadow: '0 24px 48px rgba(15, 36, 64, 0.28)',
+            borderRadius: '16px',
             fontFamily: 'Inter, sans-serif',
-            fontSize: '13px',
-            padding: '12px 16px',
+            fontSize: '14px',
+            padding: '14px 16px',
           },
           success: {
             iconTheme: {
-              primary: '#FBBF24',
-              secondary: '#0F1F32',
+              primary: '#C99A3B',
+              secondary: '#0F2440',
             },
           },
           error: {
             iconTheme: {
-              primary: '#F43F5E',
+              primary: '#9B1D20',
               secondary: '#FFFFFF',
             },
           },

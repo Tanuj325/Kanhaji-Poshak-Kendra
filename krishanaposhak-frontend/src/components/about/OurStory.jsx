@@ -19,7 +19,7 @@ export default function OurStory() {
               <img
                 src="/logo2.jpeg"
                 alt="Sacred Craftsmanship Story"
-                className="h-[460px] w-full rounded-2xl object-cover"
+                className="aspect-[4/5] w-full rounded-2xl object-cover sm:aspect-[4/3] lg:aspect-[5/6]"
               />
               <div className="absolute -bottom-6 -right-6 hidden sm:flex items-center gap-3 rounded-2xl bg-royal-blue text-white p-4 shadow-xl border border-white/20">
                 <div className="h-12 w-12 rounded-xl bg-temple-gold/20 flex items-center justify-center text-temple-gold font-bold text-lg">

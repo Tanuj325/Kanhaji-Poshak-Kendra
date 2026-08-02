@@ -49,7 +49,7 @@ export default function CategoryPage() {
 
   if (isLoading || category?.id) {
     return (
-      <div className="container-page py-16">
+      <div className="container-page py-10 sm:py-16">
         <SEO
           title={`${category?.name || slug || 'Category'} Collection`}
           description={category?.description || `Explore our handcrafted collection of divine ${category?.name || 'attire'} from Meerut.`}
@@ -60,7 +60,7 @@ export default function CategoryPage() {
         <div className="space-y-6 max-w-xl mx-auto text-center">
           <Skeleton variant="text" className="h-10 w-2/3 mx-auto" />
           <Skeleton variant="text" className="h-5 w-full mx-auto" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-6">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 gap-4 pt-6">
             <Skeleton variant="card" className="h-64" />
             <Skeleton variant="card" className="h-64" />
             <Skeleton variant="card" className="h-64" />
@@ -72,7 +72,7 @@ export default function CategoryPage() {
 
   if (isError) {
     return (
-      <div className="container-page py-16">
+      <div className="container-page py-10 sm:py-16">
         <ErrorState
           title="Failed to Load Category"
           message={error?.message || 'We could not load this category right now.'}
@@ -86,7 +86,7 @@ export default function CategoryPage() {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="container-page py-16"
+      className="container-page py-10 sm:py-16"
     >
       <EmptyState
         title="Category Not Found"
@@ -95,7 +95,7 @@ export default function CategoryPage() {
           <button
             type="button"
             onClick={() => navigate(ROUTE_PATHS.SHOP)}
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-royal-blue to-deep-navy px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-soft hover:shadow-royal-blue/30 hover:scale-105 active:scale-95 transition-all"
+            className="inline-flex min-h-[48px] items-center gap-2 rounded-2xl bg-gradient-to-r from-royal-blue to-deep-navy px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-soft hover:shadow-royal-blue/30 hover:scale-105 active:scale-95 transition-all"
           >
             <span>Explore Complete Shop Catalog</span>
             <FiArrowRight className="h-4 w-4" />

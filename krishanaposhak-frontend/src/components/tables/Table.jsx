@@ -215,8 +215,8 @@ function Table({
   }
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className="w-full overflow-x-auto">
+    <div className={cn('w-full rounded-[28px] border border-white/70 bg-white/80 shadow-[0_18px_48px_rgba(44,40,36,0.08)] backdrop-blur-sm overflow-hidden', className)}>
+      <div className="responsive-table w-full overflow-x-auto" tabIndex={0} aria-label="Scrollable data table">
         <table className="w-full border-collapse" role="table">
           <TableHeader
             columns={columns}
@@ -230,7 +230,7 @@ function Table({
             selectable={selectable}
           />
           {isLoading ? (
-            <LoadingRows columns={columns} selectable={selectable} />
+            <div className="flex justify-center border-t border-muted-sand/20 px-4 py-4">
           ) : (
             <tbody>
               {data.map((row, index) => (

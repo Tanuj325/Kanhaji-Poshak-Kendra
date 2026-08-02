@@ -249,7 +249,7 @@ export default function ProductsListPage() {
           </div>
           <Link
             to={ROUTE_PATHS.ADMIN_PRODUCT_NEW}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98] sm:w-auto"
           >
             <FiPlus className="h-4 w-4" />
             Add New Product

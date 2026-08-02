@@ -40,8 +40,8 @@ function SalesChart({ data, isLoading, error, onRetry }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-72 items-center justify-center" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-64 w-full" />
+      <div className="flex h-56 items-center justify-center sm:h-72" role="status" aria-label="Loading chart">
+        <Skeleton variant="rect" className="h-48 w-full sm:h-64" />
         <span className="sr-only">Loading sales chart...</span>
       </div>
     );
@@ -53,21 +53,21 @@ function SalesChart({ data, isLoading, error, onRetry }) {
         title="Failed to load sales data"
         message={error}
         onRetry={onRetry}
-        className="h-72"
+        className="h-56 sm:h-72"
       />
     );
   }
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-72 items-center justify-center text-sm text-natural-wood" role="status">
+      <div className="flex h-56 items-center justify-center text-sm text-natural-wood sm:h-72" role="status">
         No sales data available
       </div>
     );
   }
 
   return (
-    <div className="h-72 w-full" role="img" aria-label="Sales chart showing revenue and orders over time">
+    <div className="h-56 w-full sm:h-72" role="img" aria-label="Sales chart showing revenue and orders over time">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />

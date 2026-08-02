@@ -2,9 +2,9 @@ import { forwardRef, useId } from 'react';
 import { cn } from '@/utils/cn';
 
 const sizeStyles = {
-  sm: 'px-2.5 py-1.5 text-sm',
-  md: 'px-3 py-2 text-base',
-  lg: 'px-4 py-2.5 text-lg',
+  sm: 'min-h-[40px] px-2.5 py-1.5 text-sm',
+  md: 'min-h-[44px] px-3 py-2 text-base',
+  lg: 'min-h-[48px] px-4 py-2.5 text-lg',
 };
 
 const Select = forwardRef(function Select(

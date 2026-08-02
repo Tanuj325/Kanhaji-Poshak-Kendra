@@ -100,7 +100,7 @@ export default function AboutHero() {
               <img
                 src="/logo3.jpeg"
                 alt="Divine Laddu Gopal Poshak"
-                className="h-[420px] w-full rounded-2xl object-cover object-center shadow-md"
+                className="aspect-[4/5] w-full rounded-2xl object-cover object-center shadow-md sm:aspect-[4/3] lg:aspect-[5/6]"
               />
               <div className="absolute bottom-6 left-6 right-6 rounded-2xl bg-dark-charcoal/90 p-4 backdrop-blur-md border border-temple-gold/30 text-center">
                 <p className="font-serif text-sm font-bold text-temple-gold">

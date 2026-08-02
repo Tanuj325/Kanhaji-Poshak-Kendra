@@ -30,7 +30,7 @@ const ReviewCard = memo(function ReviewCard({
   const isOwner = currentUserId && (userId === currentUserId || user?.id === currentUserId);
 
   return (
-    <Card variant="default" padding="md" className={cn('border border-muted-sand/20 bg-white', className)}>
+    <Card variant="default" padding="md" className={cn('border border-muted-sand/20 bg-white/90', className)}>
       <div className="flex items-start gap-3">
         <Avatar
           src={user?.profileImageUrl}
@@ -63,7 +63,7 @@ const ReviewCard = memo(function ReviewCard({
                 <button
                   type="button"
                   onClick={() => onEdit(review)}
-                  className="flex items-center gap-1 text-xs font-medium text-royal-blue hover:underline"
+                  className="flex min-h-[44px] items-center gap-1 rounded-full px-2 text-xs font-medium text-royal-blue hover:bg-royal-blue/5"
                 >
                   <FiEdit2 className="h-3 w-3" /> Edit
                 </button>
@@ -72,7 +72,7 @@ const ReviewCard = memo(function ReviewCard({
                 <button
                   type="button"
                   onClick={() => onDelete(id)}
-                  className="flex items-center gap-1 text-xs font-medium text-error hover:underline"
+                  className="flex min-h-[44px] items-center gap-1 rounded-full px-2 text-xs font-medium text-error hover:bg-error/5"
                 >
                   <FiTrash2 className="h-3 w-3" /> Delete
                 </button>

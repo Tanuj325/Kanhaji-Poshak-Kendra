@@ -4,7 +4,7 @@ import SEO from '@/components/common/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '@/hooks/useProducts';
 import { useRootCategories } from '@/hooks/useCategories';
-import { useDebounce, useIsMobile } from '@/hooks';
+import { useDebounce, useMediaQuery } from '@/hooks';
 import { useAuth } from '@/context/AuthContext';
 import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/hooks/useWishlist';
 import { useAddToCart } from '@/hooks/useCart';
@@ -57,7 +57,7 @@ function mapProductToCard(product) {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="flex flex-col gap-3 rounded-2xl bg-white p-3 border border-amber-900/10 shadow-xs">
           <Skeleton variant="rect" className="aspect-[4/5] w-full rounded-xl bg-amber-100/40" />
@@ -233,7 +233,7 @@ function FilterSidebar({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] bg-white p-6 shadow-2xl overflow-y-auto flex flex-col justify-between"
+              className="fixed inset-y-0 left-0 z-50 flex w-[min(22rem,calc(100vw-1rem))] flex-col justify-between overflow-y-auto bg-white p-4 shadow-2xl sm:p-6"
               role="dialog"
               aria-modal="true"
               aria-label="Filter products catalog"
@@ -247,7 +247,7 @@ function FilterSidebar({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-stone-500 hover:text-amber-950 hover:bg-amber-50 transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-stone-500 hover:text-amber-950 hover:bg-amber-50 transition-colors"
                   >
                     <FiX className="h-5 w-5" />
                   </button>
@@ -272,7 +272,7 @@ function FilterSidebar({
   }
 
   return (
-    <aside className="hidden lg:block w-72 flex-shrink-0">
+    <aside className="hidden xl:block w-72 flex-shrink-0">
       <div className="sticky top-28 space-y-6 rounded-3xl bg-white p-6 border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] backdrop-blur-md">
         <div className="flex items-center gap-2.5 pb-4 border-b border-amber-900/10">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100/80 text-amber-900">
@@ -348,7 +348,7 @@ function ActiveFilters({
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery('(max-width: 1279px)');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const { isAuthenticated } = useAuth();
@@ -552,7 +552,7 @@ export default function ShopPage() {
 
       <div className="min-h-screen bg-lotus-white font-body">
         {/* Hero Banner Header */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-deep-navy via-royal-blue-800 to-deep-navy text-lotus-white py-12 sm:py-16 px-4 shadow-elevated border-b border-temple-gold/20">
+        <div className="relative overflow-hidden bg-gradient-to-r from-deep-navy via-royal-blue-800 to-deep-navy text-lotus-white py-8 sm:py-16 px-4 shadow-elevated border-b border-temple-gold/20">
           <div className="container-page relative z-10">
             <Breadcrumb items={breadcrumbItems} className="mb-4 text-temple-gold-light/80" />
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -616,8 +616,8 @@ export default function ShopPage() {
           )}
 
           {/* Controls Bar: Search & Sorting */}
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-3xl border border-amber-900/10 shadow-[0_2px_12px_rgba(44,40,36,0.03)]">
-            <div className="flex items-center gap-3 flex-1">
+          <div className="mb-6 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between bg-white p-3 sm:p-4 rounded-3xl border border-amber-900/10 shadow-[0_2px_12px_rgba(44,40,36,0.03)]">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3 flex-1">
               <SearchInput
                 placeholder="Search by poshak, size, mukut, color..."
                 value={searchInput}
@@ -630,14 +630,14 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(true)}
-                  className="flex h-11 items-center gap-2 px-4 rounded-2xl border border-amber-900/20 text-xs font-bold text-amber-950 bg-amber-50/60 shadow-xs hover:bg-amber-100/80 transition-all whitespace-nowrap min-h-[44px]"
+                className="flex h-11 shrink-0 items-center gap-2 px-3 sm:px-4 rounded-2xl border border-amber-900/20 text-xs font-bold text-amber-950 bg-amber-50/60 shadow-xs hover:bg-amber-100/80 transition-all whitespace-nowrap min-h-[44px]"
                 >
                   <FiFilter className="h-4 w-4 text-amber-800" /> Filters
                 </button>
               )}
             </div>
 
-            <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-amber-900/10">
+            <div className="flex items-center justify-between gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 border-amber-900/10">
               <span className="text-xs font-bold uppercase tracking-wider text-amber-950 whitespace-nowrap">
                 Sort By:
               </span>
@@ -646,7 +646,7 @@ export default function ShopPage() {
                 onChange={handleSortChange}
                 options={SORT_OPTIONS}
                 size="sm"
-                className="w-52"
+                className="min-w-0 flex-1 sm:w-52 sm:flex-none"
               />
             </div>
           </div>
@@ -669,7 +669,7 @@ export default function ShopPage() {
           />
 
           {/* Main Shop Catalog Grid Layout */}
-          <div className="mt-8 flex gap-8">
+          <div className="mt-8 flex gap-6 xl:gap-8">
             <FilterSidebar
               categories={categories}
               selectedCategoryId={categoryId}
@@ -730,7 +730,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.05 },
                       },
                     }}
-                    className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6"
+                    className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6"
                   >
                     {productList.map((product) => (
                       <motion.div

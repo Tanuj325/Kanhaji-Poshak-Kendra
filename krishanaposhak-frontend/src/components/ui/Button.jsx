@@ -3,17 +3,17 @@ import { cn } from '@/utils/cn';
 
 const variantStyles = {
   primary:
-    'bg-royal-blue text-white hover:bg-deep-navy focus-visible:ring-royal-blue shadow-soft',
+    'bg-royal-blue text-lotus-white hover:bg-deep-navy focus-visible:ring-royal-blue shadow-[0_10px_24px_rgba(27,58,92,0.18)]',
   secondary:
-    'bg-temple-gold text-dark-charcoal hover:bg-temple-gold-dark focus-visible:ring-temple-gold shadow-soft',
+    'bg-temple-gold text-dark-charcoal hover:bg-temple-gold-dark focus-visible:ring-temple-gold shadow-[0_10px_24px_rgba(201,154,59,0.2)]',
   outline:
-    'border-2 border-royal-blue text-royal-blue hover:bg-royal-blue/5 focus-visible:ring-royal-blue',
+    'border border-royal-blue text-royal-blue hover:bg-royal-blue/5 focus-visible:ring-royal-blue',
   ghost:
     'text-royal-blue hover:bg-royal-blue/5 focus-visible:ring-royal-blue',
   danger:
-    'bg-error text-white hover:bg-red-700 focus-visible:ring-error shadow-soft',
+    'bg-error text-white hover:bg-[#7e171a] focus-visible:ring-error shadow-[0_10px_24px_rgba(155,29,32,0.18)]',
   success:
-    'bg-success text-white hover:bg-green-700 focus-visible:ring-success shadow-soft',
+    'bg-success text-white hover:bg-[#24523d] focus-visible:ring-success shadow-[0_10px_24px_rgba(45,106,79,0.18)]',
 };
 
 const sizeStyles = {
@@ -76,7 +76,7 @@ const Button = forwardRef(function Button(
   const disabled = isDisabled || isLoading;
 
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold tracking-wide rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] select-none shadow-xs hover:shadow-soft';
+    'inline-flex items-center justify-center font-semibold tracking-wide rounded-2xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-lotus-white active:scale-[0.97] select-none';
 
   return (
     <Component
@@ -90,7 +90,7 @@ const Button = forwardRef(function Button(
         variantStyles[variant],
         sizeStyles[size],
         isFullWidth && 'w-full',
-        disabled && 'pointer-events-none opacity-50',
+        disabled && 'pointer-events-none opacity-60 grayscale-[0.15]',
         className,
       )}
       {...props}

@@ -41,7 +41,7 @@ function Tooltip({
         <div
           role="tooltip"
           className={cn(
-            'pointer-events-none absolute z-50 whitespace-nowrap rounded bg-dark-charcoal px-2 py-1 text-xs text-white shadow-soft',
+            'pointer-events-none absolute z-50 whitespace-nowrap rounded-full border border-white/10 bg-[#0B1728] px-3 py-1.5 text-xs text-lotus-white shadow-[0_12px_30px_rgba(15,36,64,0.2)]',
             placementStyles[placement],
           )}
         >

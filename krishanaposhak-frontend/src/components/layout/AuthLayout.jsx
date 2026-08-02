@@ -13,7 +13,7 @@ const floatingOrbs = [
 
 export default function AuthLayout() {
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-[#060E1A]">
+    <div className="relative flex min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#0f2440_0%,#081427_55%,#060e1a_100%)]">
       <ScrollToTop />
 
       {/* ─── Animated Background Orbs ─── */}
@@ -58,18 +58,18 @@ export default function AuthLayout() {
           {/* Logo Mark */}
           <div className="mb-8 flex flex-col items-center">
             <div className="relative mb-5">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-[2px] shadow-xl shadow-amber-500/25">
-                <div className="flex h-full w-full items-center justify-center rounded-2xl bg-[#0B1728]">
-                  <span className="font-serif text-3xl font-bold text-amber-300">K</span>
+              <div className="h-20 w-20 rounded-[28px] bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] p-[2px] shadow-[0_18px_44px_rgba(201,154,59,0.24)]">
+                <div className="flex h-full w-full items-center justify-center rounded-[26px] bg-deep-navy">
+                  <span className="font-display text-3xl font-bold text-temple-gold-light">K</span>
                 </div>
               </div>
               <motion.div
-                className="absolute -inset-2 rounded-2xl bg-amber-400/20 blur-xl"
+                className="absolute -inset-2 rounded-[28px] bg-temple-gold/20 blur-xl"
                 animate={{ opacity: [0.3, 0.6, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
               />
             </div>
-            <h1 className="font-serif text-3xl font-bold tracking-wide text-white xl:text-4xl">
+            <h1 className="font-display text-3xl font-semibold tracking-wide text-white xl:text-4xl">
               {siteConfig.name}
             </h1>
             <div className="mt-3 h-[1px] w-24 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
@@ -106,7 +106,7 @@ export default function AuthLayout() {
       </div>
 
       {/* ─── Right Panel: Form Content ─── */}
-      <div className="relative z-10 flex flex-1 flex-col">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
         {/* Mobile Header */}
         <header className="flex shrink-0 items-center justify-between px-5 py-4 lg:px-8 lg:py-5">
           <Link
@@ -114,18 +114,18 @@ export default function AuthLayout() {
             className="group flex items-center gap-2.5"
             aria-label={siteConfig.name}
           >
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-300 to-amber-600 p-[1.5px] shadow-md shadow-amber-500/20">
-              <div className="flex h-full w-full items-center justify-center rounded-lg bg-[#0B1728] font-serif text-sm font-bold text-amber-300">
+            <div className="h-8 w-8 rounded-[14px] bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] p-[1.5px] shadow-[0_10px_24px_rgba(201,154,59,0.2)]">
+              <div className="flex h-full w-full items-center justify-center rounded-[13px] bg-deep-navy font-display text-sm font-bold text-temple-gold-light">
                 K
               </div>
             </div>
-            <span className="font-serif text-sm font-bold tracking-wide text-white sm:text-base lg:hidden">
+            <span className="font-display text-sm font-semibold tracking-wide text-white sm:text-base lg:hidden">
               {siteConfig.name}
             </span>
           </Link>
           <Link
             to={ROUTE_PATHS.HOME}
-            className="rounded-full border border-white/10 px-3 py-1.5 text-[10px] font-medium text-slate-400 transition-colors hover:border-white/20 hover:text-white"
+            className="min-h-[44px] inline-flex items-center rounded-full border border-white/10 px-3 py-1.5 text-[10px] font-medium text-slate-400 transition-colors hover:border-white/20 hover:text-white"
           >
             ← Back to Store
           </Link>

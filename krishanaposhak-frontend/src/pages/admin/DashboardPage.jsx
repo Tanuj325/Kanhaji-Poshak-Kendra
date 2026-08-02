@@ -53,7 +53,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/products/new')}
-        className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-bold text-slate-950 shadow-xs hover:bg-amber-400 transition-all active:scale-[0.98]"
+        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-bold text-slate-950 shadow-xs hover:bg-amber-400 transition-all active:scale-[0.98]"
       >
         <FiPlus className="h-4 w-4" />
         <span>Add Product</span>
@@ -61,7 +61,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/orders')}
-        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
       >
         <FiShoppingCart className="h-4 w-4 text-amber-600" />
         <span>View Orders</span>
@@ -69,7 +69,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/coupons/new')}
-        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
       >
         <FiTag className="h-4 w-4 text-amber-600" />
         <span>Create Coupon</span>
@@ -77,7 +77,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/analytics/sales')}
-        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
       >
         <FiBarChart2 className="h-4 w-4 text-amber-600" />
         <span>Full Analytics</span>
@@ -155,13 +155,13 @@ function StatCards({ overview, isLoading }) {
 const SalesTimeRange = memo(function SalesTimeRange({ range, onChange }) {
   const ranges = ['daily', 'weekly', 'monthly', 'yearly'];
   return (
-    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl" role="radiogroup" aria-label="Sales time range">
+    <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-slate-100 p-1 scrollbar-hide" role="radiogroup" aria-label="Sales time range">
       {ranges.map((r) => (
         <button
           key={r}
           onClick={() => onChange(r)}
           className={cn(
-            'px-3 py-1 text-xs font-bold rounded-lg transition-all focus:outline-none',
+            'min-h-[36px] shrink-0 px-3 py-1 text-xs font-bold rounded-lg transition-all focus:outline-none',
             range === r
               ? 'bg-white text-slate-900 shadow-2xs'
               : 'text-slate-500 hover:text-slate-900',

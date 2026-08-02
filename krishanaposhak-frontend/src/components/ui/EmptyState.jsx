@@ -14,20 +14,19 @@ export default function EmptyState({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'relative overflow-hidden flex flex-col items-center justify-center gap-5 px-6 py-16 text-center rounded-3xl bg-white border border-amber-900/10 shadow-xl shadow-amber-950/5',
+        'relative overflow-hidden flex flex-col items-center justify-center gap-5 px-5 py-14 sm:px-8 sm:py-16 text-center rounded-[28px] bg-white/85 border border-white/70 shadow-[0_18px_48px_rgba(44,40,36,0.08)] backdrop-blur-sm',
         className,
       )}
     >
-      {/* Decorative background glow */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-amber-400/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-temple-gold/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-royal-blue/10 blur-3xl" />
 
       {icon ? (
-        <div className="text-amber-600">{icon}</div>
+        <div className="text-temple-gold">{icon}</div>
       ) : (
-        <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 to-blue-600/15 border border-amber-500/20 shadow-inner">
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-[24px] border border-temple-gold/20 bg-[linear-gradient(180deg,rgba(248,246,243,0.92),rgba(240,234,225,0.88))] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
           <svg
-            className="h-10 w-10 text-amber-700"
+            className="h-10 w-10 text-temple-gold-dark"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -44,7 +43,7 @@ export default function EmptyState({
       )}
 
       <div className="space-y-1.5 max-w-md">
-        <h3 className="font-display text-xl font-bold tracking-tight text-dark-charcoal sm:text-2xl">
+        <h3 className="font-display text-xl font-semibold tracking-tight text-dark-charcoal sm:text-2xl">
           {title}
         </h3>
         {message && (

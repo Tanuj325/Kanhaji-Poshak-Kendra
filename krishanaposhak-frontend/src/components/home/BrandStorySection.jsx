@@ -30,7 +30,7 @@ const trustPillars = [
 
 const BrandStorySection = memo(function BrandStorySection() {
   return (
-    <section className="section-padding bg-deep-navy text-lotus-white relative overflow-hidden">
+    <section className="section-padding bg-[linear-gradient(180deg,#0f2440_0%,#081427_100%)] text-lotus-white relative overflow-hidden">
       {/* Subtle background radial glow & pattern */}
       <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-temple-gold/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-royal-blue/10 blur-3xl pointer-events-none" />
@@ -48,7 +48,7 @@ const BrandStorySection = memo(function BrandStorySection() {
             <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold bg-temple-gold/15 px-3.5 py-1 rounded-full border border-temple-gold/30">
               <FiStar className="h-3.5 w-3.5" /> Our Sacred Heritage
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-lotus-white">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight text-lotus-white text-balance">
               Weaving Devotion into Every Thread
             </h2>
             <p className="text-lotus-white/80 text-sm sm:text-base font-light leading-relaxed">
@@ -61,7 +61,7 @@ const BrandStorySection = memo(function BrandStorySection() {
             <div className="pt-2">
               <Link
                 to={ROUTE_PATHS.ABOUT}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-temple-gold to-amber-500 px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-dark-charcoal shadow-lg hover:shadow-temple-gold/20 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300"
               >
                 Read Our Story <FiArrowRight className="h-4 w-4" />
               </Link>
@@ -75,7 +75,7 @@ const BrandStorySection = memo(function BrandStorySection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-5"
           >
-            <div className="relative rounded-3xl border border-temple-gold/40 bg-deep-navy/80 p-3 shadow-gold overflow-hidden group">
+            <div className="relative rounded-[28px] border border-temple-gold/30 bg-deep-navy/80 p-3 shadow-[0_18px_44px_rgba(15,36,64,0.24)] overflow-hidden group">
               <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden">
 <img
                   src="/logo2.jpeg"
@@ -85,13 +85,13 @@ const BrandStorySection = memo(function BrandStorySection() {
                   decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-deep-navy/90 border border-temple-gold/30 backdrop-blur-md">
+                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-deep-navy/90 border border-temple-gold/30 backdrop-blur-md">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-xl bg-temple-gold/20 border border-temple-gold/40 flex items-center justify-center text-temple-gold font-serif text-lg font-bold shrink-0">
                       🪔
                     </div>
                     <div>
-                      <h3 className="font-display text-base font-bold text-lotus-white">The Meerut Standard</h3>
+                      <h3 className="font-display text-base font-semibold text-lotus-white">The Meerut Standard</h3>
                       <p className="text-[11px] text-temple-gold font-mono">100% Authentic Handcrafts & Garments</p>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ const BrandStorySection = memo(function BrandStorySection() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-temple-gold">
               Pillars of Excellence
             </span>
-            <h3 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-lotus-white">
+            <h3 className="mt-2 font-display text-2xl sm:text-3xl font-semibold text-lotus-white">
               Why Devotees Choose Krishana Poshak
             </h3>
           </div>
@@ -122,12 +122,12 @@ const BrandStorySection = memo(function BrandStorySection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: idx * 0.1 }}
-                  className="rounded-2xl border border-temple-gold/20 bg-white/5 p-6 hover:bg-white/10 hover:border-temple-gold/50 transition-all duration-300 group"
+                  className="rounded-[24px] border border-temple-gold/20 bg-white/5 p-6 hover:bg-white/10 hover:border-temple-gold/50 transition-all duration-300 group"
                 >
-                  <div className="h-12 w-12 rounded-xl bg-temple-gold/15 border border-temple-gold/30 flex items-center justify-center text-temple-gold mb-4 group-hover:scale-110 group-hover:bg-temple-gold group-hover:text-dark-charcoal transition-all">
+                  <div className="h-12 w-12 rounded-2xl bg-temple-gold/15 border border-temple-gold/30 flex items-center justify-center text-temple-gold mb-4 group-hover:scale-110 group-hover:bg-temple-gold group-hover:text-dark-charcoal transition-all">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h4 className="font-serif text-base font-bold text-lotus-white group-hover:text-temple-gold transition-colors">
+                  <h4 className="font-display text-base font-semibold text-lotus-white group-hover:text-temple-gold transition-colors">
                     {pillar.title}
                   </h4>
                   <p className="mt-2 text-xs text-lotus-white/70 leading-relaxed">

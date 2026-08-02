@@ -300,7 +300,7 @@ function CheckoutPage() {
         <link rel="canonical" href={`${siteConfig.url}/checkout`} />
       </Helmet>
 
-      <div className="container-page py-8 bg-[#FAF7F2] min-h-screen font-display">
+      <div className="container-page py-6 sm:py-8 bg-[#FAF7F2] min-h-screen font-display">
         <Breadcrumb items={breadcrumbItems} className="mb-6 text-xs" />
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-4 border-b border-amber-900/10">
@@ -332,7 +332,7 @@ function CheckoutPage() {
                     if (isPast) setCurrentStep(step.id);
                   }}
                   disabled={!isPast && !isActive}
-                  className={`flex flex-col sm:flex-row items-center gap-2 p-2.5 sm:p-3.5 rounded-xl transition-all min-h-[44px] ${
+                  className={`flex min-h-[52px] flex-col items-center gap-1 p-2 sm:flex-row sm:gap-2 sm:p-3.5 rounded-xl transition-all ${
                     isActive
                       ? 'bg-amber-900 text-amber-50 shadow-md font-bold'
                       : isPast
@@ -345,7 +345,7 @@ function CheckoutPage() {
                   }`}>
                     {idx + 1}
                   </div>
-                  <span className="text-xs sm:text-sm truncate hidden sm:inline">{step.label}</span>
+                  <span className="text-[10px] sm:text-sm truncate">{step.label}</span>
                 </button>
               );
             })}
@@ -378,12 +378,12 @@ function CheckoutPage() {
                     onSetDefault={(id) => setDefaultAddr.mutateAsync(id)}
                   />
 
-                  <div className="flex justify-end pt-2">
+                  <div className="flex justify-stretch sm:justify-end pt-2">
                     <button
                       type="button"
                       disabled={!selectedAddressId}
                       onClick={() => setCurrentStep('payment')}
-                      className="rounded-xl bg-amber-900 text-white font-bold py-3.5 px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center gap-2"
+                      className="w-full sm:w-auto rounded-xl bg-amber-900 text-white font-bold py-3.5 px-6 sm:px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2"
                     >
                       <span>Proceed to Payment & Promo</span>
                       <FiChevronRight className="h-4 w-4" />
@@ -424,7 +424,7 @@ function CheckoutPage() {
                     grandTotal={finalGrandTotal}
                   />
 
-                  <div className="flex justify-between items-center pt-2">
+                  <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between pt-2">
                     <button
                       type="button"
                       onClick={() => setCurrentStep('address')}
@@ -436,7 +436,7 @@ function CheckoutPage() {
                       type="button"
                       disabled={!isOrderValid}
                       onClick={() => setCurrentStep('review')}
-                      className="rounded-xl bg-amber-900 text-white font-bold py-3.5 px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center gap-2"
+                      className="w-full sm:w-auto rounded-xl bg-amber-900 text-white font-bold py-3.5 px-6 sm:px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2"
                     >
                       <span>Review Order Details</span>
                       <FiChevronRight className="h-4 w-4" />
@@ -540,7 +540,7 @@ function CheckoutPage() {
 
           {/* Sticky Order Summary Sidebar */}
           <div className="lg:col-span-5">
-            <div className="sticky top-24 space-y-4">
+            <div className="space-y-4 lg:sticky lg:top-24">
               <CheckoutOrderSummary
                 items={cartItems}
                 subtotal={subtotal}

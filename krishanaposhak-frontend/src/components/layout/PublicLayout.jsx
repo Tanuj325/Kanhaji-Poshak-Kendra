@@ -12,7 +12,7 @@ export default function PublicLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen flex-col bg-lotus-white text-dark-charcoal selection:bg-amber-400/30 selection:text-amber-900">
+    <div className="flex min-h-screen flex-col bg-lotus-white text-dark-charcoal selection:bg-temple-gold/25 selection:text-deep-navy">
       <ScrollToTop />
       <Header />
       <main className="flex-1 w-full min-w-0 overflow-x-hidden">

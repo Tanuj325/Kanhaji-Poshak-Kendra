@@ -171,7 +171,7 @@ export default function OrdersListPage() {
             <button
               onClick={() => handleStatusFilterChange('')}
               className={cn(
-                'whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all',
+                'min-h-[44px] whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all',
                 filterOrderStatus === ''
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -184,7 +184,7 @@ export default function OrdersListPage() {
                 key={status}
                 onClick={() => handleStatusFilterChange(status)}
                 className={cn(
-                  'whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all',
+                  'min-h-[44px] whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all',
                   filterOrderStatus === status
                     ? 'bg-amber-500 text-slate-950 shadow-xs'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'

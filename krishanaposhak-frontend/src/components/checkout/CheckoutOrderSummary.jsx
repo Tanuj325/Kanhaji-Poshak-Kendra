@@ -54,7 +54,7 @@ function CheckoutOrderSummary({ items, subtotal, discount, shippingCharge, grand
           <span>✓ FREE DELIVERY</span>
         </div>
       ) : (
-        <div className="mb-4 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-900 flex items-center justify-between gap-1">
+        <div className="mb-4 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-900 flex items-start gap-1 sm:items-center sm:justify-between">
           <span className="flex items-center gap-1">
             <FiTruck className="h-3.5 w-3.5 text-amber-700 shrink-0" />
             <span>Add {formatPrice(remainingForFreeShipping)} more to get FREE Delivery</span>
@@ -82,7 +82,7 @@ function CheckoutOrderSummary({ items, subtotal, discount, shippingCharge, grand
           </div>
         )}
         {couponCode && (
-          <div className="flex items-center justify-between bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
+          <div className="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
             <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
               🏷️ Coupon: <span className="font-mono">{couponCode}</span>
             </span>

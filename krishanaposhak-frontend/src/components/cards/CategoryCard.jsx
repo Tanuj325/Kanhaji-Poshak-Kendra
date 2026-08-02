@@ -21,11 +21,11 @@ const CategoryCard = memo(function CategoryCard({
         padding="none"
         isHoverable
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-2xl border border-amber-900/10 bg-white shadow-xs hover:shadow-[0_4px_20px_rgba(44,40,36,0.06)] hover:border-amber-700/40 transition-all duration-300',
+          'group relative flex flex-col h-full overflow-hidden rounded-[28px] border border-white/70 bg-white/90 shadow-[0_14px_36px_rgba(44,40,36,0.08)] hover:shadow-[0_20px_48px_rgba(44,40,36,0.12)] hover:border-temple-gold/25 transition-all duration-300 backdrop-blur-sm',
           className,
         )}
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-amber-50/40">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[linear-gradient(180deg,rgba(248,246,243,0.96),rgba(240,234,225,0.9))]">
           {imageUrl ? (
             <OptimizedImage
               src={imageUrl}
@@ -41,10 +41,10 @@ const CategoryCard = memo(function CategoryCard({
               </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-amber-950/60 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.05),rgba(15,36,64,0.42))] opacity-70 group-hover:opacity-90 transition-opacity" />
 
           {productCount !== undefined && (
-            <span className="absolute top-2.5 right-2.5 rounded-full bg-amber-950/80 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-amber-100 border border-amber-500/20 backdrop-blur-md font-mono shadow-xs">
+            <span className="absolute top-2.5 right-2.5 rounded-full bg-deep-navy/90 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-temple-gold-light border border-temple-gold/20 backdrop-blur-md font-mono shadow-[0_10px_24px_rgba(15,36,64,0.18)]">
               {productCount} Items
             </span>
           )}
@@ -52,7 +52,7 @@ const CategoryCard = memo(function CategoryCard({
 
         <div className="flex flex-col flex-1 p-3.5 sm:p-4 text-center justify-between font-display">
           <div>
-            <h3 className="font-heading text-base sm:text-lg font-bold text-amber-950 group-hover:text-amber-800 transition-colors line-clamp-1">
+            <h3 className="font-heading text-base sm:text-lg font-semibold text-dark-charcoal group-hover:text-royal-blue transition-colors line-clamp-1">
               {name}
             </h3>
             {description && (
@@ -62,7 +62,7 @@ const CategoryCard = memo(function CategoryCard({
             )}
           </div>
 
-          <div className="mt-3 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-amber-900 group-hover:text-amber-700 transition-colors pt-2.5 border-t border-amber-900/10">
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-royal-blue group-hover:text-peacock-blue transition-colors pt-2.5 border-t border-muted-sand/20">
             <span>Explore Collection</span>
             <FiArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1 text-amber-700" />
           </div>

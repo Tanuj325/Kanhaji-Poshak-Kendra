@@ -55,7 +55,7 @@ function PaymentSection({
           <div
             key={method.id}
             className={cn(
-              'relative rounded-lg border p-4 cursor-pointer transition-all duration-150',
+              'relative min-h-[76px] rounded-lg border p-4 cursor-pointer transition-all duration-150',
               selectedMethod === method.id
                 ? 'border-royal-blue bg-royal-blue/5 ring-1 ring-royal-blue'
                 : 'border-muted-sand/30 bg-white hover:border-muted-sand',

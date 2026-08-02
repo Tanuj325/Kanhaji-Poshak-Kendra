@@ -6,7 +6,7 @@ import Footer from '@/components/layout/Footer';
 
 export default function CustomerLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-warm-cream/40 via-[#FAF7F2] to-warm-cream/30 text-dark-charcoal selection:bg-temple-gold/30 selection:text-dark-charcoal">
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(201,154,59,0.08),transparent_28%),linear-gradient(180deg,#faf7f2_0%,#f7f2ea_50%,#f8f6f3_100%)] text-dark-charcoal selection:bg-temple-gold/30 selection:text-dark-charcoal">
       <ScrollToTop />
       <Header />
 

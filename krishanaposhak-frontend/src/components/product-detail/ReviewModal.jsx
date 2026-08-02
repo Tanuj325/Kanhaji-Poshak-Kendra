@@ -94,7 +94,7 @@ export default function ReviewModal({
         />
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+        <div className="flex flex-col-reverse items-stretch gap-3 pt-3 border-t border-slate-200 sm:flex-row sm:items-center sm:justify-end">
           <Button variant="outline" onClick={onClose} type="button" className="rounded-xl">
             Cancel
           </Button>

@@ -92,7 +92,7 @@ const NewArrivals = memo(function NewArrivals() {
             <Skeleton className="h-4 w-32 mx-auto rounded-full" />
             <Skeleton className="h-8 w-64 mx-auto mt-2 rounded-xl" />
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-80 w-full rounded-2xl" />
             ))}
@@ -128,10 +128,10 @@ const NewArrivals = memo(function NewArrivals() {
           className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:mb-10"
         >
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold bg-temple-gold/10 px-3.5 py-1 rounded-full border border-temple-gold/20">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold-dark bg-temple-gold/10 px-3.5 py-1 rounded-full border border-temple-gold/20">
               <FiStar className="h-3.5 w-3.5 text-temple-gold" /> Fresh Additions
             </span>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-dark-charcoal sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl font-semibold text-dark-charcoal sm:text-4xl">
               New Arrivals
             </h2>
             <p className="mt-1 text-sm text-natural-wood sm:text-base">
@@ -140,7 +140,7 @@ const NewArrivals = memo(function NewArrivals() {
           </div>
           <Link
             to={ROUTE_PATHS.SHOP}
-            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-royal-blue hover:text-deep-navy transition-colors self-start sm:self-auto group"
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-royal-blue hover:text-peacock-blue transition-colors self-start sm:self-auto group"
           >
             <span>View All Collection</span>
             <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
@@ -153,7 +153,7 @@ const NewArrivals = memo(function NewArrivals() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
+          className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
         >
           {productList.map((product) => (
             <motion.div key={product.slug || product.id} variants={itemVariants}>

@@ -125,7 +125,7 @@ export default function FAQPage() {
         jsonLd={faqSchemas}
       />
 
-      <section className="container-page section-padding space-y-8">
+      <section className="container-page section-padding space-y-6 sm:space-y-8">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -149,7 +149,7 @@ export default function FAQPage() {
         </div>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:justify-center">
           {faqCategories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
@@ -161,7 +161,7 @@ export default function FAQPage() {
                   setActiveCategory(cat.id);
                   setOpenIndex(null);
                 }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                className={`flex min-h-[44px] shrink-0 items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                   isActive
                     ? 'bg-royal-blue text-white border-royal-blue shadow-xs'
                     : 'bg-white text-natural-wood hover:text-dark-charcoal border-muted-sand/20'
@@ -192,7 +192,7 @@ export default function FAQPage() {
                   <button
                     type="button"
                     onClick={() => toggleAccordion(idx)}
-                    className="w-full flex items-center justify-between gap-4 p-5 text-left font-bold text-sm text-dark-charcoal hover:text-royal-blue transition-colors"
+                    className="w-full flex min-h-[56px] items-center justify-between gap-4 p-4 text-left font-bold text-sm text-dark-charcoal hover:text-royal-blue transition-colors sm:p-5"
                   >
                     <span>{faq.question}</span>
                     <FiChevronDown

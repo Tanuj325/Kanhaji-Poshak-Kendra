@@ -49,9 +49,9 @@ export default function SidebarContent({ isCollapsed = false, onCloseMobile }) {
         title={isCollapsed ? item.label : undefined}
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all',
+            'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-xs font-semibold transition-all',
             isActive
-              ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30 font-bold shadow-2xs'
+              ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30 font-bold shadow-[0_10px_24px_rgba(201,154,59,0.12)]'
               : 'text-natural-wood hover:text-dark-charcoal hover:bg-warm-cream/50',
             isCollapsed && 'justify-center px-0',
           )
