@@ -55,8 +55,8 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
       <button
         type="button"
         onClick={onToggle}
-        className={`group relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-slate-200 bg-white text-dark-charcoal transition-all duration-200 hover:border-temple-gold/60 hover:bg-temple-gold/10 hover:text-temple-gold-dark hover:shadow-[0_6px_18px_rgba(201,154,59,0.18)] active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60 ${
-          isOpen ? 'border-temple-gold/60 bg-temple-gold/10 text-temple-gold-dark' : ''
+        className={`group relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-lotus-white transition-all duration-200 hover:border-temple-gold/60 hover:bg-temple-gold/15 hover:text-temple-gold-light hover:shadow-[0_6px_18px_rgba(201,154,59,0.22)] active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60 ${
+          isOpen ? 'border-temple-gold/60 bg-temple-gold/15 text-temple-gold-light' : ''
         }`}
         aria-label={`Notifications (${unreadCountNum} unread)`}
         aria-expanded={isOpen}

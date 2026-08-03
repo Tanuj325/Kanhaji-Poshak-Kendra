@@ -1,46 +1,44 @@
 import {
   FiLock,
-  FiRefreshCw,
+  FiRefreshCcw,
   FiAward,
-  FiClock,
+  FiHeadphones,
 } from 'react-icons/fi';
 
+/**
+ * Premium trust strip (compact, deep navy with gold accents) shown beneath
+ * the main header on desktop/tablet. Mirrors premium ecommerce trust bars.
+ */
 const FEATURES = [
-  { icon: FiLock, label: 'Secure Payments', sub: 'SSL encrypted checkout' },
-  { icon: FiRefreshCw, label: 'Easy Returns', sub: '7-day hassle-free' },
-  { icon: FiAward, label: 'Premium Quality', sub: 'Handcrafted in Meerut' },
-  { icon: FiClock, label: '24x7 Support', sub: 'Devotee-first assistance' },
+  { icon: FiLock, label: 'Secure Payments', sub: '256-bit SSL' },
+  { icon: FiRefreshCcw, label: 'Easy Returns', sub: '7-day hassle-free' },
+  { icon: FiAward, label: 'Premium Quality', sub: '100% handcrafted' },
+  { icon: FiHeadphones, label: '24×7 Support', sub: 'Always here to help' },
 ];
 
-/**
- * Feature trust bar displayed below the navigation on desktop/tablet.
- * Compact, premium, responsive.
- */
 export default function HeaderFeatureBar() {
   return (
-    <div className="hidden border-b border-slate-200/80 bg-white/90 backdrop-blur-sm md:block">
-      <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-2 px-6 py-2.5 lg:grid-cols-4 lg:px-10 xl:px-12 2xl:px-16">
-        {FEATURES.map((f) => {
-          const Icon = f.icon;
-          return (
-            <div
-              key={f.label}
-              className="group flex items-center justify-center gap-2.5 rounded-xl px-3 py-1.5 transition-colors hover:bg-warm-cream/60"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-temple-gold/25 bg-temple-gold/10 text-temple-gold-dark transition-transform duration-300 group-hover:scale-110">
-                <Icon className="h-4 w-4" />
+    <div className="hidden w-full border-t border-white/10 bg-[#0B1B30] md:block">
+      <div className="mx-auto flex h-11 w-full max-w-[1600px] items-center justify-center gap-6 px-4 sm:gap-10 sm:px-6 lg:gap-16 lg:px-10 xl:px-12 2xl:px-16">
+        {FEATURES.map(({ icon: Icon, label, sub }) => (
+          <div
+            key={label}
+            className="group flex items-center gap-2.5"
+            title={`${label} — ${sub}`}
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-temple-gold/25 bg-temple-gold/10 text-temple-gold-light transition-all duration-200 group-hover:bg-temple-gold group-hover:text-deep-navy group-hover:shadow-[0_4px_14px_rgba(201,154,59,0.35)]">
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="leading-none">
+              <span className="block text-[11px] font-bold tracking-wide text-lotus-white">
+                {label}
               </span>
-              <span className="min-w-0">
-                <span className="block truncate text-xs font-bold text-dark-charcoal">
-                  {f.label}
-                </span>
-                <span className="hidden truncate text-[10px] text-natural-wood lg:block">
-                  {f.sub}
-                </span>
+              <span className="mt-0.5 hidden text-[9px] font-medium tracking-wider text-muted-sand sm:block">
+                {sub}
               </span>
-            </div>
-          );
-        })}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/config/queryConfig';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/index.css';
+import '@/styles/globals.css';
 import App from '@/App';
 
 const rootElement = document.getElementById('root');

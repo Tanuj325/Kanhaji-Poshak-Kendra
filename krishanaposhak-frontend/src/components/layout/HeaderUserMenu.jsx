@@ -6,7 +6,6 @@ import {
   FiPackage,
   FiHeart,
   FiMapPin,
-  FiBell,
   FiSettings,
   FiGrid,
   FiLogOut,
@@ -17,10 +16,6 @@ import { isAdmin } from '@/utils/roleChecker';
 
 export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, onLogout }) {
   const dropdownRef = useRef(null);
-
-  const initials = user?.firstName
-    ? `${user.firstName.charAt(0)}${user.lastName ? user.lastName.charAt(0) : ''}`.toUpperCase()
-    : 'U';
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -46,36 +41,27 @@ export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, 
     { label: 'Orders', to: ROUTE_PATHS.ORDERS, icon: FiPackage },
     { label: 'Wishlist', to: ROUTE_PATHS.WISHLIST, icon: FiHeart },
     { label: 'Addresses', to: ROUTE_PATHS.ADDRESSES, icon: FiMapPin },
-    { label: 'Notifications', to: ROUTE_PATHS.NOTIFICATIONS, icon: FiBell },
     { label: 'Settings', to: ROUTE_PATHS.SETTINGS, icon: FiSettings },
   ];
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Avatar trigger with premium ring */}
+      {/* Account Button: User Icon, Label, and Gold Arrow */}
       <button
         type="button"
         onClick={onToggle}
-        className={`group flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-2 transition-all duration-200 hover:border-temple-gold/50 hover:shadow-[0_6px_18px_rgba(201,154,59,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60 ${
-          isOpen ? 'border-temple-gold/60 shadow-[0_6px_18px_rgba(201,154,59,0.16)]' : ''
+        className={`group flex items-center gap-1.5 py-1.5 px-2 text-xs font-semibold text-slate-700 hover:text-[#C99A3B] transition-colors ${
+          isOpen ? 'text-[#0F2440]' : ''
         }`}
         aria-label="User Account Menu"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] text-[11px] font-bold text-white ring-2 ring-temple-gold/30">
-          {user?.profileImageUrl ? (
-            <img src={user.profileImageUrl} alt={user.firstName || 'User'} className="h-full w-full object-cover" />
-          ) : (
-            initials
-          )}
-        </span>
-        <span className="hidden max-w-[5.5rem] truncate text-[11px] font-bold text-dark-charcoal xl:block">
-          {user?.firstName || 'Account'}
-        </span>
+        <FiUser className="h-5 w-5 text-[#0F2440] group-hover:text-[#C99A3B] transition-colors" />
+        <span>{user?.firstName || 'Account'}</span>
         <FiChevronDown
-          className={`hidden h-3.5 w-3.5 text-natural-wood transition-transform duration-200 xl:block ${
-            isOpen ? 'rotate-180' : ''
+          className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${
+            isOpen ? 'rotate-180 text-[#C99A3B]' : ''
           }`}
         />
       </button>
@@ -83,24 +69,23 @@ export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute right-0 top-full z-50 mt-3 w-64 max-w-[calc(100vw-24px)] origin-top-right overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,36,64,0.18)]"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl text-xs text-slate-800"
             role="menu"
-            aria-orientation="vertical"
           >
-            {/* User info */}
-            <div className="border-b border-slate-100 bg-warm-cream/40 px-4 py-3">
-              <p className="truncate text-xs font-bold text-dark-charcoal">
+            {/* User Info */}
+            <div className="border-b border-slate-100 px-3 py-2">
+              <p className="truncate font-bold text-[#0F2440]">
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className="mt-0.5 truncate text-[10px] text-natural-wood font-mono">{user?.email}</p>
+              <p className="truncate text-[11px] text-slate-400 font-normal">{user?.email}</p>
             </div>
 
-            {/* Links */}
-            <div className="space-y-0.5 px-1.5 py-1.5" role="none">
+            {/* Menu Links */}
+            <div className="py-1 space-y-0.5" role="none">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -108,10 +93,10 @@ export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, 
                     key={item.to}
                     to={item.to}
                     onClick={onClose}
-                    className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-medium text-dark-charcoal transition-colors hover:bg-temple-gold/10 hover:text-temple-gold-dark"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 hover:bg-amber-50/60 hover:text-[#0F2440] transition-colors"
                     role="menuitem"
                   >
-                    <Icon className="h-3.5 w-3.5 text-temple-gold/80" />
+                    <Icon className="h-3.5 w-3.5 text-[#C99A3B]" />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -121,24 +106,24 @@ export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, 
                 <Link
                   to={ROUTE_PATHS.ADMIN}
                   onClick={onClose}
-                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-bold text-temple-gold-dark transition-colors hover:bg-temple-gold/15"
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-bold text-[#0F2440] hover:bg-amber-50/60 transition-colors"
                   role="menuitem"
                 >
-                  <FiGrid className="h-3.5 w-3.5 text-temple-gold" />
+                  <FiGrid className="h-3.5 w-3.5 text-[#C99A3B]" />
                   <span>Admin Console</span>
                 </Link>
               )}
             </div>
 
             {/* Logout */}
-            <div className="border-t border-slate-100 p-1.5">
+            <div className="border-t border-slate-100 pt-1">
               <button
                 type="button"
                 onClick={() => {
                   onClose();
                   onLogout();
                 }}
-                className="flex w-full items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50 hover:text-rose-700"
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
                 role="menuitem"
               >
                 <FiLogOut className="h-3.5 w-3.5" />
@@ -151,4 +136,3 @@ export default function HeaderUserMenu({ user, role, isOpen, onToggle, onClose, 
     </div>
   );
 }
-

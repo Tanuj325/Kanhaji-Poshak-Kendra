@@ -10,6 +10,5 @@ export { default as HeaderMegaMenu } from './HeaderMegaMenu';
 export { default as HeaderFeatureBar } from './HeaderFeatureBar';
 export { default as HeaderMobileDrawer } from './HeaderMobileDrawer';
 export { default as HeaderUserMenu } from './HeaderUserMenu';
-export { default as HeaderNotificationDropdown } from './HeaderNotificationDropdown';
 export { default as HeaderSearch } from './HeaderSearch';
 export { default as Footer } from './Footer';

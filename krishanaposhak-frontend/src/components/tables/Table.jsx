@@ -231,6 +231,7 @@ function Table({
           />
           {isLoading ? (
             <div className="flex justify-center border-t border-muted-sand/20 px-4 py-4">
+              <
           ) : (
             <tbody>
               {data.map((row, index) => (
