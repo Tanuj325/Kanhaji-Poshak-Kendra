@@ -28,6 +28,7 @@ export const ROUTE_PATHS = {
   NOTIFICATIONS: '/account/notifications',
   SETTINGS: '/account/settings',
   ADMIN: '/admin',
+  ADMIN_PAYMENTS: '/admin/payments',
   ADMIN_PRODUCT_ANALYTICS: '/admin/analytics/products',
   ADMIN_SALES_ANALYTICS: '/admin/analytics/sales',
   ADMIN_CUSTOMER_ANALYTICS: '/admin/analytics/customers',

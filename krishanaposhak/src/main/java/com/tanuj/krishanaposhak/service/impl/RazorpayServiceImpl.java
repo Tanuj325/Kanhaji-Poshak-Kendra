@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import lombok.ToString;
+
 @Data
 @Service
 @RequiredArgsConstructor
@@ -23,9 +25,11 @@ public class RazorpayServiceImpl implements RazorpayService {
     private String razorpayKeyId;
 
     @Value("${razorpay.api.secret}")
+    @ToString.Exclude
     private String razorpayKeySecret;
 
     @Value("${razorpay.webhook-secret}")
+    @ToString.Exclude
     private String razorpayWebhookSecret;
 
     private RazorpayClient razorpayClient;
@@ -135,5 +139,19 @@ public class RazorpayServiceImpl implements RazorpayService {
     public Refund createRefund(String paymentId, JSONObject options) throws RazorpayException {
         options.put("payment_id", paymentId);
         return razorpayClient.refunds.create(options);
+    }
+
+    /**
+     * Fetches all payments associated with a Razorpay order ID.
+     *
+     * @param razorpayOrderId the Razorpay order ID
+     * @return list of Razorpay Payment objects
+     * @throws RazorpayException if the API call fails
+     */
+    public java.util.List<com.razorpay.Payment> fetchPaymentsForOrder(String razorpayOrderId) throws RazorpayException {
+        if (razorpayOrderId == null || razorpayOrderId.isBlank()) {
+            throw new IllegalArgumentException("Razorpay order ID is required");
+        }
+        return razorpayClient.orders.fetchPayments(razorpayOrderId);
     }
 }

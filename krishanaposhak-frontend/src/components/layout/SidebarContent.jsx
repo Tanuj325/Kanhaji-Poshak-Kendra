@@ -14,6 +14,7 @@ import {
   FiMail,
   FiSettings,
   FiBarChart2,
+  FiShield,
 } from 'react-icons/fi';
 
 const menuItems = [
@@ -21,6 +22,7 @@ const menuItems = [
   { key: 'products', to: ROUTE_PATHS.ADMIN_PRODUCTS, label: 'Products', icon: FiPackage, roles: ['ADMIN'] },
   { key: 'categories', to: ROUTE_PATHS.ADMIN_CATEGORIES, label: 'Categories', icon: FiLayers, roles: ['ADMIN'] },
   { key: 'orders', to: ROUTE_PATHS.ADMIN_ORDERS, label: 'Orders', icon: FiShoppingBag, roles: ['ADMIN'] },
+  { key: 'payments', to: ROUTE_PATHS.ADMIN_PAYMENTS, label: 'Payment Monitoring', icon: FiShield, roles: ['ADMIN'] },
   { key: 'users', to: ROUTE_PATHS.ADMIN_USERS, label: 'Users', icon: FiUsers, roles: ['ADMIN'] },
   { key: 'coupons', to: ROUTE_PATHS.ADMIN_COUPONS, label: 'Coupons', icon: FiTag, roles: ['ADMIN'] },
   { key: 'banners', to: ROUTE_PATHS.ADMIN_BANNERS, label: 'Banners', icon: FiImage, roles: ['ADMIN'] },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,6 +15,7 @@ import { formatPrice } from '@/utils/formatPrice';
 import { formatDate } from '@/utils/formatDate';
 import { useOrders } from '@/hooks/useOrders';
 import { useAddToCart } from '@/hooks/useCart';
+import { paymentService } from '@/services';
 import { siteConfig } from '@/config/siteConfig';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import toast from 'react-hot-toast';
@@ -124,6 +125,18 @@ export default function OrdersPage() {
     paymentStatus: paymentStatus || undefined,
     sort,
   });
+
+  useEffect(() => {
+    paymentService.getRecoveryStatus()
+      .then((res) => {
+        const recoveryData = res?.data || res;
+        if (recoveryData?.recoveredCount > 0) {
+          toast.success(recoveryData.message || 'Payment recovered successfully!');
+          refetch();
+        }
+      })
+      .catch(() => {});
+  }, [refetch]);
 
   const rawOrders = data?.content || data?.data || [];
   const totalPages = data?.totalPages || 1;

@@ -7,6 +7,7 @@ import com.tanuj.krishanaposhak.enums.PaymentStatus;
 import com.tanuj.krishanaposhak.service.OrderService;
 import com.tanuj.krishanaposhak.service.PaymentService;
 import com.tanuj.krishanaposhak.security.jwt.JwtService;
+import com.tanuj.krishanaposhak.dto.payment.PaymentVerificationRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -114,15 +115,17 @@ public class PaymentController {
     @PostMapping("/razorpay/verify")
     public ResponseEntity<PaymentResponse> verifyRazorpayPayment(
             HttpServletRequest request,
-            @Parameter(description = "Razorpay order ID", required = true) @RequestParam String razorpayOrderId,
-            @Parameter(description = "Razorpay payment ID", required = true) @RequestParam String razorpayPaymentId,
-            @Parameter(description = "Razorpay signature", required = true) @RequestParam String razorpaySignature) {
+            @Valid @RequestBody PaymentVerificationRequest verificationRequest) {
         Long userId = getUserIdFromRequest(request);
         if (userId == null) {
             return ResponseEntity.status(401).build();
         }
         PaymentResponse response = paymentService.verifyRazorpayPayment(
-                userId, razorpayOrderId, razorpayPaymentId, razorpaySignature);
+                userId,
+                verificationRequest.getRazorpayOrderId(),
+                verificationRequest.getRazorpayPaymentId(),
+                verificationRequest.getRazorpaySignature()
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -202,6 +205,23 @@ public class PaymentController {
             return ResponseEntity.badRequest().build();
         }
         PaymentResponse response = paymentService.updatePaymentStatus(paymentId, paymentStatus);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Get user payment recovery and reconciliation status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recovery status retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    @GetMapping("/recovery")
+    public ResponseEntity<com.tanuj.krishanaposhak.dto.payment.PaymentRecoveryResponse> getPaymentRecoveryStatus(
+            HttpServletRequest request) {
+        Long userId = getUserIdFromRequest(request);
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+        com.tanuj.krishanaposhak.dto.payment.PaymentRecoveryResponse response =
+                paymentService.reconcilePendingPaymentsForUser(userId);
         return ResponseEntity.ok(response);
     }
 }

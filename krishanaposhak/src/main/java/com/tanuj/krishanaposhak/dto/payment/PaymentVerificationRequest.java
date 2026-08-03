@@ -1,9 +1,11 @@
 package com.tanuj.krishanaposhak.dto.payment;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Request object for verifying a Razorpay payment.
@@ -17,15 +19,19 @@ public class PaymentVerificationRequest {
     /**
      * Razorpay order ID.
      */
+    @NotBlank(message = "Razorpay order ID is required")
     private String razorpayOrderId;
 
     /**
      * Razorpay payment ID.
      */
+    @NotBlank(message = "Razorpay payment ID is required")
     private String razorpayPaymentId;
 
     /**
-     * Razorpay signature.
+     * Razorpay signature. Excluded from toString to prevent secret leakage in logs.
      */
+    @NotBlank(message = "Razorpay signature is required")
+    @ToString.Exclude
     private String razorpaySignature;
 }

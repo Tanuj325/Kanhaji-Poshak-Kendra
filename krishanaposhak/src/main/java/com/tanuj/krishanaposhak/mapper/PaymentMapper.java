@@ -29,6 +29,10 @@ public interface PaymentMapper {
     @Mapping(target = "orderId", source = "order.id")
     @Mapping(target = "amount",
             expression = "java(payment.getAmount() == null ? null : payment.getAmount().doubleValue())")
+    @Mapping(target = "refunded", ignore = true)
+    @Mapping(target = "refundInitiated", ignore = true)
+    @Mapping(target = "refundStatus", ignore = true)
+    @Mapping(target = "message", ignore = true)
     PaymentResponse toResponse(Payment payment);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

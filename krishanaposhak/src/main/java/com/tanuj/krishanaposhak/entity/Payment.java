@@ -54,6 +54,7 @@ public class Payment extends BaseEntity {
     @Column(name = "razorpay_payment_id", length = 150)
     private String razorpayPaymentId;
 
+    @ToString.Exclude
     @Column(name = "razorpay_signature", length = 255)
     private String razorpaySignature;
 

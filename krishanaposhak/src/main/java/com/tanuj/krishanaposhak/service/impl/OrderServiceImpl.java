@@ -68,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
     private final CouponService couponService;
     private final OrderMapper orderMapper;
     private final EmailService emailService;
+    private final com.tanuj.krishanaposhak.service.RefundService refundService;
 
     @Override
     public OrderResponse placeOrder(Long userId, PlaceOrderRequest request) {
@@ -315,6 +316,21 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(OrderStatus.CANCELLED);
         order = orderRepository.save(order);
+
+        // Process automatic Razorpay refund if eligible
+        if (refundService.isEligibleForRefund(order)) {
+            try {
+                refundService.processAutomaticRefund(order, "Order cancelled by customer");
+                // Update payment and order status to REFUNDED after successful refund
+                if (order.getPayment() != null) {
+                    order.getPayment().setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
+                    order.setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
+                    orderRepository.save(order);
+                }
+            } catch (Exception e) {
+                log.error("Automatic Razorpay refund failed for cancelled Order ID {}: {}", orderId, e.getMessage());
+            }
+        }
 
         return orderMapper.toResponse(order);
     }

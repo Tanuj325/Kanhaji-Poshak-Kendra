@@ -26,4 +26,14 @@ public class PaymentResponse {
 
     private Double amount;
 
+    @Builder.Default
+    private boolean refunded = false;
+
+    @Builder.Default
+    private boolean refundInitiated = false;
+
+    private String refundStatus;
+
+    private String message;
+
 }

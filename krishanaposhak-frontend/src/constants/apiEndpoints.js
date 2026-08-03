@@ -123,6 +123,11 @@ export const API_ENDPOINTS = {
     BY_ORDER: (orderId) => `payments/order/${orderId}`,
     BY_ID: (paymentId) => `payments/${paymentId}`,
     UPDATE: (paymentId) => `payments/${paymentId}`,
+    RECOVERY: 'payments/recovery',
+    ADMIN_MONITORING: 'admin/payments/monitoring',
+    ADMIN_RECONCILE: 'admin/payments/reconcile',
+    ADMIN_RETRY_REFUNDS: 'admin/payments/retry-refunds',
+    ADMIN_CLEANUP: 'admin/payments/cleanup-unpaid',
   },
 
   WEBHOOKS: {

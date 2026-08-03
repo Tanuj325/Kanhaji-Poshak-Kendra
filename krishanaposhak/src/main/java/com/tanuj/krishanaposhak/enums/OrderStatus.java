@@ -16,6 +16,8 @@ public enum OrderStatus {
 
     CANCELLED,
 
-    RETURNED
+    RETURNED,
+
+    FAILED_INSUFFICIENT_STOCK
 
 }

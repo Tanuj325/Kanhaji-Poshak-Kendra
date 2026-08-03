@@ -64,6 +64,7 @@ const ActivityLogsPage = lazy(() => import('@/pages/admin/ActivityLogsPage'));
 const ProductAnalyticsPage = lazy(() => import('@/pages/admin/ProductAnalyticsPage'));
 const SalesAnalyticsPage = lazy(() => import('@/pages/admin/SalesAnalyticsPage'));
 const CustomerAnalyticsPage = lazy(() => import('@/pages/admin/CustomerAnalyticsPage'));
+const PaymentMonitoringPage = lazy(() => import('@/pages/admin/PaymentMonitoringPage'));
 
 const NotFoundPage = lazy(() => import('@/pages/error/NotFoundPage'));
 const ForbiddenPage = lazy(() => import('@/pages/error/ForbiddenPage'));
@@ -134,6 +135,7 @@ export default function AppRouter() {
             <Route element={<AdminRoute />}>
               <Route element={<AdminLayout />}>
                 <Route index path={ROUTE_PATHS.ADMIN} element={<DashboardPage />} />
+                <Route path={ROUTE_PATHS.ADMIN_PAYMENTS} element={<PaymentMonitoringPage />} />
                 <Route path={ROUTE_PATHS.ADMIN_PRODUCT_ANALYTICS} element={<ProductAnalyticsPage />} />
                 <Route path={ROUTE_PATHS.ADMIN_SALES_ANALYTICS} element={<SalesAnalyticsPage />} />
                 <Route path={ROUTE_PATHS.ADMIN_CUSTOMER_ANALYTICS} element={<CustomerAnalyticsPage />} />

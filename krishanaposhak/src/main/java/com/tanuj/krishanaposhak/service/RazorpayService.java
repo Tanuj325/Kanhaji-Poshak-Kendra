@@ -52,6 +52,15 @@ public interface RazorpayService {
     Refund createRefund(String paymentId, JSONObject options) throws RazorpayException;
 
     /**
+     * Fetches all payments associated with a Razorpay order ID.
+     *
+     * @param razorpayOrderId the Razorpay order ID
+     * @return list of Razorpay Payment objects
+     * @throws RazorpayException if the API call fails
+     */
+    java.util.List<com.razorpay.Payment> fetchPaymentsForOrder(String razorpayOrderId) throws RazorpayException;
+
+    /**
      * Gets the Razorpay client instance.
      *
      * @return the Razorpay client

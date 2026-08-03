@@ -46,6 +46,16 @@ public class Refund {
     @Column(length = 500)
     private String reason;
 
+    @Column(name = "failure_reason", length = 500)
+    private String failureReason;
+
+    @Builder.Default
+    @Column(name = "retry_count", nullable = false)
+    private Integer retryCount = 0;
+
+    @Column(name = "last_retry_at")
+    private Instant lastRetryAt;
+
     @Column(name = "created_at")
     private Instant createdAt;
 

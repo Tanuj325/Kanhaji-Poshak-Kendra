@@ -63,4 +63,28 @@ public interface PaymentService {
      */
     RefundResponse getRefundByPaymentId(Long paymentId);
 
+    /**
+     * Reconciles all pending/created Razorpay payments older than threshold using Razorpay API.
+     */
+    int reconcilePendingPayments();
+
+    /**
+     * Reconciles pending payments specifically for a given user (login/page load recovery).
+     *
+     * @param userId the ID of the user
+     * @return summary of payment recovery
+     */
+    com.tanuj.krishanaposhak.dto.payment.PaymentRecoveryResponse reconcilePendingPaymentsForUser(Long userId);
+
+    /**
+     * Cleans up unpaid pending orders older than configurable timeout.
+     */
+    int cleanupUnpaidPendingOrders();
+
+    /**
+     * Gets admin payment monitoring telemetry and paginated payment records.
+     */
+    com.tanuj.krishanaposhak.dto.payment.AdminPaymentMonitoringResponse getAdminPaymentMonitoringData(
+            String status, String search, int page, int size);
+
 }
