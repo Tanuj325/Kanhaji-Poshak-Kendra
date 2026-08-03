@@ -5,10 +5,8 @@ import { ROUTE_PATHS } from '@/routes/routePaths';
 
 export const mainNav = [
   { label: 'Home', to: ROUTE_PATHS.HOME, end: true },
+  { label: 'About', to: ROUTE_PATHS.ABOUT },
   { label: 'Shop', to: ROUTE_PATHS.SHOP },
-  { label: 'New Arrivals', to: ROUTE_PATHS.SHOP, query: 'sort=createdAt,desc' },
-  { label: 'Best Sellers', to: ROUTE_PATHS.SHOP, query: 'sort=sales,desc' },
-  { label: 'Festivals', to: ROUTE_PATHS.SHOP, query: 'category=festivals' },
   { label: 'Contact', to: ROUTE_PATHS.CONTACT },
 ];
 
