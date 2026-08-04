@@ -51,20 +51,20 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
   if (!navItems || navItems.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb navigation" className={cn('flex flex-wrap items-center gap-1.5 text-xs font-display py-1.5', className)}>
-      <ol className="flex flex-wrap items-center gap-1.5">
+    <nav aria-label="Breadcrumb navigation" className={cn('flex items-center gap-1.5 text-xs font-display py-1 overflow-x-auto max-w-full scrollbar-none', className)}>
+      <ol className="flex items-center gap-1.5 whitespace-nowrap">
         {navItems.map((item, index) => {
           const isLast = index === navItems.length - 1;
 
           return (
-            <li key={index} className="flex items-center gap-1.5">
+            <li key={index} className="flex items-center gap-1.5 shrink-0">
               {index > 0 && (
                 <FiChevronRight className="h-3.5 w-3.5 text-temple-gold/60 shrink-0" aria-hidden="true" />
               )}
               {item.href && !isLast ? (
                 <Link
                   to={item.href}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-temple-gold/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-lotus-white hover:border-temple-gold/50 hover:bg-white/20 transition-all shadow-2xs backdrop-blur-xs min-h-[32px]"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-temple-gold/20 bg-white/10 px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-lotus-white hover:border-temple-gold/50 hover:bg-white/20 transition-all shadow-2xs backdrop-blur-xs min-h-[32px]"
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -72,7 +72,7 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
               ) : (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1.5 font-bold rounded-xl px-3 py-1.5 text-xs backdrop-blur-xs min-h-[32px]',
+                    'inline-flex items-center gap-1.5 font-bold rounded-xl px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs backdrop-blur-xs min-h-[32px]',
                     isLast
                       ? 'bg-temple-gold/20 text-temple-gold-light border border-temple-gold/30'
                       : 'text-stone-300',

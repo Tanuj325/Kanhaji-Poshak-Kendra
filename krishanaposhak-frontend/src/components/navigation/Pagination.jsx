@@ -62,7 +62,7 @@ function Pagination({
   return (
     <nav
       aria-label="Shop catalog pagination"
-      className={cn('flex flex-wrap items-center justify-center gap-1.5 p-2 bg-white/95 backdrop-blur-md rounded-3xl border border-amber-900/10 shadow-soft', className)}
+      className={cn('flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 p-1.5 sm:p-2 bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-amber-900/10 shadow-soft max-w-full overflow-x-auto', className)}
     >
       {showFirstLast && (
         <button
@@ -72,7 +72,7 @@ function Pagination({
           aria-label="First page"
           className={cn(
             buttonBase,
-            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
+            'hidden min-[420px]:inline-flex border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronsLeft className="h-4 w-4" />
@@ -99,7 +99,7 @@ function Pagination({
           return (
             <span
               key={`ellipsis-${index}`}
-              className="inline-flex items-center justify-center h-11 w-8 text-stone-400 font-bold"
+              className="inline-flex items-center justify-center h-11 w-6 sm:w-8 text-stone-400 font-bold text-xs"
             >
               ...
             </span>
@@ -151,7 +151,7 @@ function Pagination({
           aria-label="Last page"
           className={cn(
             buttonBase,
-            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
+            'hidden min-[420px]:inline-flex border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronsRight className="h-4 w-4" />

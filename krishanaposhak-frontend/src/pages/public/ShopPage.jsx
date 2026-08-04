@@ -57,14 +57,14 @@ function mapProductToCard(product) {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3.5 sm:gap-5">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5">
       {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className="flex flex-col gap-3 rounded-[26px] bg-white p-3 border border-amber-900/10 shadow-2xs">
+        <div key={i} className="flex flex-col gap-2.5 rounded-[22px] sm:rounded-[26px] bg-white p-2.5 sm:p-3 border border-amber-900/10 shadow-2xs">
           <Skeleton variant="rect" className="aspect-[4/5] w-full rounded-2xl bg-amber-100/50" />
           <Skeleton variant="text" className="h-3 w-1/3 bg-amber-100/60" />
-          <Skeleton variant="text" className="h-4 w-4/5 bg-amber-100/60" />
-          <Skeleton variant="text" className="h-4 w-1/2 bg-amber-100/60" />
-          <Skeleton variant="rect" className="h-10 w-full rounded-xl bg-amber-100/50 mt-1" />
+          <Skeleton variant="text" className="h-3.5 w-4/5 bg-amber-100/60" />
+          <Skeleton variant="text" className="h-3.5 w-1/2 bg-amber-100/60" />
+          <Skeleton variant="rect" className="h-9 sm:h-10 w-full rounded-xl bg-amber-100/50 mt-1" />
         </div>
       ))}
     </div>
@@ -333,15 +333,15 @@ export default function ShopPage() {
           isLoading={isLoading}
         />
 
-        <div className="container-page py-6 sm:py-8 lg:py-10">
+        <div className="container-page py-4 sm:py-8 lg:py-10 px-3 sm:px-6 lg:px-8">
           {/* Horizontal Category Quick-Selector Pills */}
           {categories.length > 0 && (
-            <div className="mb-6 sm:mb-8 flex gap-2 overflow-x-auto pb-2.5 scrollbar-thin scrollbar-thumb-amber-200">
+            <div className="mb-4 sm:mb-8 flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-200 -mx-1 px-1">
               <button
                 type="button"
                 onClick={() => handleCategoryChange('')}
                 className={cn(
-                  'rounded-2xl px-4 py-2.5 text-xs font-bold whitespace-nowrap transition-all duration-200 border min-h-[44px]',
+                  'rounded-2xl px-3.5 sm:px-4 py-2 text-xs font-bold whitespace-nowrap transition-all duration-200 border min-h-[44px]',
                   !categoryId
                     ? 'bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] text-white border-amber-900 shadow-gold scale-102 font-bold'
                     : 'bg-white text-stone-800 border-amber-900/15 hover:border-amber-800/40 hover:bg-amber-50/50',
@@ -355,7 +355,7 @@ export default function ShopPage() {
                   type="button"
                   onClick={() => handleCategoryChange(String(cat.id))}
                   className={cn(
-                    'rounded-2xl px-4 py-2.5 text-xs font-bold whitespace-nowrap transition-all duration-200 border min-h-[44px]',
+                    'rounded-2xl px-3.5 sm:px-4 py-2 text-xs font-bold whitespace-nowrap transition-all duration-200 border min-h-[44px]',
                     categoryId === String(cat.id)
                       ? 'bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] text-white border-amber-900 shadow-gold scale-102 font-bold'
                       : 'bg-white text-stone-800 border-amber-900/15 hover:border-amber-800/40 hover:bg-amber-50/50',
@@ -455,7 +455,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.04 },
                       },
                     }}
-                    className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3.5 sm:gap-5"
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5"
                   >
                     {productList.map((product) => (
                       <motion.div

@@ -83,10 +83,10 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 pt-1 font-display">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 pt-1 font-display">
         {/* Left: Gallery */}
-        <div className="space-y-3">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-amber-50/40 border border-amber-900/10 shadow-inner">
+        <div className="space-y-2.5">
+          <div className="relative aspect-[4/5] max-h-[40vh] md:max-h-none overflow-hidden rounded-2xl bg-amber-50/40 border border-amber-900/10 shadow-inner">
             <img
               src={activeImage}
               alt={product.name || 'Product creation'}
@@ -103,13 +103,13 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
           </div>
 
           {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-amber-200">
               {images.map((img, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => setSelectedImageIndex(i)}
-                  className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
+                  className={`relative h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all min-h-[44px] min-w-[44px] ${
                     selectedImageIndex === i
                       ? 'border-amber-800 ring-2 ring-amber-700/30 scale-105'
                       : 'border-amber-900/15 opacity-70 hover:opacity-100'
@@ -129,36 +129,36 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
         {/* Right: Info & Form */}
         <div className="flex flex-col justify-between space-y-4">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-900 bg-amber-100/80 px-2.5 py-1 rounded-md border border-amber-800/20 inline-block mb-2">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-amber-900 bg-amber-100/80 px-2.5 py-0.5 rounded-md border border-amber-800/20 inline-block mb-1.5">
               {product.categoryName || product.category?.name || 'Meerut Sacred Collection'}
             </span>
 
-            <h2 className="text-lg sm:text-xl font-bold text-amber-950 leading-snug">
+            <h2 className="text-base sm:text-xl font-bold text-amber-950 leading-snug">
               {product.name}
             </h2>
 
-            <div className="mt-2.5 flex items-center gap-3">
-              <Rating rating={product.averageRating || 5} size="sm" count={product.reviewCount || 12} />
+            <div className="mt-2 flex items-center gap-3">
+              <Rating rating={product.averageRating || 5} size="xs" count={product.reviewCount || 12} />
               <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700">
                 <FiCheckCircle className="h-3.5 w-3.5" /> In Stock
               </span>
             </div>
 
-            <div className="mt-3.5 pt-3 border-t border-amber-900/10">
+            <div className="mt-2.5 pt-2.5 border-t border-amber-900/10">
               <PriceDisplay
                 price={discountPrice || price}
                 originalPrice={discountPrice ? price : undefined}
-                size="lg"
+                size="md"
               />
             </div>
 
             {/* Variants */}
             {variants.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-amber-950">
+              <div className="mt-3 space-y-1.5">
+                <label className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-950">
                   Select Size Variant
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {variants.map((variant) => {
                     const isSelected = selectedVariant?.id === variant.id;
                     const isVarOutOfStock = variant.stock === 0;
@@ -168,9 +168,9 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
                         type="button"
                         onClick={() => setSelectedVariant(variant)}
                         disabled={isVarOutOfStock}
-                        className={`rounded-xl px-3.5 py-2 text-xs font-bold border transition-all min-h-[44px] ${
+                        className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition-all min-h-[44px] ${
                           isSelected
-                            ? 'border-amber-900 bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] text-white shadow-gold scale-105'
+                            ? 'border-amber-900 bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] text-white shadow-gold scale-102'
                             : isVarOutOfStock
                             ? 'border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed'
                             : 'border-amber-900/20 bg-white text-amber-950 hover:border-amber-800'
@@ -185,8 +185,8 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
             )}
 
             {/* Quantity Selector */}
-            <div className="mt-5 space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-amber-950">
+            <div className="mt-3 space-y-1.5">
+              <label className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-950">
                 Quantity
               </label>
               <QuantitySelector
@@ -198,12 +198,12 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="space-y-3 pt-4 border-t border-amber-900/10">
-            <div className="flex gap-3">
+          {/* Sticky Actions */}
+          <div className="space-y-2.5 pt-3 border-t border-amber-900/10 sticky bottom-0 bg-white/95 backdrop-blur-md">
+            <div className="flex gap-2.5">
               <Button
                 variant="primary"
-                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] py-3 text-xs sm:text-sm font-bold text-white shadow-gold min-h-[44px]"
+                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] py-3 text-xs sm:text-sm font-bold text-white shadow-gold min-h-[48px]"
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
                 isLoading={addToCartMutation.isPending}
@@ -214,7 +214,7 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
               <button
                 type="button"
                 onClick={handleWishlistToggle}
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all min-h-[44px] min-w-[44px] ${
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl border transition-all min-h-[48px] min-w-[48px] ${
                   isInWishlist
                     ? 'border-rose-300 bg-rose-50 text-rose-600 shadow-xs'
                     : 'border-amber-900/20 bg-white text-stone-700 hover:border-rose-300 hover:text-rose-600'
@@ -229,9 +229,9 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
               <Link
                 to={buildPath.product(product.slug)}
                 onClick={onClose}
-                className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 transition-colors pt-1"
+                className="flex items-center justify-center gap-1 text-xs font-bold text-amber-900 hover:text-amber-950 transition-colors pt-0.5"
               >
-                View Complete Product Details <FiExternalLink className="h-3 w-3" />
+                View Complete Details <FiExternalLink className="h-3 w-3" />
               </Link>
             )}
           </div>

@@ -70,12 +70,12 @@ function Rating({
         })}
       </div>
       {(showValue || rating > 0) && (
-        <span className="text-xs font-bold text-amber-950 font-mono">
+        <span className="text-[10px] sm:text-xs font-bold text-amber-950 font-mono">
           {Number(rating).toFixed(1)}
         </span>
       )}
       {count !== undefined && count > 0 && (
-        <span className="text-[11px] font-medium text-stone-500">
+        <span className="text-[9px] min-[360px]:text-[10px] sm:text-[11px] font-medium text-stone-500 truncate">
           ({count})
         </span>
       )}
