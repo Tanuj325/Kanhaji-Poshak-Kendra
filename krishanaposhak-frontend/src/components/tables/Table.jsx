@@ -18,10 +18,10 @@ const TableHeader = memo(function TableHeader({
   selectable,
 }) {
   return (
-    <thead className="bg-muted-sand/10">
+    <thead className="bg-amber-50/60 border-b border-amber-900/10 font-heading">
       <tr>
         {selectable && (
-          <th className="w-10 px-3 py-3 text-left">
+          <th className="w-10 px-4 py-3.5 text-left">
             <Checkbox
               checked={allSelected}
               isIndeterminate={selectedRows?.size > 0 && !allSelected}
@@ -37,8 +37,8 @@ const TableHeader = memo(function TableHeader({
             <th
               key={col.key}
               className={cn(
-                'px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-natural-wood',
-                col.sortable && isSortable && 'cursor-pointer select-none hover:text-dark-charcoal',
+                'px-4 py-3.5 text-left text-xs font-extrabold uppercase tracking-wider text-amber-950',
+                col.sortable && isSortable && 'cursor-pointer select-none hover:text-amber-800',
               )}
               style={col.width ? { width: col.width } : undefined}
               onClick={() => {
@@ -59,7 +59,7 @@ const TableHeader = memo(function TableHeader({
                   <svg
                     className={cn(
                       'h-3 w-3 transition-transform',
-                      isSorted && 'text-royal-blue',
+                      isSorted && 'text-amber-800',
                     )}
                     viewBox="0 0 12 12"
                     fill="currentColor"
@@ -99,14 +99,14 @@ const TableRow = memo(function TableRow({
   return (
     <tr
       className={cn(
-        'border-b border-muted-sand/20 transition-colors hover:bg-muted-sand/5',
-        isSelected && 'bg-royal-blue/5',
+        'border-b border-amber-900/10 transition-colors hover:bg-amber-50/40 font-body',
+        isSelected && 'bg-amber-100/50',
         onRowClick && 'cursor-pointer',
       )}
       onClick={handleClick}
     >
       {selectable && (
-        <td className="w-10 px-3 py-3">
+        <td className="w-10 px-4 py-3.5">
           <Checkbox
             checked={isSelected}
             onChange={() => onSelect?.(row)}
@@ -118,7 +118,7 @@ const TableRow = memo(function TableRow({
       {columns.map((col) => (
         <td
           key={col.key}
-          className="px-3 py-3 text-sm text-dark-charcoal"
+          className="px-4 py-3.5 text-xs sm:text-sm text-amber-950 font-medium"
         >
           {col.render ? col.render(row[col.key], row, index) : row[col.key]}
         </td>
@@ -131,14 +131,14 @@ function LoadingRows({ columns, selectable, count = 5 }) {
   return (
     <tbody>
       {Array.from({ length: count }).map((_, i) => (
-        <tr key={i} className="border-b border-muted-sand/20">
+        <tr key={i} className="border-b border-amber-900/10">
           {selectable && (
-            <td className="w-10 px-3 py-3">
+            <td className="w-10 px-4 py-3.5">
               <Skeleton variant="rect" className="h-4 w-4 rounded" />
             </td>
           )}
           {columns.map((col) => (
-            <td key={col.key} className="px-3 py-3">
+            <td key={col.key} className="px-4 py-3.5">
               <Skeleton variant="text" className="h-4 w-3/4" />
             </td>
           ))}
@@ -215,7 +215,7 @@ function Table({
   }
 
   return (
-    <div className={cn('w-full rounded-[28px] border border-white/70 bg-white/80 shadow-[0_18px_48px_rgba(44,40,36,0.08)] backdrop-blur-sm overflow-hidden', className)}>
+    <div className={cn('w-full rounded-3xl border border-amber-900/10 bg-white shadow-[0_4px_20px_rgba(44,40,36,0.03)] overflow-hidden font-display', className)}>
       <div className="responsive-table w-full overflow-x-auto" tabIndex={0} aria-label="Scrollable data table">
         <table className="w-full border-collapse" role="table">
           <TableHeader
@@ -230,8 +230,7 @@ function Table({
             selectable={selectable}
           />
           {isLoading ? (
-            <div className="flex justify-center border-t border-muted-sand/20 px-4 py-4">
-              <
+            <LoadingRows columns={columns} selectable={selectable} count={5} />
           ) : (
             <tbody>
               {data.map((row, index) => (
@@ -251,7 +250,7 @@ function Table({
         </table>
       </div>
       {pagination && pagination.totalPages > 1 && (
-        <div className="flex justify-center border-t border-muted-sand/20 pt-4">
+        <div className="flex justify-center border-t border-amber-900/10 p-4">
           <Pagination
             currentPage={pagination.page}
             totalPages={pagination.totalPages}
@@ -265,4 +264,3 @@ function Table({
 }
 
 export default Table;
-

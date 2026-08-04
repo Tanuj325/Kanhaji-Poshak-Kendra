@@ -144,14 +144,14 @@ export default function OrderDetailAdminPage() {
             </button>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
                   Order #{order.orderNumber}
                 </h1>
                 <span className={cn('inline-block border px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider', STATUS_BADGES[order.orderStatus])}>
                   {(order.orderStatus || 'PENDING').replace(/_/g, ' ')}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-stone-600 font-body">
                 Placed on {formatDate(order.orderDate || order.createdAt, { format: 'datetime' })}
               </p>
             </div>

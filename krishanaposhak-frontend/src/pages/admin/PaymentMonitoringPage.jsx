@@ -125,10 +125,10 @@ export default function PaymentMonitoringPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <FiShield className="text-indigo-600" /> Payment & Refund Monitoring
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 flex items-center gap-2">
+              <FiShield className="text-amber-800" /> Payment & Refund Monitoring
             </h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-xs sm:text-sm text-stone-600 font-body">
               Enterprise payment reconciliation, automated refund retries, and transaction telemetry
             </p>
           </div>

@@ -156,10 +156,10 @@ export default function OrdersListPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-5">
           <div>
-            <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
               Devotee Orders ({totalItems})
             </h1>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-stone-600 font-body">
               Manage fulfillment, status progression, payments, and order details
             </p>
           </div>

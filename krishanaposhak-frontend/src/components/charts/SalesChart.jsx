@@ -16,12 +16,12 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-lg border border-muted-sand/30 bg-white p-3 shadow-card">
-      <p className="text-sm font-medium text-dark-charcoal">{label}</p>
-      <p className="mt-1 text-sm text-royal-blue">
+    <div className="rounded-2xl border border-amber-900/20 bg-white p-3.5 shadow-lg font-display">
+      <p className="text-xs font-bold text-amber-950 font-heading">{label}</p>
+      <p className="mt-1 text-xs text-amber-900 font-mono font-bold">
         Revenue: {formatPrice(data.revenue)}
       </p>
-      <p className="text-sm text-natural-wood">
+      <p className="text-[11px] text-stone-500 font-body">
         Orders: {data.orders ?? 0}
       </p>
     </div>
@@ -41,7 +41,7 @@ function SalesChart({ data, isLoading, error, onRetry }) {
   if (isLoading) {
     return (
       <div className="flex h-56 items-center justify-center sm:h-72" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-48 w-full sm:h-64" />
+        <Skeleton variant="rect" className="h-48 w-full sm:h-64 rounded-2xl bg-amber-100/40" />
         <span className="sr-only">Loading sales chart...</span>
       </div>
     );
@@ -60,34 +60,34 @@ function SalesChart({ data, isLoading, error, onRetry }) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center text-sm text-natural-wood sm:h-72" role="status">
+      <div className="flex h-56 items-center justify-center text-xs text-stone-500 sm:h-72 font-body" role="status">
         No sales data available
       </div>
     );
   }
 
   return (
-    <div className="h-56 w-full sm:h-72" role="img" aria-label="Sales chart showing revenue and orders over time">
+    <div className="h-56 w-full sm:h-72 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 11, fill: '#8B7355' }}
+            tick={{ fontSize: 11, fill: '#78350f' }}
             tickLine={false}
-            axisLine={{ stroke: '#e5e7eb' }}
+            axisLine={{ stroke: '#f1f5f9' }}
           />
           <YAxis
-            tick={{ fontSize: 11, fill: '#8B7355' }}
+            tick={{ fontSize: 11, fill: '#78350f' }}
             tickLine={false}
-            axisLine={{ stroke: '#e5e7eb' }}
+            axisLine={{ stroke: '#f1f5f9' }}
             tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(217, 119, 6, 0.08)' }} />
           <Bar
             dataKey="revenue"
-            fill="#4F46E5"
-            radius={[4, 4, 0, 0]}
+            fill="#78350f"
+            radius={[6, 6, 0, 0]}
             maxBarSize={48}
             aria-label="Revenue bar"
           />
@@ -98,4 +98,3 @@ function SalesChart({ data, isLoading, error, onRetry }) {
 }
 
 export default memo(SalesChart);
-

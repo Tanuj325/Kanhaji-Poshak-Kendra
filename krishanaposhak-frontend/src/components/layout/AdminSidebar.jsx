@@ -17,6 +17,7 @@ import {
   FiArrowLeft,
   FiTrendingUp,
   FiPieChart,
+  FiDollarSign,
 } from 'react-icons/fi';
 
 const menuSections = [
@@ -44,11 +45,12 @@ const menuSections = [
     ],
   },
   {
-    title: 'Analytics & Reports',
+    title: 'Analytics & Finance',
     items: [
       { key: 'sales-analytics', to: ROUTE_PATHS.ADMIN_SALES_ANALYTICS, label: 'Sales Analytics', icon: FiBarChart2 },
       { key: 'product-analytics', to: ROUTE_PATHS.ADMIN_PRODUCT_ANALYTICS, label: 'Product Insights', icon: FiTrendingUp },
       { key: 'customer-analytics', to: ROUTE_PATHS.ADMIN_CUSTOMER_ANALYTICS, label: 'Devotee Analytics', icon: FiPieChart },
+      { key: 'payments', to: ROUTE_PATHS.ADMIN_PAYMENTS, label: 'Payment Gateway', icon: FiDollarSign },
     ],
   },
   {
@@ -69,10 +71,10 @@ const NavItem = memo(function NavItem({ item, collapsed }) {
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>
         cn(
-          'group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-xs font-medium transition-all duration-150',
+          'group relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 select-none min-h-[40px]',
           isActive
-            ? 'bg-amber-500/10 text-amber-800 font-bold border border-amber-500/20 shadow-[0_10px_24px_rgba(201,154,59,0.12)]'
-            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80',
+            ? 'bg-amber-900 text-white shadow-md border border-amber-700/30 font-extrabold'
+            : 'text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 font-medium',
           collapsed && 'justify-center px-0 py-2.5',
         )
       }
@@ -81,13 +83,13 @@ const NavItem = memo(function NavItem({ item, collapsed }) {
         <>
           <Icon
             className={cn(
-              'h-4 w-4 shrink-0 transition-colors',
-              isActive ? 'text-amber-600' : 'text-slate-400 group-hover:text-slate-600'
+              'h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110',
+              isActive ? 'text-amber-300' : 'text-amber-800 group-hover:text-amber-950'
             )}
           />
-          {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+          {!collapsed && <span className="flex-1 truncate font-display">{item.label}</span>}
           {isActive && !collapsed && (
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-xs" />
+            <span className="h-2 w-2 rounded-full bg-amber-400 shadow-xs" />
           )}
         </>
       )}
@@ -102,25 +104,25 @@ export default function AdminSidebar({ collapsed = false, onNavigate }) {
       <Link
         to={ROUTE_PATHS.HOME}
         className={cn(
-          'flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-slate-50/50 px-3 py-2 text-xs font-bold text-slate-700 hover:border-amber-400/40 hover:bg-amber-50/50 hover:text-amber-900 transition-all',
+          'flex items-center gap-2.5 rounded-2xl border border-amber-900/15 bg-amber-50/70 px-3.5 py-2.5 text-xs font-bold text-amber-950 hover:border-amber-700/40 hover:bg-amber-100/70 transition-all min-h-[40px]',
           collapsed && 'justify-center px-0',
         )}
         onClick={onNavigate}
         title={collapsed ? 'Return to Storefront' : undefined}
       >
-        <FiArrowLeft className="h-4 w-4 shrink-0 text-amber-600" />
-        {!collapsed && <span className="truncate">Storefront</span>}
+        <FiArrowLeft className="h-4 w-4 shrink-0 text-amber-800" />
+        {!collapsed && <span className="truncate">Public Storefront</span>}
       </Link>
 
       {/* Grouped Nav Sections */}
       {menuSections.map((section) => (
         <div key={section.title} className="space-y-1">
           {!collapsed && (
-            <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <p className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-amber-900/60 font-heading">
               {section.title}
             </p>
           )}
-          <div className="space-y-0.5">
+          <div className="space-y-1">
             {section.items.map((item) => (
               <div key={item.key} onClick={onNavigate}>
                 <NavItem item={item} collapsed={collapsed} />

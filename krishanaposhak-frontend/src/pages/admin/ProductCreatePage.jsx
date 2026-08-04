@@ -209,10 +209,10 @@ export default function ProductCreatePage() {
               <FiArrowLeft className="h-4 w-4" />
             </button>
             <div>
-              <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
                 Create Divine Attire Product
               </h1>
-              <p className="mt-0.5 text-xs text-slate-500">Add new poshak product listing, size variants, and media gallery</p>
+              <p className="mt-0.5 text-xs text-stone-600 font-body">Add new poshak product listing, size variants, and media gallery</p>
             </div>
           </div>
         </div>
