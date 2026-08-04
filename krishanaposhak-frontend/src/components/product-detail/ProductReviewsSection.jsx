@@ -127,7 +127,7 @@ export default function ProductReviewsSection({ productId, productAverageRating 
           size="md"
           onClick={openCreateModal}
           leftIcon={<FiEdit3 className="h-4 w-4 text-amber-200" />}
-          className="rounded-xl bg-amber-900 hover:bg-amber-950 text-amber-50 font-bold py-3 px-5 text-xs sm:text-sm shrink-0 shadow-md border border-amber-500/20 self-start sm:self-auto min-h-[44px]"
+          className="w-full sm:w-auto flex justify-center items-center rounded-xl bg-amber-900 hover:bg-amber-950 text-amber-50 font-bold py-3 px-5 text-xs sm:text-sm shrink-0 shadow-md border border-amber-500/20 min-h-[48px]"
         >
           Write a Review
         </Button>

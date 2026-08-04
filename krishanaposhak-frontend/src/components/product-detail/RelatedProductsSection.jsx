@@ -106,12 +106,12 @@ export default function RelatedProductsSection({ categoryId, currentProductSlug,
       <div
         ref={scrollRef}
         onScroll={updateScrollState}
-        className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory scroll-smooth -mx-1 px-1"
+        className="flex gap-2.5 sm:gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-amber-200 pb-2.5 snap-x snap-mandatory scroll-smooth -mx-1 px-1"
       >
         {relatedProducts.map((product) => (
           <div
             key={product.id || product.slug}
-            className="snap-start shrink-0 w-[calc(50%-6px)] min-[480px]:w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
+            className="snap-start shrink-0 w-[calc(50%-5px)] min-[480px]:w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
           >
             <ProductCard product={product} />
           </div>

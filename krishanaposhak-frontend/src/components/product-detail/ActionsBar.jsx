@@ -148,28 +148,28 @@ function ActionsBar({ selectedVariant }) {
       </div>
 
       {/* Wishlist & Share Row */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2.5 w-full">
         <button
           type="button"
           onClick={handleWishlist}
-          className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-xs sm:text-sm font-bold transition-all shadow-2xs min-h-[48px] ${
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-xs sm:text-sm font-bold transition-all shadow-2xs min-h-[48px] ${
             wishlisted
               ? 'border-rose-300 bg-rose-50 text-rose-700'
               : 'border-amber-900/15 bg-white text-stone-800 hover:border-amber-700/40 hover:bg-amber-50/50'
           }`}
           title="Add to Wishlist"
         >
-          <FiHeart className={`h-4 w-4 ${wishlisted ? 'fill-current text-rose-600' : 'text-amber-800'}`} />
+          <FiHeart className={`h-4 w-4 shrink-0 ${wishlisted ? 'fill-current text-rose-600' : 'text-amber-800'}`} />
           <span>{wishlisted ? 'Wishlisted' : 'Wishlist'}</span>
         </button>
 
         <button
           type="button"
           onClick={handleShare}
-          className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-amber-900/15 bg-white text-xs sm:text-sm font-bold text-stone-800 hover:border-amber-700/40 hover:bg-amber-50/50 transition-all shadow-2xs min-h-[48px]"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-amber-900/15 bg-white text-xs sm:text-sm font-bold text-stone-800 hover:border-amber-700/40 hover:bg-amber-50/50 transition-all shadow-2xs min-h-[48px]"
           title="Share Product"
         >
-          <FiShare2 className="h-4 w-4 text-amber-800" />
+          <FiShare2 className="h-4 w-4 shrink-0 text-amber-800" />
           <span>Share</span>
         </button>
       </div>

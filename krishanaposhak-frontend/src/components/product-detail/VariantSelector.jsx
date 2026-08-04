@@ -28,7 +28,7 @@ const VariantSelector = memo(function VariantSelector({ variants, selectedVarian
       </div>
 
       {/* Variant Pills Grid */}
-      <div className="flex flex-wrap gap-2 sm:gap-2.5" role="radiogroup" aria-label="Select poshak size variant">
+      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-amber-200 sm:flex-wrap" role="radiogroup" aria-label="Select poshak size variant">
         {activeVariants.map((variant) => {
           const isSelected = selectedVariant?.id === variant.id;
           const isOutOfStock = variant.stock <= 0;
@@ -43,24 +43,24 @@ const VariantSelector = memo(function VariantSelector({ variants, selectedVarian
               aria-label={`Size ${variant.size}${isOutOfStock ? ' - Out of stock' : ''}`}
               disabled={isOutOfStock}
               onClick={() => onSelect(variant)}
-              whileHover={!isOutOfStock ? { scale: 1.05 } : undefined}
+              whileHover={!isOutOfStock ? { scale: 1.04 } : undefined}
               whileTap={!isOutOfStock ? { scale: 0.97 } : undefined}
               className={cn(
-                'relative flex flex-col items-center justify-center min-w-[3.5rem] sm:min-w-[4rem] min-h-[48px] px-3 sm:px-4 py-2.5 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/50 font-display',
+                'relative flex-shrink-0 flex flex-col items-center justify-center min-w-[3.25rem] sm:min-w-[4rem] min-h-[48px] px-3 sm:px-4 py-2 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/50 font-display',
                 isSelected
                   ? 'border-amber-800 bg-amber-900 text-amber-50 font-bold shadow-md ring-2 ring-amber-800/20'
                   : 'border-amber-900/15 bg-white text-stone-800 hover:border-amber-700/50 hover:bg-amber-50/50',
                 isOutOfStock && 'opacity-35 cursor-not-allowed bg-stone-100 border-stone-200 text-stone-400',
               )}
             >
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 whitespace-nowrap">
                 <span className="text-xs sm:text-sm font-bold uppercase">{variant.size}</span>
-                {isSelected && <FiCheck className="h-3.5 w-3.5 text-amber-200" />}
+                {isSelected && <FiCheck className="h-3.5 w-3.5 text-amber-200 shrink-0" />}
               </div>
 
               {variantPrice && (
                 <span className={cn(
-                  'text-[10px] sm:text-[11px] font-semibold mt-0.5 font-mono',
+                  'text-[9px] min-[360px]:text-[10px] sm:text-[11px] font-semibold font-mono whitespace-nowrap',
                   isSelected ? 'text-amber-200/80' : 'text-stone-500',
                 )}>
                   ₹{Number(variantPrice).toFixed(0)}

@@ -70,18 +70,18 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
             <button
               type="button"
               onClick={() => onEdit?.(review)}
-              className="flex items-center justify-center h-9 w-9 rounded-lg text-amber-800 hover:bg-amber-100/60 transition-colors min-h-[36px]"
+              className="flex items-center justify-center h-10 w-10 sm:h-9 sm:w-9 rounded-lg text-amber-800 hover:bg-amber-100/60 transition-colors min-h-[44px] min-w-[44px]"
               aria-label="Edit review"
             >
-              <FiEdit2 className="h-3.5 w-3.5" />
+              <FiEdit2 className="h-4 w-4" />
             </button>
             <button
               type="button"
               onClick={() => onDelete?.(id)}
-              className="flex items-center justify-center h-9 w-9 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors min-h-[36px]"
+              className="flex items-center justify-center h-10 w-10 sm:h-9 sm:w-9 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors min-h-[44px] min-w-[44px]"
               aria-label="Delete review"
             >
-              <FiTrash2 className="h-3.5 w-3.5" />
+              <FiTrash2 className="h-4 w-4" />
             </button>
           </div>
         )}
@@ -89,8 +89,8 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
 
       {/* Rating & Comment */}
       <div className="w-full space-y-2 min-w-0">
-        <Rating rating={rating || 5} size="sm" />
-        <p className="w-full max-w-none text-sm sm:text-base text-stone-800 leading-relaxed font-normal break-words whitespace-normal font-body">
+        <Rating rating={rating || 5} size="xs" />
+        <p className="w-full max-w-none text-xs sm:text-base text-stone-800 leading-relaxed font-normal break-words whitespace-normal font-body">
           "{comment}"
         </p>
       </div>
@@ -100,18 +100,18 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
         <button
           type="button"
           onClick={handleHelpfulClick}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors font-display min-h-[36px] ${
+          className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-bold transition-colors font-display min-h-[44px] ${
             hasVotedHelpful
               ? 'bg-amber-900 text-amber-50 border-amber-900'
               : 'bg-amber-50/60 border-amber-900/10 text-stone-700 hover:bg-amber-100/60'
           }`}
         >
-          <FiThumbsUp className="h-3 w-3" />
+          <FiThumbsUp className="h-3.5 w-3.5 shrink-0" />
           <span>Helpful {helpfulCount > 0 ? `(${helpfulCount})` : ''}</span>
         </button>
 
-        <span className="inline-flex items-center gap-1 font-bold text-amber-900 font-display text-[11px]">
-          <FiShoppingBag className="h-3 w-3 text-amber-700" /> Verified Purchase
+        <span className="inline-flex items-center gap-1 font-bold text-amber-900 font-display text-[10px] sm:text-[11px]">
+          <FiShoppingBag className="h-3 w-3 text-amber-700 shrink-0" /> Verified Purchase
         </span>
       </div>
     </motion.div>

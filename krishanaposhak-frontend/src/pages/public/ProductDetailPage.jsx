@@ -193,9 +193,9 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="container-page section-padding pb-32 lg:pb-16 font-display">
+      <section className="container-page section-padding px-3 sm:px-6 lg:px-8 pb-32 lg:pb-16 font-display">
         {/* Breadcrumb */}
-        <div className="py-4 sm:py-6">
+        <div className="py-3 sm:py-6">
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
@@ -204,7 +204,7 @@ export default function ProductDetailPage() {
             On mobile: stacked (gallery → purchase card)
             On lg+: side-by-side (gallery left, purchase sticky right)
            ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 xl:gap-10 items-start">
           {/* LEFT: Image Gallery (7 columns on desktop) */}
           <div className="lg:col-span-7 w-full">
             <ImageGallery images={product.images} productName={product.name} />
@@ -212,7 +212,7 @@ export default function ProductDetailPage() {
 
           {/* RIGHT: Purchase Panel (5 columns on desktop, sticky) */}
           <div className="lg:col-span-5 w-full">
-            <div className="lg:sticky lg:top-24 rounded-3xl bg-white p-4 sm:p-6 lg:p-6 xl:p-7 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-5">
+            <div className="lg:sticky lg:top-24 rounded-2xl sm:rounded-3xl bg-white p-3.5 sm:p-6 lg:p-6 xl:p-7 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-4 sm:space-y-5">
               {/* Product Info: Title, Category, Rating, Material */}
               <ProductInfo
                 product={product}
@@ -250,7 +250,7 @@ export default function ProductDetailPage() {
         {/* ══════════════════════════════════════════════════════════════
             STAGE 2: Full-Width Content Sections
            ══════════════════════════════════════════════════════════════ */}
-        <div className="space-y-10 sm:space-y-14 mt-10 sm:mt-14 w-full">
+        <div className="space-y-8 sm:space-y-14 mt-8 sm:mt-14 w-full">
           <ProductTabs product={product} />
           <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
           <RelatedProductsSection
@@ -264,10 +264,10 @@ export default function ProductDetailPage() {
       {/* ══════════════════════════════════════════════════════════════
           Mobile Sticky Bottom Purchase Bar
          ══════════════════════════════════════════════════════════════ */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white/95 backdrop-blur-xl p-3.5 sm:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-amber-900/10 shadow-[0_-4px_20px_rgba(44,40,36,0.08)]">
-        <div className="flex items-center justify-between gap-3 max-w-[1600px] mx-auto font-display min-w-0">
-          <div className="flex min-w-0 flex-col">
-            <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider">Total Price</span>
+      <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white/95 backdrop-blur-xl p-3 sm:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-amber-900/10 shadow-[0_-4px_20px_rgba(44,40,36,0.12)]">
+        <div className="flex items-center justify-between gap-2.5 max-w-[1600px] mx-auto font-display min-w-0">
+          <div className="flex min-w-0 flex-col shrink-0">
+            <span className="text-[9px] uppercase font-bold text-stone-500 tracking-wider">Total Price</span>
             <PriceDisplay
               price={activeDiscountPrice || activePrice}
               originalPrice={activeDiscountPrice ? activePrice : undefined}
@@ -278,12 +278,13 @@ export default function ProductDetailPage() {
           <Button
             variant="primary"
             size="md"
-            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3.5 shadow-md border border-amber-500/20 min-h-[48px] max-w-[200px]"
+            className="flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3 text-xs sm:text-sm shadow-md border border-amber-500/20 min-h-[48px]"
             onClick={handleStickyAddToCart}
             isLoading={isAddingItem}
             disabled={!selectedVariant || selectedVariant.stock === 0}
           >
-            <FiShoppingBag className="h-4.5 w-4.5 text-amber-200" /> Add to Cart
+            <FiShoppingBag className="h-4 w-4 text-amber-200 shrink-0" />
+            <span className="truncate">Add to Cart</span>
           </Button>
         </div>
       </div>

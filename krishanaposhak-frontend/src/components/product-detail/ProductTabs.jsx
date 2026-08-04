@@ -134,16 +134,16 @@ export default function ProductTabs({ product }) {
               <button
                 type="button"
                 onClick={() => setActiveTab(isActive ? '' : tab.id)}
-                className="w-full flex items-center justify-between px-4 py-3.5 text-left"
+                className="w-full flex items-center justify-between px-4 py-3.5 text-left min-h-[48px]"
               >
                 <div className="flex items-center gap-2">
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-amber-800' : 'text-stone-400'}`} />
-                  <span className={`text-sm font-bold ${isActive ? 'text-amber-950' : 'text-stone-600'}`}>
+                  <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-amber-800' : 'text-stone-400'}`} />
+                  <span className={`text-sm font-bold ${isActive ? 'text-amber-950 font-extrabold' : 'text-stone-700'}`}>
                     {tab.label}
                   </span>
                 </div>
                 <FiChevronDown
-                  className={`h-4 w-4 text-stone-400 transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`}
+                  className={`h-4 w-4 text-stone-400 shrink-0 transition-transform duration-200 ${isActive ? 'rotate-180 text-amber-900' : ''}`}
                 />
               </button>
               <AnimatePresence>
@@ -155,7 +155,7 @@ export default function ProductTabs({ product }) {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-4 pb-4">
+                    <div className="px-4 pb-4.5 pt-1">
                       {tab.content}
                     </div>
                   </motion.div>
