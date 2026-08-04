@@ -1,33 +1,30 @@
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Button from '@/components/ui/Button';
-import Divider from '@/components/ui/Divider';
 import { formatPrice } from '@/utils/formatPrice';
+import { FiCreditCard, FiDollarSign, FiCheck, FiShield, FiLock, FiAlertCircle } from 'react-icons/fi';
 
 const paymentMethods = [
   {
     id: 'RAZORPAY',
     label: 'Online Payment (Razorpay)',
-    description: 'Pay via Credit/Debit Card, UPI, Net Banking, or Wallet',
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-      </svg>
-    ),
+    badge: 'Recommended',
+    description: 'UPI (GPay, PhonePe, Paytm), Credit/Debit Card, Net Banking, Wallets',
+    icon: FiCreditCard,
+    iconBg: 'bg-emerald-100/70 text-emerald-800',
   },
   {
     id: 'COD',
     label: 'Cash on Delivery',
-    description: 'Pay when you receive your order',
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    badge: 'Pay Upon Arrival',
+    description: 'Pay cash to courier executive when your sacred order arrives',
+    icon: FiDollarSign,
+    iconBg: 'bg-amber-100/70 text-amber-900',
   },
 ];
 
-function PaymentSection({
+const PaymentSection = memo(function PaymentSection({
   selectedMethod,
   onSelectMethod,
   onPlaceOrder,
@@ -44,73 +41,95 @@ function PaymentSection({
 
   const buttonText = selectedMethod === 'COD' 
     ? 'Place Order (COD)' 
-    : (grandTotal > 0 ? `Pay ${formatPrice(grandTotal)}` : 'Pay with Razorpay');
+    : (grandTotal > 0 ? `Pay ${formatPrice(grandTotal)} via Razorpay` : 'Pay with Razorpay');
 
   return (
-    <div className="rounded-lg bg-white border border-muted-sand/30 p-4 sm:p-6">
-      <h3 className="font-display text-lg font-semibold text-dark-charcoal mb-4">Payment Method</h3>
+    <div className="rounded-2xl bg-white border border-amber-900/10 p-5 sm:p-6 shadow-xs font-display space-y-4">
+      <div className="flex items-center justify-between pb-2">
+        <h3 className="font-heading text-lg sm:text-xl font-bold text-amber-950 flex items-center gap-2">
+          <FiCreditCard className="h-5 w-5 text-amber-800" />
+          <span>Select Payment Method</span>
+        </h3>
+        <span className="text-xs font-semibold text-emerald-800 flex items-center gap-1">
+          <FiShield className="h-3.5 w-3.5 text-emerald-600" /> SSL Encrypted
+        </span>
+      </div>
 
-      <div className="space-y-3" role="radiogroup" aria-label="Payment method">
-        {paymentMethods.map((method) => (
-          <div
-            key={method.id}
-            className={cn(
-              'relative min-h-[76px] rounded-lg border p-4 cursor-pointer transition-all duration-150',
-              selectedMethod === method.id
-                ? 'border-royal-blue bg-royal-blue/5 ring-1 ring-royal-blue'
-                : 'border-muted-sand/30 bg-white hover:border-muted-sand',
-            )}
-            onClick={() => onSelectMethod(method.id)}
-            role="radio"
-            aria-checked={selectedMethod === method.id}
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectMethod(method.id); } }}
-          >
-            <div className="flex items-start gap-3">
-              <div className={cn(
-                'mt-0.5 h-4 w-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center',
-                selectedMethod === method.id ? 'border-royal-blue' : 'border-muted-sand',
-              )}>
-                {selectedMethod === method.id && <div className="h-2 w-2 rounded-full bg-royal-blue" />}
+      <div className="space-y-3" role="radiogroup" aria-label="Payment method selector">
+        {paymentMethods.map((method) => {
+          const Icon = method.icon;
+          const isSelected = selectedMethod === method.id;
+
+          return (
+            <motion.div
+              key={method.id}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => onSelectMethod(method.id)}
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onSelectMethod(method.id);
+                }
+              }}
+              className={cn(
+                'relative rounded-2xl border-2 p-4 sm:p-5 transition-all duration-200 cursor-pointer overflow-hidden text-left',
+                isSelected
+                  ? 'border-amber-800 bg-amber-900/5 ring-2 ring-amber-800/20 shadow-md'
+                  : 'border-amber-900/10 bg-white hover:border-amber-700/40 hover:bg-amber-50/40 shadow-xs',
+              )}
+            >
+              <div className="flex items-start gap-3.5">
+                <div
+                  className={cn(
+                    'mt-0.5 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
+                    isSelected ? 'border-amber-800 bg-amber-900 text-white' : 'border-stone-300 bg-white',
+                  )}
+                >
+                  {isSelected && <FiCheck className="h-3 w-3 stroke-[3]" />}
+                </div>
+
+                <div className={`h-9 w-9 rounded-xl ${method.iconBg} flex items-center justify-center shrink-0`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+
+                <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-heading font-extrabold text-sm sm:text-base text-amber-950">
+                      {method.label}
+                    </span>
+                    <span className="inline-flex items-center text-[10px] font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded-full border border-amber-300/50 uppercase tracking-wider">
+                      {method.badge}
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-600 font-body leading-relaxed">
+                    {method.description}
+                  </p>
+                </div>
               </div>
-              <div className="text-natural-wood/60 flex-shrink-0 mt-0.5" aria-hidden="true">
-                {method.icon}
-              </div>
-              <div>
-                <p className="text-sm font-medium text-dark-charcoal">{method.label}</p>
-                <p className="text-xs text-natural-wood mt-0.5">{method.description}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+            </motion.div>
+          );
+        })}
       </div>
 
       {error && (
-        <p className="mt-3 text-sm text-error" role="alert">{error}</p>
+        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-2" role="alert">
+          <FiAlertCircle className="h-4 w-4 shrink-0" />
+          <span>{error}</span>
+        </div>
       )}
 
-      <Divider className="my-4" />
-
-      <div className="flex flex-col gap-2">
-        <Button
-          variant="primary"
-          size="lg"
-          isFullWidth
-          onClick={handlePlaceOrder}
-          isLoading={isPlacingOrder || isCreatingRazorpay}
-          isDisabled={!isValid}
-          aria-label={buttonText}
-        >
-          {buttonText}
-        </Button>
-        {selectedMethod === 'RAZORPAY' && (
-          <p className="text-xs text-natural-wood text-center">
-            You will be redirected to Razorpay secure checkout
-          </p>
-        )}
-      </div>
+      {selectedMethod === 'RAZORPAY' && (
+        <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-center gap-1.5 font-body">
+          <FiLock className="h-4 w-4 text-emerald-600 shrink-0" />
+          <span>Official Bank Gateways: UPI, Cards, Net Banking & Instant Refunds</span>
+        </div>
+      )}
     </div>
   );
-}
+});
 
 export default PaymentSection;

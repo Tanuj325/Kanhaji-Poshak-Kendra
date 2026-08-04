@@ -3,112 +3,122 @@ import { cn } from '@/utils/cn';
 import { formatPrice } from '@/utils/formatPrice';
 import { calculateShipping } from '@/utils/shippingCalculator';
 import Divider from '@/components/ui/Divider';
-import { FiTruck, FiCheckCircle } from 'react-icons/fi';
+import FreeShippingBar from '@/components/cart/FreeShippingBar';
+import CheckoutItemRow from './CheckoutItemRow';
+import { FiShoppingBag, FiShield, FiTag, FiTruck } from 'react-icons/fi';
 
-const CheckoutItemRow = memo(function CheckoutItemRow({ item }) {
-  return (
-    <div className="flex gap-3 py-3">
-      <div className="h-16 w-16 flex-shrink-0 rounded overflow-hidden bg-warm-cream">
-        <img
-          src={item.imageUrl || '/placeholder.svg'}
-          alt={item.productName}
-          className="h-full w-full object-cover"
-          loading="lazy"
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-dark-charcoal line-clamp-1">{item.productName}</p>
-        <p className="text-xs text-natural-wood mt-0.5">Size: {item.size}</p>
-        <p className="text-xs text-natural-wood">Qty: {item.quantity}</p>
-      </div>
-      <div className="text-right flex-shrink-0">
-        <p className="text-sm font-medium text-dark-charcoal">{formatPrice(item.totalPrice || item.price * item.quantity)}</p>
-        {item.discountPrice && item.discountPrice < item.price && (
-          <p className="text-xs text-natural-wood line-through">{formatPrice(item.price)}</p>
-        )}
-      </div>
-    </div>
-  );
-});
-
-function CheckoutOrderSummary({ items, subtotal, discount, shippingCharge, grandTotal, couponCode, onRemoveCoupon }) {
+const CheckoutOrderSummary = memo(function CheckoutOrderSummary({
+  items,
+  subtotal = 0,
+  discount = 0,
+  shippingCharge = 0,
+  grandTotal = 0,
+  couponCode,
+  onRemoveCoupon,
+}) {
   const {
     shipping: calculatedShipping,
     isFreeShipping,
-    remainingForFreeShipping,
-    freeShippingMessage,
   } = calculateShipping(subtotal);
 
   const displayShipping = typeof shippingCharge === 'number' && shippingCharge > 0 ? shippingCharge : calculatedShipping;
   const effectiveIsFree = displayShipping === 0 || isFreeShipping;
+  const savings = Math.max(0, discount);
 
   return (
-    <div className="rounded-lg bg-white border border-muted-sand/30 p-4 sm:p-6 shadow-xs">
-      <h3 className="font-display text-lg font-semibold text-dark-charcoal mb-2">Order Summary</h3>
-      <p className="text-xs text-natural-wood mb-4">{items?.length || 0} item(s)</p>
+    <div className="rounded-2xl bg-white border border-amber-900/10 p-5 sm:p-6 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-4 font-display">
+      <div className="flex items-center justify-between pb-3 border-b border-amber-900/10">
+        <h3 className="font-heading text-lg sm:text-xl font-extrabold text-amber-950 flex items-center gap-2">
+          <FiShoppingBag className="h-5 w-5 text-amber-800" /> Order Summary
+        </h3>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100/80 text-amber-950 border border-amber-300/40">
+          {items?.length || 0} {items?.length === 1 ? 'Item' : 'Items'}
+        </span>
+      </div>
 
-      {/* Free Shipping Callout */}
-      {effectiveIsFree ? (
-        <div className="mb-4 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-center gap-1.5">
-          <FiCheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-          <span>✓ FREE DELIVERY</span>
-        </div>
-      ) : (
-        <div className="mb-4 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-900 flex items-start gap-1 sm:items-center sm:justify-between">
-          <span className="flex items-center gap-1">
-            <FiTruck className="h-3.5 w-3.5 text-amber-700 shrink-0" />
-            <span>Add {formatPrice(remainingForFreeShipping)} more to get FREE Delivery</span>
-          </span>
+      {/* Free Shipping Progress Indicator */}
+      <FreeShippingBar subTotal={subtotal} />
+
+      {/* Order Item List Preview */}
+      {Array.isArray(items) && items.length > 0 && (
+        <div className="max-h-56 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-amber-200">
+          {items.map((item) => (
+            <CheckoutItemRow key={item.cartItemId || item.id || item.variantId} item={item} />
+          ))}
         </div>
       )}
 
-      <div className="divide-y divide-muted-sand/20">
-        {Array.isArray(items) && items.map((item) => (
-          <CheckoutItemRow key={item.cartItemId || item.id} item={item} />
-        ))}
-      </div>
+      <Divider className="my-2 border-amber-900/10" />
 
-      <Divider className="my-3" />
-
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-natural-wood">Subtotal</span>
-          <span className="font-medium text-dark-charcoal">{formatPrice(subtotal)}</span>
+      {/* Pricing Breakdown */}
+      <div className="space-y-2.5 text-xs sm:text-sm font-medium">
+        <div className="flex items-center justify-between text-stone-700">
+          <span>Subtotal</span>
+          <span className="font-bold text-amber-950 font-mono">{formatPrice(subtotal)}</span>
         </div>
+
         {discount > 0 && (
-          <div className="flex justify-between text-emerald-600 font-semibold">
-            <span>Discount</span>
-            <span>-{formatPrice(discount)}</span>
+          <div className="flex items-center justify-between text-emerald-800 bg-emerald-50/80 px-3 py-1.5 rounded-xl border border-emerald-200/60 font-body">
+            <span className="flex items-center gap-1.5 font-bold font-display">
+              <FiTag className="h-4 w-4 text-emerald-600" /> Discount Savings
+            </span>
+            <span className="font-extrabold font-mono">-{formatPrice(discount)}</span>
           </div>
         )}
+
         {couponCode && (
-          <div className="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
-            <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
-              🏷️ Coupon: <span className="font-mono">{couponCode}</span>
-            </span>
+          <div className="flex items-center justify-between bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 text-xs font-bold text-amber-950 font-mono">
+            <span>🏷️ Coupon ({couponCode})</span>
             {onRemoveCoupon && (
-              <button onClick={onRemoveCoupon} className="text-[11px] font-bold text-error hover:underline" type="button">
+              <button
+                type="button"
+                onClick={onRemoveCoupon}
+                className="text-[11px] text-rose-600 hover:underline font-sans"
+              >
                 Remove
               </button>
             )}
           </div>
         )}
-        <div className="flex justify-between items-center">
-          <span className="text-natural-wood">Shipping</span>
-          <span className={cn('font-medium', effectiveIsFree ? 'text-emerald-600 font-bold' : 'text-dark-charcoal')}>
+
+        <div className="flex items-center justify-between text-stone-700">
+          <span className="flex items-center gap-1.5">
+            <FiTruck className="h-4 w-4 text-amber-800" /> Shipping
+          </span>
+          <span className={cn('font-bold font-mono', effectiveIsFree ? 'text-emerald-700 font-extrabold font-display' : 'text-amber-950')}>
             {effectiveIsFree ? 'FREE' : formatPrice(displayShipping)}
           </span>
         </div>
+
+        {savings > 0 && (
+          <div className="p-2 rounded-xl bg-amber-100/60 border border-amber-300/40 text-center">
+            <p className="text-xs font-bold text-amber-950">
+              🎉 You save <span className="font-extrabold text-amber-900 font-mono">{formatPrice(savings)}</span> on this order!
+            </p>
+          </div>
+        )}
       </div>
 
-      <Divider className="my-3" />
+      <Divider className="my-2 border-amber-900/10" />
 
-      <div className="flex justify-between items-center">
-        <span className="font-semibold text-dark-charcoal">Grand Total</span>
-        <span className="font-bold text-xl text-royal-blue">{formatPrice(grandTotal)}</span>
+      {/* Grand Total */}
+      <div className="flex items-baseline justify-between pt-1">
+        <div>
+          <span className="font-heading font-extrabold text-base sm:text-lg text-amber-950 block">Grand Total</span>
+          <span className="text-[11px] text-stone-500 font-medium">Inclusive of all taxes</span>
+        </div>
+        <span className="font-heading font-black text-2xl sm:text-3xl text-amber-950 tracking-tight font-mono">
+          {formatPrice(grandTotal)}
+        </span>
+      </div>
+
+      {/* Security Note */}
+      <div className="pt-2 flex items-center justify-center gap-2 text-xs font-semibold text-stone-600 bg-amber-50/60 py-2.5 px-3 rounded-xl border border-amber-200/50 font-body">
+        <FiShield className="h-4 w-4 text-emerald-600 shrink-0" />
+        <span>100% Safe & Secure Bank Processing</span>
       </div>
     </div>
   );
-}
+});
 
 export default CheckoutOrderSummary;

@@ -3,10 +3,22 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumb from '@/components/navigation/Breadcrumb';
-import Spinner from '@/components/ui/Spinner';
 import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
-import { AddressSelector, CheckoutOrderSummary, PaymentSection, PaymentFailureModal } from '@/components/checkout';
+
+import {
+  AddressSelector,
+  CheckoutOrderSummary,
+  PaymentSection,
+  PaymentFailureModal,
+  CheckoutHeader,
+  RazorpayOverlay,
+  CheckoutTrustBadges,
+  CheckoutSkeleton,
+  CheckoutMobileBar,
+  OrderNotesSection,
+} from '@/components/checkout';
+
 import CouponInput from '@/components/cart/CouponInput';
 import { useCartContext } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -20,19 +32,13 @@ import { useRazorpayPayment } from '@/hooks/useRazorpayPayment';
 import { paymentService } from '@/services';
 import { siteConfig } from '@/config/siteConfig';
 import { calculateShipping } from '@/utils/shippingCalculator';
-import { FiMapPin, FiCreditCard, FiCheckCircle, FiShield, FiLock, FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight, FiChevronLeft, FiLock, FiShield, FiAlertCircle } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 const breadcrumbItems = [
   { label: 'Home', href: ROUTE_PATHS.HOME },
   { label: 'Cart', href: ROUTE_PATHS.CART },
   { label: 'Checkout' },
-];
-
-const STEPS = [
-  { id: 'address', label: 'Shipping Address', icon: FiMapPin },
-  { id: 'payment', label: 'Payment & Promo', icon: FiCreditCard },
-  { id: 'review', label: 'Review & Place Order', icon: FiCheckCircle },
 ];
 
 function CheckoutPage() {
@@ -59,6 +65,7 @@ function CheckoutPage() {
   const [orderNotes, setOrderNotes] = useState('');
   const [orderError, setOrderError] = useState(null);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  const [overlayStatusText, setOverlayStatusText] = useState('Connecting to Razorpay Secure Gateway...');
   const [failureModalOpen, setFailureModalOpen] = useState(false);
   const [failureReason, setFailureReason] = useState('');
 
@@ -127,6 +134,7 @@ function CheckoutPage() {
     paymentLockRef.current = true;
     setOrderError(null);
     setIsProcessingOrder(true);
+    setOverlayStatusText('Placing Cash on Delivery order...');
 
     try {
       const payload = {
@@ -175,6 +183,7 @@ function CheckoutPage() {
     paymentLockRef.current = true;
     setOrderError(null);
     setIsProcessingOrder(true);
+    setOverlayStatusText('Initializing Razorpay Secure Gateway...');
 
     try {
       await loadRazorpayScript();
@@ -201,6 +210,7 @@ function CheckoutPage() {
           contact: selectedAddress?.phoneNumber || user?.phoneNumber || '',
         },
         onSuccess: async (verifyPayload) => {
+          setOverlayStatusText('Verifying bank transaction security signature...');
           try {
             const verificationResult = await verifyPayment(verifyPayload);
             const verifiedPayment = verificationResult?.data || verificationResult;
@@ -256,20 +266,26 @@ function CheckoutPage() {
     }
   }, [paymentMethod, handlePlaceCODOrder, handleRazorpayOrder]);
 
+  const handleStepClick = (stepId) => {
+    if (stepId === 'cart') {
+      navigate('/cart');
+    } else {
+      setCurrentStep(stepId);
+    }
+  };
+
   if (cartLoading) {
-    return (
-      <div className="container-page py-12 flex items-center justify-center min-h-[60vh]">
-        <Spinner isFullPage label="Loading secure checkout..." />
-      </div>
-    );
+    return <CheckoutSkeleton />;
   }
 
   if (cartError) {
     return (
-      <div className="container-page py-12">
-        <div className="text-center py-12 bg-white rounded-2xl p-8 border border-amber-900/10 shadow-xs max-w-md mx-auto">
-          <p className="text-rose-700 font-bold mb-4">Unable to load your cart items.</p>
-          <Button onClick={loadCart} variant="primary">Retry Checkout</Button>
+      <div className="container-page py-12 font-display">
+        <div className="text-center py-12 bg-white rounded-3xl p-8 border border-amber-900/10 shadow-xs max-w-md mx-auto space-y-4">
+          <p className="text-rose-700 font-bold text-base">Unable to load your cart items.</p>
+          <Button onClick={loadCart} variant="primary" className="rounded-xl bg-amber-900 text-white min-h-[44px]">
+            Retry Loading Checkout
+          </Button>
         </div>
       </div>
     );
@@ -277,12 +293,12 @@ function CheckoutPage() {
 
   if (cartCount === 0) {
     return (
-      <div className="container-page py-12">
+      <div className="container-page py-12 font-display">
         <EmptyState
           title="Your cart is currently empty"
           message="Add items to your cart before proceeding to checkout."
           action={
-            <Button variant="primary" onClick={() => navigate(ROUTE_PATHS.SHOP)}>
+            <Button variant="primary" onClick={() => navigate(ROUTE_PATHS.SHOP)} className="rounded-xl bg-amber-900 text-white min-h-[44px]">
               Browse Divine Collection
             </Button>
           }
@@ -300,268 +316,239 @@ function CheckoutPage() {
         <link rel="canonical" href={`${siteConfig.url}/checkout`} />
       </Helmet>
 
-      <div className="container-page py-6 sm:py-8 bg-[#FAF7F2] min-h-screen font-display">
-        <Breadcrumb items={breadcrumbItems} className="mb-6 text-xs" />
+      <div className="min-h-screen bg-[#FAF7F2] font-display pb-36 lg:pb-16">
+        <div className="container-page py-6 sm:py-8 space-y-6 sm:space-y-8">
+          <Breadcrumb items={breadcrumbItems} />
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-4 border-b border-amber-900/10">
-          <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-amber-950">
-              Secure Checkout
-            </h1>
-            <p className="text-xs text-stone-600 mt-1 font-body">
-              Encrypted SSL & Official Bank Razorpay Integration
-            </p>
-          </div>
-          <div className="flex items-center gap-2 text-xs font-bold text-amber-900 bg-amber-100/80 px-3.5 py-1.5 rounded-full border border-amber-800/20">
-            <FiShield className="h-4 w-4 text-amber-800" /> 100% Safe & Verified Purchase
-          </div>
-        </div>
+          {/* Stepper Header */}
+          <CheckoutHeader currentStep={currentStep} onStepClick={handleStepClick} />
 
-        {/* Step Indicator */}
-        <div className="mb-8 bg-white rounded-2xl p-4 sm:p-5 border border-amber-900/10 shadow-xs">
-          <div className="grid grid-cols-3 gap-2 sm:gap-4">
-            {STEPS.map((step, idx) => {
-              const isActive = currentStep === step.id;
-              const isPast = (currentStep === 'payment' && idx === 0) || (currentStep === 'review' && idx < 2);
+          {/* Main 2-Column Checkout Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            {/* Left Column: Interactive Form Steps */}
+            <div className="lg:col-span-7 space-y-6">
+              <AnimatePresence mode="wait">
+                {currentStep === 'address' && (
+                  <motion.div
+                    key="step-address"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6"
+                  >
+                    <AddressSelector
+                      addresses={addresses}
+                      isLoading={addrLoading}
+                      isError={addrError}
+                      onRetry={refetchAddresses}
+                      selectedId={selectedAddressId}
+                      onSelect={setSelectedAddressId}
+                      onCreate={(data) => createAddr.mutateAsync(data)}
+                      onUpdate={(id, data) => updateAddr.mutateAsync({ addressId: id, data })}
+                      onDelete={(id) => deleteAddr.mutateAsync(id)}
+                      onSetDefault={(id) => setDefaultAddr.mutateAsync(id)}
+                    />
 
-              return (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => {
-                    if (isPast) setCurrentStep(step.id);
-                  }}
-                  disabled={!isPast && !isActive}
-                  className={`flex min-h-[52px] flex-col items-center gap-1 p-2 sm:flex-row sm:gap-2 sm:p-3.5 rounded-xl transition-all ${
-                    isActive
-                      ? 'bg-amber-900 text-amber-50 shadow-md font-bold'
-                      : isPast
-                        ? 'bg-amber-100/70 text-amber-950 hover:bg-amber-100 cursor-pointer font-bold'
-                        : 'bg-stone-100 text-stone-400 cursor-not-allowed text-xs'
-                  }`}
-                >
-                  <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                    isActive ? 'bg-amber-50 text-amber-950 font-bold' : isPast ? 'bg-amber-900 text-amber-50' : 'bg-stone-200 text-stone-500'
-                  }`}>
-                    {idx + 1}
-                  </div>
-                  <span className="text-[10px] sm:text-sm truncate">{step.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+                    {/* Order Delivery Instructions */}
+                    <OrderNotesSection notes={orderNotes} onChange={setOrderNotes} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          {/* Main Form Area */}
-          <div className="lg:col-span-7 space-y-6">
-            <AnimatePresence mode="wait">
-              {currentStep === 'address' && (
-                <motion.div
-                  key="step-address"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
-                  <AddressSelector
-                    addresses={addresses}
-                    isLoading={addrLoading}
-                    isError={addrError}
-                    onRetry={refetchAddresses}
-                    selectedId={selectedAddressId}
-                    onSelect={setSelectedAddressId}
-                    onCreate={(data) => createAddr.mutateAsync(data)}
-                    onUpdate={(id, data) => updateAddr.mutateAsync({ addressId: id, data })}
-                    onDelete={(id) => deleteAddr.mutateAsync(id)}
-                    onSetDefault={(id) => setDefaultAddr.mutateAsync(id)}
-                  />
+                    <div className="flex justify-stretch sm:justify-end pt-2">
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        disabled={!selectedAddressId}
+                        onClick={() => setCurrentStep('payment')}
+                        className="w-full sm:w-auto rounded-2xl bg-amber-900 text-white font-bold py-4 px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2 border border-amber-500/20"
+                      >
+                        <span>Proceed to Payment & Promo</span>
+                        <FiChevronRight className="h-4 w-4 text-amber-200" />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
 
-                  <div className="flex justify-stretch sm:justify-end pt-2">
-                    <button
-                      type="button"
-                      disabled={!selectedAddressId}
-                      onClick={() => setCurrentStep('payment')}
-                      className="w-full sm:w-auto rounded-xl bg-amber-900 text-white font-bold py-3.5 px-6 sm:px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2"
-                    >
-                      <span>Proceed to Payment & Promo</span>
-                      <FiChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-
-              {currentStep === 'payment' && (
-                <motion.div
-                  key="step-payment"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
-                  {/* Coupon Section */}
-                  <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs">
-                    <h3 className="font-heading text-base font-bold text-amber-950 mb-3">Apply Promotional Coupon</h3>
+                {currentStep === 'payment' && (
+                  <motion.div
+                    key="step-payment"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6"
+                  >
+                    {/* Coupon Section */}
                     <CouponInput
                       orderAmount={subtotal}
-                      appliedCoupon={couponCode ? { code: couponCode } : null}
+                      appliedCoupon={appliedCoupon}
                       onApply={handleCouponApply}
                       onRemove={handleCouponRemove}
                     />
-                  </div>
 
-                  {/* Payment Method Section */}
-                  <PaymentSection
-                    selectedMethod={paymentMethod}
-                    onSelectMethod={setPaymentMethod}
-                    onPlaceOrder={() => setCurrentStep('review')}
-                    isPlacingOrder={false}
-                    isCreatingRazorpay={false}
-                    isValid={isOrderValid}
-                    error={orderError}
-                    grandTotal={finalGrandTotal}
-                  />
+                    {/* Payment Method Section */}
+                    <PaymentSection
+                      selectedMethod={paymentMethod}
+                      onSelectMethod={setPaymentMethod}
+                      onPlaceOrder={() => setCurrentStep('review')}
+                      isPlacingOrder={false}
+                      isCreatingRazorpay={false}
+                      isValid={isOrderValid}
+                      error={orderError}
+                      grandTotal={finalGrandTotal}
+                    />
 
-                  <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep('address')}
-                      className="text-xs font-bold text-stone-600 hover:text-amber-950 py-2.5 px-4 min-h-[44px]"
-                    >
-                      ← Back to Address
-                    </button>
-                    <button
-                      type="button"
-                      disabled={!isOrderValid}
-                      onClick={() => setCurrentStep('review')}
-                      className="w-full sm:w-auto rounded-xl bg-amber-900 text-white font-bold py-3.5 px-6 sm:px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2"
-                    >
-                      <span>Review Order Details</span>
-                      <FiChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
+                    <div className="flex flex-col-reverse items-stretch gap-2.5 sm:flex-row sm:items-center sm:justify-between pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep('address')}
+                        className="text-xs font-bold text-stone-600 hover:text-amber-950 py-2.5 px-4 min-h-[44px] flex items-center gap-1.5"
+                      >
+                        <FiChevronLeft className="h-4 w-4" /> Back to Shipping Address
+                      </button>
 
-              {currentStep === 'review' && (
-                <motion.div
-                  key="step-review"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
-                  {/* Address Summary */}
-                  {selectedAddress && (
-                    <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs">
-                      <div className="flex justify-between items-center mb-3">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900">Deliver To</h4>
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        disabled={!isOrderValid}
+                        onClick={() => setCurrentStep('review')}
+                        className="w-full sm:w-auto rounded-2xl bg-amber-900 text-white font-bold py-4 px-8 text-sm shadow-md hover:bg-amber-950 disabled:opacity-50 min-h-[48px] flex items-center justify-center gap-2 border border-amber-500/20"
+                      >
+                        <span>Review Order Details</span>
+                        <FiChevronRight className="h-4 w-4 text-amber-200" />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentStep === 'review' && (
+                  <motion.div
+                    key="step-review"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6"
+                  >
+                    {/* Shipping Address Summary Card */}
+                    {selectedAddress && (
+                      <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs font-display">
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 font-display">Deliver To</h4>
+                          <button
+                            type="button"
+                            onClick={() => setCurrentStep('address')}
+                            className="text-xs font-bold text-amber-800 hover:underline min-h-[36px] flex items-center"
+                          >
+                            Change Address
+                          </button>
+                        </div>
+                        <p className="text-sm font-bold text-amber-950">{selectedAddress.fullName}</p>
+                        <p className="text-xs text-stone-600 font-mono mt-0.5">{selectedAddress.phoneNumber}</p>
+                        <p className="text-xs text-stone-700 mt-1 font-body leading-relaxed">
+                          {selectedAddress.addressLine1}{selectedAddress.addressLine2 ? `, ${selectedAddress.addressLine2}` : ''}<br />
+                          <strong className="text-amber-950">{selectedAddress.city}, {selectedAddress.state} - {selectedAddress.postalCode}</strong>
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Payment Method Summary Card */}
+                    <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs font-display">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900">Payment Option Selected</h4>
                         <button
                           type="button"
-                          onClick={() => setCurrentStep('address')}
-                          className="text-xs font-bold text-amber-800 hover:underline min-h-[44px] flex items-center"
+                          onClick={() => setCurrentStep('payment')}
+                          className="text-xs font-bold text-amber-800 hover:underline min-h-[36px] flex items-center"
                         >
-                          Change
+                          Change Option
                         </button>
                       </div>
-                      <p className="text-sm font-bold text-amber-950">{selectedAddress.fullName}</p>
-                      <p className="text-xs text-stone-600 mt-0.5">{selectedAddress.phoneNumber}</p>
-                      <p className="text-xs text-stone-600 mt-1 font-body">
-                        {selectedAddress.addressLine1}{selectedAddress.addressLine2 ? `, ${selectedAddress.addressLine2}` : ''}<br />
-                        {selectedAddress.city}, {selectedAddress.state} - {selectedAddress.postalCode}
+                      <p className="text-sm font-bold text-amber-950">
+                        {paymentMethod === 'COD' ? 'Cash on Delivery (Pay upon arrival)' : 'Online Payment via Razorpay (UPI, Cards, Netbanking, Wallets)'}
                       </p>
                     </div>
-                  )}
 
-                  {/* Payment Method Summary */}
-                  <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900">Payment Option</h4>
+                    {/* Order Notes Summary if entered */}
+                    {orderNotes && (
+                      <div className="rounded-2xl bg-amber-50/60 border border-amber-900/10 p-4 font-display">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Special Delivery Notes</h4>
+                        <p className="text-xs text-stone-700 font-body italic">"{orderNotes}"</p>
+                      </div>
+                    )}
+
+                    {orderError && (
+                      <div className="rounded-xl bg-rose-50 border border-rose-200 p-4 text-xs font-bold text-rose-700 flex items-center gap-2">
+                        <FiAlertCircle className="h-4 w-4 shrink-0" />
+                        <span>{orderError}</span>
+                      </div>
+                    )}
+
+                    {/* Final Action Button Row */}
+                    <div className="flex flex-col-reverse sm:flex-row gap-3 justify-between items-center pt-2">
                       <button
                         type="button"
                         onClick={() => setCurrentStep('payment')}
-                        className="text-xs font-bold text-amber-800 hover:underline min-h-[44px] flex items-center"
+                        className="text-xs font-bold text-stone-600 hover:text-amber-950 py-2.5 px-4 min-h-[44px] flex items-center gap-1.5"
                       >
-                        Change
+                        <FiChevronLeft className="h-4 w-4" /> Back to Payment
                       </button>
+
+                      <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        onClick={handlePlaceOrder}
+                        disabled={!isOrderValid || isProcessingOrder || placeOrderMutation.isPending || razorpayOrderMutation.isPending || isVerifying}
+                        className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 hover:from-amber-950 hover:to-stone-950 text-white font-bold py-4 px-10 text-sm sm:text-base shadow-xl flex items-center justify-center gap-2.5 min-h-[52px] border border-amber-500/20 disabled:opacity-50"
+                      >
+                        <FiLock className="h-4 w-4 text-amber-200" />
+                        <span>{paymentMethod === 'COD' ? 'Confirm & Place COD Order' : `Pay ${formatPrice(finalGrandTotal)} Securely`}</span>
+                      </motion.button>
                     </div>
-                    <p className="text-sm font-bold text-amber-950">
-                      {paymentMethod === 'COD' ? 'Cash on Delivery (Pay upon delivery)' : 'Online Payment via Razorpay (UPI, Cards, Netbanking)'}
-                    </p>
-                  </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                  {/* Order Notes */}
-                  <div className="rounded-2xl bg-white border border-amber-900/10 p-5 shadow-xs">
-                    <label htmlFor="order-notes" className="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">
-                      Delivery Instructions / Order Notes (Optional)
-                    </label>
-                    <textarea
-                      id="order-notes"
-                      rows={2}
-                      value={orderNotes}
-                      onChange={(e) => setOrderNotes(e.target.value)}
-                      placeholder="e.g. Leave with security, call before delivery..."
-                      className="w-full rounded-xl border border-amber-900/15 p-3 text-xs text-amber-950 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-700/30 font-body"
-                    />
-                  </div>
+              {/* Trust Section */}
+              <CheckoutTrustBadges />
+            </div>
 
-                  {orderError && (
-                    <div className="rounded-xl bg-rose-50 border border-rose-200 p-4 text-xs font-bold text-rose-700">
-                      {orderError}
-                    </div>
-                  )}
-
-                  {/* Final Place Order Action */}
-                  <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep('payment')}
-                      className="text-xs font-bold text-stone-600 hover:text-amber-950 py-2.5 px-4 min-h-[44px]"
-                    >
-                      ← Back to Payment
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handlePlaceOrder}
-                      disabled={!isOrderValid || isProcessingOrder || placeOrderMutation.isPending || razorpayOrderMutation.isPending || isVerifying}
-                      className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 hover:from-amber-950 hover:to-stone-950 text-white font-bold py-3.5 px-10 text-sm shadow-md flex items-center justify-center gap-2 min-h-[48px]"
-                    >
-                      <FiLock className="h-4 w-4 text-amber-200" />
-                      <span>{paymentMethod === 'COD' ? 'Confirm & Place COD Order' : `Pay ${formatPrice(finalGrandTotal)}`}</span>
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Sticky Order Summary Sidebar */}
-          <div className="lg:col-span-5">
-            <div className="space-y-4 lg:sticky lg:top-24">
-              <CheckoutOrderSummary
-                items={cartItems}
-                subtotal={subtotal}
-                discount={finalDiscount}
-                shippingCharge={activeShippingCharge}
-                grandTotal={finalGrandTotal}
-                couponCode={couponCode}
-                onRemoveCoupon={handleCouponRemove}
-              />
-
-              <div className="rounded-2xl bg-amber-100/50 border border-amber-900/10 p-4 text-center">
-                <p className="text-xs font-bold text-amber-950 font-body">
-                  ✨ Guaranteed Authentic Meerut Deity Attire & Safe Shipping across India
-                </p>
+            {/* Right Column: Sticky Order Summary */}
+            <div className="lg:col-span-5 w-full">
+              <div className="space-y-4 lg:sticky lg:top-24">
+                <CheckoutOrderSummary
+                  items={cartItems}
+                  subtotal={subtotal}
+                  discount={finalDiscount}
+                  shippingCharge={activeShippingCharge}
+                  grandTotal={finalGrandTotal}
+                  couponCode={couponCode}
+                  onRemoveCoupon={handleCouponRemove}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Payment Failure Modal */}
+      {/* Mobile Bottom Payment Bar */}
+      {currentStep === 'review' && (
+        <CheckoutMobileBar
+          grandTotal={finalGrandTotal}
+          paymentMethod={paymentMethod}
+          isDisabled={!isOrderValid}
+          isProcessing={isProcessingOrder || isVerifying}
+          onPay={handlePlaceOrder}
+        />
+      )}
+
+      {/* Razorpay Processing Overlay */}
+      <RazorpayOverlay
+        isVisible={isProcessingOrder || isVerifying}
+        statusText={overlayStatusText}
+      />
+
+      {/* Payment Failure Recovery Modal */}
       <PaymentFailureModal
         isOpen={failureModalOpen}
         onClose={() => setFailureModalOpen(false)}
