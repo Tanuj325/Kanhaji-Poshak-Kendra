@@ -6,21 +6,21 @@ import { FiShoppingBag, FiArrowRight, FiHeart } from 'react-icons/fi';
 
 function EmptyCart() {
   return (
-    <div className="space-y-12 py-8 font-display">
+    <div className="space-y-10 py-6 font-display">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="max-w-xl mx-auto text-center space-y-6 px-4 py-12 rounded-3xl bg-gradient-to-b from-amber-50/80 via-white to-amber-50/40 border border-amber-900/10 shadow-[0_8px_30px_rgba(212,175,55,0.08)] relative overflow-hidden"
+        className="max-w-xl mx-auto text-center space-y-5 px-6 py-12 sm:py-14 rounded-3xl bg-gradient-to-b from-amber-50/90 via-white to-amber-50/50 border border-amber-900/10 shadow-[0_8px_30px_rgba(212,175,55,0.08)] relative overflow-hidden"
       >
-        {/* Luxury Glowing Background Accent */}
+        {/* Luxury Glow Accent */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-amber-300/20 to-amber-600/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Custom Sacred Gold Shopping Bag SVG Artwork */}
+        {/* Custom Sacred Gold Shopping Bag SVG */}
         <div className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-amber-100 via-amber-200/60 to-amber-100 p-1 shadow-lg shadow-amber-500/10 flex items-center justify-center">
           <div className="w-full h-full rounded-full bg-white flex items-center justify-center border border-amber-300/50">
             <svg
-              className="w-12 h-12 text-amber-700 stroke-current"
+              className="w-12 h-12 text-amber-800 stroke-current"
               viewBox="0 0 24 24"
               fill="none"
               strokeWidth="1.8"
@@ -38,32 +38,32 @@ function EmptyCart() {
           <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/80 px-3 py-1 rounded-full border border-amber-300/50">
             ✦ Sacred Poshak Collection ✦
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-stone-950 pt-2">
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 pt-2">
             Your Cart is Waiting for Divine Attire
           </h2>
-          <p className="text-stone-600 text-sm max-w-md mx-auto leading-relaxed">
-            Discover exquisite handcrafted deity poshaks, regal mukuts, handcrafted jewelry, and spiritual accessories.
+          <p className="text-stone-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed font-body">
+            Discover handcrafted deity poshaks, regal mukuts, handcrafted jewelry, and spiritual accessories.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 relative z-10">
-          <Link to="/shop">
+          <Link to="/shop" className="w-full sm:w-auto">
             <Button
               variant="primary"
               size="lg"
               leftIcon={<FiShoppingBag className="h-5 w-5" />}
               rightIcon={<FiArrowRight className="h-5 w-5" />}
-              className="w-full sm:w-auto shadow-md hover:shadow-lg font-bold px-7 rounded-2xl min-h-[48px]"
+              className="w-full sm:w-auto shadow-md hover:shadow-lg font-bold px-7 rounded-2xl min-h-[48px] bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-white border border-amber-500/20"
             >
               Explore Collection
             </Button>
           </Link>
-          <Link to="/account/wishlist">
+          <Link to="/account/wishlist" className="w-full sm:w-auto">
             <Button
               variant="outline"
               size="lg"
-              leftIcon={<FiHeart className="h-5 w-5 text-amber-700" />}
-              className="w-full sm:w-auto font-bold px-6 rounded-2xl border-amber-900/20 text-stone-900 hover:bg-amber-50 min-h-[48px]"
+              leftIcon={<FiHeart className="h-5 w-5 text-amber-800" />}
+              className="w-full sm:w-auto font-bold px-6 rounded-2xl border-amber-900/20 text-amber-950 hover:bg-amber-50 min-h-[48px]"
             >
               View Saved Items
             </Button>
@@ -71,7 +71,7 @@ function EmptyCart() {
         </div>
       </motion.div>
 
-      {/* Featured Products Recommendations */}
+      {/* Recommended Products Carousel */}
       <RecommendedProducts title="Recommended Divine Poshaks" limit={4} />
     </div>
   );

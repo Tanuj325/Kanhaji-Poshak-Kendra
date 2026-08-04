@@ -1,10 +1,9 @@
 import { memo, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartContext } from '@/context/CartContext';
 import CartItem from './CartItem';
-import CouponInput from './CouponInput';
-import CartSummary from './CartSummary';
+import FreeShippingBar from './FreeShippingBar';
 import Button from '@/components/ui/Button';
 import { formatPrice } from '@/utils/formatPrice';
 import { FiX, FiShoppingBag, FiArrowRight, FiLock, FiTrash2 } from 'react-icons/fi';
@@ -17,7 +16,6 @@ export const CartDrawer = memo(function CartDrawer() {
     cartCount,
     subtotal,
     discount,
-    shippingCharge,
     grandTotal,
     updateQuantity,
     removeItem,
@@ -85,17 +83,17 @@ export const CartDrawer = memo(function CartDrawer() {
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
               className="w-screen max-w-md flex flex-col border-l border-white/10 bg-[linear-gradient(180deg,#0b1728_0%,#081427_100%)] shadow-[0_28px_80px_rgba(0,0,0,0.45)]"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between bg-[#081427]/95 p-4 text-white shadow-[0_14px_30px_rgba(15,36,64,0.2)] backdrop-blur-xl sm:p-5">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between bg-[#081427]/95 p-4 sm:p-5 text-white shadow-[0_14px_30px_rgba(15,36,64,0.2)] backdrop-blur-xl border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/15 text-amber-300">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/15 text-temple-gold">
                     <FiShoppingBag className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="font-display text-lg font-semibold leading-tight text-white">
+                    <h2 className="font-display text-lg font-bold leading-tight text-white">
                       Your Shopping Cart
                     </h2>
-                    <span className="text-xs font-medium text-amber-300/80">
+                    <span className="text-xs font-medium text-amber-200/80">
                       {cartCount} {cartCount === 1 ? 'item' : 'items'} selected
                     </span>
                   </div>
@@ -107,7 +105,7 @@ export const CartDrawer = memo(function CartDrawer() {
                       type="button"
                       onClick={clearCart}
                       disabled={isClearing}
-                      className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/10 hover:text-rose-400"
+                      className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/10 hover:text-rose-400 min-h-[40px] min-w-[40px] flex items-center justify-center"
                       title="Clear Cart"
                     >
                       <FiTrash2 className="h-4 w-4" />
@@ -128,12 +126,12 @@ export const CartDrawer = memo(function CartDrawer() {
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {cartItems.length === 0 ? (
                   <div className="py-16 text-center space-y-4">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-amber-400/20 bg-amber-400/10 text-amber-300">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-amber-400/20 bg-amber-400/10 text-temple-gold">
                       <FiShoppingBag className="h-8 w-8" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-display text-lg font-semibold text-white">Your Cart is Empty</h3>
-                      <p className="mx-auto max-w-xs text-xs text-slate-400">
+                      <h3 className="font-display text-lg font-bold text-white">Your Cart is Empty</h3>
+                      <p className="mx-auto max-w-xs text-xs text-slate-400 font-body">
                         Add handcrafted poshaks and spiritual attire to begin.
                       </p>
                     </div>
@@ -141,13 +139,14 @@ export const CartDrawer = memo(function CartDrawer() {
                       variant="primary"
                       size="sm"
                       onClick={closeDrawer}
-                      className="rounded-full px-5 font-bold"
+                      className="rounded-full px-6 font-bold bg-amber-400 text-stone-950 hover:bg-amber-300"
                     >
                       Browse Shop
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-3">
+                    <FreeShippingBar subTotal={subtotal} className="bg-white/5 border-white/10 text-white" />
                     <AnimatePresence mode="popLayout">
                       {cartItems.map((item) => (
                         <CartItem
@@ -167,31 +166,31 @@ export const CartDrawer = memo(function CartDrawer() {
 
               {/* Drawer Footer Summary & Actions */}
               {cartItems.length > 0 && (
-                <div className="space-y-3 border-t border-white/10 bg-[#081427] p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:p-5">
+                <div className="space-y-3 border-t border-white/10 bg-[#081427] p-4 sm:p-5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
                   <div className="space-y-1.5 text-xs">
                     <div className="flex justify-between font-medium text-slate-300">
                       <span>Subtotal</span>
-                      <span className="font-bold text-white">{formatPrice(subtotal)}</span>
+                      <span className="font-bold text-white font-mono">{formatPrice(subtotal)}</span>
                     </div>
                     {discount > 0 && (
-                      <div className="flex justify-between font-bold text-emerald-300">
+                      <div className="flex justify-between font-bold text-emerald-300 font-mono">
                         <span>Discount</span>
                         <span>-{formatPrice(discount)}</span>
                       </div>
                     )}
-                    <div className="flex items-baseline justify-between border-t border-white/10 pt-1">
+                    <div className="flex items-baseline justify-between border-t border-white/10 pt-2">
                       <span className="font-display text-sm font-extrabold text-white">Grand Total</span>
-                      <span className="font-display text-xl font-extrabold text-temple-gold">
+                      <span className="font-display text-xl font-extrabold text-temple-gold font-mono">
                         {formatPrice(grandTotal)}
                       </span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2 pt-1">
+                  <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2.5 pt-1">
                     <button
                       type="button"
                       onClick={handleViewCart}
-                      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/10 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/5"
+                      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/15 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/10"
                     >
                       <FiShoppingBag className="h-4 w-4 text-temple-gold" />
                       <span>View Full Cart</span>

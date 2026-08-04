@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
 function QuantitySelector({
@@ -59,40 +60,41 @@ function QuantitySelector({
   };
 
   const sizeContainer = {
-    sm: 'h-8 text-xs',
-    md: 'h-9 sm:h-10 text-sm',
-    lg: 'h-11 sm:h-12 text-base font-bold',
+    sm: 'h-9 text-xs',
+    md: 'h-10 text-sm',
+    lg: 'h-12 text-base font-bold',
   };
 
   const buttonWidth = {
-    sm: 'w-7 sm:w-8',
-    md: 'w-8 sm:w-9',
-    lg: 'w-10 sm:w-11',
+    sm: 'w-8 min-h-[36px]',
+    md: 'w-9 min-h-[40px]',
+    lg: 'w-11 min-h-[48px]',
   };
 
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-xl border border-amber-900/15 bg-stone-50/60 shadow-2xs overflow-hidden font-display transition-all duration-200 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-400/20',
+        'inline-flex items-center rounded-xl border border-amber-900/15 bg-white shadow-2xs overflow-hidden font-display transition-all duration-200 focus-within:border-amber-700 focus-within:ring-2 focus-within:ring-amber-700/20',
         sizeContainer[size],
         isComponentDisabled && 'opacity-50 pointer-events-none bg-stone-100',
         className,
       )}
     >
-      <button
+      <motion.button
+        whileTap={{ scale: 0.9 }}
         type="button"
         onClick={handleDecrement}
         disabled={value <= min || isComponentDisabled}
         aria-label="Decrease quantity"
         className={cn(
-          'flex items-center justify-center h-full border-r border-amber-900/10 text-stone-800 font-bold hover:bg-amber-100/60 hover:text-amber-900 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed min-h-[32px]',
+          'flex items-center justify-center h-full border-r border-amber-900/10 text-amber-950 font-bold hover:bg-amber-100/70 hover:text-amber-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed',
           buttonWidth[size],
         )}
       >
         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
         </svg>
-      </button>
+      </motion.button>
 
       <input
         type="number"
@@ -104,25 +106,26 @@ function QuantitySelector({
         disabled={isComponentDisabled}
         aria-label="Quantity selector input"
         className={cn(
-          'w-10 sm:w-12 px-1 text-center border-none bg-transparent text-stone-900 font-bold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-mono',
+          'w-10 sm:w-12 px-1 text-center border-none bg-transparent text-amber-950 font-bold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-mono',
           sizeContainer[size],
         )}
       />
 
-      <button
+      <motion.button
+        whileTap={{ scale: 0.9 }}
         type="button"
         onClick={handleIncrement}
         disabled={value >= max || isComponentDisabled}
         aria-label="Increase quantity"
         className={cn(
-          'flex items-center justify-center h-full border-l border-amber-900/10 text-stone-800 font-bold hover:bg-amber-100/60 hover:text-amber-900 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed min-h-[32px]',
+          'flex items-center justify-center h-full border-l border-amber-900/10 text-amber-950 font-bold hover:bg-amber-100/70 hover:text-amber-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed',
           buttonWidth[size],
         )}
       >
         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
         </svg>
-      </button>
+      </motion.button>
     </div>
   );
 }
