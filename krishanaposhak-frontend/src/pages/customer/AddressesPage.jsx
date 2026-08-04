@@ -149,6 +149,11 @@ export default function AddressesPage() {
 
   const [deleteTarget, setDeleteTarget] = useState(null);
 
+  const handleDelete = useCallback((addrOrId) => {
+    const target = typeof addrOrId === 'object' ? addrOrId : { id: addrOrId };
+    setDeleteTarget(target);
+  }, []);
+
   const handleDeleteConfirm = useCallback(async () => {
     if (!deleteTarget) return;
     try {
@@ -338,6 +343,17 @@ export default function AddressesPage() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Saved Address"
+        message="Are you sure you want to remove this delivery address from your account?"
+        confirmText="Delete"
+        variant="danger"
+        isLoading={deleteAddress.isPending}
+      />
     </>
   );
 }

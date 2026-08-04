@@ -254,7 +254,7 @@ export default function ProductEditPage() {
             formData.append('thumbnail', String(payload.thumbnail));
             return productImageService.update(productId, image.id, formData);
           } else {
-            return productImageService.updateMetadata(productId, image.id, payload);
+            return productImageService.update(productId, image.id, payload);
           }
         } else {
           if (!image.file) return Promise.resolve();
@@ -271,7 +271,7 @@ export default function ProductEditPage() {
       await Promise.all(imagePromises);
 
       if (imagesToDelete.length > 0) {
-        await Promise.all(imagesToDelete.map((imgId) => productImageService.remove(productId, imgId)));
+        await Promise.all(imagesToDelete.map((imgId) => productImageService.delete(productId, imgId)));
       }
 
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCT, productId] });

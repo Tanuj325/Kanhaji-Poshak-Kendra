@@ -11,7 +11,13 @@ const productImageService = {
   update: (productId, imageId, data) =>
     api.put(API_ENDPOINTS.IMAGES.UPDATE(productId, imageId), data),
 
+  updateMetadata: (productId, imageId, data) =>
+    api.put(API_ENDPOINTS.IMAGES.UPDATE(productId, imageId), data),
+
   delete: (productId, imageId) =>
+    api.delete(API_ENDPOINTS.IMAGES.DELETE(productId, imageId)),
+
+  remove: (productId, imageId) =>
     api.delete(API_ENDPOINTS.IMAGES.DELETE(productId, imageId)),
 
   setThumbnail: (productId, imageId) =>

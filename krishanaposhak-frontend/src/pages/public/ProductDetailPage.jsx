@@ -89,45 +89,14 @@ export default function ProductDetailPage() {
     addItem(selectedVariant.id, 1);
   };
 
-  if (isLoading) {
-    return <ProductDetailSkeleton />;
-  }
-
-  if (isError) {
-    return (
-      <div className="container-page section-padding py-16">
-        <ErrorState
-          title="Unable to load product details"
-          message={getErrorMessage(error)}
-          onRetry={refetch}
-        />
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="container-page section-padding py-16">
-        <EmptyState
-          title="Sacred poshak not found"
-          message="The requested creation could not be found or has been moved."
-          action={
-            <Link to={ROUTE_PATHS.SHOP}>
-              <Button variant="primary" className="bg-amber-900 text-white rounded-2xl">Return to Shop</Button>
-            </Link>
-          }
-        />
-      </div>
-    );
-  }
-
-  const activePrice = selectedVariant?.price || product.price;
-  const activeDiscountPrice = selectedVariant?.discountPrice || product.discountPrice;
-  const canonicalUrl = `${siteConfig.url}/products/${product.slug || slug}`;
-  const productImage = product.imageUrl || product.images?.[0]?.imageUrl;
-  const categoryName = product.categoryName || product.category?.name || 'Devotional Attire';
+  const activePrice = selectedVariant?.price || product?.price;
+  const activeDiscountPrice = selectedVariant?.discountPrice || product?.discountPrice;
+  const canonicalUrl = `${siteConfig.url}/products/${product?.slug || slug}`;
+  const productImage = product?.imageUrl || product?.images?.[0]?.imageUrl;
+  const categoryName = product?.categoryName || product?.category?.name || 'Devotional Attire';
 
   const productSchemas = useMemo(() => {
+    if (!product) return [];
     const schemas = [
       {
         '@context': 'https://schema.org',
@@ -180,6 +149,38 @@ export default function ProductDetailPage() {
 
     return schemas;
   }, [product, selectedVariant, activePrice, activeDiscountPrice, canonicalUrl, productImage, categoryName, breadcrumbItems]);
+
+  if (isLoading) {
+    return <ProductDetailSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="container-page section-padding py-16">
+        <ErrorState
+          title="Unable to load product details"
+          message={getErrorMessage(error)}
+          onRetry={refetch}
+        />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="container-page section-padding py-16">
+        <EmptyState
+          title="Sacred poshak not found"
+          message="The requested creation could not be found or has been moved."
+          action={
+            <Link to={ROUTE_PATHS.SHOP}>
+              <Button variant="primary" className="bg-amber-900 text-white rounded-2xl">Return to Shop</Button>
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">

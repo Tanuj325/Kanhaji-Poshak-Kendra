@@ -277,13 +277,13 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* Carousel Navigation Arrows - Hidden on mobile/small screens (under md breakpoint) */}
+        {/* Carousel Navigation Arrows - Hidden on mobile view */}
         {bannerList.length > 1 && (
           <>
             <button
               type="button"
               onClick={goPrev}
-              className="absolute left-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:left-4 sm:h-12 sm:w-12"
+              className="absolute left-2 top-1/2 z-20 hidden md:flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:left-4 sm:h-12 sm:w-12"
               aria-label="Previous banner"
             >
               <FiChevronLeft className="h-6 w-6" />
@@ -291,7 +291,7 @@ export default function HeroBanner() {
             <button
               type="button"
               onClick={goNext}
-              className="absolute right-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:right-4 sm:h-12 sm:w-12"
+              className="absolute right-2 top-1/2 z-20 hidden md:flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lotus-white backdrop-blur-md transition-all duration-200 hover:bg-temple-gold hover:text-dark-charcoal hover:border-temple-gold focus-visible:outline-none shadow-[0_18px_36px_rgba(0,0,0,0.2)] sm:right-4 sm:h-12 sm:w-12"
               aria-label="Next banner"
             >
               <FiChevronRight className="h-6 w-6" />
