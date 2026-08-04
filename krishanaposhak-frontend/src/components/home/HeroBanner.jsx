@@ -259,7 +259,7 @@ export default function HeroBanner() {
                 >
                   <Link
                     to={banner.redirectUrl || '/shop'}
-                  className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
                   >
                     Shop Collection
                     <FiChevronRight className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function HeroBanner() {
 
                   <Link
                     to="/about"
-                  className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-6 py-3.5 text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-6 py-3.5 text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
                   >
                     Our Heritage Story
                   </Link>

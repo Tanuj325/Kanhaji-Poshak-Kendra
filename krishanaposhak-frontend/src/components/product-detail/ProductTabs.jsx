@@ -26,28 +26,28 @@ export default function ProductTabs({ product }) {
     },
     ...(product.material || product.careInstructions
       ? [
-          {
-            id: 'specifications',
-            label: 'Material & Care',
-            icon: FiFeather,
-            content: (
-              <div className="space-y-3 text-sm text-stone-700 font-body">
-                {product.material && (
-                  <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-amber-50/50 border border-amber-900/10">
-                    <span className="font-bold text-amber-950 w-32 shrink-0 font-display">Primary Fabric:</span>
-                    <span>{product.material}</span>
-                  </div>
-                )}
-                {product.careInstructions && (
-                  <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-amber-50/50 border border-amber-900/10">
-                    <span className="font-bold text-amber-950 w-32 shrink-0 font-display">Care Instructions:</span>
-                    <span className="whitespace-pre-line">{product.careInstructions}</span>
-                  </div>
-                )}
-              </div>
-            ),
-          },
-        ]
+        {
+          id: 'specifications',
+          label: 'Material & Care',
+          icon: FiFeather,
+          content: (
+            <div className="space-y-3 text-sm text-stone-700 font-body">
+              {product.material && (
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-amber-50/50 border border-amber-900/10">
+                  <span className="font-bold text-amber-950 w-32 shrink-0 font-display">Primary Fabric:</span>
+                  <span>{product.material}</span>
+                </div>
+              )}
+              {product.careInstructions && (
+                <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl bg-amber-50/50 border border-amber-900/10">
+                  <span className="font-bold text-amber-950 w-32 shrink-0 font-display">Care Instructions:</span>
+                  <span className="whitespace-pre-line">{product.careInstructions}</span>
+                </div>
+              )}
+            </div>
+          ),
+        },
+      ]
       : []),
     {
       id: 'shipping',
@@ -92,9 +92,8 @@ export default function ProductTabs({ product }) {
               role="tab"
               aria-selected={isActive}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex items-center gap-2 py-4 px-5 xl:px-6 text-xs sm:text-sm font-bold transition-all focus:outline-none whitespace-nowrap ${
-                isActive ? 'text-amber-950 font-extrabold' : 'text-stone-500 hover:text-amber-900'
-              }`}
+              className={`relative flex items-center gap-2 py-4 px-5 xl:px-6 text-xs sm:text-sm font-bold transition-all focus:outline-none whitespace-nowrap ${isActive ? 'text-amber-950 font-extrabold' : 'text-stone-500 hover:text-amber-900'
+                }`}
             >
               <Icon className={`h-4 w-4 ${isActive ? 'text-amber-800' : 'text-stone-400'}`} />
               <span>{tab.label}</span>
