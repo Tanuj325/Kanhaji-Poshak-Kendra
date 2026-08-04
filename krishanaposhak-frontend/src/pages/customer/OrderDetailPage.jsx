@@ -136,17 +136,17 @@ export default function OrderDetailPage() {
         />
 
         {/* Luxury Order Header Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-white via-warm-cream/30 to-temple-gold/10 p-6 sm:p-7 rounded-3xl border border-temple-gold/30 shadow-md print:shadow-none print:border-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-white via-amber-50/40 to-amber-100/20 p-6 sm:p-7 rounded-3xl border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] print:shadow-none print:border-none">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal">
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950">
                 Order #{order?.orderNumber}
               </h1>
-              <Badge variant={order?.orderStatus === 'DELIVERED' ? 'success' : order?.orderStatus === 'CANCELLED' ? 'danger' : 'warning'} className="font-bold border border-black/10">
+              <Badge variant={order?.orderStatus === 'DELIVERED' ? 'success' : order?.orderStatus === 'CANCELLED' ? 'danger' : 'warning'} className="font-bold">
                 {order?.orderStatus}
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-natural-wood mt-1 font-medium">
+            <p className="text-xs sm:text-sm text-stone-600 mt-1 font-body">
               Placed on {order?.orderDate ? formatDate(order.orderDate, { format: 'datetime' }) : 'N/A'}
             </p>
           </div>

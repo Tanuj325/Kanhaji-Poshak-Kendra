@@ -6,26 +6,31 @@ const DashboardCard = memo(function DashboardCard({ icon, label, value, trend, c
     <button
       onClick={onClick}
       className={cn(
-        'flex flex-col gap-1.5 rounded-lg bg-white p-4 shadow-soft border border-muted-sand/20 text-left transition-all duration-150',
-        onClick && 'cursor-pointer hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue/50',
+        'flex flex-col justify-between rounded-3xl bg-white p-5 shadow-[0_4px_20px_rgba(44,40,36,0.03)] border border-amber-900/10 text-left transition-all duration-200 font-display min-h-[110px]',
+        onClick && 'cursor-pointer hover:border-amber-700/30 hover:shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:-translate-y-1 active:scale-[0.98]',
         className,
       )}
       aria-label={`${label}: ${value}`}
       type="button"
     >
       <div className="flex items-center justify-between">
-        <span className="text-natural-wood">{icon}</span>
-        {trend && (
+        <div className="h-10 w-10 rounded-2xl bg-amber-100/70 text-amber-900 flex items-center justify-center shrink-0">
+          {icon}
+        </div>
+        {trend !== undefined && (
           <span className={cn(
-            'text-xs font-medium',
-            trend > 0 ? 'text-success' : trend < 0 ? 'text-error' : 'text-natural-wood'
+            'text-xs font-bold font-mono px-2 py-0.5 rounded-md',
+            trend > 0 ? 'bg-emerald-50 text-emerald-700' : trend < 0 ? 'bg-rose-50 text-rose-700' : 'bg-stone-100 text-stone-600'
           )}>
             {trend > 0 ? '+' : ''}{trend}%
           </span>
         )}
       </div>
-      <span className="text-2xl font-bold font-display text-dark-charcoal">{value}</span>
-      <span className="text-xs text-natural-wood">{label}</span>
+      
+      <div className="space-y-0.5 pt-2">
+        <span className="text-2xl font-extrabold font-heading text-amber-950 block leading-none">{value}</span>
+        <span className="text-xs font-medium text-stone-600 font-body block">{label}</span>
+      </div>
     </button>
   );
 });

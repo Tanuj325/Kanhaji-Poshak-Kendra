@@ -198,13 +198,13 @@ export default function OrdersPage() {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-muted-sand/20">
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal flex items-center gap-2.5">
-              <FiShoppingBag className="h-6 w-6 text-temple-gold" /> Order History {totalOrders > 0 && `(${totalOrders})`}
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 flex items-center gap-2.5">
+              <FiShoppingBag className="h-6 w-6 text-amber-800" /> Order History {totalOrders > 0 && `(${totalOrders})`}
             </h1>
-            <p className="text-xs sm:text-sm text-natural-wood mt-0.5 font-normal">Track your orders, review items, and re-order with ease</p>
+            <p className="text-xs sm:text-sm text-stone-600 mt-0.5 font-body">Track your orders, review items, and re-order with 1-click ease</p>
           </div>
           <Link to="/shop">
-            <Button variant="outline" size="md" className="font-bold">
+            <Button variant="primary" size="md" className="font-bold bg-amber-900 text-white rounded-xl min-h-[44px]">
               Explore Collection
             </Button>
           </Link>

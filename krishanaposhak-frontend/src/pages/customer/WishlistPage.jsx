@@ -147,15 +147,15 @@ function WishlistPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-white via-warm-cream/30 to-temple-gold/10 border border-temple-gold/30 shadow-md">
           <div>
             <div className="flex items-center gap-3">
-              <span className="p-2.5 rounded-2xl bg-temple-gold/20 text-temple-gold border border-temple-gold/30">
-                <FiHeart className="h-6 w-6 fill-temple-gold" />
+              <span className="p-2.5 rounded-2xl bg-amber-100 text-amber-900 border border-amber-900/20">
+                <FiHeart className="h-6 w-6 fill-amber-700 text-amber-900" />
               </span>
-              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal">
-                Saved Wishlist {items.length > 0 && <span className="text-royal-blue">({items.length})</span>}
+              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950">
+                Saved Wishlist {items.length > 0 && <span className="text-amber-800">({items.length})</span>}
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-natural-wood mt-1.5 flex items-center gap-1.5 font-normal">
-              <FiGift className="h-3.5 w-3.5 text-temple-gold flex-shrink-0" />
+            <p className="text-xs sm:text-sm text-stone-600 mt-1.5 flex items-center gap-1.5 font-body">
+              <FiGift className="h-3.5 w-3.5 text-amber-800 shrink-0" />
               Your saved divine poshaks, mukuts & devotional jewellery
             </p>
           </div>

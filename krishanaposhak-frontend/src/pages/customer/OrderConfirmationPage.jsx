@@ -124,13 +124,13 @@ function OrderConfirmationPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h1 className="font-display text-2xl font-semibold text-dark-charcoal">
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950">
               Order Confirmed!
             </h1>
-            <p className="text-natural-wood mt-2">
+            <p className="text-stone-600 mt-2 font-body">
               Thank you for your order. Your order number is:
             </p>
-            <p className="font-display text-xl font-semibold text-royal-blue mt-1">
+            <p className="font-heading text-xl font-extrabold text-amber-900 mt-1 font-mono">
               #{orderData.orderNumber}
             </p>
           </div>

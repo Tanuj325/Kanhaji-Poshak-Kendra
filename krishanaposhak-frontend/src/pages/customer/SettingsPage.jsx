@@ -99,9 +99,9 @@ export default function SettingsPage() {
       >
         <Breadcrumb items={breadcrumbItems} />
 
-        <div className="pb-4 border-b border-muted-sand/20">
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal">Account Preferences & Security</h1>
-          <p className="text-xs sm:text-sm text-natural-wood mt-0.5 font-normal">Manage your account security, notification alerts, and active login sessions</p>
+        <div className="pb-4 border-b border-amber-900/10">
+          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950">Account Preferences & Security</h1>
+          <p className="text-xs sm:text-sm text-stone-600 mt-0.5 font-body">Manage your account security, notification alerts, and active login sessions</p>
         </div>
 
         {/* Account Overview & Status Card */}

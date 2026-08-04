@@ -59,10 +59,10 @@ const NavItem = memo(function NavItem({ item, unreadCount, wishlistCount }) {
       end={item.key === 'dashboard' || item.key === 'profile'}
       className={({ isActive }) =>
         cn(
-          'group relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 select-none',
+          'group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-xs sm:text-sm font-bold transition-all duration-200 select-none min-h-[44px]',
           isActive
-            ? 'bg-gradient-to-r from-deep-navy via-royal-blue to-royal-blue text-lotus-white shadow-md font-bold'
-            : 'text-dark-charcoal/80 hover:bg-temple-gold/10 hover:text-royal-blue',
+            ? 'bg-amber-900 text-white shadow-md font-extrabold border border-amber-700/30'
+            : 'text-stone-700 hover:bg-amber-100/60 hover:text-amber-950 font-medium',
         )
       }
     >
@@ -70,14 +70,14 @@ const NavItem = memo(function NavItem({ item, unreadCount, wishlistCount }) {
         <>
           <Icon
             className={cn(
-              'h-4 w-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110',
-              isActive ? 'text-temple-gold' : 'text-royal-blue/80 group-hover:text-royal-blue',
+              'h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110',
+              isActive ? 'text-amber-300' : 'text-amber-800 group-hover:text-amber-950',
             )}
           />
-          <span className="flex-1 min-w-0 leading-tight">{item.label}</span>
+          <span className="flex-1 min-w-0 leading-tight font-display">{item.label}</span>
 
           {item.key === 'notifications' && unreadCount > 0 && (
-            <Badge variant="danger" size="sm" className="font-bold flex-shrink-0 animate-pulse">
+            <Badge variant="danger" size="sm" className="font-bold shrink-0 animate-pulse bg-rose-600 text-white">
               {unreadCount}
             </Badge>
           )}
@@ -85,10 +85,10 @@ const NavItem = memo(function NavItem({ item, unreadCount, wishlistCount }) {
           {item.key === 'wishlist' && wishlistCount > 0 && (
             <span
               className={cn(
-                'rounded-full px-2 py-0.5 text-[10px] font-bold flex-shrink-0 border',
+                'rounded-full px-2 py-0.5 text-[10px] font-bold shrink-0 border font-mono',
                 isActive
-                  ? 'bg-white/20 text-temple-gold border-temple-gold/30'
-                  : 'bg-royal-blue/10 text-royal-blue border-royal-blue/20',
+                  ? 'bg-amber-800 text-amber-200 border-amber-600'
+                  : 'bg-amber-100 text-amber-900 border-amber-300',
               )}
             >
               {wishlistCount}
@@ -96,15 +96,7 @@ const NavItem = memo(function NavItem({ item, unreadCount, wishlistCount }) {
           )}
 
           {isActive && (
-            <FiChevronRight className="h-4 w-4 text-temple-gold hidden md:block flex-shrink-0" />
-          )}
-
-          {isActive && (
-            <motion.div
-              layoutId="activeSideNav"
-              className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-temple-gold hidden md:block shadow-[0_0_8px_#D4AF37]"
-              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-            />
+            <FiChevronRight className="h-4 w-4 text-amber-300 hidden md:block shrink-0" />
           )}
         </>
       )}
@@ -134,9 +126,9 @@ function AccountSidebar() {
   const allItems = navGroups.flatMap((g) => g.items);
 
   return (
-    <aside className="w-full space-y-4">
+    <aside className="w-full space-y-4 font-display">
       {/* Mobile Horizontal Pill Navigation Bar */}
-      <div className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white/90 backdrop-blur-md p-2 rounded-[24px] border border-temple-gold/20 shadow-[0_12px_28px_rgba(44,40,36,0.08)] flex items-center gap-1.5">
+      <div className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white p-2 rounded-2xl border border-amber-900/10 shadow-xs flex items-center gap-1.5">
         {allItems.map((item) => (
           <NavItem
             key={item.key}
@@ -149,35 +141,35 @@ function AccountSidebar() {
 
       {/* Desktop Luxury Sticky Sidebar */}
       <nav
-        className="sticky top-24 hidden md:block rounded-[28px] bg-white/90 p-5 shadow-[0_18px_48px_rgba(44,40,36,0.1)] border border-white/70 space-y-6 relative overflow-hidden backdrop-blur-sm"
+        className="sticky top-24 hidden md:block rounded-3xl bg-white p-5 shadow-[0_4px_24px_rgba(44,40,36,0.04)] border border-amber-900/10 space-y-6 relative overflow-hidden"
         aria-label="Account navigation"
       >
         {/* Subtle Background Luxury Glow Accent */}
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-temple-gold/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
 
         {/* Customer Header Info */}
-        <div className="flex items-center gap-3.5 pb-4 border-b border-muted-sand/20 relative z-10">
-          <div className="relative flex-shrink-0">
+        <div className="flex items-center gap-3.5 pb-4 border-b border-amber-900/10 relative z-10">
+          <div className="relative shrink-0">
             <Avatar
               name={`${user?.firstName || ''} ${user?.lastName || ''}`}
               src={user?.profileImageUrl}
               size="lg"
-              className="border-2 border-temple-gold shadow-md"
+              className="border-2 border-amber-500 shadow-md"
             />
-            <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-[0_10px_20px_rgba(16,185,129,0.18)]" title="Online Session" />
+            <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-xs" title="Active Account" />
           </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <FiStar className="h-3 w-3 text-temple-gold" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-temple-gold">
+              <FiStar className="h-3 w-3 text-amber-700" />
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-900 font-heading">
                 Devotee Member
               </span>
             </div>
-            <h3 className="truncate font-display text-base font-bold text-dark-charcoal leading-tight">
+            <h3 className="truncate font-heading text-base font-extrabold text-amber-950 leading-tight">
               {user?.firstName || 'Valued'} {user?.lastName || 'Customer'}
             </h3>
-            <p className="truncate text-xs text-natural-wood mt-0.5 font-medium">{user?.email}</p>
+            <p className="truncate text-xs text-stone-500 mt-0.5 font-body">{user?.email}</p>
           </div>
         </div>
 
@@ -185,7 +177,7 @@ function AccountSidebar() {
         <div className="space-y-4 relative z-10">
           {navGroups.map((group, idx) => (
             <div key={idx} className="space-y-1">
-              <h4 className="px-3 text-[10px] font-bold uppercase tracking-wider text-natural-wood/60 font-display">
+              <h4 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-amber-900/60 font-heading">
                 {group.title}
               </h4>
               <div className="space-y-1">
@@ -205,34 +197,34 @@ function AccountSidebar() {
             <div className="pt-2">
               <NavLink
                 to={ROUTE_PATHS.ADMIN}
-                className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-temple-gold bg-[linear-gradient(135deg,#0f2440,#2c2824)] hover:opacity-95 transition-all shadow-[0_14px_32px_rgba(15,36,64,0.2)]"
+                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-xs font-extrabold text-amber-200 bg-amber-950 hover:bg-stone-950 transition-all shadow-md border border-amber-500/20 min-h-[44px]"
               >
-                <FiShield className="h-4 w-4 text-temple-gold flex-shrink-0" />
-                <span>Admin Portal</span>
+                <FiShield className="h-4 w-4 text-amber-300 shrink-0" />
+                <span>Admin Portal Access</span>
               </NavLink>
             </div>
           )}
         </div>
 
         {/* Cart Shortcut & Logout Footer */}
-        <div className="pt-4 border-t border-muted-sand/20 space-y-2 relative z-10">
+        <div className="pt-4 border-t border-amber-900/10 space-y-2 relative z-10 font-body">
           <Link
             to={ROUTE_PATHS.CART}
-            className="flex items-center justify-between rounded-2xl px-3.5 py-2.5 text-xs font-bold text-dark-charcoal bg-warm-cream/50 border border-temple-gold/20 hover:bg-warm-cream transition-colors"
+            className="flex items-center justify-between rounded-2xl px-4 py-2.5 text-xs font-bold text-amber-950 bg-amber-50/70 border border-amber-900/10 hover:bg-amber-100/60 transition-colors min-h-[44px]"
           >
             <span className="flex items-center gap-2">
-              <FiShoppingCart className="h-4 w-4 text-royal-blue flex-shrink-0" /> Shopping Cart
+              <FiShoppingCart className="h-4 w-4 text-amber-800 shrink-0" /> Active Cart
             </span>
-            <span className="rounded-full bg-royal-blue px-2.5 py-0.5 text-[10px] text-white font-bold">{cartCount}</span>
+            <span className="rounded-full bg-amber-900 px-2.5 py-0.5 text-[10px] text-white font-mono font-bold">{cartCount}</span>
           </Link>
 
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center justify-between rounded-2xl px-3.5 py-2 text-xs font-bold text-error hover:bg-error/10 transition-colors min-h-[44px]"
+            className="flex w-full items-center justify-between rounded-2xl px-4 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors min-h-[44px]"
           >
             <span>Sign Out</span>
-            <FiLogOut className="h-4 w-4 flex-shrink-0" />
+            <FiLogOut className="h-4 w-4 shrink-0 text-rose-600" />
           </button>
         </div>
       </nav>

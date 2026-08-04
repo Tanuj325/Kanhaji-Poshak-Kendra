@@ -214,15 +214,15 @@ export default function ProfilePage() {
       >
         <Breadcrumb items={breadcrumbItems} />
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-muted-sand/20 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-900/10 pb-4">
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal">Personal Profile</h1>
-            <p className="text-xs sm:text-sm text-natural-wood mt-0.5">Manage your personal information, contact details, and account security</p>
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950">Personal Profile</h1>
+            <p className="text-xs sm:text-sm text-stone-600 mt-0.5 font-body">Manage your personal information, contact details, and account security</p>
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge variant={currentUserData?.role === 'ADMIN' ? 'warning' : 'primary'} className="font-bold border border-temple-gold/30">
-              <FiShield className="h-3 w-3 mr-1 inline" /> {currentUserData?.role || 'CUSTOMER'}
+            <Badge variant={currentUserData?.role === 'ADMIN' ? 'warning' : 'primary'} className="font-bold border border-amber-500/30">
+              <FiShield className="h-3 w-3 mr-1 inline text-amber-800" /> {currentUserData?.role || 'CUSTOMER'}
             </Badge>
             <Badge variant={currentUserData?.enabled !== false ? 'success' : 'danger'} className="font-bold">
               {currentUserData?.enabled !== false ? 'Active Devotee' : 'Inactive'}

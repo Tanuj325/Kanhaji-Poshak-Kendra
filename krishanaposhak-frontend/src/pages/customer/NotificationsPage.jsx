@@ -83,12 +83,12 @@ export default function NotificationsPage() {
       >
         <Breadcrumb items={breadcrumbItems} />
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-muted-sand/20">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-amber-900/10">
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-dark-charcoal flex items-center gap-2.5">
-              <FiBell className="h-6 w-6 text-temple-gold" /> Notification Center
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 flex items-center gap-2.5">
+              <FiBell className="h-6 w-6 text-amber-800" /> Notification Center
             </h1>
-            <p className="text-xs sm:text-sm text-natural-wood mt-0.5 font-normal">
+            <p className="text-xs sm:text-sm text-stone-600 mt-0.5 font-body">
               Stay updated with order tracking, store announcements, and security alerts.
             </p>
           </div>
@@ -98,8 +98,8 @@ export default function NotificationsPage() {
             size="md"
             onClick={handleMarkAllRead}
             isLoading={markAllRead.isPending}
-            leftIcon={<FiCheckCircle className="h-4 w-4" />}
-            className="font-bold"
+            leftIcon={<FiCheckCircle className="h-4 w-4 text-amber-800" />}
+            className="font-bold border-amber-900/20 text-amber-950 rounded-xl min-h-[44px]"
           >
             Mark All Read
           </Button>
