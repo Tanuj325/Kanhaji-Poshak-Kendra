@@ -11,19 +11,25 @@ const CartHeader = memo(function CartHeader({ currentStep = 1, itemCount = 0 }) 
 
   return (
     <div className="w-full bg-white border border-amber-900/10 rounded-2xl p-4 sm:p-5 shadow-[0_2px_12px_rgba(44,40,36,0.03)] font-display">
-      <div className="flex items-center justify-between gap-4 flex-wrap pb-3 sm:pb-4 border-b border-amber-900/10">
+      <div className="flex items-center justify-between gap-3 flex-wrap pb-3 sm:pb-4 border-b border-amber-900/10">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-amber-900 bg-amber-100/70 px-2.5 py-0.5 rounded-full border border-amber-300/40">
+          <span className="text-[9px] min-[360px]:text-[10px] font-bold uppercase tracking-widest text-amber-900 bg-amber-100/70 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-300/40">
             ✦ Sacred Poshak Checkout ✦
           </span>
-          <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 mt-1 flex items-center gap-2.5">
+          <h1 className="font-heading text-lg min-[360px]:text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 mt-1 flex items-center gap-2">
             <span>Shopping Cart</span>
             {itemCount > 0 && (
-              <span className="text-xs font-sans font-bold text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+              <span className="text-xs font-sans font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
                 {itemCount} {itemCount === 1 ? 'item' : 'items'}
               </span>
             )}
           </h1>
+        </div>
+
+        {/* Mobile Step Indicator */}
+        <div className="flex md:hidden items-center gap-1.5 text-xs font-bold text-amber-950 bg-amber-50/80 px-3 py-1.5 rounded-xl border border-amber-900/10">
+          <span className="h-2 w-2 rounded-full bg-amber-800 animate-pulse" />
+          <span>Step 1 of 4: Cart</span>
         </div>
 
         {/* Horizontal Progress Stepper for Desktop/Tablet */}

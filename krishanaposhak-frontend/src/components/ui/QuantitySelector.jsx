@@ -60,14 +60,14 @@ function QuantitySelector({
   };
 
   const sizeContainer = {
-    sm: 'h-9 text-xs',
-    md: 'h-10 text-sm',
+    sm: 'h-9.5 text-xs sm:h-9',
+    md: 'h-11 text-sm sm:h-10',
     lg: 'h-12 text-base font-bold',
   };
 
   const buttonWidth = {
-    sm: 'w-8 min-h-[36px]',
-    md: 'w-9 min-h-[40px]',
+    sm: 'w-9 min-h-[40px] sm:w-8 sm:min-h-[36px]',
+    md: 'w-10 min-h-[44px] sm:w-9 sm:min-h-[40px]',
     lg: 'w-11 min-h-[48px]',
   };
 

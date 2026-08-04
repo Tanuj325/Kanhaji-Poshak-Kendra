@@ -136,36 +136,79 @@ const CartItem = memo(function CartItem({
       transition={{ duration: 0.25 }}
       className="group relative p-4 sm:p-5 rounded-2xl bg-white border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.12)] hover:border-amber-400/30 transition-all duration-300 font-display"
     >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
-        {/* Product Thumbnail */}
-        <Link
-          to={`/product/${slug || productId || id}`}
-          className="shrink-0 relative overflow-hidden rounded-xl border border-amber-950/10 bg-gradient-to-br from-amber-50/50 to-stone-50 p-1 group/img"
-        >
-          {imgSrc ? (
-            <OptimizedImage
-              src={imgSrc}
-              alt={productName}
-              loading="lazy"
-              aspectRatio="aspect-square"
-              className="h-24 w-24 sm:h-28 sm:w-28 object-cover rounded-lg group-hover/img:scale-108 transition-transform duration-500 ease-out"
-            />
-          ) : (
-            <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-lg bg-amber-50/60 flex items-center justify-center text-amber-800/40">
-              <FiPackage className="h-9 w-9" />
-            </div>
-          )}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-5">
+        <div className="flex items-start gap-3 sm:gap-4 w-full sm:w-auto">
+          {/* Product Thumbnail */}
+          <Link
+            to={`/product/${slug || productId || id}`}
+            className="shrink-0 relative overflow-hidden rounded-xl border border-amber-950/10 bg-gradient-to-br from-amber-50/50 to-stone-50 p-1 group/img"
+          >
+            {imgSrc ? (
+              <OptimizedImage
+                src={imgSrc}
+                alt={productName}
+                loading="lazy"
+                aspectRatio="aspect-square"
+                className="h-20 w-20 min-[375px]:h-24 min-[375px]:w-24 sm:h-28 sm:w-28 object-cover rounded-lg group-hover/img:scale-108 transition-transform duration-500 ease-out"
+              />
+            ) : (
+              <div className="h-20 w-20 min-[375px]:h-24 min-[375px]:w-24 sm:h-28 sm:w-28 rounded-lg bg-amber-50/60 flex items-center justify-center text-amber-800/40">
+                <FiPackage className="h-8 w-8 sm:h-9 sm:w-9" />
+              </div>
+            )}
 
-          {discountPercent > 0 && (
-            <div className="absolute top-2 left-2 z-10">
-              <DiscountBadge percentage={discountPercent} size="sm" />
-            </div>
-          )}
-        </Link>
+            {discountPercent > 0 && (
+              <div className="absolute top-1.5 left-1.5 z-10">
+                <DiscountBadge percentage={discountPercent} size="sm" />
+              </div>
+            )}
+          </Link>
 
-        {/* Product Meta Details */}
+          {/* Mobile Top Info Column (Title + Size + Stock) */}
+          <div className="flex-1 min-w-0 space-y-1.5 sm:hidden">
+            <Link
+              to={`/product/${slug || productId || id}`}
+              className="font-heading text-sm font-bold text-amber-950 hover:text-amber-700 transition-colors line-clamp-2 leading-snug break-words"
+            >
+              {productName}
+            </Link>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {size && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100/70 text-amber-950 border border-amber-300/40 whitespace-nowrap">
+                  Size: {size}
+                </span>
+              )}
+              {itemSku && (
+                <span className="text-[10px] font-mono text-stone-400 truncate max-w-[120px]">
+                  SKU: {itemSku}
+                </span>
+              )}
+            </div>
+
+            {/* Stock Status */}
+            <div className="pt-0.5">
+              {isInStock ? (
+                isLowStock ? (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                    <FiAlertCircle className="h-3 w-3 shrink-0" /> Only {stock} left
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    <FiCheckCircle className="h-3 w-3 text-emerald-600 shrink-0" /> In Stock
+                  </span>
+                )
+              ) : (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-800 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
+                  Out of Stock
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Product Meta Details (Desktop & Full view) */}
         <div className="flex-1 min-w-0 space-y-2 w-full">
-          <div className="flex items-start justify-between gap-2">
+          <div className="hidden sm:flex items-start justify-between gap-2">
             <div>
               <Link
                 to={`/product/${slug || productId || id}`}
@@ -188,7 +231,7 @@ const CartItem = memo(function CartItem({
             </div>
 
             {/* Price (Desktop) */}
-            <div className="text-right hidden sm:block">
+            <div className="text-right">
               <span className="font-heading font-extrabold text-amber-950 text-lg block">
                 <PriceDisplay price={calculatedTotal} size="md" />
               </span>
@@ -200,8 +243,8 @@ const CartItem = memo(function CartItem({
             </div>
           </div>
 
-          {/* Stock Status Indicator */}
-          <div className="flex items-center gap-3 text-xs">
+          {/* Stock Status Indicator (Desktop) */}
+          <div className="hidden sm:flex items-center gap-3 text-xs">
             {isInStock ? (
               isLowStock ? (
                 <span className="inline-flex items-center gap-1 text-amber-800 font-bold bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">
@@ -220,7 +263,7 @@ const CartItem = memo(function CartItem({
           </div>
 
           {/* Bottom Actions Row */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-amber-900/10">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 sm:pt-2 border-t border-amber-900/10 w-full">
             <div className="flex items-center gap-3">
               <QuantitySelector
                 value={quantity}
@@ -237,24 +280,24 @@ const CartItem = memo(function CartItem({
 
             {/* Price (Mobile) */}
             <div className="sm:hidden text-right">
-              <span className="text-[10px] uppercase font-bold text-stone-500 block">Total</span>
+              <span className="text-[9px] uppercase font-bold text-stone-500 block">Total</span>
               <span className="font-heading font-extrabold text-amber-950 text-base">
                 <PriceDisplay price={calculatedTotal} size="sm" />
               </span>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-1 sm:pt-0">
               {onMoveToWishlist && (
                 <button
                   type="button"
                   onClick={() => onMoveToWishlist(item)}
                   disabled={isUpdating}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-amber-900 transition-colors px-3 py-1.5 rounded-xl hover:bg-amber-100/50 border border-amber-900/10 min-h-[38px]"
+                  className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-stone-700 hover:text-amber-900 transition-colors px-3 py-2 rounded-xl hover:bg-amber-100/50 border border-amber-900/10 min-h-[44px] flex-1 sm:flex-none"
                   title="Move to Wishlist"
                 >
-                  <FiHeart className="h-3.5 w-3.5 text-amber-800" />
-                  <span className="hidden sm:inline">Save for Later</span>
+                  <FiHeart className="h-3.5 w-3.5 text-amber-800 shrink-0" />
+                  <span>Save for Later</span>
                 </button>
               )}
 
@@ -262,11 +305,11 @@ const CartItem = memo(function CartItem({
                 type="button"
                 onClick={() => onRemove?.(targetId)}
                 disabled={isUpdating}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-700 transition-colors px-3 py-1.5 rounded-xl hover:bg-rose-50 border border-amber-900/10 min-h-[38px]"
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-700 transition-colors px-3 py-2 rounded-xl hover:bg-rose-50 border border-amber-900/10 min-h-[44px] flex-1 sm:flex-none"
                 title="Remove item from cart"
               >
-                <FiTrash2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Remove</span>
+                <FiTrash2 className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                <span>Remove</span>
               </button>
             </div>
           </div>

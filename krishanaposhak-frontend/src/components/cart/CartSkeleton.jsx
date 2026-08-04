@@ -4,8 +4,8 @@ import Skeleton from '@/components/ui/Skeleton';
 export const CartItemSkeleton = memo(function CartItemSkeleton() {
   return (
     <div className="p-4 sm:p-5 rounded-2xl bg-white border border-amber-900/10 shadow-xs flex flex-col sm:flex-row items-start sm:items-center gap-4 animate-pulse">
-      <div className="flex items-center gap-4 flex-1 min-w-0 w-full">
-        <Skeleton variant="card" className="h-24 w-24 sm:h-28 sm:w-28 rounded-xl bg-amber-100/40 shrink-0" />
+      <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 w-full">
+        <Skeleton variant="card" className="h-20 w-20 min-[375px]:h-24 min-[375px]:w-24 sm:h-28 sm:w-28 rounded-xl bg-amber-100/40 shrink-0" />
         <div className="space-y-2 flex-1 min-w-0">
           <Skeleton variant="text" className="h-5 w-3/4 bg-amber-100/50" />
           <div className="flex items-center gap-2">

@@ -62,22 +62,22 @@ const CartTrustBadges = memo(function CartTrustBadges({ compact = false }) {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-amber-900/10 font-display">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 pt-5 sm:pt-6 border-t border-amber-900/10 font-display">
       {badges.map((badge) => {
         const Icon = badge.icon;
         return (
           <div
             key={badge.id}
-            className="flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl bg-white border border-amber-900/10 shadow-[0_2px_8px_rgba(44,40,36,0.02)] gap-2 text-center transition-all hover:border-amber-700/20 hover:shadow-xs"
+            className="flex flex-col items-center justify-center p-2.5 sm:p-4 rounded-2xl bg-white border border-amber-900/10 shadow-[0_2px_8px_rgba(44,40,36,0.02)] gap-1.5 sm:gap-2 text-center transition-all hover:border-amber-700/20 hover:shadow-xs"
           >
-            <div className={`h-9 w-9 items-center justify-center rounded-xl ${badge.iconBg} flex shrink-0`}>
-              <Icon className="h-4.5 w-4.5" />
+            <div className={`h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl ${badge.iconBg} flex shrink-0`}>
+              <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
             </div>
             <div className="space-y-0.5">
-              <span className="text-xs font-bold text-amber-950 block leading-tight">
+              <span className="text-[11px] sm:text-xs font-bold text-amber-950 block leading-tight">
                 {badge.title}
               </span>
-              <span className="text-[11px] text-stone-500 font-medium block leading-tight font-body">
+              <span className="text-[10px] sm:text-[11px] text-stone-500 font-medium block leading-tight font-body">
                 {badge.subtitle}
               </span>
             </div>

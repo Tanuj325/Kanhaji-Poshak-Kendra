@@ -15,35 +15,35 @@ const FreeShippingBar = memo(function FreeShippingBar({ subTotal = 0, className 
 
   return (
     <div
-      className={`rounded-2xl p-4 border transition-all duration-300 font-display ${
+      className={`rounded-2xl p-3.5 sm:p-4 border transition-all duration-300 font-display ${
         isFreeShipping
           ? 'bg-gradient-to-r from-emerald-50 via-emerald-100/60 to-emerald-50 border-emerald-300/60 shadow-2xs'
           : 'bg-gradient-to-r from-amber-50/90 via-stone-50/80 to-amber-50/70 border-amber-900/10 shadow-2xs'
       } ${className}`}
     >
       {isFreeShipping ? (
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
-            <FiCheckCircle className="h-5 w-5" />
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+            <FiCheckCircle className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-extrabold text-emerald-900 uppercase tracking-wider">
-              <FiStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-              <span>Free Express Shipping Unlocked!</span>
+            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold text-emerald-900 uppercase tracking-wider">
+              <FiStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
+              <span className="truncate">Free Express Shipping Unlocked!</span>
             </div>
-            <p className="text-xs text-emerald-800 font-body font-medium mt-0.5">
+            <p className="text-[11px] sm:text-xs text-emerald-800 font-body font-medium mt-0.5 leading-snug">
               Your sacred order qualifies for complimentary nationwide delivery.
             </p>
           </div>
         </div>
       ) : (
         <div className="space-y-2.5">
-          <div className="flex items-center justify-between text-xs font-bold text-amber-950">
-            <span className="flex items-center gap-1.5 font-display">
-              <FiTruck className="h-4 w-4 text-amber-800" />
-              <span>Add <strong className="text-amber-900">{formatPrice(remainingForFreeShipping)}</strong> for FREE Shipping</span>
+          <div className="flex items-center justify-between text-[11px] sm:text-xs font-bold text-amber-950 gap-2">
+            <span className="flex items-center gap-1.5 font-display min-w-0">
+              <FiTruck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-800 shrink-0" />
+              <span className="truncate">Add <strong className="text-amber-900">{formatPrice(remainingForFreeShipping)}</strong> for FREE Shipping</span>
             </span>
-            <span className="font-mono text-stone-500 text-[11px]">{Math.round(progressPct)}%</span>
+            <span className="font-mono text-stone-500 text-[10px] sm:text-[11px] shrink-0">{Math.round(progressPct)}%</span>
           </div>
 
           <div className="w-full bg-stone-200/80 rounded-full h-2 overflow-hidden relative">

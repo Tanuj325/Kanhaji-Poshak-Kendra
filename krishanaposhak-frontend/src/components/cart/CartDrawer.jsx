@@ -166,7 +166,7 @@ export const CartDrawer = memo(function CartDrawer() {
 
               {/* Drawer Footer Summary & Actions */}
               {cartItems.length > 0 && (
-                <div className="space-y-3 border-t border-white/10 bg-[#081427] p-4 sm:p-5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+                <div className="space-y-3 border-t border-white/10 bg-[#081427] p-4 sm:p-5 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
                   <div className="space-y-1.5 text-xs">
                     <div className="flex justify-between font-medium text-slate-300">
                       <span>Subtotal</span>
@@ -190,20 +190,20 @@ export const CartDrawer = memo(function CartDrawer() {
                     <button
                       type="button"
                       onClick={handleViewCart}
-                      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/15 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/10"
+                      className="flex min-h-[48px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/15 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/10"
                     >
-                      <FiShoppingBag className="h-4 w-4 text-temple-gold" />
+                      <FiShoppingBag className="h-4 w-4 text-temple-gold shrink-0" />
                       <span>View Full Cart</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleCheckout}
-                      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-4 py-3 text-xs font-bold text-stone-950 shadow-[0_14px_30px_rgba(201,154,59,0.18)] transition-all hover:scale-[1.01]"
+                      className="flex min-h-[48px] w-full items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-4 py-3 text-xs font-bold text-stone-950 shadow-[0_14px_30px_rgba(201,154,59,0.18)] transition-all hover:scale-[1.01]"
                     >
-                      <FiLock className="h-3.5 w-3.5 text-stone-950/80" />
+                      <FiLock className="h-3.5 w-3.5 text-stone-950/80 shrink-0" />
                       <span>Checkout</span>
-                      <FiArrowRight className="h-3.5 w-3.5 text-stone-950/80" />
+                      <FiArrowRight className="h-3.5 w-3.5 text-stone-950/80 shrink-0" />
                     </button>
                   </div>
                 </div>

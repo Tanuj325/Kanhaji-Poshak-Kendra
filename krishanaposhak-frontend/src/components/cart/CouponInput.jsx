@@ -97,17 +97,17 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
 
   return (
     <div
-      className={`rounded-2xl bg-white border border-amber-900/10 p-4 sm:p-5 shadow-xs space-y-3 font-display ${className || ''}`}
+      className={`rounded-2xl bg-white border border-amber-900/10 p-3.5 sm:p-5 shadow-xs space-y-3 font-display ${className || ''}`}
     >
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-amber-950 min-h-[36px]"
+        className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-amber-950 min-h-[44px]"
       >
         <span className="flex items-center gap-2">
-          <FiTag className="h-4 w-4 text-amber-800" /> Have a Promo Code?
+          <FiTag className="h-4 w-4 text-amber-800 shrink-0" /> Have a Promo Code?
         </span>
-        {isExpanded ? <FiChevronUp className="h-4 w-4 text-stone-500" /> : <FiChevronDown className="h-4 w-4 text-stone-500" />}
+        {isExpanded ? <FiChevronUp className="h-4 w-4 text-stone-500 shrink-0" /> : <FiChevronDown className="h-4 w-4 text-stone-500 shrink-0" />}
       </button>
 
       {/* Input box */}
@@ -128,7 +128,7 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
               }
             }}
             placeholder="ENTER CODE"
-            className="flex-1 rounded-xl border border-amber-900/20 bg-amber-50/30 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-amber-950 focus:border-amber-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-700/20 font-mono transition-all"
+            className="flex-1 min-w-0 rounded-xl border border-amber-900/20 bg-amber-50/30 px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider text-amber-950 focus:border-amber-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-700/20 font-mono transition-all h-[48px] sm:h-auto"
           />
           <Button
             variant="primary"
@@ -136,7 +136,7 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
             onClick={() => handleApply()}
             isLoading={applyCoupon.isPending}
             disabled={!code.trim()}
-            className="font-bold min-h-[40px] px-4 rounded-xl bg-amber-900 text-amber-50"
+            className="font-bold min-h-[48px] sm:min-h-[40px] px-4 rounded-xl bg-amber-900 text-amber-50 shrink-0"
           >
             Apply
           </Button>
@@ -148,9 +148,9 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
         {Array.isArray(activeCoupons) && activeCoupons.length > 0 && (
           <div className="pt-2 border-t border-amber-900/10 space-y-2">
             <span className="text-[11px] font-bold text-amber-950 flex items-center gap-1.5 uppercase tracking-wider">
-              <FiGift className="h-3.5 w-3.5 text-amber-800" /> Available Offers
+              <FiGift className="h-3.5 w-3.5 text-amber-800 shrink-0" /> Available Offers
             </span>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-amber-200 sm:flex-wrap">
               {activeCoupons.slice(0, 3).map((coupon) => (
                 <button
                   key={coupon.id || coupon.code}
@@ -159,11 +159,11 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
                     setCode(coupon.code);
                     handleApply(coupon.code);
                   }}
-                  className="group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300/60 text-amber-950 transition-all text-xs font-mono font-bold hover:scale-105 active:scale-95"
+                  className="group flex-shrink-0 flex items-center gap-1.5 px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300/60 text-amber-950 transition-all text-xs font-mono font-bold hover:scale-105 active:scale-95 min-h-[40px] sm:min-h-[36px]"
                 >
-                  <span>{coupon.code}</span>
+                  <span className="whitespace-nowrap">{coupon.code}</span>
                   {coupon.discountValue && (
-                    <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1 rounded font-sans">
+                    <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1 rounded font-sans whitespace-nowrap">
                       {coupon.discountType === 'PERCENTAGE' ? `${coupon.discountValue}% OFF` : `₹${coupon.discountValue} OFF`}
                     </span>
                   )}

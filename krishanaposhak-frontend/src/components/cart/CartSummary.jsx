@@ -26,16 +26,16 @@ const CartSummary = memo(function CartSummary({
   return (
     <div
       className={cn(
-        'rounded-2xl bg-white border border-amber-900/10 p-5 sm:p-6 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-4 font-display',
+        'rounded-2xl bg-white border border-amber-900/10 p-4 sm:p-6 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-3.5 sm:space-y-4 font-display',
         className,
       )}
     >
       <div className="flex items-center justify-between pb-3 border-b border-amber-900/10">
-        <h3 className="font-heading text-lg sm:text-xl font-extrabold text-amber-950 flex items-center gap-2">
-          <FiShoppingBag className="h-5 w-5 text-amber-800" /> Order Summary
+        <h3 className="font-heading text-base sm:text-xl font-extrabold text-amber-950 flex items-center gap-2">
+          <FiShoppingBag className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-amber-800 shrink-0" /> Order Summary
         </h3>
         {totalItems > 0 && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100/80 text-amber-950 border border-amber-300/40">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100/80 text-amber-950 border border-amber-300/40 shrink-0">
             {totalItems} {totalItems === 1 ? 'Item' : 'Items'}
           </span>
         )}
@@ -45,7 +45,7 @@ const CartSummary = memo(function CartSummary({
       <FreeShippingBar subTotal={subTotal} />
 
       {/* Summary Rows */}
-      <div className="space-y-3 text-xs sm:text-sm font-medium">
+      <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm font-medium">
         <div className="flex items-center justify-between text-stone-700">
           <span>Subtotal</span>
           <span className="font-bold text-amber-950 font-mono">{formatPrice(subTotal)}</span>
@@ -53,16 +53,16 @@ const CartSummary = memo(function CartSummary({
 
         {discount > 0 && (
           <div className="flex items-center justify-between text-emerald-800 bg-emerald-50/80 px-3 py-2 rounded-xl border border-emerald-200/60 font-body">
-            <span className="flex items-center gap-1.5 font-bold font-display">
-              <FiTag className="h-4 w-4 text-emerald-600" /> Coupon Discount
+            <span className="flex items-center gap-1.5 font-bold font-display text-xs">
+              <FiTag className="h-3.5 w-3.5 text-emerald-600 shrink-0" /> Coupon Discount
             </span>
-            <span className="font-extrabold font-mono">-{formatPrice(discount)}</span>
+            <span className="font-extrabold font-mono text-xs sm:text-sm">-{formatPrice(discount)}</span>
           </div>
         )}
 
         <div className="flex items-center justify-between text-stone-700">
           <span className="flex items-center gap-1.5">
-            <FiTruck className="h-4 w-4 text-amber-800" /> Shipping
+            <FiTruck className="h-4 w-4 text-amber-800 shrink-0" /> Shipping
           </span>
           <span className={cn('font-bold font-mono', effectiveIsFree ? 'text-emerald-700 font-extrabold font-display' : 'text-amber-950')}>
             {effectiveIsFree ? 'FREE' : formatPrice(displayShipping)}
@@ -83,10 +83,10 @@ const CartSummary = memo(function CartSummary({
       {/* Grand Total */}
       <div className="flex items-baseline justify-between pt-1">
         <div>
-          <span className="font-heading font-extrabold text-base sm:text-lg text-amber-950 block">Grand Total</span>
-          <span className="text-[11px] text-stone-500 font-medium">Inclusive of all taxes</span>
+          <span className="font-heading font-extrabold text-sm sm:text-lg text-amber-950 block">Grand Total</span>
+          <span className="text-[10px] sm:text-[11px] text-stone-500 font-medium">Inclusive of all taxes</span>
         </div>
-        <span className="font-heading font-black text-2xl sm:text-3xl text-amber-950 tracking-tight font-mono">
+        <span className="font-heading font-black text-xl min-[360px]:text-2xl sm:text-3xl text-amber-950 tracking-tight font-mono">
           {formatPrice(grandTotal)}
         </span>
       </div>
@@ -94,7 +94,7 @@ const CartSummary = memo(function CartSummary({
       {/* Trust Badge */}
       <div className="pt-2 flex items-center justify-center gap-2 text-xs font-semibold text-stone-600 bg-amber-50/60 py-2.5 px-3 rounded-xl border border-amber-200/50 font-body">
         <FiShield className="h-4 w-4 text-emerald-600 shrink-0" />
-        <span>100% Safe & Secure Checkout Guaranteed</span>
+        <span className="text-[11px] sm:text-xs">100% Safe & Secure Checkout Guaranteed</span>
       </div>
     </div>
   );

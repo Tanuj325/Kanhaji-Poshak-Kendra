@@ -176,14 +176,14 @@ function CartPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="container-page py-6 sm:py-8 pb-36 lg:pb-16 space-y-6 sm:space-y-8 font-display"
+        className="container-page py-4 sm:py-8 px-3.5 sm:px-6 lg:px-8 pb-36 lg:pb-16 space-y-5 sm:space-y-8 font-display"
       >
         <Breadcrumb items={breadcrumbItems} />
 
         {items.length === 0 ? (
           <EmptyCart />
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Header Section with Stepper */}
             <CartHeader currentStep={1} itemCount={items.length} />
 
@@ -192,15 +192,15 @@ function CartPage() {
               <button
                 type="button"
                 onClick={() => setShowClearConfirm(true)}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-700 transition-colors px-3.5 py-2 rounded-xl hover:bg-rose-50 border border-amber-900/10 min-h-[40px]"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-700 transition-colors px-3.5 py-2 rounded-xl hover:bg-rose-50 border border-amber-900/10 min-h-[44px]"
               >
-                <FiTrash2 className="h-4 w-4 text-rose-600" />
+                <FiTrash2 className="h-4 w-4 text-rose-600 shrink-0" />
                 <span>Clear Entire Cart</span>
               </button>
             </div>
 
             {/* Main Cart Grid Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
               {/* Left Column: Cart Items List */}
               <div className="lg:col-span-8 space-y-4">
                 <AnimatePresence mode="popLayout">

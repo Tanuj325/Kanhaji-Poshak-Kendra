@@ -27,20 +27,20 @@ const RecommendedProducts = memo(function RecommendedProducts({ title = "Complet
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="space-y-5 pt-8 border-t border-amber-900/10 font-display">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+    <section className="space-y-4 sm:space-y-5 pt-6 sm:pt-8 border-t border-amber-900/10 font-display">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="font-heading text-lg sm:text-2xl font-bold text-amber-950 flex items-center gap-2">
-            <FiStar className="h-5 w-5 text-amber-700" /> {title}
+          <h2 className="font-heading text-base sm:text-2xl font-bold text-amber-950 flex items-center gap-2">
+            <FiStar className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-amber-700 shrink-0" /> {title}
           </h2>
-          <p className="text-xs text-stone-500 mt-0.5 font-body">Handcrafted recommendations suited for sacred occasions</p>
+          <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 font-body">Handcrafted recommendations suited for sacred occasions</p>
         </div>
-        <span className="text-[11px] font-bold text-amber-900 tracking-wider uppercase bg-amber-100/60 px-3 py-1 rounded-full border border-amber-300/40">
+        <span className="text-[10px] sm:text-[11px] font-bold text-amber-900 tracking-wider uppercase bg-amber-100/60 px-2.5 sm:px-3 py-1 rounded-full border border-amber-300/40 shrink-0">
           Handcrafted Selection
         </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
         {products.slice(0, limit).map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
