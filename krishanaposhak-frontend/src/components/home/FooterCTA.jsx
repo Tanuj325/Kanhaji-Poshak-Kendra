@@ -7,11 +7,11 @@ import { FiShoppingBag, FiArrowRight, FiStar, FiHeart } from 'react-icons/fi';
 
 const FooterCTA = memo(function FooterCTA() {
   return (
-    <section className="relative overflow-hidden py-14 sm:py-20 bg-gradient-to-br from-amber-950 via-stone-950 to-amber-900 text-white font-display">
+    <section className="relative overflow-hidden py-10 sm:py-14 lg:py-20 bg-gradient-to-br from-amber-950 via-stone-950 to-amber-900 text-white font-display">
       {/* Background glowing orb */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-500/20 to-temple-gold/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="container-page relative z-10 text-center space-y-6 max-w-3xl mx-auto px-4">
+      <div className="container-page relative z-10 text-center space-y-5 sm:space-y-6 max-w-3xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -19,16 +19,16 @@ const FooterCTA = memo(function FooterCTA() {
           transition={{ duration: 0.5 }}
           className="space-y-3"
         >
-          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-300 uppercase tracking-widest bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-extrabold text-amber-300 uppercase tracking-widest bg-amber-400/10 px-2.5 sm:px-3 py-1 rounded-full border border-amber-400/20">
             <FiStar className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
             <span>Handcrafted Meerut Devotional Wear</span>
           </span>
 
-          <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className="font-heading text-xl sm:text-3xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
             Adorn Your Deity with Pure Velvet & Zari Craftsmanship
           </h2>
 
-          <p className="text-stone-300 text-xs sm:text-base max-w-xl mx-auto font-body leading-relaxed">
+          <p className="text-stone-300 text-[11px] sm:text-sm lg:text-base max-w-xl mx-auto font-body leading-relaxed">
             Every creation is tailored with divine love, traditional embroidery, and authentic Indian artistry suitable for holy worship and festive celebrations.
           </p>
         </motion.div>

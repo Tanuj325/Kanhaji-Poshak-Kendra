@@ -21,7 +21,7 @@ const CategoryCard = memo(function CategoryCard({
         padding="none"
         isHoverable
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-[30px] border border-amber-900/15 bg-white shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 backdrop-blur-sm',
+          'group relative flex flex-col h-full overflow-hidden rounded-[20px] sm:rounded-[30px] border border-amber-900/15 bg-white shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 backdrop-blur-sm',
           className,
         )}
       >
@@ -39,7 +39,7 @@ const CategoryCard = memo(function CategoryCard({
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-100/80 to-amber-50/50">
-              <span className="font-heading text-3xl sm:text-4xl font-extrabold text-amber-950 group-hover:scale-110 transition-transform">
+              <span className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-amber-950 group-hover:scale-110 transition-transform">
                 {name ? name.charAt(0).toUpperCase() : 'C'}
               </span>
             </div>
@@ -47,27 +47,27 @@ const CategoryCard = memo(function CategoryCard({
           <div className="absolute inset-0 bg-gradient-to-t from-amber-950/70 via-amber-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
 
           {productCount !== undefined && (
-            <span className="absolute top-3 right-3 rounded-full bg-stone-950/90 px-3 py-1 text-[10px] sm:text-xs font-extrabold text-amber-300 border border-amber-500/40 backdrop-blur-md font-mono shadow-md z-20">
+            <span className="absolute top-2 right-2 sm:top-3 sm:right-3 rounded-full bg-stone-950/90 px-2 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-xs font-extrabold text-amber-300 border border-amber-500/40 backdrop-blur-md font-mono shadow-md z-20">
               {productCount} Items
             </span>
           )}
         </div>
 
-        <div className="flex flex-col flex-1 p-4 sm:p-5 text-center justify-between font-display bg-white relative">
+        <div className="flex flex-col flex-1 p-3 sm:p-4 lg:p-5 text-center justify-between font-display bg-white relative">
           <div>
-            <h3 className="font-heading text-base sm:text-lg font-extrabold text-amber-950 group-hover:text-amber-800 transition-colors line-clamp-1">
+            <h3 className="font-heading text-sm sm:text-base lg:text-lg font-extrabold text-amber-950 group-hover:text-amber-800 transition-colors line-clamp-1">
               {name}
             </h3>
             {description && (
-              <p className="mt-1.5 text-xs text-stone-600 line-clamp-2 leading-relaxed font-body">
+              <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-xs text-stone-600 line-clamp-2 leading-relaxed font-body">
                 {description}
               </p>
             )}
           </div>
 
-          <div className="mt-3.5 flex items-center justify-center gap-2 text-xs sm:text-sm font-extrabold text-amber-950 group-hover:text-amber-900 transition-colors pt-3 border-t border-amber-900/10 font-display">
-            <span>Explore Collection</span>
-            <div className="h-6 w-6 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center group-hover:bg-amber-900 group-hover:text-amber-200 transition-colors shadow-xs">
+          <div className="mt-2.5 sm:mt-3.5 flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm font-extrabold text-amber-950 group-hover:text-amber-900 transition-colors pt-2 sm:pt-3 border-t border-amber-900/10 font-display">
+            <span>Explore</span>
+            <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center group-hover:bg-amber-900 group-hover:text-amber-200 transition-colors shadow-xs">
               <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </div>
           </div>

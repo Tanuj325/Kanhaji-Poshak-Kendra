@@ -64,16 +64,16 @@ export default function WhyChooseUs() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="mb-10 text-center sm:mb-12"
+          className="mb-8 text-center sm:mb-10 lg:mb-12"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300 font-display">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-300 font-display">
             Why Krishana Poshak
           </span>
-          <h2 className="mt-2 font-heading text-3xl font-extrabold text-white sm:text-4xl text-balance">
+          <h2 className="mt-2 font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white text-balance">
             Crafted with Tradition, <br />
             Worn with Pride
           </h2>
-          <p className="mt-3 text-sm text-stone-300 sm:text-base max-w-lg mx-auto font-body">
+          <p className="mt-2 sm:mt-3 text-xs sm:text-sm lg:text-base text-stone-300 max-w-lg mx-auto font-body">
             Every stitch tells a story of heritage, devotion, and the timeless beauty of Indian craftsmanship
           </p>
         </motion.div>
@@ -83,21 +83,21 @@ export default function WhyChooseUs() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-2 gap-3 sm:gap-6 md:gap-8 lg:grid-cols-4"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className="group rounded-[24px] border border-lotus-white/10 bg-lotus-white/5 p-6 text-center transition-all duration-300 hover:bg-lotus-white/10 hover:border-temple-gold/30"
+              className="group rounded-[20px] sm:rounded-[24px] border border-lotus-white/10 bg-lotus-white/5 p-4 sm:p-6 text-center transition-all duration-300 hover:bg-lotus-white/10 hover:border-temple-gold/30"
             >
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-temple-gold/10 text-temple-gold transition-colors group-hover:bg-temple-gold/20">
+                <div className="mx-auto mb-3 sm:mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl bg-temple-gold/10 text-temple-gold transition-colors group-hover:bg-temple-gold/20">
                 {feature.icon}
               </div>
-                <h3 className="font-display text-lg font-semibold text-lotus-white">
+                <h3 className="font-display text-sm sm:text-lg font-semibold text-lotus-white">
                 {feature.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-lotus-white/60">
+              <p className="mt-1.5 sm:mt-2 text-[11px] sm:text-sm leading-relaxed text-lotus-white/60 line-clamp-3 sm:line-clamp-none">
                 {feature.description}
               </p>
             </motion.div>

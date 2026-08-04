@@ -81,7 +81,7 @@ const ProductCard = memo(function ProductCard({
   return (
     <div
       className={cn(
-        'group relative flex flex-col h-full overflow-hidden rounded-[28px] bg-white border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 font-display backdrop-blur-xs',
+        'group relative flex flex-col h-full overflow-hidden rounded-[20px] sm:rounded-[28px] bg-white border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 font-display backdrop-blur-xs',
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -120,21 +120,21 @@ const ProductCard = memo(function ProductCard({
         )}
 
         {/* Top Left Glassmorphism Badges */}
-        <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
+        <div className="absolute left-2 top-2 sm:left-3 sm:top-3 z-10 flex flex-col items-start gap-1 sm:gap-1.5">
           {discount > 0 && (
-            <span className="rounded-full bg-stone-950/90 px-3 py-1 text-[10px] sm:text-[11px] font-extrabold text-amber-300 uppercase tracking-widest shadow-md border border-amber-500/40 backdrop-blur-md font-mono">
+            <span className="rounded-full bg-stone-950/90 px-2 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-[11px] font-extrabold text-amber-300 uppercase tracking-widest shadow-md border border-amber-500/40 backdrop-blur-md font-mono">
               {discount}% OFF
             </span>
           )}
           {product.featured && (
-            <span className="rounded-full bg-gradient-to-r from-amber-600 to-amber-800 px-3 py-1 text-[9px] sm:text-[10px] font-extrabold text-white uppercase tracking-wider shadow-md backdrop-blur-md border border-amber-400/30">
+            <span className="rounded-full bg-gradient-to-r from-amber-600 to-amber-800 px-2 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-[10px] font-extrabold text-white uppercase tracking-wider shadow-md backdrop-blur-md border border-amber-400/30">
               ✨ Featured
             </span>
           )}
         </div>
 
         {/* Top Right Wishlist & Mobile Quick View */}
-        <div className="absolute right-2.5 top-2.5 z-20 flex items-center gap-1.5">
+        <div className="absolute right-2 top-2 sm:right-2.5 sm:top-2.5 z-20 flex items-center gap-1 sm:gap-1.5">
           {onQuickView && (
             <button
               type="button"
@@ -143,9 +143,9 @@ const ProductCard = memo(function ProductCard({
                 onQuickView(product);
               }}
               aria-label="Quick View product"
-              className="flex lg:hidden h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-md text-stone-800 active:scale-90 transition-all min-h-[44px] min-w-[44px]"
+              className="flex lg:hidden h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/90 shadow-md text-stone-800 active:scale-90 transition-all min-h-[36px] min-w-[36px] sm:min-h-[44px] sm:min-w-[44px]"
             >
-              <FiEye className="h-4 w-4 text-amber-900" />
+              <FiEye className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-900" />
             </button>
           )}
 
@@ -158,7 +158,7 @@ const ProductCard = memo(function ProductCard({
               }}
               aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-xs transition-all duration-200 hover:scale-110 active:scale-90 border border-amber-900/10 min-h-[44px] min-w-[44px]',
+                'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-xs transition-all duration-200 hover:scale-110 active:scale-90 border border-amber-900/10 min-h-[36px] min-w-[36px] sm:min-h-[44px] sm:min-w-[44px]',
                 isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-700 hover:text-rose-600',
               )}
             >
@@ -195,15 +195,15 @@ const ProductCard = memo(function ProductCard({
       </div>
 
       {/* Content Body */}
-      <div className="flex flex-col flex-1 p-3.5 sm:p-4 justify-between font-display bg-white">
+      <div className="flex flex-col flex-1 p-2.5 sm:p-4 justify-between font-display bg-white">
         <div>
-          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-800 truncate block">
+          <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-800 truncate block">
             {displayCategory}
           </span>
 
           <h3
             onClick={handleCardClick}
-            className="font-heading text-sm sm:text-base font-extrabold text-amber-950 leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-amber-900 transition-colors mt-0.5"
+            className="font-heading text-[12px] sm:text-base font-extrabold text-amber-950 leading-snug line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-amber-900 transition-colors mt-0.5"
             title={name}
           >
             {name}
@@ -219,21 +219,21 @@ const ProductCard = memo(function ProductCard({
         </div>
 
         {/* Price & Action Buttons */}
-        <div className="mt-3 pt-2.5 border-t border-amber-900/10 space-y-2.5">
+        <div className="mt-2 sm:mt-3 pt-2 sm:pt-2.5 border-t border-amber-900/10 space-y-2 sm:space-y-2.5">
           <div className="flex items-baseline justify-between gap-1 flex-wrap">
             <div className="flex items-baseline gap-1.5">
-              <span className="font-heading text-base sm:text-lg font-bold text-dark-charcoal">
+              <span className="font-heading text-sm sm:text-lg font-bold text-dark-charcoal">
                 ₹{Number(finalPrice).toFixed(0)}
               </span>
               {originalPrice && (
-                <span className="text-xs text-stone-400 line-through font-normal">
+                <span className="text-[10px] sm:text-xs text-stone-400 line-through font-normal">
                   ₹{Number(originalPrice).toFixed(0)}
                 </span>
               )}
             </div>
 
             {savings > 0 && (
-              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-[9px] sm:text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1 sm:px-1.5 py-0.5 rounded-md border border-emerald-200">
                 Save ₹{savings.toFixed(0)}
               </span>
             )}
@@ -241,12 +241,12 @@ const ProductCard = memo(function ProductCard({
 
           {/* Action Buttons */}
           {onAddToCart && !isOutOfStock && (
-            <div className="grid grid-cols-2 gap-1.5 pt-1">
+            <div className="grid grid-cols-2 gap-1 sm:gap-1.5 pt-0.5 sm:pt-1">
               <button
                 type="button"
                 onClick={handleAddToCartClick}
                 className={cn(
-                  'flex items-center justify-center gap-1 rounded-xl py-2 px-2 text-xs font-bold transition-all min-h-[44px]',
+                  'flex items-center justify-center gap-0.5 sm:gap-1 rounded-lg sm:rounded-xl py-1.5 sm:py-2 px-1.5 sm:px-2 text-[10px] sm:text-xs font-bold transition-all min-h-[36px] sm:min-h-[44px]',
                   isAddedAnimation
                     ? 'bg-emerald-700 text-white'
                     : 'bg-amber-100/90 text-amber-950 hover:bg-amber-200 border border-amber-800/20 active:scale-95',
@@ -254,12 +254,12 @@ const ProductCard = memo(function ProductCard({
               >
                 {isAddedAnimation ? (
                   <>
-                    <FiCheck className="h-3.5 w-3.5" />
+                    <FiCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     <span>Added</span>
                   </>
                 ) : (
                   <>
-                    <FiShoppingBag className="h-3.5 w-3.5 text-amber-900 shrink-0" />
+                    <FiShoppingBag className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-900 shrink-0" />
                     <span className="truncate">Add</span>
                   </>
                 )}
@@ -268,9 +268,9 @@ const ProductCard = memo(function ProductCard({
               <button
                 type="button"
                 onClick={handleBuyNowClick}
-                className="flex items-center justify-center gap-1 rounded-xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] hover:opacity-95 text-white py-2 px-2 text-xs font-bold shadow-xs active:scale-95 transition-all min-h-[44px]"
+                className="flex items-center justify-center gap-0.5 sm:gap-1 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] hover:opacity-95 text-white py-1.5 sm:py-2 px-1.5 sm:px-2 text-[10px] sm:text-xs font-bold shadow-xs active:scale-95 transition-all min-h-[36px] sm:min-h-[44px]"
               >
-                <FiZap className="h-3.5 w-3.5 text-amber-300 shrink-0" />
+                <FiZap className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-300 shrink-0" />
                 <span className="truncate">Buy Now</span>
               </button>
             </div>

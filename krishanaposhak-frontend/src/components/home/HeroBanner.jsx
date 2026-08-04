@@ -119,7 +119,7 @@ export default function HeroBanner() {
 
   if (isLoading) {
     return (
-      <section className="relative h-[min(65svh,42rem)] min-h-[28rem] sm:h-[75vh] lg:h-[85vh] w-full bg-deep-navy overflow-hidden">
+      <section className="relative h-[min(55svh,36rem)] min-h-[24rem] sm:h-[65svh] sm:min-h-[28rem] lg:h-[85vh] w-full bg-deep-navy overflow-hidden">
         <Skeleton className="h-full w-full bg-deep-navy/80" />
         <div className="absolute inset-0 flex items-center">
           <div className="container-page space-y-4 max-w-xl">
@@ -138,7 +138,7 @@ export default function HeroBanner() {
 
   if (isError || !bannerList.length) {
     return (
-      <section className="relative flex h-[min(65svh,42rem)] min-h-[28rem] sm:h-[72vh] lg:h-[82vh] items-center justify-center bg-deep-navy overflow-hidden select-none">
+      <section className="relative flex h-[min(55svh,36rem)] min-h-[24rem] sm:h-[65svh] sm:min-h-[28rem] lg:h-[82vh] items-center justify-center bg-deep-navy overflow-hidden select-none">
         <img
           src="/ogImage.jpeg"
           alt="Krishana Poshak Divine Attire Banner"
@@ -152,13 +152,13 @@ export default function HeroBanner() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold backdrop-blur-md border border-temple-gold/30">
             <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Craftsmanship
           </span>
-          <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-lotus-white sm:text-6xl lg:text-7xl leading-tight drop-shadow-md text-balance">
+          <h1 className="mt-3 font-display text-2xl font-semibold tracking-tight text-lotus-white sm:text-4xl lg:text-7xl leading-[1.15] drop-shadow-md text-balance">
             {siteConfig.name}
           </h1>
-          <p className="mt-4 text-base text-lotus-white/90 sm:text-xl font-light leading-relaxed max-w-2xl mx-auto drop-shadow-xs font-body text-balance">
+          <p className="mt-2 sm:mt-4 text-sm text-lotus-white/80 sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto drop-shadow-xs font-body text-balance">
             Sacred Designer Poshaks, Laddoo Gopal Attire & Devotional Jewellery Crafted with Love & Reverence
           </p>
-          <div className="mt-8 flex w-full justify-center gap-4 sm:w-auto">
+          <div className="mt-5 sm:mt-8 flex w-full justify-center gap-3 sm:gap-4 sm:w-auto">
             <Link
               to="/shop"
               className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal transition-all duration-300 hover:scale-[1.02] shadow-[0_14px_30px_rgba(201,154,59,0.22)] sm:w-auto sm:px-8"
@@ -186,7 +186,7 @@ export default function HeroBanner() {
       aria-roledescription="carousel"
       aria-label="Featured banners carousel"
     >
-      <div className="relative h-[min(65svh,42rem)] min-h-[28rem] sm:h-[75vh] lg:h-[85vh]">
+      <div className="relative h-[min(55svh,36rem)] min-h-[24rem] sm:h-[65svh] sm:min-h-[28rem] lg:h-[85vh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={banner.id || currentIndex}
@@ -221,7 +221,7 @@ export default function HeroBanner() {
                   variants={textVariants}
                   initial="hidden"
                   animate="visible"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold backdrop-blur-md border border-temple-gold/30 mb-4"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-temple-gold backdrop-blur-md border border-temple-gold/30 mb-3 sm:mb-4"
                 >
                   <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Handloom
                 </motion.span>
@@ -232,7 +232,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="font-display text-3xl font-semibold text-lotus-white sm:text-5xl lg:text-6xl leading-[1.15] drop-shadow-md text-balance"
+                    className="font-display text-[clamp(1.5rem,5.5vw,1.875rem)] font-semibold text-lotus-white sm:text-4xl lg:text-6xl leading-[1.15] drop-shadow-md text-balance"
                   >
                     {banner.title}
                   </motion.h1>
@@ -244,7 +244,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="mt-4 text-base text-lotus-white/90 sm:text-lg lg:text-xl max-w-xl font-light leading-relaxed drop-shadow-xs text-balance"
+                    className="mt-2 sm:mt-4 text-[13px] text-lotus-white/80 sm:text-base lg:text-xl max-w-xl font-light leading-relaxed drop-shadow-xs text-balance line-clamp-3 sm:line-clamp-none"
                   >
                     {banner.subtitle}
                   </motion.p>
@@ -255,11 +255,11 @@ export default function HeroBanner() {
                   variants={textVariants}
                   initial="hidden"
                   animate="visible"
-                  className="mt-8 flex flex-wrap items-center gap-4"
+                  className="mt-4 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4"
                 >
                   <Link
                     to={banner.redirectUrl || '/shop'}
-                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-6 py-3.5 text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-5 py-3 text-[13px] sm:text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
                   >
                     Shop Collection
                     <FiChevronRight className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function HeroBanner() {
 
                   <Link
                     to="/about"
-                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-6 py-3.5 text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-5 py-3 text-[13px] sm:text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
                   >
                     Our Heritage Story
                   </Link>
@@ -301,7 +301,7 @@ export default function HeroBanner() {
 
         {/* Banner Slide Counter & Progress Bar */}
         {bannerList.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 sm:gap-3 pb-[env(safe-area-inset-bottom,0px)]">
             {/* Slide Index Counter
             <span className="text-xs font-bold text-temple-gold tracking-widest font-mono bg-black/30 px-3 py-0.5 rounded-full border border-temple-gold/30 backdrop-blur-md">
               0{currentIndex + 1} / 0{bannerList.length}

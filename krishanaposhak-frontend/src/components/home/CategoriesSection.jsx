@@ -43,7 +43,7 @@ const CategoriesSection = memo(function CategoriesSection() {
             <Skeleton className="h-4 w-32 mx-auto rounded-full bg-amber-100/60" />
             <Skeleton className="h-8 w-64 mx-auto mt-2 rounded-xl bg-amber-100/60" />
           </div>
-          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-2.5 min-[480px]:gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-56 w-full rounded-2xl bg-amber-100/40" />
             ))}
@@ -76,20 +76,20 @@ const CategoriesSection = memo(function CategoriesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="mb-8 text-center sm:mb-10"
+          className="mb-6 text-center sm:mb-8 lg:mb-10"
         >
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold-dark bg-temple-gold/10 px-3.5 py-1.5 rounded-full border border-temple-gold/20 font-display">
+          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-temple-gold-dark bg-temple-gold/10 px-3 py-1 sm:py-1.5 rounded-full border border-temple-gold/20 font-display">
             <FiGrid className="h-3.5 w-3.5 text-amber-800" /> Sacred Collections
           </span>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-dark-charcoal">
+          <h2 className="mt-2 sm:mt-3 font-display text-2xl sm:text-3xl lg:text-5xl font-semibold text-dark-charcoal">
             Shop By Divine Category
           </h2>
-          <p className="mt-2 text-natural-wood text-sm sm:text-base max-w-md mx-auto font-body">
+          <p className="mt-1.5 sm:mt-2 text-natural-wood text-xs sm:text-sm lg:text-base max-w-md mx-auto font-body">
             Explore our handcrafted collections of divine dresses, mukuts & spiritual accessories
           </p>
           <Link
             to={ROUTE_PATHS.SHOP}
-            className="mt-3.5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-royal-blue hover:text-peacock-blue transition-colors group font-display"
+            className="mt-2.5 sm:mt-3.5 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-royal-blue hover:text-peacock-blue transition-colors group font-display min-h-[44px]"
           >
             <span>View All Categories</span>
             <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
@@ -101,7 +101,7 @@ const CategoriesSection = memo(function CategoriesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+          className="grid grid-cols-2 gap-2.5 min-[480px]:gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           {categoryList.map((category) => (
             <motion.div key={category.slug} variants={itemVariants}>

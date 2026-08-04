@@ -37,7 +37,7 @@ const BrandStorySection = memo(function BrandStorySection() {
 
       <div className="container-page relative z-10">
         {/* Brand Story Banner Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16 sm:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center mb-10 sm:mb-16 lg:mb-20">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -45,16 +45,16 @@ const BrandStorySection = memo(function BrandStorySection() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-7 space-y-5"
           >
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.25em] text-amber-300 bg-amber-500/15 px-3.5 py-1.5 rounded-full border border-amber-400/30 font-display">
+            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-amber-300 bg-amber-500/15 px-3 py-1 sm:py-1.5 rounded-full border border-amber-400/30 font-display">
               <FiStar className="h-3.5 w-3.5 text-amber-300" /> Our Sacred Heritage
             </span>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-white text-balance">
+            <h2 className="font-heading text-2xl sm:text-3xl lg:text-5xl font-extrabold leading-tight text-white text-balance">
               Weaving Devotion into Every Thread
             </h2>
-            <p className="text-stone-200 text-sm sm:text-base font-light leading-relaxed font-body">
+            <p className="text-stone-200 text-xs sm:text-sm lg:text-base font-light leading-relaxed font-body">
               At <strong className="text-amber-300 font-semibold">{siteConfig.name}</strong>, we honor the rich spiritual lineage of Meerut by crafting divine attire for Shri Radha Krishna, Laddu Gopal Ji, and temple deities. Each dress is born from a quiet act of devotion, blending rich heritage techniques with modern elegance.
             </p>
-            <p className="text-stone-300 text-xs sm:text-sm font-light leading-relaxed font-body">
+            <p className="text-stone-300 text-[11px] sm:text-xs lg:text-sm font-light leading-relaxed font-body line-clamp-3 sm:line-clamp-none">
               From delicate Mukut crowns and embroidered Dupattas to royal festival Poshaks, our master craftsmen infuse every seam with grace, reverence, and uncompromised quality.
             </p>
 
@@ -76,7 +76,7 @@ const BrandStorySection = memo(function BrandStorySection() {
             className="lg:col-span-5"
           >
             <div className="relative rounded-[28px] border border-temple-gold/30 bg-deep-navy/80 p-3 shadow-[0_18px_44px_rgba(15,36,64,0.24)] overflow-hidden group">
-              <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden">
+              <div className="relative h-48 sm:h-64 md:h-72 w-full rounded-2xl overflow-hidden">
 <img
                   src="/logo2.jpeg"
                   alt="Krishana Poshak Sacred Heritage Craftsmanship"
@@ -102,17 +102,17 @@ const BrandStorySection = memo(function BrandStorySection() {
         </div>
 
         {/* Trust Pillars Grid */}
-        <div className="border-t border-temple-gold/20 pt-12 sm:pt-16">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-temple-gold">
+        <div className="border-t border-temple-gold/20 pt-8 sm:pt-12 lg:pt-16">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-temple-gold">
               Pillars of Excellence
             </span>
-            <h3 className="mt-2 font-display text-2xl sm:text-3xl font-semibold text-lotus-white">
+            <h3 className="mt-1.5 sm:mt-2 font-display text-xl sm:text-2xl lg:text-3xl font-semibold text-lotus-white">
               Why Devotees Choose Krishana Poshak
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             {trustPillars.map((pillar, idx) => {
               const Icon = pillar.icon;
               return (
@@ -122,15 +122,15 @@ const BrandStorySection = memo(function BrandStorySection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: idx * 0.1 }}
-                  className="rounded-[24px] border border-temple-gold/20 bg-white/5 p-6 hover:bg-white/10 hover:border-temple-gold/50 transition-all duration-300 group"
+                  className="rounded-[20px] sm:rounded-[24px] border border-temple-gold/20 bg-white/5 p-4 sm:p-6 hover:bg-white/10 hover:border-temple-gold/50 transition-all duration-300 group"
                 >
-                  <div className="h-12 w-12 rounded-2xl bg-temple-gold/15 border border-temple-gold/30 flex items-center justify-center text-temple-gold mb-4 group-hover:scale-110 group-hover:bg-temple-gold group-hover:text-dark-charcoal transition-all">
-                    <Icon className="h-6 w-6" />
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-temple-gold/15 border border-temple-gold/30 flex items-center justify-center text-temple-gold mb-3 sm:mb-4 group-hover:scale-110 group-hover:bg-temple-gold group-hover:text-dark-charcoal transition-all">
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
-                  <h4 className="font-display text-base font-semibold text-lotus-white group-hover:text-temple-gold transition-colors">
+                  <h4 className="font-display text-sm sm:text-base font-semibold text-lotus-white group-hover:text-temple-gold transition-colors">
                     {pillar.title}
                   </h4>
-                  <p className="mt-2 text-xs text-lotus-white/70 leading-relaxed">
+                  <p className="mt-1.5 sm:mt-2 text-[11px] sm:text-xs text-lotus-white/70 leading-relaxed line-clamp-3 sm:line-clamp-none">
                     {pillar.description}
                   </p>
                 </motion.div>
