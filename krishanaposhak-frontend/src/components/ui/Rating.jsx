@@ -34,15 +34,15 @@ function Rating({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1.5',
+        'inline-flex items-center gap-1.5 font-display',
         isInteractive && 'cursor-pointer',
         className,
       )}
       role={isInteractive ? 'radiogroup' : 'img'}
       aria-label={
         isInteractive
-          ? `Rating: ${rating} out of ${maxRating} stars`
-          : `${rating} out of ${maxRating} stars`
+          ? `Rating selection: ${rating} out of ${maxRating} stars`
+          : `Rated ${rating} out of ${maxRating} stars`
       }
     >
       <div className="flex items-center gap-0.5">
@@ -55,7 +55,7 @@ function Rating({
               key={i}
               className={cn(
                 'transition-all duration-200',
-                filled ? 'text-amber-500 fill-amber-500' : 'text-slate-300',
+                filled ? 'text-amber-500 fill-amber-500' : 'text-stone-300',
                 isInteractive && 'hover:scale-125 hover:text-amber-600',
               )}
               onClick={() => handleClick(starValue)}
@@ -70,12 +70,12 @@ function Rating({
         })}
       </div>
       {(showValue || rating > 0) && (
-        <span className="text-xs font-bold font-mono text-dark-charcoal/90">
+        <span className="text-xs font-bold text-amber-950 font-mono">
           {Number(rating).toFixed(1)}
         </span>
       )}
       {count !== undefined && count > 0 && (
-        <span className="text-[11px] font-medium text-natural-wood/60">
+        <span className="text-[11px] font-medium text-stone-500">
           ({count})
         </span>
       )}

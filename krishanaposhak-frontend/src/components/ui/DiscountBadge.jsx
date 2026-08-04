@@ -21,14 +21,14 @@ const DiscountBadge = memo(function DiscountBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full font-display tracking-wider uppercase bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-soft shadow-rose-900/20 border border-white/20 backdrop-blur-xs',
+        'inline-flex items-center gap-1 rounded-full font-display tracking-wider uppercase bg-deep-navy/95 text-temple-gold-light shadow-md border border-temple-gold/30 backdrop-blur-xs',
         sizeStyles[size],
         className,
       )}
-      aria-label={`${percentage} percent off`}
+      aria-label={`${percentage} percent discount off`}
     >
       <span>-{percentage}%</span>
-      <span className="text-[9px] opacity-80 uppercase tracking-widest font-normal">OFF</span>
+      <span className="text-[9px] text-temple-gold uppercase tracking-widest font-normal">OFF</span>
     </span>
   );
 });

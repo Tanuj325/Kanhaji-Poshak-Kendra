@@ -50,12 +50,12 @@ export default function ReviewModal({
     >
       <form onSubmit={handleSubmit} className="space-y-6 pt-2 font-display">
         {/* Rating Selector */}
-        <div className="space-y-2 text-center p-4 rounded-2xl bg-amber-50/50 border border-amber-900/10">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
+        <div className="space-y-3 text-center p-5 rounded-2xl bg-gradient-to-b from-amber-50/60 to-stone-50/40 border border-amber-900/10">
+          <label className="block text-xs font-bold uppercase tracking-wider text-amber-950">
             Overall Rating
           </label>
 
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-1.5">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -63,14 +63,14 @@ export default function ReviewModal({
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHoveredRating(star)}
                 onMouseLeave={() => setHoveredRating(0)}
-                className="p-1 hover:scale-125 transition-transform focus:outline-none"
+                className="p-1 hover:scale-125 active:scale-95 transition-transform focus:outline-none min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label={`Rate ${star} stars out of 5`}
               >
                 <FiStar
-                  className={`h-8 w-8 transition-colors ${
+                  className={`h-7 w-7 sm:h-8 sm:w-8 transition-colors ${
                     star <= activeStar
                       ? 'fill-amber-500 text-amber-500'
-                      : 'text-slate-300'
+                      : 'text-stone-300'
                   }`}
                 />
               </button>
@@ -90,19 +90,19 @@ export default function ReviewModal({
           placeholder="Share your honest experience regarding the fabric quality, stitching, vibrant colors, and delivery..."
           rows={4}
           required
-          className="rounded-2xl"
+          className="rounded-xl"
         />
 
         {/* Actions */}
-        <div className="flex flex-col-reverse items-stretch gap-3 pt-3 border-t border-slate-200 sm:flex-row sm:items-center sm:justify-end">
-          <Button variant="outline" onClick={onClose} type="button" className="rounded-xl">
+        <div className="flex flex-col-reverse items-stretch gap-3 pt-4 border-t border-amber-900/10 sm:flex-row sm:items-center sm:justify-end">
+          <Button variant="outline" onClick={onClose} type="button" className="rounded-xl min-h-[44px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             type="submit"
             isLoading={isLoading}
-            className="rounded-xl bg-gradient-to-r from-amber-700 to-slate-900 text-white font-bold"
+            className="rounded-xl bg-gradient-to-r from-amber-900 to-stone-900 text-white font-bold min-h-[44px]"
           >
             {editingReview ? 'Update Review' : 'Submit Review'}
           </Button>

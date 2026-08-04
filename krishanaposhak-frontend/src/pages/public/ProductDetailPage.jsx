@@ -192,57 +192,64 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="container-page section-padding pb-32 md:pb-16 font-display space-y-8 sm:space-y-12">
-        <Breadcrumb items={breadcrumbItems} />
-
-        {/* STAGE 1: Hero Image Gallery */}
-        <div className="w-full">
-          <ImageGallery images={product.images} productName={product.name} />
+      <section className="container-page section-padding pb-32 lg:pb-16 font-display">
+        {/* Breadcrumb */}
+        <div className="py-4 sm:py-6">
+          <Breadcrumb items={breadcrumbItems} />
         </div>
 
-        {/* STAGE 2: Horizontally Wide Purchase Action Card (Positioned BELOW Image Gallery) */}
-        <div className="w-full rounded-3xl bg-white p-4 sm:p-8 xl:p-10 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-6 sm:space-y-8">
-          {/* Header Info: Title, Category, Rating, Material */}
-          <ProductInfo
-            product={product}
-            averageRating={product.averageRating || 0}
-            reviewCount={product.reviewCount || 0}
-          />
+        {/* ══════════════════════════════════════════════════════════════
+            STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
+            On mobile: stacked (gallery → purchase card)
+            On lg+: side-by-side (gallery left, purchase sticky right)
+           ══════════════════════════════════════════════════════════════ */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-start">
+          {/* LEFT: Image Gallery (7 columns on desktop) */}
+          <div className="lg:col-span-7 w-full">
+            <ImageGallery images={product.images} productName={product.name} />
+          </div>
 
-          {/* Pricing & Size Selection Grid (Horizontally Spaced) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start pt-6 border-t border-amber-900/10">
-            {/* Pricing Section (Left 5 Cols) */}
-            <div className="lg:col-span-5">
+          {/* RIGHT: Purchase Panel (5 columns on desktop, sticky) */}
+          <div className="lg:col-span-5 w-full">
+            <div className="lg:sticky lg:top-24 rounded-3xl bg-white p-4 sm:p-6 lg:p-6 xl:p-7 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-5">
+              {/* Product Info: Title, Category, Rating, Material */}
+              <ProductInfo
+                product={product}
+                averageRating={product.averageRating || 0}
+                reviewCount={product.reviewCount || 0}
+              />
+
+              {/* Pricing */}
               <PricingSection variant={selectedVariant} product={product} />
-            </div>
 
-            {/* Size Selector (Right 7 Cols) */}
-            <div className="lg:col-span-7">
+              {/* Size Selector */}
               <VariantSelector
                 variants={variants}
                 selectedVariant={selectedVariant}
                 onSelect={setSelectedVariant}
               />
+
+              {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
+              <ActionsBar selectedVariant={selectedVariant} />
+
+              {/* Trust Badges */}
+              <TrustBadges />
+
+              {/* Social Share */}
+              <div className="pt-4 border-t border-amber-900/10 flex items-center justify-between flex-wrap gap-3">
+                <SocialShareButtons
+                  url={canonicalUrl}
+                  title={`Handcrafted ${product.name} - ${siteConfig.name}`}
+                />
+              </div>
             </div>
-          </div>
-
-          {/* Wide Horizontal CTA Bar: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
-          <ActionsBar selectedVariant={selectedVariant} />
-
-          {/* 3-Column Trust Badges */}
-          <TrustBadges />
-
-          {/* Social Share Bar */}
-          <div className="pt-4 border-t border-amber-900/10 flex items-center justify-between flex-wrap gap-4">
-            <SocialShareButtons
-              url={canonicalUrl}
-              title={`Handcrafted ${product.name} - ${siteConfig.name}`}
-            />
           </div>
         </div>
 
-        {/* STAGE 3: Full-Width Product Tabs, Devotee Reviews, and Related Products */}
-        <div className="space-y-12 sm:space-y-16 w-full">
+        {/* ══════════════════════════════════════════════════════════════
+            STAGE 2: Full-Width Content Sections
+           ══════════════════════════════════════════════════════════════ */}
+        <div className="space-y-10 sm:space-y-14 mt-10 sm:mt-14 w-full">
           <ProductTabs product={product} />
           <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
           <RelatedProductsSection
@@ -253,7 +260,9 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Mobile Sticky Bottom Purchase Bar */}
+      {/* ══════════════════════════════════════════════════════════════
+          Mobile Sticky Bottom Purchase Bar
+         ══════════════════════════════════════════════════════════════ */}
       <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white/95 backdrop-blur-xl p-3.5 sm:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-amber-900/10 shadow-[0_-4px_20px_rgba(44,40,36,0.08)]">
         <div className="flex items-center justify-between gap-3 max-w-[1600px] mx-auto font-display min-w-0">
           <div className="flex min-w-0 flex-col">
@@ -268,7 +277,7 @@ export default function ProductDetailPage() {
           <Button
             variant="primary"
             size="md"
-            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3.5 shadow-md border border-amber-500/20 min-h-[48px]"
+            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3.5 shadow-md border border-amber-500/20 min-h-[48px] max-w-[200px]"
             onClick={handleStickyAddToCart}
             isLoading={isAddingItem}
             disabled={!selectedVariant || selectedVariant.stock === 0}

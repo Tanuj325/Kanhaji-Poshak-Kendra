@@ -13,11 +13,10 @@ function getLabelFromPath(path) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', className }) {
+const Breadcrumb = memo(function Breadcrumb({ items, className }) {
   const location = useLocation();
   const pathname = location.pathname;
 
-  // Auto-generate items if items prop is not provided or empty
   let navItems = items;
   if (!navItems || navItems.length === 0) {
     const paths = pathname
@@ -31,7 +30,7 @@ const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', classNam
       {
         label: isAdminRoute ? 'Admin' : 'Home',
         href: isAdminRoute ? ROUTE_PATHS.ADMIN : ROUTE_PATHS.HOME,
-        icon: isAdminRoute ? <FiGrid className="h-3.5 w-3.5 text-amber-400" /> : <FiHome className="h-3.5 w-3.5 text-amber-400" />,
+        icon: isAdminRoute ? <FiGrid className="h-3.5 w-3.5 text-temple-gold" /> : <FiHome className="h-3.5 w-3.5 text-temple-gold" />,
       },
       ...paths
         .filter((path) => !(isAdminRoute && path === '/admin'))
@@ -41,10 +40,9 @@ const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', classNam
         })),
     ];
   } else {
-    // Enrich custom items with home icon if missing
     navItems = navItems.map((item, idx) => {
       if (idx === 0 && (item.label.toLowerCase() === 'home' || item.href === '/' || item.href === ROUTE_PATHS.HOME) && !item.icon) {
-        return { ...item, icon: <FiHome className="h-3.5 w-3.5 text-amber-400" /> };
+        return { ...item, icon: <FiHome className="h-3.5 w-3.5 text-temple-gold" /> };
       }
       return item;
     });
@@ -53,7 +51,7 @@ const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', classNam
   if (!navItems || navItems.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb navigation" className={cn('flex flex-wrap items-center gap-1.5 text-xs font-display py-2', className)}>
+    <nav aria-label="Breadcrumb navigation" className={cn('flex flex-wrap items-center gap-1.5 text-xs font-display py-1.5', className)}>
       <ol className="flex flex-wrap items-center gap-1.5">
         {navItems.map((item, index) => {
           const isLast = index === navItems.length - 1;
@@ -61,12 +59,12 @@ const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', classNam
           return (
             <li key={index} className="flex items-center gap-1.5">
               {index > 0 && (
-                <FiChevronRight className="h-3.5 w-3.5 text-amber-400/60 shrink-0" aria-hidden="true" />
+                <FiChevronRight className="h-3.5 w-3.5 text-temple-gold/60 shrink-0" aria-hidden="true" />
               )}
               {item.href && !isLast ? (
                 <Link
                   to={item.href}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-300 hover:border-amber-400/40 hover:bg-white/10 hover:text-white transition-all shadow-2xs backdrop-blur-xs"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-temple-gold/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-lotus-white hover:border-temple-gold/50 hover:bg-white/20 transition-all shadow-2xs backdrop-blur-xs min-h-[32px]"
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -74,10 +72,10 @@ const Breadcrumb = memo(function Breadcrumb({ items, separator = '›', classNam
               ) : (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1.5 font-bold rounded-lg px-2.5 py-1 text-xs backdrop-blur-xs',
+                    'inline-flex items-center gap-1.5 font-bold rounded-xl px-3 py-1.5 text-xs backdrop-blur-xs min-h-[32px]',
                     isLast
-                      ? 'bg-amber-400/15 text-amber-300 border border-amber-400/30'
-                      : 'text-slate-300',
+                      ? 'bg-temple-gold/20 text-temple-gold-light border border-temple-gold/30'
+                      : 'text-stone-300',
                   )}
                   aria-current={isLast ? 'page' : undefined}
                 >

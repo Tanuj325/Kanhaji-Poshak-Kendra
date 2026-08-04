@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { FiTruck, FiRefreshCw, FiShield } from 'react-icons/fi';
+import { FiTruck, FiRefreshCw, FiShield, FiAward } from 'react-icons/fi';
 
 const TrustBadges = memo(function TrustBadges() {
   const badges = [
@@ -8,6 +8,7 @@ const TrustBadges = memo(function TrustBadges() {
       icon: FiTruck,
       title: 'Express Shipping',
       subtitle: '3-5 Days Nationwide',
+      iconBg: 'bg-amber-100/70',
       iconColor: 'text-amber-800',
     },
     {
@@ -15,34 +16,44 @@ const TrustBadges = memo(function TrustBadges() {
       icon: FiRefreshCw,
       title: 'Easy Exchange',
       subtitle: '7-Day Hassle Free',
-      iconColor: 'text-amber-800',
+      iconBg: 'bg-deep-navy/10',
+      iconColor: 'text-deep-navy',
     },
     {
       id: 'handcrafted',
-      icon: FiShield,
+      icon: FiAward,
       title: '100% Handcrafted',
       subtitle: 'Pure Meerut Artistry',
+      iconBg: 'bg-temple-gold/10',
+      iconColor: 'text-temple-gold',
+    },
+    {
+      id: 'quality',
+      icon: FiShield,
+      title: 'Quality Assured',
+      subtitle: 'Premium Materials',
+      iconBg: 'bg-emerald-100/70',
       iconColor: 'text-emerald-700',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 xl:gap-4 pt-5 border-t border-amber-900/10">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 pt-5 border-t border-amber-900/10">
       {badges.map((badge) => {
         const Icon = badge.icon;
         return (
           <div
             key={badge.id}
-            className="flex flex-row sm:flex-col items-center sm:justify-center p-3.5 sm:p-3 xl:p-4 rounded-2xl bg-gradient-to-b from-amber-50/60 to-stone-50/80 border border-amber-900/10 gap-3 sm:gap-1.5 xl:gap-2 text-left sm:text-center transition-all hover:border-amber-700/20 shadow-[0_2px_8px_rgba(44,40,36,0.02)]"
+            className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-xl bg-gradient-to-b from-amber-50/60 to-stone-50/80 border border-amber-900/10 gap-1.5 text-center transition-all hover:border-amber-700/20 hover:shadow-xs"
           >
-            <div className="flex h-9 w-9 xl:h-10 xl:w-10 items-center justify-center rounded-xl bg-amber-100/60 shrink-0">
-              <Icon className={`h-4.5 w-4.5 xl:h-5 xl:w-5 ${badge.iconColor}`} />
+            <div className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg ${badge.iconBg} shrink-0`}>
+              <Icon className={`h-4 w-4 ${badge.iconColor}`} />
             </div>
             <div className="space-y-0.5">
-              <span className="text-xs sm:text-xs xl:text-sm font-bold text-amber-950 block leading-tight font-display">
+              <span className="text-[10px] sm:text-xs font-bold text-amber-950 block leading-tight font-display">
                 {badge.title}
               </span>
-              <span className="text-[11px] xl:text-xs text-stone-500 font-medium block">
+              <span className="text-[9px] sm:text-[11px] text-stone-500 font-medium block leading-tight">
                 {badge.subtitle}
               </span>
             </div>

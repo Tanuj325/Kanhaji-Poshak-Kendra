@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { FiStar } from 'react-icons/fi';
+import { cn } from '@/utils/cn';
 
 const ReviewFilterChips = memo(function ReviewFilterChips({
   selectedStarFilter = 'ALL',
@@ -17,7 +18,7 @@ const ReviewFilterChips = memo(function ReviewFilterChips({
   ];
 
   return (
-    <div className="w-full flex items-center gap-2.5 overflow-x-auto whitespace-nowrap scrollbar-hide py-1">
+    <div className="w-full flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-1">
       {filterOptions.map((opt) => {
         const isActive = selectedStarFilter === opt.key;
         return (
@@ -25,22 +26,23 @@ const ReviewFilterChips = memo(function ReviewFilterChips({
             key={opt.key}
             type="button"
             onClick={() => onSelectFilter(opt.key)}
-            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold shrink-0 transition-all font-display ${
+            className={cn(
+              'inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all font-display min-h-[36px]',
               isActive
-                ? 'bg-amber-900 text-amber-50 shadow-md border border-amber-800 scale-[1.02]'
-                : 'bg-white text-stone-800 hover:bg-amber-50/60 border border-amber-900/10'
-            }`}
+                ? 'bg-amber-900 text-amber-50 shadow-md border border-amber-800'
+                : 'bg-white text-stone-700 hover:bg-amber-50/60 border border-amber-900/10',
+            )}
           >
             {opt.key === 'ALL' ? (
-              <span>All Reviews</span>
+              <span>All</span>
             ) : (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-0.5">
                 <span>{opt.stars}</span>
-                <FiStar className={`h-3 w-3 ${isActive ? 'fill-amber-300 text-amber-300' : 'fill-amber-500 text-amber-500'}`} />
+                <FiStar className={cn('h-3 w-3', isActive ? 'fill-amber-300 text-amber-300' : 'fill-amber-500 text-amber-500')} />
               </span>
             )}
 
-            <span className={`text-[11px] font-mono ${isActive ? 'text-amber-200' : 'text-stone-500'}`}>
+            <span className={cn('text-[10px] font-mono', isActive ? 'text-amber-200' : 'text-stone-400')}>
               ({opt.count})
             </span>
           </button>

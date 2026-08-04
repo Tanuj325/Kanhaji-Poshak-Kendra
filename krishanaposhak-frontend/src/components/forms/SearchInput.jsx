@@ -10,6 +10,7 @@ const SearchInput = forwardRef(function SearchInput(
     value,
     onChange,
     onClear,
+    isLoading = false,
     error,
     isDisabled = false,
     size = 'md',
@@ -22,18 +23,18 @@ const SearchInput = forwardRef(function SearchInput(
   const inputId = name || generatedId;
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full font-display', className)}>
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-dark-charcoal font-display"
+          className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-amber-950"
         >
           {label}
         </label>
       )}
       <div className="relative group">
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-natural-wood/70 group-focus-within:text-royal-blue transition-colors"
+          className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-amber-900/60 group-focus-within:text-amber-900 transition-colors"
           aria-hidden="true"
         >
           <FiSearch className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
@@ -47,34 +48,37 @@ const SearchInput = forwardRef(function SearchInput(
           value={value}
           onChange={onChange}
           disabled={isDisabled}
-          aria-label={label || 'Search'}
+          aria-label={label || 'Search catalog'}
           className={cn(
-            'w-full rounded-2xl border bg-white/90 text-dark-charcoal placeholder:text-natural-wood/50 transition-all duration-300 focus:outline-none font-medium',
-            'border-muted-sand/50 shadow-xs focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:bg-white',
-            isDisabled && 'cursor-not-allowed bg-muted-sand/10 opacity-60',
-            'pl-10 pr-10',
-            size === 'sm' && 'py-1.5 text-xs',
+            'w-full rounded-2xl border bg-amber-50/30 text-amber-950 placeholder:text-stone-400 transition-all duration-300 focus:outline-none font-medium',
+            'border-amber-900/15 shadow-2xs focus:border-amber-800 focus:ring-2 focus:ring-amber-700/20 focus:bg-white',
+            isDisabled && 'cursor-not-allowed bg-stone-100 opacity-60',
+            'pl-10 pr-10 min-h-[44px]',
+            size === 'sm' && 'py-2 text-xs',
             size === 'md' && 'py-2.5 text-xs sm:text-sm',
-            size === 'lg' && 'py-3 text-sm sm:text-base',
+            size === 'lg' && 'py-3.5 text-sm sm:text-base',
           )}
           {...props}
         />
-        {value && onClear && (
-          <button
-            type="button"
-            onClick={onClear}
-            disabled={isDisabled}
-            aria-label="Clear search"
-            className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-natural-wood/60 hover:text-dark-charcoal transition-colors focus:outline-none"
-          >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-sand/30 hover:bg-muted-sand/60 transition-colors">
-              <FiX className="h-3 w-3" />
-            </span>
-          </button>
-        )}
+
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+          {isLoading ? (
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-800 border-t-transparent" />
+          ) : value && onClear ? (
+            <button
+              type="button"
+              onClick={onClear}
+              disabled={isDisabled}
+              aria-label="Clear search query"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-stone-400 hover:text-amber-950 hover:bg-amber-100/60 transition-colors focus:outline-none min-h-[44px] min-w-[44px]"
+            >
+              <FiX className="h-4 w-4" />
+            </button>
+          ) : null}
+        </div>
       </div>
       {error && (
-        <p className="mt-1 text-xs font-semibold text-error" role="alert">{error}</p>
+        <p className="mt-1 text-xs font-semibold text-rose-600" role="alert">{error}</p>
       )}
     </div>
   );

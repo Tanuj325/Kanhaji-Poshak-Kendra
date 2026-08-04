@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn';
 
 export default function Skeleton({ className, variant = 'text', count = 1 }) {
-  const baseClass = 'animate-pulse bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 bg-[length:200%_100%] rounded-2xl';
+  const baseClass = 'animate-pulse bg-gradient-to-r from-stone-200/80 via-amber-100/60 to-stone-200/80 bg-[length:200%_100%] rounded-2xl';
 
   const variantClasses = {
     text: 'h-4 w-full rounded-lg',
@@ -13,14 +13,14 @@ export default function Skeleton({ className, variant = 'text', count = 1 }) {
 
   if (count > 1) {
     return (
-      <div className="flex flex-col gap-2.5" role="status" aria-label="Loading content">
+      <div className="flex flex-col gap-2.5" role="status" aria-label="Loading catalog item">
         {Array.from({ length: count }).map((_, i) => (
           <div
             key={i}
             className={cn(baseClass, variantClasses[variant], className)}
           />
         ))}
-        <span className="sr-only">Loading content...</span>
+        <span className="sr-only">Loading catalog item...</span>
       </div>
     );
   }
@@ -29,9 +29,9 @@ export default function Skeleton({ className, variant = 'text', count = 1 }) {
     <div
       className={cn(baseClass, variantClasses[variant], className)}
       role="status"
-      aria-label="Loading content"
+      aria-label="Loading catalog item"
     >
-      <span className="sr-only">Loading content...</span>
+      <span className="sr-only">Loading catalog item...</span>
     </div>
   );
 }

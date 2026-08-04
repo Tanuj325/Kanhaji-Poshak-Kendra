@@ -2,9 +2,9 @@ import { forwardRef, useId } from 'react';
 import { cn } from '@/utils/cn';
 
 const sizeStyles = {
-  sm: 'min-h-[40px] px-2.5 py-1.5 text-sm',
-  md: 'min-h-[44px] px-3 py-2 text-base',
-  lg: 'min-h-[48px] px-4 py-2.5 text-lg',
+  sm: 'min-h-[44px] px-3 py-2 text-xs font-bold',
+  md: 'min-h-[44px] px-3.5 py-2.5 text-xs sm:text-sm font-bold',
+  lg: 'min-h-[48px] px-4 py-3 text-sm font-bold',
 };
 
 const Select = forwardRef(function Select(
@@ -32,14 +32,14 @@ const Select = forwardRef(function Select(
   const isControlled = value !== undefined;
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full font-display', className)}>
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-1.5 block text-sm font-medium text-dark-charcoal"
+          className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-amber-950"
         >
           {label}
-          {isRequired && <span className="ml-0.5 text-error" aria-hidden="true">*</span>}
+          {isRequired && <span className="ml-0.5 text-rose-600" aria-hidden="true">*</span>}
         </label>
       )}
       <div className="relative">
@@ -54,11 +54,11 @@ const Select = forwardRef(function Select(
           aria-invalid={!!error}
           aria-describedby={errorId}
           className={cn(
-            'w-full appearance-none rounded-xl border bg-white text-dark-charcoal text-xs transition-all duration-200 focus:outline-none focus:ring-2 cursor-pointer shadow-xs',
-            'border-muted-sand/40 focus:border-royal-blue focus:ring-royal-blue/20',
-            error && 'border-error focus:border-error focus:ring-error/20',
-            isDisabled && 'cursor-not-allowed bg-muted-sand/10 opacity-60',
-            isControlled && !value && 'text-natural-wood/60',
+            'w-full appearance-none rounded-2xl border bg-amber-50/40 text-amber-950 transition-all duration-200 focus:outline-none focus:ring-2 cursor-pointer shadow-2xs font-bold',
+            'border-amber-900/15 focus:border-amber-800 focus:ring-amber-700/20 focus:bg-white',
+            error && 'border-rose-600 focus:border-rose-600 focus:ring-rose-500/20',
+            isDisabled && 'cursor-not-allowed bg-stone-100 opacity-60',
+            isControlled && !value && 'text-stone-400',
             'pr-10',
             sizeStyles[size],
           )}
@@ -76,7 +76,7 @@ const Select = forwardRef(function Select(
                   key={option.value}
                   value={option.value}
                   disabled={option.isDisabled}
-                  className="text-dark-charcoal"
+                  className="text-amber-950 font-bold bg-white"
                 >
                   {option.label}
                 </option>
@@ -84,21 +84,20 @@ const Select = forwardRef(function Select(
             </>
           )}
         </select>
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-natural-wood" aria-hidden="true">
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-amber-900" aria-hidden="true">
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
           </svg>
         </div>
       </div>
       {error && (
-        <p id={errorId} className="mt-1 text-sm text-error" role="alert">{error}</p>
+        <p id={errorId} className="mt-1 text-xs font-semibold text-rose-600" role="alert">{error}</p>
       )}
       {helperText && !error && (
-        <p className="mt-1 text-sm text-natural-wood">{helperText}</p>
+        <p className="mt-1 text-xs text-stone-500">{helperText}</p>
       )}
     </div>
   );
 });
 
 export default Select;
-

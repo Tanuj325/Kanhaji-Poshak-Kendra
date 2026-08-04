@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { FiAlertTriangle, FiRefreshCw } from 'react-icons/fi';
 
 export default function ErrorState({
-  title = 'Something Went Wrong',
-  message = 'We encountered an error. Please try again.',
+  title = 'Catalog Connection Error',
+  message = 'We encountered a server error while connecting to our catalog services.',
   code,
   onRetry,
   action,
@@ -18,39 +18,36 @@ export default function ErrorState({
       transition={{ duration: 0.3 }}
       role="alert"
       className={cn(
-        'flex flex-col items-center justify-center gap-5 px-5 sm:px-8 text-center rounded-[28px] border py-12 bg-white/85 shadow-[0_18px_48px_rgba(44,40,36,0.08)] backdrop-blur-sm',
-        fullPage
-          ? 'min-h-[50vh] border-error/10'
-          : 'py-10 border-error/15',
+        'flex flex-col items-center justify-center gap-5 px-5 sm:px-8 text-center rounded-[32px] border py-12 bg-white/95 border-rose-200/80 shadow-elevated backdrop-blur-md font-display',
+        fullPage ? 'min-h-[45vh]' : 'py-10',
         className,
       )}
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-error/10 border border-error/20 text-error shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+      <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-rose-50 border border-rose-200 text-rose-600 shadow-md">
         <FiAlertTriangle className="h-7 w-7" />
       </div>
 
       <div className="space-y-1.5 max-w-md">
         {code && (
-          <span className="text-xs font-bold text-error/70 tracking-wider">{code}</span>
+          <span className="text-xs font-bold text-rose-600/80 uppercase tracking-wider">{code}</span>
         )}
-        <h3 className="font-display text-lg font-semibold text-dark-charcoal sm:text-xl">
+        <h3 className="font-heading text-lg font-bold text-amber-950 sm:text-xl">
           {title}
         </h3>
-        <p className="text-xs sm:text-sm text-natural-wood/70 leading-relaxed">
+        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-body">
           {message}
         </p>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-col items-center gap-3 sm:flex-row">
         {onRetry && (
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-2xl bg-royal-blue px-6 py-2.5 text-xs font-bold text-white shadow-[0_10px_24px_rgba(27,58,92,0.18)] transition-all hover:bg-deep-navy hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue/50"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] px-6 py-2.5 text-xs font-bold text-white shadow-gold transition-all hover:opacity-95 active:scale-95 focus:outline-none"
           >
-            <FiRefreshCw className="h-3.5 w-3.5" />
-            <span>Try Again</span>
+            <FiRefreshCw className="h-4 w-4 text-amber-300" />
+            <span>Retry Connection</span>
           </button>
         )}
         {action}

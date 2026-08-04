@@ -43,8 +43,8 @@ const Checkbox = forwardRef(function Checkbox(
   };
 
   return (
-    <div className={cn('flex items-start gap-2', className)}>
-      <div className="relative flex items-center pt-0.5">
+    <div className={cn('flex items-center gap-2.5 min-h-[44px]', className)}>
+      <div className="relative flex items-center justify-center">
         <input
           ref={ref}
           id={inputId}
@@ -61,21 +61,21 @@ const Checkbox = forwardRef(function Checkbox(
         <label
           htmlFor={inputId}
           className={cn(
-            'flex items-center justify-center rounded border-2 transition-colors duration-150 cursor-pointer',
+            'flex items-center justify-center rounded-lg border-2 transition-all duration-200 cursor-pointer shadow-2xs',
             sizeStyles[size],
             isChecked || isIndeterminate
-              ? 'bg-royal-blue border-royal-blue text-white'
-              : 'bg-white border-muted-sand hover:border-royal-blue/50',
+              ? 'bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] border-amber-900 text-white shadow-gold scale-105'
+              : 'bg-white border-amber-900/20 hover:border-amber-800/60 hover:bg-amber-50/50',
             isDisabled && 'cursor-not-allowed opacity-50',
-            error && !isChecked && 'border-error',
+            error && !isChecked && 'border-rose-600',
           )}
         >
           {isIndeterminate ? (
-            <svg className={cn('text-white', iconSizes[size])} viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <svg className={cn('text-amber-300', iconSizes[size])} viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
               <rect x="2" y="5" width="8" height="2" rx="1" />
             </svg>
           ) : isChecked ? (
-            <svg className={cn('text-white', iconSizes[size])} viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <svg className={cn('text-amber-300', iconSizes[size])} viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
               <path d="M10.28 2.22a.75.75 0 010 1.06l-5.5 5.5a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 011.06-1.06L4.25 7.19l4.97-4.97a.75.75 0 011.06 0z" />
             </svg>
           ) : null}
@@ -85,7 +85,7 @@ const Checkbox = forwardRef(function Checkbox(
         <label
           htmlFor={inputId}
           className={cn(
-            'text-sm text-dark-charcoal cursor-pointer select-none',
+            'text-xs font-semibold text-amber-950 cursor-pointer select-none font-display flex-1',
             isDisabled && 'cursor-not-allowed opacity-50',
           )}
         >
@@ -93,7 +93,7 @@ const Checkbox = forwardRef(function Checkbox(
         </label>
       )}
       {error && (
-        <p className="text-sm text-error" role="alert">{error}</p>
+        <p className="text-xs font-semibold text-rose-600" role="alert">{error}</p>
       )}
     </div>
   );

@@ -109,41 +109,41 @@ export default function ProductReviewsSection({ productId, productAverageRating 
   }, [reviewsList, selectedStarFilter]);
 
   return (
-    <section className="w-full mt-12 sm:mt-16 xl:mt-20 font-display space-y-8 xl:space-y-10">
+    <section className="w-full font-display space-y-6 xl:space-y-8">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-amber-900/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-amber-900/10">
         <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold text-amber-950 tracking-tight flex items-center gap-3 font-heading">
-            <FiMessageSquare className="h-6 w-6 sm:h-7 sm:w-7 text-amber-800" />
-            <span>Devotee & Customer Reviews</span>
+          <h2 className="text-xl sm:text-2xl xl:text-3xl font-extrabold text-amber-950 tracking-tight flex items-center gap-2.5 font-heading">
+            <FiMessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-amber-800" />
+            <span>Customer Reviews</span>
           </h2>
-          <p className="text-xs sm:text-sm xl:text-base text-stone-600 font-medium font-body">
-            Real customer experiences & verified ratings ({totalReviews})
+          <p className="text-xs sm:text-sm text-stone-500 font-medium font-body">
+            Real experiences & verified ratings ({totalReviews})
           </p>
         </div>
 
         <Button
           variant="primary"
-          size="lg"
+          size="md"
           onClick={openCreateModal}
-          leftIcon={<FiEdit3 className="h-5 w-5 text-amber-200" />}
-          className="rounded-2xl bg-amber-900 hover:bg-amber-950 text-amber-50 font-bold py-3.5 px-6 text-sm sm:text-base shrink-0 shadow-md border border-amber-500/20 self-start sm:self-auto min-h-[44px]"
+          leftIcon={<FiEdit3 className="h-4 w-4 text-amber-200" />}
+          className="rounded-xl bg-amber-900 hover:bg-amber-950 text-amber-50 font-bold py-3 px-5 text-xs sm:text-sm shrink-0 shadow-md border border-amber-500/20 self-start sm:self-auto min-h-[44px]"
         >
           Write a Review
         </Button>
       </div>
 
-      {/* Summary Card (3 Column Grid) */}
+      {/* Summary Card */}
       <ReviewSummary
         avgRating={avgRating}
         totalReviews={totalReviews}
         ratingCounts={ratingCounts}
       />
 
-      {/* Filter Chips (Scrollable Pills) */}
+      {/* Filter Chips */}
       {totalReviews > 0 && (
-        <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between">
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
             <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-950">
               Filter by Rating
             </h3>
@@ -151,9 +151,9 @@ export default function ProductReviewsSection({ productId, productAverageRating 
               <button
                 type="button"
                 onClick={() => setSelectedStarFilter('ALL')}
-                className="text-xs sm:text-sm font-bold text-amber-800 hover:underline"
+                className="text-xs font-bold text-amber-800 hover:underline"
               >
-                Clear Filter
+                Clear
               </button>
             )}
           </div>
@@ -167,10 +167,10 @@ export default function ProductReviewsSection({ productId, productAverageRating 
         </div>
       )}
 
-      {/* Full Width Review Cards List */}
+      {/* Review Cards */}
       {isLoadingReviews ? (
-        <div className="py-16 text-center">
-          <Spinner label="Loading customer reviews..." />
+        <div className="py-12 text-center">
+          <Spinner label="Loading reviews..." />
         </div>
       ) : filteredReviews.length === 0 ? (
         <EmptyState
@@ -181,13 +181,13 @@ export default function ProductReviewsSection({ productId, productAverageRating 
               : 'Be the first devotee to share your thoughts on this sacred poshak!'
           }
           action={
-            <Button variant="primary" size="md" onClick={openCreateModal} className="rounded-2xl bg-amber-900 text-white min-h-[44px]">
+            <Button variant="primary" size="md" onClick={openCreateModal} className="rounded-xl bg-amber-900 text-white min-h-[44px]">
               Write Review
             </Button>
           }
         />
       ) : (
-        <div className="w-full space-y-4 sm:space-y-5 pt-2">
+        <div className="w-full grid grid-cols-1 gap-3 sm:gap-4 pt-1">
           {filteredReviews.map((rev) => (
             <ReviewCard
               key={rev.id}
@@ -200,7 +200,7 @@ export default function ProductReviewsSection({ productId, productAverageRating 
         </div>
       )}
 
-      {/* Review Submission Modal */}
+      {/* Review Modal */}
       <Suspense fallback={null}>
         <ReviewModal
           isOpen={isModalOpen}

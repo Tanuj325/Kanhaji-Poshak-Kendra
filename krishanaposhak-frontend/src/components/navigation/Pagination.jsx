@@ -9,7 +9,6 @@ function Pagination({
   siblingCount = 1,
   showFirstLast = true,
   showPrevNext = true,
-  size = 'md',
   isDisabled = false,
   className,
 }) {
@@ -47,15 +46,9 @@ function Pagination({
     return [1, '...', ...middleRange, '...', totalPages];
   }, [currentPage, totalPages, siblingCount]);
 
-  const sizeStyles = {
-    sm: 'h-8 w-8 text-xs',
-    md: 'h-9 sm:h-10 w-9 sm:w-10 text-xs sm:text-sm font-bold',
-    lg: 'h-11 w-11 text-base font-bold',
-  };
-
   const buttonBase = cn(
-    'inline-flex items-center justify-center rounded-2xl transition-all duration-300 font-display',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal-blue/50 active:scale-95 border',
+    'inline-flex items-center justify-center rounded-2xl transition-all duration-300 font-display min-h-[44px] min-w-[44px] text-xs sm:text-sm font-bold',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/50 active:scale-95 border',
   );
 
   const handlePageChange = (page) => {
@@ -67,7 +60,10 @@ function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <nav aria-label="Pagination" className={cn('flex items-center gap-1.5 p-1.5 bg-white/80 backdrop-blur-md rounded-2xl border border-muted-sand/30 shadow-xs', className)}>
+    <nav
+      aria-label="Shop catalog pagination"
+      className={cn('flex flex-wrap items-center justify-center gap-1.5 p-2 bg-white/95 backdrop-blur-md rounded-3xl border border-amber-900/10 shadow-soft', className)}
+    >
       {showFirstLast && (
         <button
           type="button"
@@ -76,13 +72,13 @@ function Pagination({
           aria-label="First page"
           className={cn(
             buttonBase,
-            sizeStyles[size],
-            'border-transparent text-natural-wood hover:text-royal-blue hover:bg-royal-blue/10 disabled:opacity-30 disabled:cursor-not-allowed',
+            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronsLeft className="h-4 w-4" />
         </button>
       )}
+
       {showPrevNext && (
         <button
           type="button"
@@ -91,8 +87,7 @@ function Pagination({
           aria-label="Previous page"
           className={cn(
             buttonBase,
-            sizeStyles[size],
-            'border-transparent text-natural-wood hover:text-royal-blue hover:bg-royal-blue/10 disabled:opacity-30 disabled:cursor-not-allowed',
+            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronLeft className="h-4 w-4" />
@@ -104,10 +99,7 @@ function Pagination({
           return (
             <span
               key={`ellipsis-${index}`}
-              className={cn(
-                'inline-flex items-center justify-center text-natural-wood/50 font-bold',
-                sizeStyles[size],
-              )}
+              className="inline-flex items-center justify-center h-11 w-8 text-stone-400 font-bold"
             >
               ...
             </span>
@@ -126,10 +118,9 @@ function Pagination({
             aria-label={`Page ${item}`}
             className={cn(
               buttonBase,
-              sizeStyles[size],
               isActive
-                ? 'bg-gradient-to-r from-royal-blue to-deep-navy text-white border-royal-blue shadow-soft shadow-royal-blue/30 scale-105'
-                : 'bg-transparent border-transparent text-dark-charcoal hover:border-royal-blue/30 hover:bg-royal-blue/5',
+                ? 'bg-[linear-gradient(135deg,#0f2440,#1b3a5c_55%,#0d4f5e)] text-white border-amber-900/20 shadow-gold scale-105'
+                : 'bg-transparent border-transparent text-amber-950 hover:border-amber-900/20 hover:bg-amber-50/80',
             )}
           >
             {item}
@@ -145,13 +136,13 @@ function Pagination({
           aria-label="Next page"
           className={cn(
             buttonBase,
-            sizeStyles[size],
-            'border-transparent text-natural-wood hover:text-royal-blue hover:bg-royal-blue/10 disabled:opacity-30 disabled:cursor-not-allowed',
+            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronRight className="h-4 w-4" />
         </button>
       )}
+
       {showFirstLast && (
         <button
           type="button"
@@ -160,8 +151,7 @@ function Pagination({
           aria-label="Last page"
           className={cn(
             buttonBase,
-            sizeStyles[size],
-            'border-transparent text-natural-wood hover:text-royal-blue hover:bg-royal-blue/10 disabled:opacity-30 disabled:cursor-not-allowed',
+            'border-amber-900/10 text-stone-700 hover:text-amber-950 hover:bg-amber-100/60 disabled:opacity-30 disabled:cursor-not-allowed',
           )}
         >
           <FiChevronsRight className="h-4 w-4" />
