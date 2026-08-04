@@ -1,67 +1,58 @@
-import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '@/components/common/SEO';
-import { FiRefreshCw, FiAlertTriangle } from 'react-icons/fi';
-import { siteConfig } from '@/config/siteConfig';
+import Button from '@/components/ui/Button';
+import { FiAlertTriangle, FiHome, FiRefreshCw } from 'react-icons/fi';
+import { ROUTE_PATHS } from '@/routes/routePaths';
 
 export default function ServerErrorPage() {
-  const canonicalUrl = `${siteConfig.url}/500`;
-
-  const serverErrorSchema = useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: '500 - Server Error | Krishana Poshak',
-    description: 'Krishana Poshak encountered a temporary server error. Please try again later.',
-    url: canonicalUrl,
-  }), [canonicalUrl]);
-
   return (
     <>
-      <SEO
-        title="500 - Server Error"
-        description="Krishana Poshak encountered a temporary server error. Our team has been notified. Please try again later."
-        canonicalUrl={canonicalUrl}
-        jsonLd={serverErrorSchema}
-      />
-      <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-16 text-center">
+      <SEO title="500 - Server Error" description="An unexpected server error occurred. Please try again." />
+
+      <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-16 text-center bg-[#FAF7F2] font-display">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-md"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="max-w-xl mx-auto space-y-6 px-6 py-12 sm:py-16 rounded-3xl bg-gradient-to-b from-amber-50/90 via-white to-amber-50/40 border border-amber-900/10 shadow-[0_8px_30px_rgba(212,175,55,0.08)] relative overflow-hidden"
         >
-          <div className="relative mb-6">
-            <motion.div
-              className="font-serif text-[120px] font-bold leading-none text-transparent sm:text-[150px]"
-              style={{ WebkitTextStroke: '2px rgba(249,115,22,0.12)' }}
-              animate={{ opacity: [0.5, 0.8, 0.5] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              500
-            </motion.div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-orange-400/20 bg-orange-500/5 shadow-lg shadow-orange-500/10">
-                <FiAlertTriangle className="h-8 w-8 text-orange-400" />
-              </div>
-            </div>
+          <div className="mx-auto h-20 w-20 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center shadow-md border border-amber-300">
+            <FiAlertTriangle className="h-9 w-9" />
           </div>
 
-          <h1 className="font-serif text-2xl font-bold text-dark-charcoal sm:text-3xl">
-            Server Error
-          </h1>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-natural-wood/70">
-            We encountered an unexpected error. Our team has been notified. Please try again later.
-          </p>
+          <div className="space-y-2">
+            <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/80 px-3 py-1 rounded-full border border-amber-300/50">
+              ✦ 500 Server Error ✦
+            </span>
+            <h1 className="font-heading text-2xl sm:text-4xl font-extrabold text-amber-950 pt-2">
+              Server Is Temporarily Busy
+            </h1>
+            <p className="text-stone-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed font-body">
+              An unexpected issue occurred on our server while processing your request. Please try refreshing or return to the main store.
+            </p>
+          </div>
 
-          <div className="mt-8">
-            <button
-              type="button"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Button
+              variant="primary"
+              size="lg"
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-3 text-sm font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+              leftIcon={<FiRefreshCw className="h-5 w-5 text-amber-200" />}
+              className="w-full sm:w-auto font-bold px-7 rounded-2xl min-h-[48px] bg-amber-900 text-white"
             >
-              <FiRefreshCw className="h-4 w-4" />
-              Retry
-            </button>
+              Refresh Page
+            </Button>
+            <Link to={ROUTE_PATHS.HOME} className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                leftIcon={<FiHome className="h-5 w-5 text-amber-800" />}
+                className="w-full sm:w-auto font-bold px-6 rounded-2xl border-amber-900/20 text-amber-950 hover:bg-amber-50 min-h-[48px]"
+              >
+                Return Home
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>

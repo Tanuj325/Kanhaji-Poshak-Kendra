@@ -1,71 +1,34 @@
-import { motion } from 'framer-motion';
-import { FiCheckCircle, FiShield, FiHeart, FiSmile } from 'react-icons/fi';
+import { memo } from 'react';
+import { FiShield, FiTruck, FiRefreshCw, FiAward } from 'react-icons/fi';
 
-export default function TrustSection() {
+const TrustSection = memo(function TrustSection() {
+  const items = [
+    { icon: FiAward, title: 'Authentic Meerut Artisans', desc: 'Directly from heritage handcraft workshops' },
+    { icon: FiTruck, title: 'Express Delivery Across India', desc: 'Free delivery on orders above ₹8,000' },
+    { icon: FiShield, title: 'Safe & Encrypted Razorpay', desc: 'UPI, Cards & Netbanking SSL Secured' },
+    { icon: FiRefreshCw, title: '7-Day Easy Size Exchange', desc: 'Hassle-free size adjustment guarantee' },
+  ];
+
   return (
-    <section className="py-16 bg-gradient-to-r from-deep-navy via-royal-blue to-deep-navy text-white font-display relative overflow-hidden">
-      <div className="container-page relative z-10">
-        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-4 gap-5 sm:gap-8 text-center divide-y min-[400px]:divide-y-0 min-[400px]:divide-x divide-white/10">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="px-4 space-y-1.5"
-          >
-            <div className="h-10 w-10 mx-auto rounded-full bg-temple-gold/20 flex items-center justify-center text-temple-gold mb-2">
-              <FiCheckCircle className="h-5 w-5" />
-            </div>
-            <p className="font-serif text-2xl sm:text-3xl font-bold text-temple-gold">100%</p>
-            <p className="text-xs sm:text-sm font-semibold text-white">Authentic Vrindavan Heritage</p>
-            <p className="text-[10px] text-white/60">Genuine Devotional Quality</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="px-4 space-y-1.5"
-          >
-            <div className="h-10 w-10 mx-auto rounded-full bg-temple-gold/20 flex items-center justify-center text-temple-gold mb-2">
-              <FiShield className="h-5 w-5" />
-            </div>
-            <p className="font-serif text-2xl sm:text-3xl font-bold text-temple-gold">Secure</p>
-            <p className="text-xs sm:text-sm font-semibold text-white">Razorpay & COD Protected</p>
-            <p className="text-[10px] text-white/60">100% Safe Payments</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="px-4 space-y-1.5"
-          >
-            <div className="h-10 w-10 mx-auto rounded-full bg-temple-gold/20 flex items-center justify-center text-temple-gold mb-2">
-              <FiHeart className="h-5 w-5" />
-            </div>
-            <p className="font-serif text-2xl sm:text-3xl font-bold text-temple-gold">Devotional</p>
-            <p className="text-xs sm:text-sm font-semibold text-white">Skin-Safe & Pure Fabrics</p>
-            <p className="text-[10px] text-white/60">Non-Fraying Silk & Velvet</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="px-4 space-y-1.5"
-          >
-            <div className="h-10 w-10 mx-auto rounded-full bg-temple-gold/20 flex items-center justify-center text-temple-gold mb-2">
-              <FiSmile className="h-5 w-5" />
-            </div>
-            <p className="font-serif text-2xl sm:text-3xl font-bold text-temple-gold">Pan-India</p>
-            <p className="text-xs sm:text-sm font-semibold text-white">Doorstep Express Delivery</p>
-            <p className="text-[10px] text-white/60">Fast Dispatch to All Pin Codes</p>
-          </motion.div>
+    <section className="py-12 bg-white font-display border-t border-amber-900/10">
+      <div className="container-page max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {items.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.title} className="p-4 rounded-2xl bg-amber-50/50 border border-amber-900/10 text-center space-y-1.5">
+                <div className="h-9 w-9 mx-auto rounded-xl bg-amber-900 text-amber-50 flex items-center justify-center">
+                  <Icon className="h-4.5 w-4.5" />
+                </div>
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-amber-950">{item.title}</h4>
+                <p className="text-[11px] text-stone-500 font-body">{item.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
-}
+});
+
+export default TrustSection;

@@ -387,7 +387,7 @@ export default function LegalPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white tracking-wide leading-tight"
+                className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-white tracking-wide leading-tight"
               >
                 Legal Information & <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 bg-clip-text text-transparent">Policies</span>
               </motion.h1>

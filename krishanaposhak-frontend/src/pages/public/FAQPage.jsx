@@ -15,6 +15,7 @@ import {
   FiShield,
   FiRefreshCw,
   FiMail,
+  FiPhone,
 } from 'react-icons/fi';
 
 const breadcrumbItems = [
@@ -119,126 +120,136 @@ export default function FAQPage() {
   return (
     <>
       <SEO
-        title="Help Center & Frequently Asked Questions"
-        description="Find answers to common questions about Krishna Poshak attire sizing, shipping times, payment methods, and exchange policies."
+        title="Help Center & FAQs - Frequently Asked Questions"
+        description="Find answers to common questions about Laddu Gopal poshak sizes, shipping timelines, Razorpay payment security, and return policies at Krishna Poshak."
         canonicalUrl={canonicalUrl}
         jsonLd={faqSchemas}
       />
 
-      <section className="container-page section-padding space-y-6 sm:space-y-8">
-        <Breadcrumb items={breadcrumbItems} />
+      <div className="min-h-screen bg-[#FAF7F2] font-display">
+        <div className="container-page py-6 sm:py-8 space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+          <Breadcrumb items={breadcrumbItems} />
 
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-temple-gold">Knowledge Base</span>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-dark-charcoal">
-            Help Center & Frequently Asked Questions
-          </h1>
-          <p className="text-sm text-natural-wood leading-relaxed">
-            Everything you need to know about our handcrafted traditional attire, shipping times, and order support.
-          </p>
+          {/* Banner Header */}
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/80 px-3 py-1 rounded-full border border-amber-300/40">
+              ✦ Devotee Assistance Center ✦
+            </span>
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-950">
+              Frequently Asked Questions
+            </h1>
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-body">
+              Everything you need to know about poshak sizes, ordering process, shipping timelines, and care instructions.
+            </p>
+          </div>
 
-          <div className="pt-2 max-w-md mx-auto">
-            <Input
-              leftIcon={<FiSearch className="h-4 w-4 text-natural-wood" />}
-              placeholder="Search questions (e.g. shipping, sizing, payments)..."
+          {/* Search Input Box */}
+          <div className="max-w-xl mx-auto relative">
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-amber-800 pointer-events-none" />
+            <input
+              type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-xs"
+              placeholder="Search questions (e.g. shipping, sizes, returns, Razorpay)..."
+              className="w-full rounded-2xl border border-amber-900/20 bg-white py-3.5 pl-12 pr-4 text-xs sm:text-sm font-bold text-amber-950 shadow-sm focus:border-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-800/20 font-body transition-all"
             />
           </div>
-        </div>
 
-        {/* Category Pills */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:justify-center">
-          {faqCategories.map((cat) => {
-            const Icon = cat.icon;
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => {
-                  setActiveCategory(cat.id);
-                  setOpenIndex(null);
-                }}
-                className={`flex min-h-[44px] shrink-0 items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
-                  isActive
-                    ? 'bg-royal-blue text-white border-royal-blue shadow-xs'
-                    : 'bg-white text-natural-wood hover:text-dark-charcoal border-muted-sand/20'
-                }`}
-              >
-                <Icon className="h-4 w-4" /> {cat.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* FAQ Accordion List */}
-        <div className="max-w-3xl mx-auto space-y-3">
-          {filteredFaqs.length === 0 ? (
-            <div className="text-center p-8 bg-white rounded-2xl border border-muted-sand/20 space-y-3">
-              <FiHelpCircle className="h-10 w-10 text-natural-wood mx-auto" />
-              <h3 className="font-display text-lg font-bold text-dark-charcoal">No answers found</h3>
-              <p className="text-xs text-natural-wood">Try refining your search keyword or browse all categories.</p>
-            </div>
-          ) : (
-            filteredFaqs.map((faq, idx) => {
-              const isOpen = openIndex === idx;
+          {/* Category Chips */}
+          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide py-1 justify-start sm:justify-center">
+            {faqCategories.map((cat) => {
+              const Icon = cat.icon;
+              const isActive = activeCategory === cat.id;
               return (
-                <div
-                  key={idx}
-                  className="bg-white rounded-xl border border-muted-sand/20 overflow-hidden transition-shadow hover:shadow-xs"
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 font-display min-h-[40px] ${
+                    isActive
+                      ? 'bg-amber-900 text-amber-50 shadow-md border border-amber-800'
+                      : 'bg-white text-stone-700 hover:bg-amber-50 border border-amber-900/10'
+                  }`}
                 >
-                  <button
-                    type="button"
-                    onClick={() => toggleAccordion(idx)}
-                    className="w-full flex min-h-[56px] items-center justify-between gap-4 p-4 text-left font-bold text-sm text-dark-charcoal hover:text-royal-blue transition-colors sm:p-5"
-                  >
-                    <span>{faq.question}</span>
-                    <FiChevronDown
-                      className={`h-4 w-4 shrink-0 transition-transform duration-200 text-royal-blue ${
-                        isOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <div className="p-5 pt-0 text-xs leading-relaxed text-natural-wood border-t border-muted-sand/10">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                  <Icon className={`h-4 w-4 ${isActive ? 'text-amber-200' : 'text-amber-800'}`} />
+                  <span>{cat.label}</span>
+                </button>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
 
-        {/* Still Need Help Box */}
-        <div className="max-w-3xl mx-auto rounded-2xl bg-warm-cream/40 p-6 md:p-8 border border-temple-gold/30 text-center space-y-3">
-          <h3 className="font-display text-xl font-bold text-dark-charcoal">
-            Still Have Questions?
-          </h3>
-          <p className="text-xs text-natural-wood max-w-md mx-auto">
-            Can't find the answer you're looking for? Reach out to our customer care team and we will assist you right away.
-          </p>
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/contact">
-              <Button variant="primary" size="sm" leftIcon={<FiMail className="h-4 w-4" />}>
-                Contact Support
-              </Button>
-            </Link>
+          {/* Accordion Questions List */}
+          <div className="space-y-3 pt-2">
+            {filteredFaqs.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-3xl p-8 border border-amber-900/10 space-y-2">
+                <p className="text-base font-bold text-amber-950">No matching questions found</p>
+                <p className="text-xs text-stone-500 font-body">Try refining your search terms or selecting a different category.</p>
+              </div>
+            ) : (
+              filteredFaqs.map((faq, idx) => {
+                const isOpen = openIndex === idx;
+                return (
+                  <div
+                    key={faq.question}
+                    className="rounded-2xl bg-white border border-amber-900/10 shadow-xs overflow-hidden transition-all duration-200"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleAccordion(idx)}
+                      className="w-full flex items-center justify-between p-4 sm:p-5 text-left transition-colors hover:bg-amber-50/40 min-h-[52px]"
+                    >
+                      <span className="font-heading font-extrabold text-sm sm:text-base text-amber-950 pr-4">
+                        {faq.question}
+                      </span>
+                      <FiChevronDown
+                        className={`h-5 w-5 text-amber-800 shrink-0 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-1 text-xs sm:text-sm text-stone-700 font-body leading-relaxed border-t border-amber-900/10">
+                            {faq.answer}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Need More Help Footer Card */}
+          <div className="rounded-3xl bg-gradient-to-r from-amber-900 via-stone-900 to-amber-950 p-6 sm:p-8 text-white text-center space-y-4 shadow-xl">
+            <h3 className="font-heading font-bold text-xl sm:text-2xl text-white">Still Have Questions?</h3>
+            <p className="text-xs sm:text-sm text-stone-300 font-body max-w-md mx-auto">
+              Our devotional care team is available Monday to Saturday (10:00 AM - 8:00 PM IST) to assist with your order.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Link to="/contact">
+                <Button variant="primary" size="md" leftIcon={<FiMail className="h-4 w-4 text-amber-200" />} className="rounded-xl bg-amber-600 text-amber-950 font-bold min-h-[44px]">
+                  Contact Customer Care
+                </Button>
+              </Link>
+              <a href={`tel:${siteConfig.phone}`}>
+                <Button variant="outline" size="md" leftIcon={<FiPhone className="h-4 w-4 text-amber-300" />} className="rounded-xl border-white/20 text-white min-h-[44px] font-bold">
+                  Call {siteConfig.phone}
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </>
   );
 }

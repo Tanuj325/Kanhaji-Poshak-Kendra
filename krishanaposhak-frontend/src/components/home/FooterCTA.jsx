@@ -1,62 +1,70 @@
-import { motion } from 'framer-motion';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import Button from '@/components/ui/Button';
 import { ROUTE_PATHS } from '@/routes/routePaths';
-import { FiArrowRight, FiMessageCircle, FiStar } from 'react-icons/fi';
+import { FiShoppingBag, FiArrowRight, FiStar, FiHeart } from 'react-icons/fi';
 
-export default function FooterCTA() {
+const FooterCTA = memo(function FooterCTA() {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,#0f2440_0%,#081427_100%)] text-lotus-white py-16 sm:py-20 lg:py-24 border-t border-temple-gold/30 select-none">
-      <img
-        src="/logo3.jpeg"
-        alt="Krishana Poshak Devotional Craftsmanship"
-        className="absolute inset-0 h-full w-full object-cover object-center opacity-30 scale-105"
-        loading="lazy"
-        decoding="async"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,36,64,0.96),rgba(15,36,64,0.78),rgba(15,36,64,0.96))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.9),transparent_45%,rgba(15,36,64,0.92))]" />
+    <section className="relative overflow-hidden py-14 sm:py-20 bg-gradient-to-br from-amber-950 via-stone-950 to-amber-900 text-white font-display">
+      {/* Background glowing orb */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-500/20 to-temple-gold/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-temple-gold/12 blur-3xl pointer-events-none" />
-
-      <div className="container-page relative z-10">
+      <div className="container-page relative z-10 text-center space-y-6 max-w-3xl mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-          className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-6"
+          transition={{ duration: 0.5 }}
+          className="space-y-3"
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold backdrop-blur-md border border-temple-gold/40 shadow-xs">
-            <FiStar className="h-3.5 w-3.5" /> Experience Divine Splendor
+          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-300 uppercase tracking-widest bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+            <FiStar className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+            <span>Handcrafted Meerut Devotional Wear</span>
           </span>
 
-          <h2 className="font-display text-3xl font-semibold text-lotus-white sm:text-4xl lg:text-5xl leading-tight drop-shadow-md text-balance">
-            Ready to Dress Your Laddu Gopal & Deities in Sacred Luxury?
+          <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+            Adorn Your Deity with Pure Velvet & Zari Craftsmanship
           </h2>
 
-          <p className="max-w-xl text-sm text-lotus-white/90 sm:text-base font-light leading-relaxed font-body text-balance">
-            Discover our authentic Meerut Poshaks, designer Mukuts, and hand-embroidered festival attire with insured Pan-India shipping.
+          <p className="text-stone-300 text-xs sm:text-base max-w-xl mx-auto font-body leading-relaxed">
+            Every creation is tailored with divine love, traditional embroidery, and authentic Indian artistry suitable for holy worship and festive celebrations.
           </p>
+        </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto font-body">
-            <Link
-              to={ROUTE_PATHS.SHOP}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-8 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] transition-all duration-300 hover:scale-[1.02] min-h-[44px]"
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2"
+        >
+          <Link to={ROUTE_PATHS.SHOP} className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              size="lg"
+              leftIcon={<FiShoppingBag className="h-5 w-5 text-amber-200" />}
+              rightIcon={<FiArrowRight className="h-5 w-5 text-amber-200" />}
+              className="w-full sm:w-auto font-bold px-8 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-amber-950 shadow-xl shadow-amber-900/30 border border-amber-300/30 min-h-[50px]"
             >
-              <span>Explore Collection</span>
-              <FiArrowRight className="h-4 w-4" />
-            </Link>
-
-            <Link
-              to={ROUTE_PATHS.CONTACT}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-lotus-white/25 bg-lotus-white/10 px-8 py-3.5 text-xs sm:text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 min-h-[44px]"
+              Explore Full Collection
+            </Button>
+          </Link>
+          <Link to={ROUTE_PATHS.ABOUT} className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              size="lg"
+              leftIcon={<FiHeart className="h-5 w-5 text-amber-300" />}
+              className="w-full sm:w-auto font-bold px-7 rounded-2xl border-white/20 text-white hover:bg-white/10 min-h-[50px]"
             >
-              <FiMessageCircle className="h-4 w-4 text-temple-gold" />
-              <span>Contact Assistance</span>
-            </Link>
-          </div>
+              Discover Our Heritage
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>
   );
-}
+});
+
+export default FooterCTA;

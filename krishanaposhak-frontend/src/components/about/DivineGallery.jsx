@@ -1,100 +1,57 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { FiInstagram, FiHeart, FiEye } from 'react-icons/fi';
+import { FiSun } from 'react-icons/fi';
 
-const galleryItems = [
-  {
-    id: 1,
-    title: 'Divine Royal Velvet Poshak',
-    category: 'Heavy Embroidered Seva',
-    image: '/logo1.jpeg',
-  },
-  {
-    id: 2,
-    title: 'Handcrafted Zardozi Mukut & Shringar',
-    category: 'Sacred Accessories',
-    image: '/logo2.jpeg',
-  },
-  {
-    id: 3,
-    title: 'Festival Special Silk Collection',
-    category: 'Janmashtami Special',
-    image: '/logo3.jpeg',
-  },
-  {
-    id: 4,
-    title: 'Authentic Traditional Attire Collection',
-    category: 'Daily Seva Wear',
-    image: '/ogImage.jpeg',
-  },
-];
-
-export default function DivineGallery() {
+const DivineGallery = memo(function DivineGallery() {
   return (
-    <section className="py-20 bg-warm-cream/20 font-display">
-      <div className="container-page">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-          <div>
-            <span className="inline-block bg-temple-gold/15 text-dark-charcoal border border-temple-gold/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-              Devotional Showcase
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-dark-charcoal tracking-tight">
-              Divine Gallery & Creations
-            </h2>
-            <p className="text-xs sm:text-sm text-natural-wood mt-1 font-light">
-              Explore our handcrafted poshaks and shringar adornments crafted for Lord Krishna.
-            </p>
-          </div>
-
-          <a
-            href="https://www.instagram.com/kanhajiposhakkendra?igsh=eHlod205czhxaXli"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl bg-white border border-temple-gold/30 px-4 py-2 text-xs font-bold text-dark-charcoal hover:bg-temple-gold/10 transition-colors shadow-2xs self-start md:self-auto"
-          >
-            <FiInstagram className="h-4 w-4 text-rose-600" />
-            <span>Follow Us on Instagram</span>
-          </a>
+    <section className="py-14 sm:py-20 bg-[#FAF7F2] font-display border-t border-amber-900/10">
+      <div className="container-page max-w-6xl mx-auto px-4 space-y-10">
+        <div className="text-center space-y-2 max-w-2xl mx-auto">
+          <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/70 px-3 py-1 rounded-full border border-amber-300/40">
+            ✦ Sacred Gallery ✦
+          </span>
+          <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-amber-950">
+            Artisanal Grace in Every Stitch
+          </h2>
         </div>
 
-        {/* Responsive Masonry/Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {galleryItems.map((item, idx) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="group relative overflow-hidden rounded-3xl border border-temple-gold/30 bg-deep-navy shadow-lg hover:shadow-gold transition-all duration-300 min-h-[320px] flex flex-col justify-end"
-            >
-              <div className="absolute inset-0 w-full h-full overflow-hidden bg-deep-navy">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-85"
-                />
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="rounded-3xl overflow-hidden border border-amber-900/10 shadow-xs bg-white p-2"
+          >
+            <img src="/logo1.jpeg" alt="Deity Poshak Collection" className="w-full h-64 object-cover rounded-2xl" />
+            <div className="p-3">
+              <p className="font-bold text-amber-950 text-sm">Heavy Zari Velvet Poshaks</p>
+              <p className="text-xs text-stone-500 font-body">Designed for Janmashtami & Festivals</p>
+            </div>
+          </motion.div>
 
-              {/* Permanent Dark Gradient Overlay for Maximum Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/80 to-transparent pointer-events-none" />
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="rounded-3xl overflow-hidden border border-amber-900/10 shadow-xs bg-white p-2"
+          >
+            <img src="/logo1.jpeg" alt="Mukut & Shringar Accessories" className="w-full h-64 object-cover rounded-2xl" />
+            <div className="p-3">
+              <p className="font-bold text-amber-950 text-sm">Regal Mukuts & Pearl Crowns</p>
+              <p className="text-xs text-stone-500 font-body">Hand-set Kundan stones & pearls</p>
+            </div>
+          </motion.div>
 
-              {/* Always-Visible Card Text Content */}
-              <div className="relative z-10 flex flex-col justify-end p-5 text-lotus-white space-y-1.5 transition-transform duration-300 group-hover:-translate-y-1">
-                <span className="inline-self-start text-[10px] font-bold uppercase tracking-widest text-temple-gold bg-temple-gold/20 px-2.5 py-1 rounded-full border border-temple-gold/30 backdrop-blur-md w-max">
-                  {item.category}
-                </span>
-                <h4 className="font-heading text-lg font-bold leading-snug text-lotus-white group-hover:text-temple-gold-light transition-colors">
-                  {item.title}
-                </h4>
-                <div className="flex items-center gap-2 pt-2 border-t border-white/20 text-xs text-muted-sand font-body">
-                  <FiHeart className="h-3.5 w-3.5 text-temple-gold fill-temple-gold" />
-                  <span>Handcrafted for Thakurji</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="rounded-3xl overflow-hidden border border-amber-900/10 shadow-xs bg-white p-2 sm:col-span-2 lg:col-span-1"
+          >
+            <img src="/logo1.jpeg" alt="Sacred Seva Accessories" className="w-full h-64 object-cover rounded-2xl" />
+            <div className="p-3">
+              <p className="font-bold text-amber-950 text-sm">Daily Seva Cotton & Silk Wear</p>
+              <p className="text-xs text-stone-500 font-body">Soft breathable fabrics for daily worship</p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
-}
+});
+
+export default DivineGallery;

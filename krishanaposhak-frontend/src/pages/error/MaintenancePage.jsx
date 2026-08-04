@@ -1,67 +1,42 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '@/components/common/SEO';
-import { FiTool } from 'react-icons/fi';
+import { FiTool, FiClock, FiMail } from 'react-icons/fi';
 import { siteConfig } from '@/config/siteConfig';
 
 export default function MaintenancePage() {
-  const maintenanceSchema = useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'Under Maintenance | Krishana Poshak',
-    description: 'Krishana Poshak is currently undergoing scheduled maintenance. We will be back shortly.',
-    url: siteConfig.url,
-  }), []);
-
   return (
     <>
-      <SEO
-        title="Under Maintenance"
-        description="Krishana Poshak is currently undergoing scheduled maintenance to improve your experience. We will be back shortly."
-        jsonLd={maintenanceSchema}
-        noindex
-      />
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#060E1A] px-4 py-16 text-center">
+      <SEO title="System Maintenance" description="We are currently undergoing scheduled maintenance to improve our service." />
+
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 text-center bg-[#FAF7F2] font-display">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-md"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="max-w-xl mx-auto space-y-6 px-6 py-12 sm:py-16 rounded-3xl bg-gradient-to-b from-amber-50/90 via-white to-amber-50/40 border border-amber-900/10 shadow-[0_8px_30px_rgba(212,175,55,0.08)] relative overflow-hidden"
         >
-          {/* Animated icon */}
-          <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
-            <motion.div
-              className="absolute inset-0 rounded-full bg-amber-400/10"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.div
-              className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-400/5"
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <FiTool className="h-9 w-9 text-amber-400" />
-            </motion.div>
+          <div className="mx-auto h-20 w-20 rounded-2xl bg-amber-900 text-amber-50 flex items-center justify-center shadow-lg border border-amber-700/30">
+            <FiTool className="h-9 w-9" />
           </div>
 
-          <h1 className="font-serif text-3xl font-bold tracking-wide text-white">
-            Under Maintenance
-          </h1>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-slate-400">
-            We are currently performing scheduled maintenance to improve your experience. We will be
-            back shortly.
-          </p>
-
-          {/* Status indicator */}
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/5 px-4 py-2">
-            <motion.div
-              className="h-2 w-2 rounded-full bg-amber-400"
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-            <span className="text-xs font-semibold text-amber-300/80">
-              Estimated return: Shortly
+          <div className="space-y-2">
+            <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/80 px-3 py-1 rounded-full border border-amber-300/50">
+              ✦ Scheduled Seva Upgrades ✦
             </span>
+            <h1 className="font-heading text-2xl sm:text-4xl font-extrabold text-amber-950 pt-2">
+              We Will Be Right Back
+            </h1>
+            <p className="text-stone-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed font-body">
+              Our website is currently undergoing brief scheduled maintenance to bring you new artisanal collections and enhanced security.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white border border-amber-900/10 shadow-xs space-y-2 font-body text-xs text-stone-700">
+            <div className="flex items-center justify-center gap-1.5 font-bold text-amber-950 font-display">
+              <FiClock className="h-4 w-4 text-amber-800" />
+              <span>Estimated Downtime: Under 30 Minutes</span>
+            </div>
+            <p>For urgent inquiries, email us at <a href={`mailto:${siteConfig.email}`} className="text-amber-900 font-bold hover:underline">{siteConfig.email}</a></p>
           </div>
         </motion.div>
       </div>

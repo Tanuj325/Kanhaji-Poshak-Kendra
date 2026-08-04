@@ -1,95 +1,76 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { siteConfig } from '@/config/siteConfig';
-import { FiCheckCircle, FiSun, FiHeart } from 'react-icons/fi';
+import { FiCheckCircle, FiSun } from 'react-icons/fi';
 
-export default function OurStory() {
+const OurStory = memo(function OurStory() {
   return (
-    <section className="py-20 bg-warm-cream/30 font-display border-b border-temple-gold/15">
-      <div className="container-page">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Story Visual Column */}
+    <section className="py-14 sm:py-20 bg-[#FAF7F2] font-display">
+      <div className="container-page max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Image Showcase Left Column */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 relative"
           >
-            <div className="relative rounded-3xl border border-temple-gold/30 p-2.5 bg-white shadow-xl">
+            <div className="relative rounded-3xl overflow-hidden border border-amber-900/10 shadow-[0_8px_30px_rgba(44,40,36,0.06)] bg-white p-2">
               <img
-                src="/logo2.jpeg"
-                alt="Sacred Craftsmanship Story"
-                className="aspect-[4/5] w-full rounded-2xl object-cover sm:aspect-[4/3] lg:aspect-[5/6]"
+                src="/logo1.jpeg"
+                alt="Krishana Poshak Craftsmanship"
+                className="w-full h-80 sm:h-96 object-cover rounded-2xl"
               />
-              <div className="absolute -bottom-6 -right-6 hidden sm:flex items-center gap-3 rounded-2xl bg-royal-blue text-white p-4 shadow-xl border border-white/20">
-                <div className="h-12 w-12 rounded-xl bg-temple-gold/20 flex items-center justify-center text-temple-gold font-bold text-lg">
-                  🙏
-                </div>
-                <div>
-                  <p className="font-serif font-bold text-sm text-temple-gold">Authentic Vrindavan Heritage</p>
-                  <p className="text-xs text-white/80">Pure Devotional Craft</p>
-                </div>
+              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-amber-900/10 shadow-lg space-y-1">
+                <p className="text-xs font-extrabold text-amber-950 font-heading flex items-center gap-1.5">
+                  <FiSun className="h-4 w-4 text-amber-700" /> Authentic Meerut Artisan Hub
+                </p>
+                <p className="text-[11px] text-stone-600 font-body">Handcrafted with pure devotional dedication.</p>
               </div>
             </div>
           </motion.div>
 
-          {/* Story Content Column */}
+          {/* Story Text Right Column */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-6"
+            className="lg:col-span-7 space-y-5"
           >
-            <div className="inline-flex items-center gap-2 rounded-full bg-temple-gold/15 border border-temple-gold/30 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-dark-charcoal">
-              <FiSun className="h-3.5 w-3.5 text-temple-gold" />
-              <span>Our Sacred Journey</span>
+            <div className="space-y-2">
+              <span className="text-xs font-extrabold text-amber-900 uppercase tracking-widest bg-amber-100/70 px-3 py-1 rounded-full border border-amber-300/40">
+                ✦ Our Heritage Story ✦
+              </span>
+              <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-amber-950 leading-tight">
+                From Meerut's Sacred Looms to Devotees Nationwide
+              </h2>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-dark-charcoal tracking-tight leading-tight">
-              Rooted in Faith, Crafted for <span className="text-royal-blue">Thakurji&apos;s Divine Grace</span>
-            </h2>
-
-            <p className="text-sm sm:text-base text-natural-wood leading-relaxed font-light">
-              <strong className="text-dark-charcoal font-semibold">{siteConfig.name}</strong> was born out of a deep spiritual desire to provide devotees across India and the globe with authentic, hand-tailored, and divine attire for their home deities.
+            <p className="text-stone-700 text-sm sm:text-base font-body leading-relaxed">
+              Founded in the historic city of Meerut, Krishna Poshak Kendra began with a single sacred vision: to provide high-quality, handcrafted deity garments that evoke deep spiritual reverence and aesthetic elegance.
             </p>
 
-            <p className="text-sm sm:text-base text-natural-wood leading-relaxed font-light">
-              Our journey began with a simple mission: to preserve traditional Indian embroidery techniques—such as Zardozi, Gota Patti, Resham, and Pearl embellishments—while ensuring every garment fits Little Kanha with perfect comfort and majesty.
+            <p className="text-stone-700 text-sm sm:text-base font-body leading-relaxed">
+              Every dress, mukut, and shringar piece is individually created by master artisans who carry forward generations of zari embroidery, stone placement, and fabric tailoring techniques.
             </p>
 
-            {/* Core Values Bullet List */}
-            <div className="grid sm:grid-cols-2 gap-4 pt-2">
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-temple-gold/20 shadow-xs">
-                <FiCheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-serif text-sm font-bold text-dark-charcoal">Pure Fabric Selection</h4>
-                  <p className="text-xs text-natural-wood mt-0.5">Velvet, pure silk, brocade & organic cottons</p>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-amber-900/10 shadow-2xs">
+                <FiCheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-bold text-amber-950">Pure Velvet & Heavy Silk Fabrics</span>
               </div>
-
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-temple-gold/20 shadow-xs">
-                <FiCheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-serif text-sm font-bold text-dark-charcoal">Artisan Tailoring</h4>
-                  <p className="text-xs text-natural-wood mt-0.5">Hand-sewn with precision for sizes 0 to 12+</p>
-                </div>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-amber-900/10 shadow-2xs">
+                <FiCheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-bold text-amber-950">Hand-embroidered Gold Zari Work</span>
               </div>
-
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-temple-gold/20 shadow-xs">
-                <FiCheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-serif text-sm font-bold text-dark-charcoal">Seasonal Specialities</h4>
-                  <p className="text-xs text-natural-wood mt-0.5">Janmashtami, Holi, Winter woollens & Daily Seva</p>
-                </div>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-amber-900/10 shadow-2xs">
+                <FiCheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-bold text-amber-950">Custom Fits for Size 0 to Size 6+</span>
               </div>
-
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-temple-gold/20 shadow-xs">
-                <FiCheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-serif text-sm font-bold text-dark-charcoal">Global Devotee Seva</h4>
-                  <p className="text-xs text-natural-wood mt-0.5">Delivering sacred joy straight to your home doorstep</p>
-                </div>
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-amber-900/10 shadow-2xs">
+                <FiCheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-bold text-amber-950">Direct Shipping Across All States</span>
               </div>
             </div>
           </motion.div>
@@ -97,4 +78,6 @@ export default function OurStory() {
       </div>
     </section>
   );
-}
+});
+
+export default OurStory;
