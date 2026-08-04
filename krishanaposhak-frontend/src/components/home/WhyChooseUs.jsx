@@ -66,14 +66,14 @@ export default function WhyChooseUs() {
           viewport={{ once: true, margin: '-50px' }}
           className="mb-10 text-center sm:mb-12"
         >
-          <span className="text-xs font-medium uppercase tracking-[0.2em] text-temple-gold">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300 font-display">
             Why Krishana Poshak
           </span>
-          <h2 className="mt-2 font-display text-3xl font-semibold text-lotus-white sm:text-4xl text-balance">
+          <h2 className="mt-2 font-heading text-3xl font-extrabold text-white sm:text-4xl text-balance">
             Crafted with Tradition, <br />
             Worn with Pride
           </h2>
-          <p className="mt-3 text-sm text-lotus-white/60 sm:text-base max-w-lg mx-auto">
+          <p className="mt-3 text-sm text-stone-300 sm:text-base max-w-lg mx-auto font-body">
             Every stitch tells a story of heritage, devotion, and the timeless beauty of Indian craftsmanship
           </p>
         </motion.div>

@@ -32,21 +32,21 @@ const ProfileHeader = memo(function ProfileHeader({ user }) {
 
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2 font-body">
           {user?.emailVerified ? (
-            <Badge variant="success" size="sm" className="font-bold flex items-center gap-1">
+            <Badge variant="success" size="sm" className="font-bold flex items-center gap-1 bg-emerald-100 text-emerald-900 border border-emerald-300">
               <FiCheckCircle className="h-3 w-3" /> Email Verified
             </Badge>
           ) : (
-            <Badge variant="warning" size="sm" className="font-bold">Unverified Email</Badge>
+            <Badge variant="warning" size="sm" className="font-bold bg-amber-100 text-amber-900 border border-amber-300">Unverified Email</Badge>
           )}
 
           {user?.phoneNumber && (
-            <span className="text-xs font-bold text-stone-600 font-mono bg-stone-100 px-2.5 py-1 rounded-lg">
+            <span className="text-xs font-bold text-stone-700 font-mono bg-stone-100 border border-stone-200 px-2.5 py-1 rounded-lg">
               {user.phoneNumber}
             </span>
           )}
 
           {user?.gender && (
-            <span className="text-xs font-bold text-stone-600 capitalize bg-amber-50 px-2.5 py-1 rounded-lg">
+            <span className="text-xs font-bold text-amber-950 capitalize bg-amber-100/70 border border-amber-300 px-2.5 py-1 rounded-lg">
               {user.gender.toLowerCase()}
             </span>
           )}

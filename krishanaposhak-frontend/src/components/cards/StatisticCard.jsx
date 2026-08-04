@@ -24,7 +24,7 @@ const StatisticCard = memo(function StatisticCard({
   }
 
   return (
-    <div className={cn('p-5 sm:p-6 rounded-3xl bg-white border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] font-display transition-all duration-200 hover:border-amber-700/30 hover:shadow-[0_8px_30px_rgba(44,40,36,0.06)]', className)}>
+    <div className={cn('p-5 sm:p-6 rounded-3xl bg-white border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] font-display transition-all duration-200 hover:border-amber-700/40 hover:shadow-[0_8px_30px_rgba(44,40,36,0.06)] focus:outline-none focus:ring-2 focus:ring-amber-500/20', className)}>
       <div className="flex items-start justify-between">
         <div className="min-w-0 space-y-1">
           <p className="text-xs font-bold text-stone-500 font-body uppercase tracking-wider">{title}</p>

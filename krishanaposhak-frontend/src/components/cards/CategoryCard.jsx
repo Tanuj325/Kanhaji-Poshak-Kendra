@@ -21,50 +21,55 @@ const CategoryCard = memo(function CategoryCard({
         padding="none"
         isHoverable
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-[28px] border border-white/70 bg-white/90 shadow-[0_14px_36px_rgba(44,40,36,0.08)] hover:shadow-[0_20px_48px_rgba(44,40,36,0.12)] hover:border-temple-gold/25 transition-all duration-300 backdrop-blur-sm',
+          'group relative flex flex-col h-full overflow-hidden rounded-[30px] border border-amber-900/15 bg-white shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 backdrop-blur-sm',
           className,
         )}
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[linear-gradient(180deg,rgba(248,246,243,0.96),rgba(240,234,225,0.9))]">
+        {/* Luxury Gold Foil Top Border Accent */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30" />
+
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[linear-gradient(180deg,rgba(250,247,242,0.9),rgba(242,235,223,0.7))]">
           {imageUrl ? (
             <OptimizedImage
               src={imageUrl}
               alt={name || 'Category'}
               loading="lazy"
               aspectRatio="aspect-[4/3]"
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-100/60 to-amber-50/40">
-              <span className="font-heading text-2xl sm:text-3xl font-bold text-amber-900 group-hover:scale-110 transition-transform">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-100/80 to-amber-50/50">
+              <span className="font-heading text-3xl sm:text-4xl font-extrabold text-amber-950 group-hover:scale-110 transition-transform">
                 {name ? name.charAt(0).toUpperCase() : 'C'}
               </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.05),rgba(15,36,64,0.42))] opacity-70 group-hover:opacity-90 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-amber-950/70 via-amber-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
 
           {productCount !== undefined && (
-            <span className="absolute top-2.5 right-2.5 rounded-full bg-deep-navy/90 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-temple-gold-light border border-temple-gold/20 backdrop-blur-md font-mono shadow-[0_10px_24px_rgba(15,36,64,0.18)]">
+            <span className="absolute top-3 right-3 rounded-full bg-stone-950/90 px-3 py-1 text-[10px] sm:text-xs font-extrabold text-amber-300 border border-amber-500/40 backdrop-blur-md font-mono shadow-md z-20">
               {productCount} Items
             </span>
           )}
         </div>
 
-        <div className="flex flex-col flex-1 p-3.5 sm:p-4 text-center justify-between font-display">
+        <div className="flex flex-col flex-1 p-4 sm:p-5 text-center justify-between font-display bg-white relative">
           <div>
-            <h3 className="font-heading text-base sm:text-lg font-semibold text-dark-charcoal group-hover:text-royal-blue transition-colors line-clamp-1">
+            <h3 className="font-heading text-base sm:text-lg font-extrabold text-amber-950 group-hover:text-amber-800 transition-colors line-clamp-1">
               {name}
             </h3>
             {description && (
-              <p className="mt-1 text-xs text-stone-600 line-clamp-2 leading-relaxed font-body">
+              <p className="mt-1.5 text-xs text-stone-600 line-clamp-2 leading-relaxed font-body">
                 {description}
               </p>
             )}
           </div>
 
-          <div className="mt-3 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-royal-blue group-hover:text-peacock-blue transition-colors pt-2.5 border-t border-muted-sand/20">
+          <div className="mt-3.5 flex items-center justify-center gap-2 text-xs sm:text-sm font-extrabold text-amber-950 group-hover:text-amber-900 transition-colors pt-3 border-t border-amber-900/10 font-display">
             <span>Explore Collection</span>
-            <FiArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1 text-amber-700" />
+            <div className="h-6 w-6 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center group-hover:bg-amber-900 group-hover:text-amber-200 transition-colors shadow-xs">
+              <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </div>
           </div>
         </div>
       </Card>

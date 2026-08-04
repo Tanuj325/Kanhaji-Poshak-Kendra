@@ -128,7 +128,11 @@ function AccountSidebar() {
   return (
     <aside className="w-full space-y-4 font-display">
       {/* Mobile Horizontal Pill Navigation Bar */}
-      <div className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white p-2 rounded-2xl border border-amber-900/10 shadow-xs flex items-center gap-1.5">
+      <div
+        className="md:hidden overflow-x-auto pb-1.5 scrollbar-hide bg-white p-2 rounded-2xl border border-amber-900/10 shadow-xs flex items-center gap-1.5"
+        role="navigation"
+        aria-label="Mobile account navigation"
+      >
         {allItems.map((item) => (
           <NavItem
             key={item.key}

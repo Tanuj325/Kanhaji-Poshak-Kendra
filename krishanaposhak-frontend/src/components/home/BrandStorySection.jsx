@@ -45,23 +45,23 @@ const BrandStorySection = memo(function BrandStorySection() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-7 space-y-5"
           >
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.25em] text-temple-gold bg-temple-gold/15 px-3.5 py-1 rounded-full border border-temple-gold/30">
-              <FiStar className="h-3.5 w-3.5" /> Our Sacred Heritage
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.25em] text-amber-300 bg-amber-500/15 px-3.5 py-1.5 rounded-full border border-amber-400/30 font-display">
+              <FiStar className="h-3.5 w-3.5 text-amber-300" /> Our Sacred Heritage
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight text-lotus-white text-balance">
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-white text-balance">
               Weaving Devotion into Every Thread
             </h2>
-            <p className="text-lotus-white/80 text-sm sm:text-base font-light leading-relaxed">
-              At <strong className="text-temple-gold font-semibold">{siteConfig.name}</strong>, we honor the rich spiritual lineage of Meerut by crafting divine attire for Shri Radha Krishna, Laddu Gopal Ji, and temple deities. Each dress is born from a quiet act of devotion, blending rich heritage techniques with modern elegance.
+            <p className="text-stone-200 text-sm sm:text-base font-light leading-relaxed font-body">
+              At <strong className="text-amber-300 font-semibold">{siteConfig.name}</strong>, we honor the rich spiritual lineage of Meerut by crafting divine attire for Shri Radha Krishna, Laddu Gopal Ji, and temple deities. Each dress is born from a quiet act of devotion, blending rich heritage techniques with modern elegance.
             </p>
-            <p className="text-lotus-white/70 text-xs sm:text-sm font-light leading-relaxed">
+            <p className="text-stone-300 text-xs sm:text-sm font-light leading-relaxed font-body">
               From delicate Mukut crowns and embroidered Dupattas to royal festival Poshaks, our master craftsmen infuse every seam with grace, reverence, and uncompromised quality.
             </p>
 
             <div className="pt-2">
               <Link
                 to={ROUTE_PATHS.ABOUT}
-                className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-7 py-3 text-xs font-bold uppercase tracking-wider text-stone-950 shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 font-display"
               >
                 Read Our Story <FiArrowRight className="h-4 w-4" />
               </Link>

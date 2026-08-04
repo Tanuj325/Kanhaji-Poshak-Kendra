@@ -216,7 +216,7 @@ function Table({
 
   return (
     <div className={cn('w-full rounded-3xl border border-amber-900/10 bg-white shadow-[0_4px_20px_rgba(44,40,36,0.03)] overflow-hidden font-display', className)}>
-      <div className="responsive-table w-full overflow-x-auto" tabIndex={0} aria-label="Scrollable data table">
+      <div className="responsive-table w-full overflow-x-auto focus:outline-none focus:ring-2 focus:ring-amber-500/20" tabIndex={0} aria-label="Scrollable data table">
         <table className="w-full border-collapse" role="table">
           <TableHeader
             columns={columns}

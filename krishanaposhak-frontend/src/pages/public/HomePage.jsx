@@ -16,7 +16,7 @@ const ShopByPrice = lazy(() => import('@/components/home/ShopByPrice'));
 const SectionDivider = memo(function SectionDivider() {
   return (
     <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-      <div className="border-t border-temple-gold/15" />
+      <div className="border-t border-amber-900/10" />
     </div>
   );
 });

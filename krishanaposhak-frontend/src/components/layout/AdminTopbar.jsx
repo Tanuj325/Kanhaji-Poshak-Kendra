@@ -243,7 +243,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setProfileOpen((v) => !v);
               setNotificationsOpen(false);
             }}
-            className="flex items-center gap-2 rounded-xl border border-slate-200/80 p-1.5 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
+            className="flex items-center gap-2 rounded-xl border border-slate-200/80 p-2 min-h-[44px] min-w-[44px] hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
             aria-label="Admin profile menu"
             aria-expanded={profileOpen}
           >

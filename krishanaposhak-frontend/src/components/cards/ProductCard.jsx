@@ -81,15 +81,18 @@ const ProductCard = memo(function ProductCard({
   return (
     <div
       className={cn(
-        'group relative flex flex-col h-full overflow-hidden rounded-[26px] bg-white border border-stone-200/70 shadow-[0_4px_20px_rgba(44,40,36,0.05)] hover:shadow-[0_16px_40px_rgba(44,40,36,0.12)] hover:border-temple-gold/40 transition-all duration-300 font-display backdrop-blur-xs',
+        'group relative flex flex-col h-full overflow-hidden rounded-[28px] bg-white border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:shadow-[0_20px_50px_rgba(44,40,36,0.16)] hover:border-amber-500/60 transition-all duration-500 font-display backdrop-blur-xs',
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Luxury Gold Foil Top Border Accent */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30" />
+
       {/* Image Container Stage */}
       <div
-        className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-stone-100/90 to-amber-50/40 cursor-pointer"
+        className="relative aspect-[4/5] w-full overflow-hidden bg-[linear-gradient(180deg,rgba(250,247,242,0.9),rgba(242,235,223,0.7))] cursor-pointer"
         onClick={handleCardClick}
       >
         <OptimizedImage
@@ -98,7 +101,7 @@ const ProductCard = memo(function ProductCard({
           loading="lazy"
           aspectRatio="aspect-[4/5]"
           className={cn(
-            'h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-108',
+            'h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110',
             isHovered && secondaryImage ? 'opacity-0' : 'opacity-100',
           )}
         />
@@ -111,21 +114,21 @@ const ProductCard = memo(function ProductCard({
             aspectRatio="aspect-[4/5]"
             className={cn(
               'absolute inset-0 h-full w-full object-cover object-top transition-all duration-700 ease-out',
-              isHovered ? 'opacity-100 scale-108' : 'opacity-0 scale-100',
+              isHovered ? 'opacity-100 scale-110' : 'opacity-0 scale-100',
             )}
           />
         )}
 
-        {/* Top Left Badges */}
-        <div className="absolute left-2.5 top-2.5 z-10 flex flex-col items-start gap-1">
+        {/* Top Left Glassmorphism Badges */}
+        <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
           {discount > 0 && (
-            <span className="rounded-full bg-deep-navy/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-bold text-temple-gold-light uppercase tracking-wider shadow-md border border-temple-gold/30 backdrop-blur-xs">
+            <span className="rounded-full bg-stone-950/90 px-3 py-1 text-[10px] sm:text-[11px] font-extrabold text-amber-300 uppercase tracking-widest shadow-md border border-amber-500/40 backdrop-blur-md font-mono">
               {discount}% OFF
             </span>
           )}
           {product.featured && (
-            <span className="rounded-full bg-amber-500/90 px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-white uppercase tracking-wider shadow-xs backdrop-blur-xs">
-              Featured
+            <span className="rounded-full bg-gradient-to-r from-amber-600 to-amber-800 px-3 py-1 text-[9px] sm:text-[10px] font-extrabold text-white uppercase tracking-wider shadow-md backdrop-blur-md border border-amber-400/30">
+              ✨ Featured
             </span>
           )}
         </div>
@@ -200,7 +203,7 @@ const ProductCard = memo(function ProductCard({
 
           <h3
             onClick={handleCardClick}
-            className="font-heading text-sm sm:text-base font-semibold text-dark-charcoal leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-royal-blue transition-colors mt-0.5"
+            className="font-heading text-sm sm:text-base font-extrabold text-amber-950 leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] cursor-pointer group-hover:text-amber-900 transition-colors mt-0.5"
             title={name}
           >
             {name}

@@ -34,7 +34,7 @@ const OrderCard = memo(function OrderCard({
   const remainingCount = (itemCount || items?.length || 0) - displayItems.length;
 
   return (
-    <Link to={`/account/orders/${id || orderNumber}`} className="block font-display">
+    <Link to={`/account/orders/${id || orderNumber}`} className="block font-display min-h-[44px]">
       <div className={cn('p-5 rounded-3xl bg-white border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.03)] hover:border-amber-700/30 hover:shadow-md transition-all duration-200 space-y-3', className)}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

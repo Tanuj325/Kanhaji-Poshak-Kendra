@@ -54,7 +54,7 @@ const OrderTimeline = memo(function OrderTimeline({ currentStatus, orderDate, de
   }
 
   return (
-    <div className="py-3 font-display">
+    <div className="py-3 font-display" role="region" aria-label="Order status timeline">
       {/* Desktop Horizontal Timeline */}
       <div className="hidden sm:block">
         <div className="relative flex items-center justify-between">

@@ -52,7 +52,7 @@ const NotificationItem = memo(function NotificationItem({ notification, onMarkRe
           <button
             type="button"
             onClick={() => onMarkRead(notification.id)}
-            className="inline-flex items-center gap-1 text-xs font-bold text-amber-950 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-xl border border-amber-300 transition-colors min-h-[36px]"
+            className="inline-flex items-center gap-1 text-xs font-bold text-amber-950 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-xl border border-amber-300 transition-colors min-h-[44px]"
             aria-label="Mark as read"
           >
             <FiCheck className="h-3.5 w-3.5 text-amber-900" /> Read
@@ -62,7 +62,7 @@ const NotificationItem = memo(function NotificationItem({ notification, onMarkRe
           <button
             type="button"
             onClick={() => onDelete(notification.id)}
-            className="p-2 text-stone-400 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
+            className="p-2 text-stone-400 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Delete notification"
           >
             <FiTrash2 className="h-4 w-4" />

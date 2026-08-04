@@ -40,23 +40,23 @@ const FooterCTA = memo(function FooterCTA() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2"
         >
-          <Link to={ROUTE_PATHS.SHOP} className="w-full sm:w-auto">
+          <Link to={ROUTE_PATHS.SHOP} className="w-full sm:w-auto" aria-label="Explore Full Collection">
             <Button
               variant="primary"
               size="lg"
               leftIcon={<FiShoppingBag className="h-5 w-5 text-amber-200" />}
               rightIcon={<FiArrowRight className="h-5 w-5 text-amber-200" />}
-              className="w-full sm:w-auto font-bold px-8 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-amber-950 shadow-xl shadow-amber-900/30 border border-amber-300/30 min-h-[50px]"
+              className="w-full sm:w-auto font-bold px-8 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-amber-950 shadow-xl shadow-amber-900/30 border border-amber-300/30 min-h-[50px] flex items-center justify-center gap-2"
             >
               Explore Full Collection
             </Button>
           </Link>
-          <Link to={ROUTE_PATHS.ABOUT} className="w-full sm:w-auto">
+          <Link to={ROUTE_PATHS.ABOUT} className="w-full sm:w-auto" aria-label="Discover Our Heritage">
             <Button
               variant="outline"
               size="lg"
               leftIcon={<FiHeart className="h-5 w-5 text-amber-300" />}
-              className="w-full sm:w-auto font-bold px-7 rounded-2xl border-white/20 text-white hover:bg-white/10 min-h-[50px]"
+              className="w-full sm:w-auto font-bold px-7 rounded-2xl border-white/20 text-white hover:bg-white/10 min-h-[50px] flex items-center justify-center gap-2"
             >
               Discover Our Heritage
             </Button>

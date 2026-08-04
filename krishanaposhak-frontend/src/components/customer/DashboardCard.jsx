@@ -6,7 +6,7 @@ const DashboardCard = memo(function DashboardCard({ icon, label, value, trend, c
     <button
       onClick={onClick}
       className={cn(
-        'flex flex-col justify-between rounded-3xl bg-white p-5 shadow-[0_4px_20px_rgba(44,40,36,0.03)] border border-amber-900/10 text-left transition-all duration-200 font-display min-h-[110px]',
+        'flex flex-col justify-between rounded-3xl bg-white p-5 shadow-[0_4px_20px_rgba(44,40,36,0.03)] border border-amber-900/10 text-left transition-all duration-200 font-display min-h-[110px] focus:outline-none focus:ring-2 focus:ring-amber-500/30',
         onClick && 'cursor-pointer hover:border-amber-700/30 hover:shadow-[0_8px_30px_rgba(44,40,36,0.06)] hover:-translate-y-1 active:scale-[0.98]',
         className,
       )}

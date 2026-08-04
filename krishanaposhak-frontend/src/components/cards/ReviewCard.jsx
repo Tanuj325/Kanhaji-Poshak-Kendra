@@ -30,7 +30,7 @@ const ReviewCard = memo(function ReviewCard({
   const isOwner = currentUserId && (userId === currentUserId || user?.id === currentUserId);
 
   return (
-    <Card variant="default" padding="md" className={cn('border border-muted-sand/20 bg-white/90', className)}>
+    <Card variant="default" padding="md" className={cn('border border-amber-900/10 bg-white/95 shadow-sm rounded-2xl font-display', className)}>
       <div className="flex items-start gap-3">
         <Avatar
           src={user?.profileImageUrl}
@@ -40,11 +40,11 @@ const ReviewCard = memo(function ReviewCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-semibold text-dark-charcoal truncate">
+              <span className="text-sm font-extrabold text-amber-950 font-heading truncate">
                 {displayName}
               </span>
             </div>
-            <span className="text-xs text-natural-wood flex-shrink-0">
+            <span className="text-xs text-stone-500 flex-shrink-0 font-display">
               {createdAt ? formatDate(createdAt, { format: 'datetime' }) : ''}
             </span>
           </div>
@@ -52,7 +52,7 @@ const ReviewCard = memo(function ReviewCard({
           <Rating rating={rating} size="sm" className="mt-1" />
 
           {comment && (
-            <p className="mt-2 text-sm text-dark-charcoal leading-relaxed whitespace-pre-line">
+            <p className="mt-2 text-sm text-stone-800 font-body leading-relaxed whitespace-pre-line">
               {comment}
             </p>
           )}

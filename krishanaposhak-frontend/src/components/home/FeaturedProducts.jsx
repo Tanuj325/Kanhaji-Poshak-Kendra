@@ -127,18 +127,18 @@ const FeaturedProducts = memo(function FeaturedProducts() {
           viewport={{ once: true, margin: '-50px' }}
           className="mb-8 text-center sm:mb-10"
         >
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold-dark bg-temple-gold/10 px-3.5 py-1.5 rounded-full border border-temple-gold/20">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-amber-900 bg-amber-100/70 px-3.5 py-1.5 rounded-full border border-amber-800/20 font-display">
             <FiStar className="h-3.5 w-3.5 text-amber-800" /> Curated Selection
           </span>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-dark-charcoal">
+          <h2 className="mt-3 font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-950">
             Featured Products
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-natural-wood max-w-md mx-auto font-body">
+          <p className="mt-2 text-sm sm:text-base text-stone-600 max-w-md mx-auto font-body">
             Handpicked devotional treasures and sacred Meerut attire
           </p>
           <Link
             to={ROUTE_PATHS.SHOP}
-            className="mt-3.5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-royal-blue hover:text-peacock-blue transition-colors group"
+            className="mt-3.5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-amber-900 hover:text-amber-950 transition-colors group font-display min-h-[44px]"
           >
             <span>Explore All Featured</span>
             <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />

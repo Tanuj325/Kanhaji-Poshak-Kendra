@@ -23,13 +23,13 @@ const ShopByPrice = memo(function ShopByPrice() {
           transition={{ duration: 0.5 }}
           className="mb-8 text-center sm:mb-10"
         >
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-temple-gold bg-temple-gold/10 px-3.5 py-1 rounded-full border border-temple-gold/20">
-            <FiTag className="h-3.5 w-3.5" /> Tailored Options
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-amber-900 bg-amber-100/70 px-3.5 py-1.5 rounded-full border border-amber-800/20 font-display">
+            <FiTag className="h-3.5 w-3.5 text-amber-800" /> Tailored Options
           </span>
-          <h2 className="mt-3 font-display text-3xl font-semibold text-dark-charcoal sm:text-4xl">
+          <h2 className="mt-3 font-heading text-3xl font-extrabold text-amber-950 sm:text-4xl">
             Shop By Price Range
           </h2>
-          <p className="mt-2 text-sm text-natural-wood sm:text-base max-w-md mx-auto">
+          <p className="mt-2 text-sm text-stone-600 sm:text-base max-w-md mx-auto font-body">
             Find the finest sacred attire tailored to your exact budget
           </p>
         </motion.div>
@@ -51,15 +51,15 @@ const ShopByPrice = memo(function ShopByPrice() {
               >
                 <Link
                   to={href}
-                  className="group relative flex min-h-[8.5rem] flex-col items-center justify-center rounded-[24px] bg-white p-5 text-center shadow-[0_14px_30px_rgba(44,40,36,0.08)] border border-temple-gold/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(44,40,36,0.12)] hover:border-temple-gold"
+                  className="group relative flex min-h-[8.5rem] flex-col items-center justify-center rounded-[24px] bg-white p-5 text-center shadow-[0_14px_30px_rgba(44,40,36,0.08)] border border-amber-900/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(44,40,36,0.12)] hover:border-amber-700/40"
                 >
-                    <span className="absolute -top-2.5 rounded-full bg-deep-navy px-2.5 py-0.5 text-[10px] font-bold text-temple-gold border border-temple-gold/30 font-mono shadow-[0_10px_20px_rgba(15,36,64,0.14)]">
+                  <span className="absolute -top-2.5 rounded-full bg-amber-950 px-3 py-0.5 text-[10px] font-extrabold text-amber-300 border border-amber-500/30 font-mono shadow-xs">
                     {range.tag}
                   </span>
-                    <span className="font-display text-base sm:text-lg font-semibold text-dark-charcoal mt-2 group-hover:text-royal-blue transition-colors">
+                  <span className="font-heading text-base sm:text-lg font-extrabold text-amber-950 mt-2 group-hover:text-amber-800 transition-colors">
                     {range.label}
                   </span>
-                  <span className="mt-2 flex items-center gap-1 text-xs font-bold text-temple-gold group-hover:text-royal-blue transition-colors pt-2 border-t border-muted-sand/15 w-full justify-center">
+                  <span className="mt-2 flex items-center gap-1 text-xs font-extrabold text-amber-900 group-hover:text-amber-950 transition-colors pt-2 border-t border-amber-900/10 w-full justify-center font-display">
                     <span>Explore</span> <FiArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
