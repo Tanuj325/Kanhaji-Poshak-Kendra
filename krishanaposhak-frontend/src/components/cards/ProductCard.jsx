@@ -30,6 +30,7 @@ const ProductCard = memo(function ProductCard({
     averageRating,
     rating,
     reviewCount,
+    numReviews,
     stock,
     category,
     categoryName,
