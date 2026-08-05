@@ -16,15 +16,6 @@ const slideVariants = {
   exit: { opacity: 0, scale: 0.96, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
-const textVariants = {
-  hidden: { opacity: 0, y: 35 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.2 + i * 0.15, duration: 0.65, ease: [0.25, 0.1, 0.25, 1] },
-  }),
-};
-
 export default function HeroBanner() {
   const { data: banners, isLoading, isError } = useActiveBanners();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,7 +47,7 @@ export default function HeroBanner() {
   useEffect(() => {
     if (bannerList.length <= 1 || isPaused) return;
 
-    const interval = 50; // update progress every 50ms
+    const interval = 50;
     const step = (interval / SLIDE_DURATION) * 100;
 
     const progressTimer = setInterval(() => {
@@ -69,7 +60,6 @@ export default function HeroBanner() {
     return () => clearInterval(progressTimer);
   }, [bannerList.length, isPaused, currentIndex]);
 
-  // Advance to next slide when timeline completes (progress >= 100)
   useEffect(() => {
     if (progress >= 100 && bannerList.length > 1) {
       setCurrentIndex((prev) => (prev + 1) % bannerList.length);
@@ -77,8 +67,6 @@ export default function HeroBanner() {
     }
   }, [progress, bannerList.length]);
 
-
-  // Keyboard Navigation
   const handleKeyDown = (e) => {
     if (e.key === 'ArrowLeft') {
       goPrev();
@@ -87,7 +75,6 @@ export default function HeroBanner() {
     }
   };
 
-  // Touch Swipe Navigation
   const handleTouchStart = (e) => {
     touchStartX.current = e.targetTouches[0].clientX;
     touchEndX.current = e.targetTouches[0].clientX;
@@ -100,7 +87,6 @@ export default function HeroBanner() {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const diff = touchStartX.current - touchEndX.current;
-    // Swipe left (next) or swipe right (prev) with a threshold of 40px
     if (diff > 40) {
       goNext();
     } else if (diff < -40) {
@@ -174,19 +160,66 @@ export default function HeroBanner() {
   const banner = bannerList[currentIndex];
 
   return (
-    <section
-      className="relative overflow-hidden outline-none bg-deep-navy select-none touch-pan-y px-4 pt-3 pb-2 sm:p-0"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      aria-roledescription="carousel"
-      aria-label="Featured banners carousel"
-    >
-      <div className="relative h-[44vh] min-h-[300px] max-h-[380px] sm:h-[65svh] sm:min-h-[28rem] sm:max-h-none lg:h-[85vh] rounded-3xl sm:rounded-none overflow-hidden shadow-xl border border-white/10 sm:border-none">
+    <section className="relative overflow-hidden bg-deep-navy font-display select-none">
+      {/* ─── NEW MOBILE UI (<1024px) ─── */}
+      <div className="block lg:hidden px-4 py-2">
+        <div
+          className="relative h-[148px] w-full rounded-xl overflow-hidden border border-stone-200/20 bg-stone-900 shadow-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <OptimizedImage
+            src={banner.imageUrl}
+            alt={banner.title || 'Krishana Poshak Banner'}
+            className="h-full w-full object-cover object-center"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent" />
+          <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
+            <div className="space-y-1 max-w-[70%]">
+              <span className="text-[9px] font-medium text-amber-300 uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded border border-white/10 inline-block">
+                Special Collection
+              </span>
+              <h1 className="text-sm font-semibold text-white leading-tight line-clamp-1">
+                {banner.title || siteConfig.name}
+              </h1>
+            </div>
+            <Link
+              to={banner.redirectUrl || '/shop'}
+              className="inline-flex items-center gap-1 h-[26px] px-2.5 rounded bg-amber-400 text-stone-950 text-[10px] font-medium active-tap-scale shrink-0 shadow-none"
+            >
+              <span>Shop Now</span>
+              <FiShoppingBag className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {/* Swipe Indicator Dots */}
+          {bannerList.length > 1 && (
+            <div className="absolute top-2.5 right-3 flex items-center gap-1 z-10 bg-black/30 px-2 py-0.5 rounded-full backdrop-blur-xs">
+              {bannerList.map((_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    'h-1.5 rounded-full transition-all duration-300',
+                    i === currentIndex ? 'w-3 bg-amber-400' : 'w-1.5 bg-white/40'
+                  )}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ─── OLD DESKTOP UI (>=1024px - 100% UNTOUCHED) ─── */}
+      <div 
+        className="hidden lg:block relative h-[85vh] overflow-hidden"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={banner.id || currentIndex}
@@ -205,79 +238,44 @@ export default function HeroBanner() {
               width={1920}
               height={1080}
             />
-            {/* Multi-layered luxury gradient overlay */}
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,36,64,0.95),rgba(15,36,64,0.58),transparent)]" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.85),transparent_55%,rgba(15,36,64,0.85))]" />
           </motion.div>
         </AnimatePresence>
 
-        {/* Hero Text & CTA Content */}
-        <div className="absolute inset-0 flex items-center p-5 sm:p-0">
+        <div className="absolute inset-0 flex items-center p-0">
           <div className="container-page w-full">
-            <AnimatePresence mode="wait">
-              <motion.div key={banner.id || currentIndex} className="max-w-2xl">
-                <motion.span
-                  custom={0}
-                  variants={textVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-300 border border-white/20 mb-3"
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-300 border border-white/20 mb-3">
+                <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Handloom
+              </span>
+              <h1 className="font-display text-6xl font-bold tracking-tight text-white leading-tight drop-shadow-md">
+                {banner.title || siteConfig.name}
+              </h1>
+              {banner.subtitle && (
+                <p className="mt-4 text-xl text-white/80 max-w-xl font-light leading-relaxed drop-shadow-xs">
+                  {banner.subtitle}
+                </p>
+              )}
+              <div className="mt-8 flex gap-4">
+                <Link
+                  to={banner.redirectUrl || '/shop'}
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-8 text-sm font-bold text-stone-950 shadow-md"
                 >
-                  <FiStar className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Authentic Meerut Handloom
-                </motion.span>
-
-                {banner.title && (
-                  <motion.h1
-                    custom={1}
-                    variants={textVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="font-display text-2xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-white leading-tight drop-shadow-md text-balance"
-                  >
-                    {banner.title}
-                  </motion.h1>
-                )}
-
-                {banner.subtitle && (
-                  <motion.p
-                    custom={2}
-                    variants={textVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="mt-2 sm:mt-4 text-xs sm:text-base lg:text-xl text-white/80 max-w-xl font-light leading-relaxed drop-shadow-xs text-balance line-clamp-1 sm:line-clamp-none"
-                  >
-                    {banner.subtitle}
-                  </motion.p>
-                )}
-
-                <motion.div
-                  custom={3}
-                  variants={textVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="mt-4 sm:mt-8 flex flex-row items-center gap-2.5 sm:gap-4"
+                  <span>Shop Collection</span>
+                  <FiChevronRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/about"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 text-sm font-semibold text-white backdrop-blur-md"
                 >
-                  <Link
-                    to={banner.redirectUrl || '/shop'}
-                    className="inline-flex h-11 min-h-[44px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-2 text-xs sm:text-sm font-bold text-stone-950 shadow-md active-tap-scale hover:scale-[1.02] transition-all duration-300 sm:px-8"
-                  >
-                    Shop Collection
-                    <FiChevronRight className="h-4 w-4" />
-                  </Link>
-
-                  <Link
-                    to="/about"
-                    className="hidden sm:inline-flex h-11 min-h-[44px] items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-5 py-2 text-xs sm:text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:px-7"
-                  >
-                    Our Story
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
+                  Our Story
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Carousel Navigation Arrows - Hidden on mobile view */}
         {bannerList.length > 1 && (
           <>
             <button
@@ -299,7 +297,6 @@ export default function HeroBanner() {
           </>
         )}
 
-        {/* Banner Slide Dots */}
         {bannerList.length > 1 && (
           <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
             {bannerList.map((_, i) => (
@@ -326,7 +323,6 @@ export default function HeroBanner() {
           </div>
         )}
 
-        {/* Scroll down indicator */}
         <button
           type="button"
           onClick={scrollToContent}

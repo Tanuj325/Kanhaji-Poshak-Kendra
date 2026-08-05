@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/hooks/useWishlist';
 import { useAddToCart } from '@/hooks/useCart';
 import { ROUTE_PATHS } from '@/routes/routePaths';
-import { FiStar, FiArrowRight } from 'react-icons/fi';
+import { FiStar, FiArrowRight, FiZap } from 'react-icons/fi';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -119,50 +119,81 @@ const NewArrivals = memo(function NewArrivals() {
   if (!productList.length) return null;
 
   return (
-    <section className="py-6 sm:py-10 bg-lotus-white">
+    <section className="py-4 lg:py-10 bg-white font-display">
       <div className="container-page">
-        {/* Mobile App Section Header */}
-        <div className="flex items-center justify-between mb-3.5 sm:mb-8 text-left sm:text-center px-4 sm:px-0">
-          <div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] text-temple-gold-dark bg-temple-gold/10 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-temple-gold/20">
-              <FiStar className="h-3.5 w-3.5 text-temple-gold" /> Fresh Additions
-            </span>
-            <h2 className="mt-1 sm:mt-3 font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-dark-charcoal">
+        {/* ─── NEW MOBILE UI (<1024px) ─── */}
+        <div className="block lg:hidden">
+          {/* Header: Title left 16px, View All right 12px */}
+          <div className="flex items-center justify-between mb-3 px-4">
+            <h2 className="text-[16px] font-semibold text-stone-900 leading-none">
               New Arrivals
             </h2>
+            <Link
+              to={ROUTE_PATHS.SHOP}
+              className="text-[12px] font-medium text-amber-900 active-tap-scale flex items-center gap-1"
+            >
+              <span>View All</span>
+              <FiArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
-          <Link
-            to={ROUTE_PATHS.SHOP}
-            className="touch-target inline-flex items-center gap-1 text-xs font-semibold text-royal-blue hover:text-peacock-blue transition-colors group shrink-0 active-tap-scale"
-          >
-            <span>View All</span>
-            <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+
+          {/* Horizontal Product Strip with Edge Padding 16px (px-4) */}
+          <div className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-2.5 px-4 pb-1">
+            {productList.map((product) => (
+              <div
+                key={product.slug || product.id}
+                className="snap-start w-[146px] shrink-0"
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
+                  isInWishlist={wishlistVariantIds.has(product.id)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Product Carousel on Mobile with Edge Padding, Grid on Desktop */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-4 pb-2 md:px-0 md:grid md:grid-cols-3 lg:grid-cols-4"
-        >
-          {productList.map((product) => (
-            <motion.div
-              key={product.slug || product.id}
-              variants={itemVariants}
-              className="snap-start w-[160px] xs:w-[185px] shrink-0 md:w-auto"
+        {/* ─── OLD DESKTOP UI (>=1024px - 100% UNTOUCHED) ─── */}
+        <div className="hidden lg:block">
+          <div className="flex items-center justify-between mb-8 text-center px-0">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.15em] text-amber-900 bg-amber-100/70 px-3 py-1 rounded-full border border-amber-800/20 font-display">
+                <FiZap className="h-3.5 w-3.5 text-amber-800" /> Fresh Creations
+              </span>
+              <h2 className="mt-3 font-heading text-3xl lg:text-4xl font-semibold text-amber-950">
+                New Arrivals
+              </h2>
+            </div>
+            <Link
+              to={ROUTE_PATHS.SHOP}
+              className="touch-target inline-flex items-center gap-1 text-xs font-semibold text-amber-900 hover:text-amber-950 transition-colors group shrink-0 active-tap-scale font-display"
             >
-              <ProductCard
-                product={product}
-                onAddToCart={handleAddToCart}
-                onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
-                isInWishlist={wishlistVariantIds.has(product.id)}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+              <span>View All</span>
+              <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4"
+          >
+            {productList.map((product) => (
+              <motion.div key={product.slug || product.id} variants={itemVariants}>
+                <ProductCard
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
+                  isInWishlist={wishlistVariantIds.has(product.id)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

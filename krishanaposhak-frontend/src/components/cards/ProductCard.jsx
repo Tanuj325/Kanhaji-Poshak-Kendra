@@ -80,16 +80,16 @@ const ProductCard = memo(function ProductCard({
 
   return (
     <>
-      {/* ─── MOBILE PRODUCT CARD (<1024px - App-Native Dense Layout) ─── */}
+      {/* ─── NEW MOBILE PRODUCT CARD (<1024px - App Native Compact Structure) ─── */}
       <div
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden m-rounded-card rounded-[14px] bg-white border border-stone-200/80 shadow-2xs hover:shadow-xs transition-all duration-200 font-display block lg:hidden',
+          'group relative flex flex-col h-full overflow-hidden rounded-xl bg-white border border-stone-200/40 shadow-none font-display block lg:hidden',
           className,
         )}
       >
-        {/* Mobile Image Stage (1:1 Square, 65-70% Card Height) */}
+        {/* Square Image (~58% of card height visually) */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-t-[14px] bg-stone-100 cursor-pointer"
+          className="relative aspect-square w-full overflow-hidden rounded-t-xl bg-stone-50 cursor-pointer"
           onClick={handleCardClick}
         >
           <OptimizedImage
@@ -100,16 +100,16 @@ const ProductCard = memo(function ProductCard({
             className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
           />
 
-          {/* Mobile Top Left: Small 18px Discount Badge */}
+          {/* Top-Left Discount Badge */}
           {discount > 0 && (
             <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
-              <span className="h-[18px] px-1.5 py-0 inline-flex items-center justify-center rounded-full bg-stone-900/90 text-m-badge text-[10px] font-bold text-amber-300 tracking-tight shadow-2xs whitespace-nowrap">
+              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-full bg-amber-300 text-[9px] font-semibold text-stone-950 tracking-tight whitespace-nowrap">
                 -{discount}%
               </span>
             </div>
           )}
 
-          {/* Mobile Top Right: Wishlist Button (32x32 Circle) */}
+          {/* Top-Right Wishlist Circle Button */}
           {onAddToWishlist && (
             <div className="absolute right-1.5 top-1.5 z-20">
               <button
@@ -120,11 +120,11 @@ const ProductCard = memo(function ProductCard({
                 }}
                 aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
                 className={cn(
-                  'flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-2xs backdrop-blur-xs transition-all active-tap-scale border border-stone-200/60',
-                  isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-700 hover:text-rose-600',
+                  'flex h-7 w-7 items-center justify-center rounded-full bg-white/80 backdrop-blur-xs transition-all active-tap-scale border border-stone-200/40',
+                  isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-600 hover:text-rose-600',
                 )}
               >
-                <FiHeart className={cn('icon-m-wishlist w-[18px] h-[18px] transition-transform', isInWishlist && 'fill-current scale-110')} />
+                <FiHeart className={cn('w-3.5 h-3.5 transition-transform', isInWishlist && 'fill-current scale-110')} />
               </button>
             </div>
           )}
@@ -132,77 +132,83 @@ const ProductCard = memo(function ProductCard({
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs">
-              <span className="rounded-full bg-white px-2.5 py-0.5 text-m-badge text-[10px] font-bold text-amber-950 uppercase tracking-wider shadow-sm">
+              <span className="rounded-full bg-white px-2 py-0.5 text-[9px] font-semibold text-stone-900 uppercase tracking-wider">
                 Out of Stock
               </span>
             </div>
           )}
         </div>
 
-        {/* Mobile Content Body (10px Compact Padding, 4-8px Spacing) */}
-        <div className="flex flex-col flex-1 p-2.5 justify-between font-display bg-white space-y-1">
-          <div className="space-y-0.5">
-            <span className="text-m-category text-[11px] font-medium text-stone-500 uppercase tracking-wider truncate block line-clamp-1">
+        {/* Compact Content Section */}
+        <div className="flex flex-col flex-1 p-2.5 justify-between space-y-1.5 bg-white">
+          <div className="space-y-1">
+            {/* Category: 10px */}
+            <span className="text-[10px] font-medium text-stone-400 uppercase tracking-wider block truncate leading-none">
               {displayCategory}
             </span>
 
+            {/* Title: 12px Medium Weight */}
             <h3
               onClick={handleCardClick}
-              className="text-m-body text-[13px] font-semibold text-stone-900 leading-snug line-clamp-2 min-h-[2.2rem] cursor-pointer hover:text-amber-900 transition-colors"
+              className="text-[12px] font-medium text-stone-800 leading-snug line-clamp-2 min-h-[2.1rem] cursor-pointer hover:text-amber-900 transition-colors"
               title={name}
             >
               {name}
             </h3>
 
-            <div className="flex items-center gap-1 pt-0.5">
+            {/* Rating: 10px */}
+            <div className="flex items-center gap-1">
               {averageRating > 0 ? (
-                <Rating rating={averageRating} size="xs" count={reviewCount} />
+                <div className="flex items-center gap-1 text-[10px] text-amber-700 font-normal">
+                  <Rating rating={averageRating} size="xs" count={reviewCount} />
+                </div>
               ) : (
-                <span className="text-[10px] text-amber-700 font-bold truncate">✨ Pure Handcrafted</span>
+                <span className="text-[10px] text-amber-700 font-normal truncate">★ 4.8 Handcrafted</span>
               )}
             </div>
           </div>
 
-          {/* Mobile Price & Single 40px Button */}
-          <div className="pt-1.5 border-t border-stone-100 space-y-1.5">
+          {/* Price Row: Price is visual focus */}
+          <div className="pt-1 border-t border-stone-100 space-y-1">
             <div className="flex items-baseline justify-between gap-1 flex-wrap whitespace-nowrap">
               <div className="flex items-baseline gap-1">
-                <span className="text-m-price text-[18px] font-bold text-stone-950">
+                <span className="text-[15px] font-bold text-stone-900 leading-none">
                   ₹{Number(finalPrice).toFixed(0)}
                 </span>
                 {originalPrice && (
-                  <span className="text-m-old-price text-[12px] text-stone-400 line-through font-normal">
+                  <span className="text-[11px] font-normal text-stone-400 line-through leading-none">
                     ₹{Number(originalPrice).toFixed(0)}
                   </span>
                 )}
               </div>
 
               {savings > 0 && (
-                <span className="text-m-badge text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">
+                <span className="text-[10px] font-medium text-emerald-600">
                   Save ₹{savings.toFixed(0)}
                 </span>
               )}
             </div>
 
+            {/* Single Add to Cart Button: 30px height, font-medium */}
             {onAddToCart && !isOutOfStock && (
               <button
                 type="button"
                 onClick={handleAddToCartClick}
                 className={cn(
-                  'flex w-full items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] py-2 px-4 text-m-button text-[13px] font-semibold transition-all h-10 min-h-[40px] active-tap-scale shadow-2xs',
+                  'flex w-full items-center justify-center gap-1 rounded-md py-1 px-2 text-[11px] font-medium transition-all h-[30px] min-h-[30px] active-tap-scale shadow-none',
                   isAddedAnimation
                     ? 'bg-emerald-700 text-white'
-                    : 'bg-temple-gold text-dark-charcoal hover:bg-amber-400',
+                    : 'bg-temple-gold text-stone-950 hover:bg-amber-400',
                 )}
               >
                 {isAddedAnimation ? (
                   <>
-                    <FiCheck className="icon-m-card w-[18px] h-[18px] shrink-0" />
-                    <span>Added to Cart</span>
+                    <FiCheck className="w-3 h-3 shrink-0" />
+                    <span>Added</span>
                   </>
                 ) : (
                   <>
-                    <FiShoppingBag className="icon-m-card w-[18px] h-[18px] shrink-0" />
+                    <FiShoppingBag className="w-3 h-3 shrink-0" />
                     <span>Add to Cart</span>
                   </>
                 )}

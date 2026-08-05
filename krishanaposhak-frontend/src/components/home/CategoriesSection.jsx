@@ -70,45 +70,87 @@ const CategoriesSection = memo(function CategoriesSection() {
   if (!categoryList.length) return null;
 
   return (
-    <section id="featured-categories" className="py-6 sm:py-10 bg-lotus-white relative font-display">
+    <section id="featured-categories" className="py-4 lg:py-10 bg-white relative font-display">
       <div className="container-page">
-        {/* Mobile App Section Header */}
-        <div className="flex items-center justify-between mb-3.5 sm:mb-8 text-left sm:text-center px-4 sm:px-0">
-          <div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] text-temple-gold-dark bg-temple-gold/10 px-2.5 py-0.5 sm:px-3 sm:py-1.5 rounded-full border border-temple-gold/20 font-display">
-              <FiGrid className="h-3.5 w-3.5 text-amber-800" /> Sacred Collections
-            </span>
-            <h2 className="mt-1 sm:mt-3 font-display text-xl sm:text-3xl lg:text-5xl font-semibold text-dark-charcoal">
-              Shop By Divine Category
+        {/* ─── NEW MOBILE UI (<1024px) ─── */}
+        <div className="block lg:hidden">
+          {/* Header: Title left 16px, View All right 12px */}
+          <div className="flex items-center justify-between mb-3 px-4">
+            <h2 className="text-[16px] font-semibold text-stone-900 leading-none">
+              Featured Collections
             </h2>
+            <Link
+              to={ROUTE_PATHS.CATEGORIES || '/categories'}
+              className="text-[12px] font-medium text-amber-900 active-tap-scale flex items-center gap-1"
+            >
+              <span>View All</span>
+              <FiArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
-          <Link
-            to={ROUTE_PATHS.SHOP}
-            className="touch-target inline-flex items-center gap-1 text-xs font-semibold text-royal-blue hover:text-peacock-blue transition-colors group shrink-0 active-tap-scale"
-          >
-            <span>View All</span>
-            <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+
+          {/* Horizontal Snap Scroll Category Strip */}
+          <div className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-4 pb-1">
+            {categoryList.map((category) => (
+              <Link
+                key={category.slug}
+                to={`${ROUTE_PATHS.SHOP}?category=${category.slug}`}
+                className="snap-start w-[80px] shrink-0 group flex flex-col items-center text-center active-tap-scale"
+              >
+                <div className="w-[80px] h-[80px] rounded-xl bg-stone-50 overflow-hidden border border-stone-100 mb-1.5 relative">
+                  {category.image ? (
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-amber-50 text-amber-800 font-semibold text-base">
+                      {category.name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <span className="text-[11px] font-medium text-stone-700 line-clamp-1 leading-tight text-center w-full">
+                  {category.name}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
 
-        {/* Categories List (Horizontal Snap Scroll on Mobile with Edge Padding, Grid on Desktop) */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-4 pb-2 md:px-0 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-        >
-          {categoryList.map((category) => (
-            <motion.div
-              key={category.slug}
-              variants={itemVariants}
-              className="snap-start w-[130px] shrink-0 md:w-auto"
+        {/* ─── OLD DESKTOP UI (>=1024px - 100% UNTOUCHED) ─── */}
+        <div className="hidden lg:block">
+          <div className="flex items-center justify-between mb-8 text-center px-0">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.15em] text-temple-gold-dark bg-temple-gold/10 px-3 py-1.5 rounded-full border border-temple-gold/20 font-display">
+                <FiGrid className="h-3.5 w-3.5 text-amber-800" /> Sacred Collections
+              </span>
+              <h2 className="mt-3 font-display text-3xl lg:text-5xl font-semibold text-dark-charcoal">
+                Shop By Divine Category
+              </h2>
+            </div>
+            <Link
+              to={ROUTE_PATHS.SHOP}
+              className="touch-target inline-flex items-center gap-1 text-xs font-semibold text-royal-blue hover:text-peacock-blue transition-colors group shrink-0 active-tap-scale"
             >
-              <CategoryCard category={category} />
-            </motion.div>
-          ))}
-        </motion.div>
+              <span>View All</span>
+              <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4"
+          >
+            {categoryList.map((category) => (
+              <motion.div key={category.slug} variants={itemVariants}>
+                <CategoryCard category={category} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

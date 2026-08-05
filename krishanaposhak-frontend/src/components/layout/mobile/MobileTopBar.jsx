@@ -25,12 +25,11 @@ import { formatPrice } from '@/utils/formatPrice';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
 /**
- * MobileTopBar (Phase M1 Redesign)
- * Native E-Commerce Shopping App Header (<768px) with 3 Rows:
- * Row 1: Logo (icon only, text hidden) + Action Icons (Wishlist, Cart, Menu) with animated badges
- * Row 2: Full-width 48-52px rounded Search Bar with Autocomplete & Keyboard Navigation
- * Row 3: Scrollable Horizontal Category Chips with active gold styling
- * Behavior: Smart sticky scroll (hides on scroll down, reveals on scroll up)
+ * MobileTopBar (<1024px)
+ * Native Shopping App Redesigned Header:
+ * Row 1: 52px height - Menu (☰) | Logo | Wishlist | Cart
+ * Row 2: 40px search bar, 16px radius, edge to edge with 12px margins (px-3)
+ * Row 3: 32px height compact scrollable category chips
  */
 export default function MobileTopBar({ onOpenDrawer }) {
   const navigate = useNavigate();
@@ -94,7 +93,6 @@ export default function MobileTopBar({ onOpenDrawer }) {
     }
   };
 
-  // Keyboard navigation inside search dropdown
   const handleKeyDown = (e) => {
     if (!isSearchOpen) return;
 
@@ -118,7 +116,6 @@ export default function MobileTopBar({ onOpenDrawer }) {
     }
   };
 
-  // Outside click to close search suggestions
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
@@ -130,266 +127,247 @@ export default function MobileTopBar({ onOpenDrawer }) {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 md:hidden bg-gradient-to-b from-deep-navy via-deep-navy to-[#142d4d] text-white shadow-md transition-transform duration-300 ease-in-out pt-safe ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
-    >
-      {/* ─── ROW 1: APP HEADER BAR (Height: 52px - Senior Design System) ───────── */}
-      <div className="flex items-center justify-between h-[52px] px-3 max-w-full">
-        {/* Left: Drawer Trigger Menu Icon */}
-        <button
-          type="button"
-          onClick={onOpenDrawer}
-          aria-label="Open Navigation Drawer"
-          className="flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
-        >
-          <FiMenu className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
-        </button>
-
-        {/* Center: "Kanhaji Poshak" App Title (18-20px 700 Bold) */}
-        <Link
-          to="/"
-          aria-label="Kanhaji Poshak Home"
-          className="flex items-center active-tap-scale truncate"
-        >
-          <span className="font-heading text-m-section-heading text-[18px] font-bold text-white tracking-tight truncate">
-            Kanhaji Poshak
-          </span>
-        </Link>
-
-        {/* Right: Action Icons (Wishlist + Cart) */}
-        <div className="flex items-center gap-1">
-          <Link
-            to={ROUTE_PATHS.WISHLIST || '/customer/wishlist'}
-            aria-label={`Wishlist (${wishlistCount} items)`}
-            className="relative flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
+    <div className="block lg:hidden">
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 bg-[#0f2440] text-white shadow-xs transition-transform duration-300 ease-in-out pt-safe ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        {/* ROW 1: Sleek Height 44px - Menu (☰) | Logo | Wishlist ONLY */}
+        <div className="flex items-center justify-between h-[44px] px-4 max-w-full">
+          <button
+            type="button"
+            onClick={onOpenDrawer}
+            aria-label="Open Navigation Drawer"
+            className="flex h-7 w-7 items-center justify-center text-white/90 hover:text-white active-tap-scale rounded-md"
           >
-            <FiHeart className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
-            {wishlistCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-2xs">
-                {wishlistCount > 99 ? '99+' : wishlistCount}
-              </span>
-            )}
-          </Link>
+            <FiMenu className="w-[18px] h-[18px]" aria-hidden="true" />
+          </button>
 
           <Link
-            to={ROUTE_PATHS.CART || '/cart'}
-            aria-label={`Cart (${cartCount} items)`}
-            className="relative flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
+            to="/"
+            aria-label="Kanhaji Poshak Home"
+            className="flex items-center active-tap-scale truncate px-2"
           >
-            <FiShoppingBag className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
-            {cartCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-2xs">
-                {cartCount > 99 ? '99+' : cartCount}
-              </span>
-            )}
+            <span className="font-heading text-[15px] font-semibold text-white tracking-tight truncate">
+              Kanhaji Poshak
+            </span>
           </Link>
-        </div>
-      </div>
 
-      {/* ─── ROW 2: SEARCH BAR (Height: 42px - Controlled 16px Radius) ───────── */}
-      <div className="px-3 pb-2 relative" ref={searchContainerRef}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            executeSearch();
-          }}
-          role="search"
-          className="relative flex items-center w-full"
-        >
-          <div className="relative flex items-center w-full h-[42px] min-h-[42px] m-rounded-search rounded-[16px] bg-white shadow-2xs overflow-hidden border border-stone-200/60 focus-within:ring-2 focus-within:ring-amber-500 transition-all">
-            {/* Search Icon (18px) */}
-            <div className="pl-3 pr-2 text-stone-400 flex items-center justify-center">
-              <FiSearch className="icon-m-search w-[18px] h-[18px] text-stone-500" aria-hidden="true" />
-            </div>
-
-            {/* Search Input (12px Text) */}
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setIsSearchOpen(true);
-              }}
-              onFocus={() => setIsSearchOpen(true)}
-              onKeyDown={handleKeyDown}
-              placeholder="Search Poshak, Mukut, Size..."
-              aria-label="Search items"
-              aria-autocomplete="list"
-              aria-expanded={isSearchOpen}
-              className="w-full h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-m-secondary text-[12px] font-medium focus:outline-none pr-8"
-            />
-
-            {/* Loading Indicator or Clear Button */}
-            {isSearchLoading ? (
-              <div className="absolute right-3 text-amber-600 animate-spin">
-                <FiLoader className="w-4 h-4" aria-hidden="true" />
-              </div>
-            ) : query ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setQuery('');
-                  if (searchInputRef.current) searchInputRef.current.focus();
-                }}
-                aria-label="Clear search input"
-                className="absolute right-2 text-stone-400 hover:text-stone-900 p-1 active-tap-scale"
-              >
-                <FiX className="w-4 h-4" aria-hidden="true" />
-              </button>
-            ) : null}
-          </div>
-        </form>
-
-        {/* ── Search Autocomplete Dropdown ── */}
-        <AnimatePresence>
-          {isSearchOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.15 }}
-              className="absolute left-3 right-3 top-[48px] z-50 bg-white rounded-2xl shadow-2xl border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
+          <div className="flex items-center">
+            <Link
+              to={ROUTE_PATHS.WISHLIST || '/customer/wishlist'}
+              aria-label={`Wishlist (${wishlistCount} items)`}
+              className="relative flex h-7 w-7 items-center justify-center text-white/90 hover:text-white active-tap-scale rounded-md"
             >
-              {/* Active Search Live Product Results */}
-              {debouncedQuery.length >= 2 ? (
-                <div className="overflow-y-auto p-2">
-                  <p className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400">
-                    Matching Products ({searchResults.length})
-                  </p>
-
-                  {searchResults.length > 0 ? (
-                    <div className="space-y-1">
-                      {searchResults.map((product, idx) => (
-                        <button
-                          key={product.id || idx}
-                          type="button"
-                          onClick={() => {
-                            navigate(ROUTE_PATHS.PRODUCT_DETAIL.replace(':slug', product.slug || product.id));
-                            setIsSearchOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-colors active-tap-scale ${
-                            selectedIndex === idx ? 'bg-amber-50 text-amber-950 font-bold' : 'hover:bg-stone-50'
-                          }`}
-                        >
-                          {product.imageUrl && (
-                            <OptimizedImage
-                              src={product.imageUrl}
-                              alt={product.name}
-                              aspectRatio="aspect-square"
-                              className="w-10 h-10 object-cover rounded-lg shrink-0 border border-stone-200/60"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-stone-900 truncate">
-                              {highlightMatch(product.name, debouncedQuery)}
-                            </p>
-                            <p className="text-[10px] text-amber-800 font-bold">
-                              {formatPrice(product.price || product.discountPrice)}
-                            </p>
-                          </div>
-                          <FiArrowRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-                        </button>
-                      ))}
-
-                      <button
-                        type="button"
-                        onClick={() => executeSearch()}
-                        className="w-full py-2 px-3 bg-amber-500/10 text-amber-900 font-bold text-xs rounded-xl flex items-center justify-center gap-2 active-tap-scale mt-1"
-                      >
-                        <span>View all results for "{debouncedQuery}"</span>
-                      </button>
-                    </div>
-                  ) : !isSearchLoading ? (
-                    <div className="p-4 text-center text-xs text-stone-400">
-                      No products found for "{debouncedQuery}"
-                    </div>
-                  ) : null}
-                </div>
-              ) : (
-                /* Recent Searches Section */
-                <div className="p-3">
-                  {recentSearches.length > 0 ? (
-                    <div>
-                      <div className="flex items-center justify-between pb-2 px-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
-                          <FiClock className="w-3.5 h-3.5" aria-hidden="true" />
-                          Recent Searches
-                        </span>
-                        <button
-                          type="button"
-                          onClick={clearAllSearches}
-                          className="text-[10px] text-rose-600 hover:underline flex items-center gap-1 font-medium p-1"
-                        >
-                          <FiTrash2 className="w-3 h-3" aria-hidden="true" />
-                          Clear all
-                        </button>
-                      </div>
-
-                      <div className="space-y-1">
-                        {recentSearches.map((term, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-stone-50 group"
-                          >
-                            <button
-                              type="button"
-                              onClick={() => executeSearch(term)}
-                              className="flex-1 flex items-center gap-2 text-xs text-stone-900 text-left font-medium active-tap-scale"
-                            >
-                              <FiClock className="w-3.5 h-3.5 text-stone-400 shrink-0" aria-hidden="true" />
-                              <span className="truncate">{term}</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => removeSearchTerm(term)}
-                              aria-label={`Remove search term ${term}`}
-                              className="p-1 text-stone-400 hover:text-rose-600 rounded"
-                            >
-                              <FiX className="w-3.5 h-3.5" aria-hidden="true" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-3 text-center text-xs text-stone-400">
-                      Start typing to search Poshak, Mukut & Accessories
-                    </div>
-                  )}
-                </div>
+              <FiHeart className="w-[18px] h-[18px]" aria-hidden="true" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[13px] h-[13px] px-0.5 flex items-center justify-center bg-amber-400 text-stone-950 text-[8px] font-bold rounded-full border border-[#0f2440]">
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
+                </span>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+            </Link>
+          </div>
+        </div>
 
-      {/* ─── ROW 3: CATEGORY CHIPS (Height: 24-26px Ultra Compact Strip) ── */}
-      <div className="w-full bg-deep-navy/95 border-t border-white/10 px-3.5 py-1 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-1.5">
-        {categoryChips.map((chip) => {
-          const isActive =
-            chip.id === 'all'
-              ? activeCategoryParam === 'all' || !activeCategoryParam
-              : String(chip.id) === String(activeCategoryParam);
+        {/* ROW 2: Sleek Compact Search Bar (34px height, rounded pill/xl) */}
+        <div className="px-4 pb-2 relative" ref={searchContainerRef}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              executeSearch();
+            }}
+            role="search"
+            className="relative flex items-center w-full"
+          >
+            <div className="relative flex items-center w-full h-[34px] rounded-full bg-white/95 overflow-hidden border border-stone-200/40 focus-within:border-amber-500 transition-all">
+              <div className="pl-3 pr-2 text-stone-400 flex items-center justify-center">
+                <FiSearch className="w-3.5 h-3.5 text-stone-400" aria-hidden="true" />
+              </div>
 
-          return (
-            <button
-              key={chip.id}
-              type="button"
-              onClick={() => handleCategorySelect(chip)}
-              className={`snap-start shrink-0 h-6 min-h-[24px] px-3 rounded-full text-[11px] font-semibold transition-all duration-150 active-tap-scale flex items-center justify-center ${
-                isActive
-                  ? 'bg-temple-gold text-dark-charcoal font-bold shadow-xs'
-                  : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/15'
-              }`}
-            >
-              <span className="truncate max-w-[120px]">{chip.name}</span>
-            </button>
-          );
-        })}
-      </div>
-    </header>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setIsSearchOpen(true);
+                }}
+                onFocus={() => setIsSearchOpen(true)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search Poshak, Mukut, Size..."
+                aria-label="Search items"
+                aria-autocomplete="list"
+                aria-expanded={isSearchOpen}
+                className="w-full h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-[12px] font-normal focus:outline-none pr-7"
+              />
+
+              {isSearchLoading ? (
+                <div className="absolute right-3 text-amber-600 animate-spin">
+                  <FiLoader className="w-3.5 h-3.5" aria-hidden="true" />
+                </div>
+              ) : query ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery('');
+                    if (searchInputRef.current) searchInputRef.current.focus();
+                  }}
+                  aria-label="Clear search input"
+                  className="absolute right-2 text-stone-400 hover:text-stone-900 p-1 active-tap-scale"
+                >
+                  <FiX className="w-3.5 h-3.5" aria-hidden="true" />
+                </button>
+              ) : null}
+            </div>
+          </form>
+
+          {/* Search Autocomplete Dropdown */}
+          <AnimatePresence>
+            {isSearchOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-4 right-4 top-[40px] z-50 bg-white rounded-xl shadow-lg border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
+              >
+                {debouncedQuery.length >= 2 ? (
+                  <div className="overflow-y-auto p-2">
+                    <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                      Matching Products ({searchResults.length})
+                    </p>
+
+                    {searchResults.length > 0 ? (
+                      <div className="space-y-1">
+                        {searchResults.map((product, idx) => (
+                          <button
+                            key={product.id || idx}
+                            type="button"
+                            onClick={() => {
+                              navigate(ROUTE_PATHS.PRODUCT_DETAIL.replace(':slug', product.slug || product.id));
+                              setIsSearchOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors active-tap-scale ${
+                              selectedIndex === idx ? 'bg-amber-50 text-amber-950 font-semibold' : 'hover:bg-stone-50'
+                            }`}
+                          >
+                            {product.imageUrl && (
+                              <OptimizedImage
+                                src={product.imageUrl}
+                                alt={product.name}
+                                aspectRatio="aspect-square"
+                                className="w-9 h-9 object-cover rounded-md shrink-0 border border-stone-200/60"
+                              />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-stone-900 truncate">
+                                {highlightMatch(product.name, debouncedQuery)}
+                              </p>
+                              <p className="text-[10px] text-amber-800 font-semibold">
+                                {formatPrice(product.price || product.discountPrice)}
+                              </p>
+                            </div>
+                            <FiArrowRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                          </button>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => executeSearch()}
+                          className="w-full py-2 px-3 bg-amber-500/10 text-amber-900 font-semibold text-xs rounded-lg flex items-center justify-center gap-2 active-tap-scale mt-1"
+                        >
+                          <span>View all results for "{debouncedQuery}"</span>
+                        </button>
+                      </div>
+                    ) : !isSearchLoading ? (
+                      <div className="p-4 text-center text-xs text-stone-400">
+                        No products found for "{debouncedQuery}"
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <div className="p-3">
+                    {recentSearches.length > 0 ? (
+                      <div>
+                        <div className="flex items-center justify-between pb-2 px-1">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
+                            <FiClock className="w-3.5 h-3.5" aria-hidden="true" />
+                            Recent Searches
+                          </span>
+                          <button
+                            type="button"
+                            onClick={clearAllSearches}
+                            className="text-[10px] text-rose-600 hover:underline flex items-center gap-1 font-medium p-1"
+                          >
+                            <FiTrash2 className="w-3 h-3" aria-hidden="true" />
+                            Clear all
+                          </button>
+                        </div>
+
+                        <div className="space-y-1">
+                          {recentSearches.map((term, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-stone-50 group"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => executeSearch(term)}
+                                className="flex-1 flex items-center gap-2 text-xs text-stone-900 text-left font-medium active-tap-scale"
+                              >
+                                <FiClock className="w-3.5 h-3.5 text-stone-400 shrink-0" aria-hidden="true" />
+                                <span className="truncate">{term}</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeSearchTerm(term)}
+                                aria-label={`Remove search term ${term}`}
+                                className="p-1 text-stone-400 hover:text-rose-600 rounded"
+                              >
+                                <FiX className="w-3.5 h-3.5" aria-hidden="true" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-3 text-center text-xs text-stone-400">
+                        Start typing to search Poshak, Mukut & Accessories
+                      </div>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* ROW 3: Category Chips (Ultra-compact 26px height, scrollable) */}
+        <div className="w-full bg-[#0f2440] border-t border-white/5 px-4 py-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
+          {categoryChips.map((chip) => {
+            const isActive =
+              chip.id === 'all'
+                ? activeCategoryParam === 'all' || !activeCategoryParam
+                : String(chip.id) === String(activeCategoryParam);
+
+            return (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => handleCategorySelect(chip)}
+                className={`snap-start shrink-0 h-[26px] px-3 rounded-full text-[11px] font-medium transition-all duration-150 active-tap-scale flex items-center justify-center ${
+                  isActive
+                    ? 'bg-amber-400 text-stone-950 font-semibold'
+                    : 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/10'
+                }`}
+              >
+                <span className="truncate max-w-[120px]">{chip.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </header>
+    </div>
   );
 }
