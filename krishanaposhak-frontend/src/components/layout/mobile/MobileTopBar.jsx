@@ -129,12 +129,11 @@ export default function MobileTopBar({ onOpenDrawer }) {
   return (
     <div className="block lg:hidden">
       <header
-        className={`fixed top-0 left-0 right-0 z-40 bg-[#0f2440] text-white shadow-xs transition-transform duration-300 ease-in-out pt-safe ${
-          isVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-40 bg-[#0f2440] text-white shadow-xs transition-transform duration-300 ease-in-out pt-safe ${isVisible ? 'translate-y-0' : '-translate-y-full'
+          }`}
       >
         {/* ROW 1: Sleek Height 44px - Menu (☰) | Logo | Wishlist ONLY */}
-        <div className="flex items-center justify-between h-[44px] px-4 max-w-full">
+        <div className="flex items-center justify-between h-[44px] px-1.5 max-w-full">
           <button
             type="button"
             onClick={onOpenDrawer}
@@ -147,7 +146,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
           <Link
             to="/"
             aria-label="Kanhaji Poshak Home"
-            className="flex items-center active-tap-scale truncate px-2"
+            className="flex items-center active-tap-scale truncate px-1"
           >
             <span className="font-heading text-[15px] font-semibold text-white tracking-tight truncate">
               Kanhaji Poshak
@@ -170,8 +169,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
           </div>
         </div>
 
-        {/* ROW 2: Sleek Compact Search Bar (34px height, rounded pill/xl) */}
-        <div className="px-4 pb-2 relative" ref={searchContainerRef}>
+        {/* ROW 2: Sleek Compact Search Bar (34px height, rounded pill) */}
+        <div className="px-3 pb-2 relative" ref={searchContainerRef}>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -230,7 +229,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-4 right-4 top-[40px] z-50 bg-white rounded-xl shadow-lg border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
+                className="absolute left-3 right-3 top-[40px] z-50 bg-white rounded-xl shadow-lg border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
               >
                 {debouncedQuery.length >= 2 ? (
                   <div className="overflow-y-auto p-2">
@@ -248,9 +247,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
                               navigate(ROUTE_PATHS.PRODUCT_DETAIL.replace(':slug', product.slug || product.id));
                               setIsSearchOpen(false);
                             }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors active-tap-scale ${
-                              selectedIndex === idx ? 'bg-amber-50 text-amber-950 font-semibold' : 'hover:bg-stone-50'
-                            }`}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors active-tap-scale ${selectedIndex === idx ? 'bg-amber-50 text-amber-950 font-semibold' : 'hover:bg-stone-50'
+                              }`}
                           >
                             {product.imageUrl && (
                               <OptimizedImage
@@ -344,7 +342,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
         </div>
 
         {/* ROW 3: Category Chips (Ultra-compact 26px height, scrollable) */}
-        <div className="w-full bg-[#0f2440] border-t border-white/5 px-4 py-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
+        <div className="w-full bg-[#0f2440] border-t border-white/5 px-3 py-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
           {categoryChips.map((chip) => {
             const isActive =
               chip.id === 'all'
@@ -356,11 +354,10 @@ export default function MobileTopBar({ onOpenDrawer }) {
                 key={chip.id}
                 type="button"
                 onClick={() => handleCategorySelect(chip)}
-                className={`snap-start shrink-0 h-[26px] px-3 rounded-full text-[11px] font-medium transition-all duration-150 active-tap-scale flex items-center justify-center ${
-                  isActive
-                    ? 'bg-amber-400 text-stone-950 font-semibold'
-                    : 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/10'
-                }`}
+                className={`snap-start shrink-0 h-[26px] px-3 rounded-full text-[11px] font-medium transition-all duration-150 active-tap-scale flex items-center justify-center ${isActive
+                  ? 'bg-amber-400 text-stone-950 font-semibold'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/10'
+                  }`}
               >
                 <span className="truncate max-w-[120px]">{chip.name}</span>
               </button>
