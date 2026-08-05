@@ -131,77 +131,52 @@ export default function MobileTopBar({ onOpenDrawer }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 md:hidden bg-gradient-to-b from-deep-navy via-deep-navy to-[#142d4d] text-lotus-white shadow-lg transition-transform duration-300 ease-in-out pt-safe ${
+      className={`fixed top-0 left-0 right-0 z-40 md:hidden bg-gradient-to-b from-deep-navy via-deep-navy to-[#142d4d] text-white shadow-md transition-transform duration-300 ease-in-out pt-safe ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
-      {/* ─── ROW 1: TOP APP BAR ─────────────────────────────────── */}
-      <div className="flex items-center justify-between h-[52px] px-3 max-w-full">
-        {/* Left: Brand Icon Logo ONLY (Text hidden on mobile) */}
+      {/* ─── ROW 1: APP HEADER BAR (Height: 46px) ─────────────── */}
+      <div className="flex items-center justify-between h-[46px] px-4 max-w-full">
+        {/* Left: Drawer Trigger Menu Icon */}
+        <button
+          type="button"
+          onClick={onOpenDrawer}
+          aria-label="Open Navigation Drawer"
+          className="flex h-10 w-10 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-full"
+        >
+          <FiMenu className="w-5 h-5" aria-hidden="true" />
+        </button>
+
+        {/* Center: "Kanhaji Poshak" Title ONLY */}
         <Link
           to="/"
-          aria-label="Kanhaji Poshak Kendra Home"
-          className="touch-target flex items-center justify-center active-tap-scale rounded-full p-1"
+          aria-label="Kanhaji Poshak Home"
+          className="flex items-center active-tap-scale truncate"
         >
-          <img
-            src="/favicon.svg"
-            alt="Kanhaji Poshak Kendra Logo"
-            className="w-8 h-8 object-contain rounded-full bg-lotus-white/10 p-1 border border-temple-gold/40 shadow-sm"
-            onError={(e) => {
-              // Fallback to text initials icon if SVG fails to load
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          <div className="hidden w-8 h-8 rounded-full bg-temple-gold text-deep-navy font-display font-bold text-xs items-center justify-center shadow-sm">
-            KP
-          </div>
+          <span className="font-heading text-sm font-extrabold text-white tracking-tight truncate">
+            Kanhaji Poshak
+          </span>
         </Link>
 
-        {/* Right: Wishlist, Cart & Menu Drawer Icons */}
-        <div className="flex items-center gap-1">
-          {/* Wishlist Link with Badge */}
+        {/* Right: Wishlist Icon ONLY */}
+        <div className="flex items-center">
           <Link
             to={ROUTE_PATHS.WISHLIST || '/customer/wishlist'}
             aria-label={`Wishlist (${wishlistCount} items)`}
-            className="touch-target relative text-lotus-white hover:text-temple-gold active-tap-scale rounded-full p-2"
+            className="relative flex h-10 w-10 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-full"
           >
             <FiHeart className="w-5 h-5" aria-hidden="true" />
             {wishlistCount > 0 && (
-              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-temple-gold text-deep-navy text-[10px] font-bold rounded-full border border-deep-navy animate-badge-pop">
+              <span className="absolute top-0.5 right-0.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-xs">
                 {wishlistCount > 99 ? '99+' : wishlistCount}
               </span>
             )}
           </Link>
-
-          {/* Cart Link with Badge */}
-          <Link
-            to={ROUTE_PATHS.CART || '/cart'}
-            aria-label={`Cart (${cartCount} items)`}
-            className="touch-target relative text-lotus-white hover:text-temple-gold active-tap-scale rounded-full p-2"
-          >
-            <FiShoppingBag className="w-5 h-5" aria-hidden="true" />
-            {cartCount > 0 && (
-              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-temple-gold text-deep-navy text-[10px] font-bold rounded-full border border-deep-navy animate-badge-pop">
-                {cartCount > 99 ? '99+' : cartCount}
-              </span>
-            )}
-          </Link>
-
-          {/* App Menu Drawer Trigger */}
-          <button
-            type="button"
-            onClick={onOpenDrawer}
-            aria-label="Open App Navigation Drawer"
-            className="touch-target text-lotus-white hover:text-temple-gold active-tap-scale rounded-full p-2"
-          >
-            <FiMenu className="w-6 h-6" aria-hidden="true" />
-          </button>
         </div>
       </div>
 
-      {/* ─── ROW 2: SEARCH BAR WITH AUTOCOMPLETE ───────────────── */}
-      <div className="px-3 pb-2 relative" ref={searchContainerRef}>
+      {/* ─── ROW 2: SEARCH BAR (Height: 36px) ────────────────── */}
+      <div className="px-4 pb-1.5 relative" ref={searchContainerRef}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -210,10 +185,10 @@ export default function MobileTopBar({ onOpenDrawer }) {
           role="search"
           className="relative flex items-center w-full"
         >
-          <div className="relative flex items-center w-full h-[48px] bg-white rounded-full shadow-md overflow-hidden border border-muted-sand/50 focus-within:ring-2 focus-within:ring-temple-gold transition-all">
+          <div className="relative flex items-center w-full h-[36px] min-h-[36px] bg-white rounded-full shadow-xs overflow-hidden border border-stone-200/60 focus-within:ring-2 focus-within:ring-amber-500 transition-all">
             {/* Search Icon */}
-            <div className="pl-4 pr-2 text-natural-wood flex items-center justify-center">
-              <FiSearch className="w-5 h-5" aria-hidden="true" />
+            <div className="pl-3 pr-2 text-stone-400 flex items-center justify-center">
+              <FiSearch className="w-3.5 h-3.5 text-stone-500" aria-hidden="true" />
             </div>
 
             {/* Search Input */}
@@ -227,17 +202,17 @@ export default function MobileTopBar({ onOpenDrawer }) {
               }}
               onFocus={() => setIsSearchOpen(true)}
               onKeyDown={handleKeyDown}
-              placeholder="Search Laddu Gopal Poshak, Mukut, Accessories..."
+              placeholder="Search Poshak, Mukut, Size..."
               aria-label="Search items"
               aria-autocomplete="list"
               aria-expanded={isSearchOpen}
-              className="w-full h-full bg-transparent text-dark-charcoal placeholder:text-natural-wood/70 text-sm font-medium focus:outline-none pr-10"
+              className="w-full h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-[11px] font-medium focus:outline-none pr-7"
             />
 
             {/* Loading Indicator or Clear Button */}
             {isSearchLoading ? (
-              <div className="absolute right-3 text-temple-gold animate-spin">
-                <FiLoader className="w-5 h-5" aria-hidden="true" />
+              <div className="absolute right-2.5 text-amber-600 animate-spin">
+                <FiLoader className="w-3.5 h-3.5" aria-hidden="true" />
               </div>
             ) : query ? (
               <button
@@ -247,28 +222,28 @@ export default function MobileTopBar({ onOpenDrawer }) {
                   if (searchInputRef.current) searchInputRef.current.focus();
                 }}
                 aria-label="Clear search input"
-                className="touch-target absolute right-1 text-natural-wood hover:text-dark-charcoal p-2 active-tap-scale"
+                className="absolute right-1.5 text-stone-400 hover:text-stone-900 p-1 active-tap-scale"
               >
-                <FiX className="w-5 h-5" aria-hidden="true" />
+                <FiX className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             ) : null}
           </div>
         </form>
 
-        {/* ── Search Autocomplete & Recent Suggestions Dropdown ── */}
+        {/* ── Search Autocomplete Dropdown ── */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 6, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 4, scale: 0.98 }}
-              transition={{ duration: 0.18 }}
-              className="absolute left-3 right-3 top-[56px] z-50 bg-white rounded-2xl shadow-2xl border border-muted-sand/40 overflow-hidden text-dark-charcoal max-h-[70vh] flex flex-col"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.15 }}
+              className="absolute left-4 right-4 top-[42px] z-50 bg-white rounded-2xl shadow-2xl border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
             >
               {/* Active Search Live Product Results */}
               {debouncedQuery.length >= 2 ? (
                 <div className="overflow-y-auto p-2">
-                  <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-natural-wood">
+                  <p className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400">
                     Matching Products ({searchResults.length})
                   </p>
 
@@ -282,45 +257,40 @@ export default function MobileTopBar({ onOpenDrawer }) {
                             navigate(ROUTE_PATHS.PRODUCT_DETAIL.replace(':slug', product.slug || product.id));
                             setIsSearchOpen(false);
                           }}
-                          className={`touch-target w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-colors active-tap-scale ${
-                            selectedIndex === idx ? 'bg-temple-gold/15 text-deep-navy font-semibold' : 'hover:bg-warm-cream/60'
+                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-colors active-tap-scale ${
+                            selectedIndex === idx ? 'bg-amber-500/15 text-stone-950 font-semibold' : 'hover:bg-stone-50'
                           }`}
                         >
-                          {/* Product Image Thumbnail */}
-                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-lotus-white shrink-0 border border-muted-sand/30">
+                          <div className="w-9 h-9 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200">
                             <OptimizedImage
                               src={product.images?.[0]?.url || product.primaryImage || '/ogImage.jpeg'}
                               alt={product.name}
                               className="w-full h-full object-cover"
                             />
                           </div>
-
-                          {/* Name and Price */}
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold truncate text-dark-charcoal">
+                            <p className="text-xs font-semibold truncate text-stone-900">
                               {highlightMatch(product.name, debouncedQuery)}
                             </p>
-                            <p className="text-[11px] font-bold text-temple-gold-dark">
+                            <p className="text-[11px] font-bold text-amber-700">
                               {formatPrice(product.discountPrice || product.price)}
                             </p>
                           </div>
-
-                          <FiArrowRight className="w-4 h-4 text-natural-wood shrink-0" aria-hidden="true" />
+                          <FiArrowRight className="w-4 h-4 text-stone-400 shrink-0" aria-hidden="true" />
                         </button>
                       ))}
 
-                      {/* View All Search Results Button */}
                       <button
                         type="button"
                         onClick={() => executeSearch()}
-                        className="touch-target w-full py-2.5 px-3 bg-temple-gold/10 text-temple-gold-dark font-bold text-xs rounded-xl flex items-center justify-center gap-2 active-tap-scale mt-1"
+                        className="w-full py-2 px-3 bg-amber-500/10 text-amber-900 font-bold text-xs rounded-xl flex items-center justify-center gap-2 active-tap-scale mt-1"
                       >
                         <span>View all results for "{debouncedQuery}"</span>
                         <FiArrowRight className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </div>
                   ) : !isSearchLoading ? (
-                    <div className="p-4 text-center text-xs text-natural-wood">
+                    <div className="p-4 text-center text-xs text-stone-400">
                       No products found for "{debouncedQuery}"
                     </div>
                   ) : null}
@@ -331,14 +301,14 @@ export default function MobileTopBar({ onOpenDrawer }) {
                   {recentSearches.length > 0 ? (
                     <div>
                       <div className="flex items-center justify-between pb-2 px-1">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-natural-wood flex items-center gap-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
                           <FiClock className="w-3.5 h-3.5" aria-hidden="true" />
                           Recent Searches
                         </span>
                         <button
                           type="button"
                           onClick={clearAllSearches}
-                          className="text-[11px] text-error hover:underline flex items-center gap-1 font-medium p-1"
+                          className="text-[10px] text-rose-600 hover:underline flex items-center gap-1 font-medium p-1"
                         >
                           <FiTrash2 className="w-3 h-3" aria-hidden="true" />
                           Clear all
@@ -349,21 +319,21 @@ export default function MobileTopBar({ onOpenDrawer }) {
                         {recentSearches.map((term, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-warm-cream/60 group"
+                            className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-stone-50 group"
                           >
                             <button
                               type="button"
                               onClick={() => executeSearch(term)}
-                              className="flex-1 flex items-center gap-2 text-xs text-dark-charcoal text-left font-medium active-tap-scale"
+                              className="flex-1 flex items-center gap-2 text-xs text-stone-900 text-left font-medium active-tap-scale"
                             >
-                              <FiClock className="w-3.5 h-3.5 text-natural-wood shrink-0" aria-hidden="true" />
+                              <FiClock className="w-3.5 h-3.5 text-stone-400 shrink-0" aria-hidden="true" />
                               <span className="truncate">{term}</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => removeSearchTerm(term)}
                               aria-label={`Remove search term ${term}`}
-                              className="touch-target p-1 text-natural-wood hover:text-error rounded"
+                              className="p-1 text-stone-400 hover:text-rose-600 rounded"
                             >
                               <FiX className="w-3.5 h-3.5" aria-hidden="true" />
                             </button>
@@ -372,8 +342,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
                       </div>
                     </div>
                   ) : (
-                    <div className="p-3 text-center text-xs text-natural-wood">
-                      Start typing to search Poshak, Mukut & Devotional Accessories
+                    <div className="p-3 text-center text-xs text-stone-400">
+                      Start typing to search Poshak, Mukut & Accessories
                     </div>
                   )}
                 </div>
@@ -383,8 +353,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
         </AnimatePresence>
       </div>
 
-      {/* ─── ROW 3: HORIZONTAL SCROLL CATEGORY CHIPS ─────────────── */}
-      <div className="w-full bg-deep-navy/80 border-t border-lotus-white/10 px-2 py-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
+      {/* ─── ROW 3: CATEGORY CHIPS (Height: 24-26px Ultra Compact Strip) ── */}
+      <div className="w-full bg-deep-navy/95 border-t border-white/10 px-3.5 py-1 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-1.5">
         {categoryChips.map((chip) => {
           const isActive =
             chip.id === 'all'
@@ -396,10 +366,10 @@ export default function MobileTopBar({ onOpenDrawer }) {
               key={chip.id}
               type="button"
               onClick={() => handleCategorySelect(chip)}
-              className={`snap-start shrink-0 touch-target h-[36px] min-w-[48px] px-3.5 rounded-full text-xs font-medium transition-all duration-150 active-tap-scale flex items-center justify-center ${
+              className={`snap-start shrink-0 h-6 min-h-[24px] px-3 rounded-full text-[11px] font-semibold transition-all duration-150 active-tap-scale flex items-center justify-center ${
                 isActive
-                  ? 'bg-temple-gold text-deep-navy font-bold shadow-md scale-105'
-                  : 'bg-white/10 text-lotus-white hover:bg-white/20 border border-white/15'
+                  ? 'bg-temple-gold text-dark-charcoal font-bold shadow-xs'
+                  : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/15'
               }`}
             >
               <span className="truncate max-w-[120px]">{chip.name}</span>

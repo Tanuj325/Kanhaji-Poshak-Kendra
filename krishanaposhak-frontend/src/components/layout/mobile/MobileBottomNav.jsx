@@ -1,21 +1,19 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiGrid, FiHeart, FiShoppingBag, FiUser } from 'react-icons/fi';
+import { FiHome, FiShoppingBag, FiGrid, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { useAuth } from '@/context/AuthContext';
 import { useCartContext } from '@/context/CartContext';
-import { useWishlistContext } from '@/context/WishlistContext';
 
 /**
- * MobileBottomNav (Phase M0)
+ * MobileBottomNav (App Redesign)
  * Native App Style Bottom Navigation for Mobile (<768px).
- * Features 48x48px minimum touch targets, safe area bottom insets, 
- * active tab highlighting, and real-time badge counts.
+ * Exactly 5 items: Home, Shop, Categories, Cart, Profile.
+ * Wishlist is located ONLY in the top right header.
  */
 export default function MobileBottomNav({ onOpenDrawer }) {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { cartCount } = useCartContext();
-  const { wishlistCount } = useWishlistContext();
 
   const currentPath = location.pathname;
 
@@ -29,28 +27,29 @@ export default function MobileBottomNav({ onOpenDrawer }) {
     },
     {
       id: 'shop',
-      label: 'Categories',
+      label: 'Shop',
       path: ROUTE_PATHS.SHOP || '/shop',
-      icon: FiGrid,
+      icon: FiShoppingBag,
       badge: 0,
     },
     {
-      id: 'wishlist',
-      label: 'Wishlist',
-      path: ROUTE_PATHS.WISHLIST || '/customer/wishlist',
-      icon: FiHeart,
-      badge: wishlistCount,
+      id: 'categories',
+      label: 'Categories',
+      path: '#categories',
+      icon: FiGrid,
+      badge: 0,
+      onClick: onOpenDrawer,
     },
     {
       id: 'cart',
       label: 'Cart',
       path: ROUTE_PATHS.CART || '/cart',
-      icon: FiShoppingBag,
+      icon: FiShoppingCart,
       badge: cartCount,
     },
     {
       id: 'account',
-      label: isAuthenticated ? 'Account' : 'Sign In',
+      label: isAuthenticated ? 'Profile' : 'Sign In',
       path: isAuthenticated ? (ROUTE_PATHS.ACCOUNT_DASHBOARD || '/customer/account') : (ROUTE_PATHS.LOGIN || '/login'),
       icon: FiUser,
       badge: 0,
@@ -74,6 +73,25 @@ export default function MobileBottomNav({ onOpenDrawer }) {
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isTabActive(item.path);
+
+          if (item.onClick) {
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={item.onClick}
+                aria-label={item.label}
+                className="touch-target flex-1 flex flex-col items-center justify-center py-1 relative active-tap-scale group text-natural-wood hover:text-dark-charcoal"
+              >
+                <div className="relative flex items-center justify-center mb-0.5">
+                  <Icon className="w-5 h-5 group-hover:scale-105" aria-hidden="true" />
+                </div>
+                <span className="text-[10px] tracking-tight leading-none text-center">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
 
           return (
             <Link

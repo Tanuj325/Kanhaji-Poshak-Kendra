@@ -31,7 +31,7 @@ export default function PublicLayout() {
       <MobileAppDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
       {/* Main Page Content Area */}
-      <main className="flex-1 w-full min-w-0 overflow-x-hidden pt-[140px] md:pt-0 pb-bottom-nav md:pb-0">
+      <main className="flex-1 w-full min-w-0 overflow-x-hidden pt-[128px] md:pt-0 pb-bottom-nav md:pb-0">
         <Suspense fallback={<LoadingSection />}>
           <Outlet key={location.pathname} />
         </Suspense>
