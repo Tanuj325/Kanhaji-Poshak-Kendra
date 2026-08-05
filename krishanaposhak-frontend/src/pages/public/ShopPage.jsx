@@ -412,8 +412,13 @@ export default function ShopPage() {
             />
           </div>
 
+          {/* Compact Mobile Result Count (<1024px) */}
+          <div className="block lg:hidden px-3 pt-2 pb-1 text-[11px] font-medium text-stone-500">
+            {!isLoading && `${totalElements} ${totalElements === 1 ? 'Product' : 'Products'}`}
+          </div>
+
           {/* Main Layout Grid */}
-          <div className="mt-2.5 sm:mt-8 flex gap-6 lg:gap-8">
+          <div className="mt-1 sm:mt-8 flex gap-6 lg:gap-8">
             {/* Desktop Filter Sidebar */}
             <FilterSidebar {...filterSidebarProps} />
 
@@ -460,7 +465,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.04 },
                       },
                     }}
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5"
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-3 sm:gap-4 md:gap-5 sm:p-0"
                   >
                     {productList.map((product) => (
                       <motion.div

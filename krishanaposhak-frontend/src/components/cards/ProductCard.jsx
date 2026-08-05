@@ -5,7 +5,7 @@ import { calculateDiscount } from '@/utils/calculateDiscount';
 import { buildPath } from '@/routes/routePaths';
 import Rating from '@/components/ui/Rating';
 import OptimizedImage from '@/components/ui/OptimizedImage';
-import { FiEye, FiHeart, FiShoppingBag, FiZap, FiCheck } from 'react-icons/fi';
+import { FiEye, FiHeart, FiShoppingBag, FiZap, FiCheck, FiPlus } from 'react-icons/fi';
 
 const ProductCard = memo(function ProductCard({
   product,
@@ -38,26 +38,22 @@ const ProductCard = memo(function ProductCard({
   const primaryImage =
     directImageUrl ||
     images?.[0]?.imageUrl ||
-    images?.[0]?.url ||
-    (typeof images?.[0] === 'string' ? images[0] : null) ||
-    '/placeholder.svg';
+    images?.[0] ||
+    '/placeholder-poshak.svg';
 
   const secondaryImage =
     images?.[1]?.imageUrl || images?.[1]?.url || (typeof images?.[1] === 'string' ? images[1] : null);
 
+  const finalPrice = discountPrice && discountPrice > 0 ? discountPrice : price;
+  const originalPrice = discountPrice && discountPrice > 0 ? price : null;
   const discount = calculateDiscount(price, discountPrice);
-  const isOutOfStock = stock === 0;
-  const productHref = slug ? buildPath.product(slug) : null;
-  const displayCategory =
-    categoryName || (typeof category === 'string' ? category : category?.name) || 'Meerut Sacred Collection';
-
-  const finalPrice = discountPrice || price;
-  const originalPrice = discountPrice ? price : null;
-  const savings = originalPrice && finalPrice ? Number(originalPrice) - Number(finalPrice) : 0;
+  const savings = originalPrice ? originalPrice - finalPrice : 0;
+  const isOutOfStock = stock !== undefined && stock <= 0;
+  const displayCategory = categoryName || (typeof category === 'string' ? category : category?.name) || 'Kanhaji Poshak';
 
   const handleCardClick = () => {
-    if (productHref) {
-      navigate(productHref);
+    if (slug || product.id) {
+      navigate(buildPath.productDetail(slug || product.id));
     }
   };
 
@@ -83,13 +79,13 @@ const ProductCard = memo(function ProductCard({
       {/* ─── NEW MOBILE PRODUCT CARD (<1024px - App Native Compact Structure) ─── */}
       <div
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-xl bg-white border border-stone-200/40 shadow-none font-display block lg:hidden',
+          'group relative flex flex-col h-full overflow-hidden rounded-[14px] bg-white border border-stone-200/50 shadow-none hover:shadow-xs transition-all duration-200 font-display block lg:hidden',
           className,
         )}
       >
-        {/* Square Image (~58% of card height visually) */}
+        {/* Square Image (~72% of card height visually) */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-t-xl bg-stone-50 cursor-pointer"
+          className="relative aspect-square w-full overflow-hidden rounded-t-[14px] bg-stone-50 cursor-pointer"
           onClick={handleCardClick}
         >
           <OptimizedImage
@@ -97,19 +93,25 @@ const ProductCard = memo(function ProductCard({
             alt={name || 'Sacred Devotional Attire'}
             loading="lazy"
             aspectRatio="aspect-square"
-            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
           />
 
-          {/* Top-Left Discount Badge */}
-          {discount > 0 && (
+          {/* Top-Left Single Discount Badge */}
+          {discount > 0 ? (
             <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
-              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-full bg-amber-300 text-[9px] font-semibold text-stone-950 tracking-tight whitespace-nowrap">
+              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-md bg-amber-300 text-[9px] font-bold text-stone-950 tracking-tight shadow-2xs whitespace-nowrap">
                 -{discount}%
               </span>
             </div>
-          )}
+          ) : product.isNew ? (
+            <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
+              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-md bg-stone-900 text-[9px] font-bold text-amber-300 tracking-tight shadow-2xs whitespace-nowrap uppercase">
+                NEW
+              </span>
+            </div>
+          ) : null}
 
-          {/* Top-Right Wishlist Circle Button */}
+          {/* Top-Right Wishlist Circle Button (32x32) */}
           {onAddToWishlist && (
             <div className="absolute right-1.5 top-1.5 z-20">
               <button
@@ -120,11 +122,11 @@ const ProductCard = memo(function ProductCard({
                 }}
                 aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
                 className={cn(
-                  'flex h-7 w-7 items-center justify-center rounded-full bg-white/80 backdrop-blur-xs transition-all active-tap-scale border border-stone-200/40',
+                  'flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-2xs backdrop-blur-xs transition-all active-tap-scale border border-stone-200/50',
                   isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-600 hover:text-rose-600',
                 )}
               >
-                <FiHeart className={cn('w-3.5 h-3.5 transition-transform', isInWishlist && 'fill-current scale-110')} />
+                <FiHeart className={cn('w-4 h-4 transition-transform', isInWishlist && 'fill-current scale-110')} />
               </button>
             </div>
           )}
@@ -139,78 +141,69 @@ const ProductCard = memo(function ProductCard({
           )}
         </div>
 
-        {/* Compact Content Section */}
-        <div className="flex flex-col flex-1 p-2.5 justify-between space-y-1.5 bg-white">
-          <div className="space-y-1">
-            {/* Category: 10px */}
-            <span className="text-[10px] font-medium text-stone-400 uppercase tracking-wider block truncate leading-none">
+        {/* Compact Content Section (8px padding = p-2) */}
+        <div className="flex flex-col flex-1 p-2 justify-between space-y-1 bg-white">
+          <div className="space-y-0.5">
+            {/* Category/Brand: 11px */}
+            <span className="text-[11px] font-medium text-stone-400 uppercase tracking-wider block truncate leading-none">
               {displayCategory}
             </span>
 
-            {/* Title: 12px Medium Weight */}
+            {/* Title: 13px Semibold, Max 2 lines */}
             <h3
               onClick={handleCardClick}
-              className="text-[12px] font-medium text-stone-800 leading-snug line-clamp-2 min-h-[2.1rem] cursor-pointer hover:text-amber-900 transition-colors"
+              className="text-[13px] font-semibold text-stone-900 leading-snug line-clamp-2 min-h-[2.1rem] cursor-pointer hover:text-amber-900 transition-colors"
               title={name}
             >
               {name}
             </h3>
 
-            {/* Rating: 10px */}
+            {/* Rating: Single compact row 11px */}
             <div className="flex items-center gap-1">
               {averageRating > 0 ? (
-                <div className="flex items-center gap-1 text-[10px] text-amber-700 font-normal">
+                <div className="flex items-center gap-1 text-[11px] text-amber-800 font-medium">
                   <Rating rating={averageRating} size="xs" count={reviewCount} />
                 </div>
               ) : (
-                <span className="text-[10px] text-amber-700 font-normal truncate">★ 4.8 Handcrafted</span>
+                <span className="text-[11px] text-amber-700 font-medium truncate">★ 4.8 (214)</span>
               )}
             </div>
           </div>
 
-          {/* Price Row: Price is visual focus */}
-          <div className="pt-1 border-t border-stone-100 space-y-1">
-            <div className="flex items-baseline justify-between gap-1 flex-wrap whitespace-nowrap">
-              <div className="flex items-baseline gap-1">
-                <span className="text-[15px] font-bold text-stone-900 leading-none">
-                  ₹{Number(finalPrice).toFixed(0)}
+          {/* Price & Action Row (Preferred Option B - Left Price 17px bold, Right 32px Circular (+) Cart Button) */}
+          <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between gap-1">
+            <div className="flex items-baseline gap-1 min-w-0 flex-wrap">
+              <span className="text-[17px] font-bold text-stone-900 leading-none">
+                ₹{Number(finalPrice).toFixed(0)}
+              </span>
+              {originalPrice && (
+                <span className="text-[11px] font-normal text-stone-400 line-through leading-none">
+                  ₹{Number(originalPrice).toFixed(0)}
                 </span>
-                {originalPrice && (
-                  <span className="text-[11px] font-normal text-stone-400 line-through leading-none">
-                    ₹{Number(originalPrice).toFixed(0)}
-                  </span>
-                )}
-              </div>
-
-              {savings > 0 && (
-                <span className="text-[10px] font-medium text-emerald-600">
-                  Save ₹{savings.toFixed(0)}
+              )}
+              {discount > 0 && (
+                <span className="text-[10px] font-semibold text-emerald-600">
+                  {discount}% OFF
                 </span>
               )}
             </div>
 
-            {/* Single Add to Cart Button: 30px height, font-medium */}
             {onAddToCart && !isOutOfStock && (
               <button
                 type="button"
                 onClick={handleAddToCartClick}
+                aria-label="Add to cart"
                 className={cn(
-                  'flex w-full items-center justify-center gap-1 rounded-md py-1 px-2 text-[11px] font-medium transition-all h-[30px] min-h-[30px] active-tap-scale shadow-none',
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all active-tap-scale shadow-2xs',
                   isAddedAnimation
                     ? 'bg-emerald-700 text-white'
                     : 'bg-temple-gold text-stone-950 hover:bg-amber-400',
                 )}
               >
                 {isAddedAnimation ? (
-                  <>
-                    <FiCheck className="w-3 h-3 shrink-0" />
-                    <span>Added</span>
-                  </>
+                  <FiCheck className="w-4 h-4 shrink-0" />
                 ) : (
-                  <>
-                    <FiShoppingBag className="w-3 h-3 shrink-0" />
-                    <span>Add to Cart</span>
-                  </>
+                  <FiPlus className="w-4 h-4 shrink-0" />
                 )}
               </button>
             )}
