@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/hooks/useWishlist';
 import { useAddToCart } from '@/hooks/useCart';
 import { siteConfig } from '@/config/siteConfig';
+import { cn } from '@/utils/cn';
 
 import ProductCard from '@/components/cards/ProductCard';
 import Pagination from '@/components/navigation/Pagination';
@@ -23,7 +24,6 @@ const QuickViewModal = lazy(() => import('@/components/overlay/QuickViewModal'))
 import Skeleton from '@/components/ui/Skeleton';
 import ErrorState from '@/components/ui/ErrorState';
 import EmptyState from '@/components/ui/EmptyState';
-import { cn } from '@/utils/cn';
 
 const SORT_OPTIONS = [
   { value: 'createdAt,desc', label: '✨ Newest Arrivals' },
