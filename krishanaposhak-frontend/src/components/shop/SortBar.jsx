@@ -21,26 +21,33 @@ const SortBar = memo(function SortBar({
 
   return (
     <div className="bg-transparent sm:bg-white p-0 sm:p-4 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200/80 shadow-none sm:shadow-xs">
-      {/* Mobile Sticky Compact Filter Chips Bar (<768px) */}
+      {/* Mobile Sticky Compact Filter Chips Bar (<1024px) */}
       {isMobile ? (
-        <div className="sticky top-[116px] z-30 bg-stone-50/95 backdrop-blur-md py-1.5 -mx-3 px-3 border-b border-stone-200/50 shadow-2xs overflow-x-auto scrollbar-hide flex items-center gap-2">
+        <div className="sticky top-[108px] z-30 bg-white/95 backdrop-blur-md py-2 -mx-3 px-3 border-b border-stone-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-x-auto scrollbar-hide flex items-center gap-2">
+          {/* Sort Button Chip */}
           <button
             type="button"
             onClick={onOpenMobileSort}
-            className="shrink-0 h-[36px] px-3.5 rounded-[12px] border border-stone-200/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale flex items-center gap-1.5"
+            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active:scale-95 transition-all flex items-center gap-1.5 hover:bg-stone-50"
             aria-label="Open sort menu"
           >
-            <FiArrowDown className="w-4 h-4 text-amber-800 shrink-0" />
-            <span className="truncate max-w-[110px]">{currentSortLabel}</span>
+            <FiArrowDown className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+            <span className="truncate max-w-[120px]">{currentSortLabel.replace(/^[^\s]+\s/, '')}</span>
           </button>
 
+          {/* Filters Main Chip with Badge */}
           <button
             type="button"
             onClick={onOpenMobileFilters}
-            className="shrink-0 h-[36px] px-3.5 rounded-[12px] border border-stone-200/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale flex items-center gap-1.5"
+            className={cn(
+              'shrink-0 h-[36px] px-3.5 rounded-full border text-[12px] font-semibold shadow-2xs active:scale-95 transition-all flex items-center gap-1.5',
+              activeFilterCount > 0
+                ? 'border-amber-500 bg-amber-50 text-stone-950 font-bold'
+                : 'border-stone-300/80 bg-white text-stone-900 hover:bg-stone-50'
+            )}
             aria-label="Open filter menu"
           >
-            <FiFilter className="w-4 h-4 text-amber-800 shrink-0" />
+            <FiFilter className="w-3.5 h-3.5 text-amber-700 shrink-0" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
               <span className="flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-stone-950 text-[10px] font-bold text-amber-300 ml-0.5">
@@ -49,20 +56,36 @@ const SortBar = memo(function SortBar({
             )}
           </button>
 
+          {/* Quick Price Chip */}
           <button
             type="button"
             onClick={onOpenMobileFilters}
-            className="shrink-0 h-[36px] px-3.5 rounded-[12px] border border-stone-200/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active-tap-scale flex items-center gap-1"
+            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
           >
-            <span>Price</span>
+            <span>Price Range</span>
           </button>
 
+          {/* Quick Newest Chip */}
           <button
             type="button"
-            onClick={() => onSortChange && onSortChange('createdAt,desc')}
-            className="shrink-0 h-[36px] px-3.5 rounded-[12px] border border-stone-200/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active-tap-scale flex items-center gap-1"
+            onClick={() => onSortChange && onSortChange({ target: { value: 'createdAt,desc' } })}
+            className={cn(
+              'shrink-0 h-[36px] px-3.5 rounded-full border text-[12px] font-medium shadow-2xs active:scale-95 transition-all flex items-center gap-1',
+              sort === 'createdAt,desc'
+                ? 'border-stone-900 bg-stone-900 text-amber-300 font-bold'
+                : 'border-stone-300/80 bg-white text-stone-700 hover:bg-stone-50'
+            )}
           >
-            <span>Newest</span>
+            <span>✨ Newest</span>
+          </button>
+
+          {/* Quick Rating Chip */}
+          <button
+            type="button"
+            onClick={onOpenMobileFilters}
+            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
+          >
+            <span>Rating 4.0+</span>
           </button>
         </div>
       ) : (

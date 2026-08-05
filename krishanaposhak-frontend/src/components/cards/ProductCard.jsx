@@ -5,7 +5,7 @@ import { calculateDiscount } from '@/utils/calculateDiscount';
 import { buildPath } from '@/routes/routePaths';
 import Rating from '@/components/ui/Rating';
 import OptimizedImage from '@/components/ui/OptimizedImage';
-import { FiEye, FiHeart, FiShoppingBag, FiZap, FiCheck, FiPlus } from 'react-icons/fi';
+import { FiEye, FiHeart, FiShoppingBag, FiZap, FiCheck, FiPlus, FiStar, FiShoppingCart } from 'react-icons/fi';
 
 const ProductCard = memo(function ProductCard({
   product,
@@ -76,16 +76,16 @@ const ProductCard = memo(function ProductCard({
 
   return (
     <>
-      {/* ─── NEW MOBILE PRODUCT CARD (<1024px - App Native Compact Structure) ─── */}
+      {/* ─── MOBILE NATIVE E-COMMERCE PRODUCT CARD (<1024px) ─── */}
       <div
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-[14px] bg-white border border-stone-200/50 shadow-none hover:shadow-xs transition-all duration-200 font-display block lg:hidden',
+          'group relative flex flex-col h-full overflow-hidden rounded-[14px] bg-white border border-stone-200/70 shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_18px_rgba(0,0,0,0.1)] transition-all duration-300 font-display block lg:hidden',
           className,
         )}
       >
-        {/* Square Image (~72% of card height visually) */}
+        {/* 1:1 Edge-to-Edge Square Image Container */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-t-[14px] bg-stone-50 cursor-pointer"
+          className="relative aspect-square w-full overflow-hidden rounded-t-[14px] bg-stone-50 cursor-pointer select-none"
           onClick={handleCardClick}
         >
           <OptimizedImage
@@ -93,27 +93,27 @@ const ProductCard = memo(function ProductCard({
             alt={name || 'Sacred Devotional Attire'}
             loading="lazy"
             aspectRatio="aspect-square"
-            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
           />
 
-          {/* Top-Left Single Discount Badge */}
+          {/* Top-Left Premium Discount or NEW Badge */}
           {discount > 0 ? (
-            <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
-              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-md bg-amber-300 text-[9px] font-bold text-stone-950 tracking-tight shadow-2xs whitespace-nowrap">
-                -{discount}%
+            <div className="absolute left-2 top-2 z-10 pointer-events-none">
+              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-rose-600 text-[10px] font-bold text-white tracking-wide shadow-sm uppercase whitespace-nowrap">
+                {discount}% OFF
               </span>
             </div>
-          ) : product.isNew ? (
-            <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
-              <span className="h-4 px-1.5 inline-flex items-center justify-center rounded-md bg-stone-900 text-[9px] font-bold text-amber-300 tracking-tight shadow-2xs whitespace-nowrap uppercase">
+          ) : product.isNew || product.newArrival ? (
+            <div className="absolute left-2 top-2 z-10 pointer-events-none">
+              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-stone-900 text-[10px] font-bold text-amber-300 tracking-wider shadow-sm uppercase whitespace-nowrap">
                 NEW
               </span>
             </div>
           ) : null}
 
-          {/* Top-Right Wishlist Circle Button (32x32) */}
+          {/* Top-Right Floating Wishlist Glass Button (34x34) */}
           {onAddToWishlist && (
-            <div className="absolute right-1.5 top-1.5 z-20">
+            <div className="absolute right-2 top-2 z-20">
               <button
                 type="button"
                 onClick={(e) => {
@@ -122,88 +122,94 @@ const ProductCard = memo(function ProductCard({
                 }}
                 aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
                 className={cn(
-                  'flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-2xs backdrop-blur-xs transition-all active-tap-scale border border-stone-200/50',
-                  isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-600 hover:text-rose-600',
+                  'flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-md transition-all active:scale-90 border border-stone-200/60',
+                  isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-700 hover:text-rose-600',
                 )}
               >
-                <FiHeart className={cn('w-4 h-4 transition-transform', isInWishlist && 'fill-current scale-110')} />
+                <FiHeart className={cn('w-4 h-4 transition-transform duration-200', isInWishlist && 'fill-current scale-110')} />
               </button>
             </div>
           )}
 
+          {/* Bottom-Left Myntra-Style Rating Overlay Pill */}
+          <div className="absolute left-2 bottom-2 z-10 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs border border-stone-200/50 text-[11px] font-bold text-stone-900 leading-none">
+            <span className="flex items-center gap-0.5 text-stone-900 font-bold">
+              {averageRating > 0 ? averageRating.toFixed(1) : '4.8'}
+              <FiStar className="w-3 h-3 fill-amber-400 text-amber-400" />
+            </span>
+            <span className="text-stone-400 font-medium">|</span>
+            <span className="text-stone-500 font-medium text-[10px]">{reviewCount || 128}</span>
+          </div>
+
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs">
-              <span className="rounded-full bg-white px-2 py-0.5 text-[9px] font-semibold text-stone-900 uppercase tracking-wider">
+              <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-stone-950 uppercase tracking-wider shadow-sm">
                 Out of Stock
               </span>
             </div>
           )}
         </div>
 
-        {/* Compact Content Section (8px padding = p-2) */}
-        <div className="flex flex-col flex-1 p-2 justify-between space-y-1 bg-white">
+        {/* Dense Content Body */}
+        <div className="flex flex-col flex-1 p-2.5 sm:p-3 justify-between bg-white space-y-1.5">
           <div className="space-y-0.5">
-            {/* Category/Brand: 11px */}
-            <span className="text-[11px] font-medium text-stone-400 uppercase tracking-wider block truncate leading-none">
+            {/* Category / Brand Name: 11px */}
+            <span className="text-[11px] font-semibold text-amber-900 uppercase tracking-wider block truncate leading-none mb-0.5">
               {displayCategory}
             </span>
 
-            {/* Title: 13px Semibold, Max 2 lines */}
+            {/* Title: 13px Semibold, 2-line Clamp */}
             <h3
               onClick={handleCardClick}
-              className="text-[13px] font-semibold text-stone-900 leading-snug line-clamp-2 min-h-[2.1rem] cursor-pointer hover:text-amber-900 transition-colors"
+              className="text-[13px] font-semibold text-stone-900 leading-snug line-clamp-2 min-h-[2.2rem] cursor-pointer hover:text-amber-800 transition-colors"
               title={name}
             >
               {name}
             </h3>
-
-            {/* Rating: Single compact row 11px */}
-            <div className="flex items-center gap-1">
-              {averageRating > 0 ? (
-                <div className="flex items-center gap-1 text-[11px] text-amber-800 font-medium">
-                  <Rating rating={averageRating} size="xs" count={reviewCount} />
-                </div>
-              ) : (
-                <span className="text-[11px] text-amber-700 font-medium truncate">★ 4.8 (214)</span>
-              )}
-            </div>
           </div>
 
-          {/* Price & Action Row (Preferred Option B - Left Price 17px bold, Right 32px Circular (+) Cart Button) */}
-          <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between gap-1">
-            <div className="flex items-baseline gap-1 min-w-0 flex-wrap">
-              <span className="text-[17px] font-bold text-stone-900 leading-none">
-                ₹{Number(finalPrice).toFixed(0)}
-              </span>
-              {originalPrice && (
-                <span className="text-[11px] font-normal text-stone-400 line-through leading-none">
-                  ₹{Number(originalPrice).toFixed(0)}
+          {/* Price & Action Row (Price 18px Bold, Circular Gold Cart Button) */}
+          <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between gap-1.5">
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-baseline gap-1 flex-wrap">
+                <span className="text-[18px] font-extrabold text-stone-950 leading-none">
+                  ₹{Number(finalPrice).toFixed(0)}
                 </span>
-              )}
-              {discount > 0 && (
-                <span className="text-[10px] font-semibold text-emerald-600">
+                {originalPrice && (
+                  <span className="text-[12px] font-medium text-stone-400 line-through leading-none">
+                    ₹{Number(originalPrice).toFixed(0)}
+                  </span>
+                )}
+              </div>
+              {discount > 0 ? (
+                <span className="text-[11px] font-bold text-emerald-600 mt-0.5 leading-none">
                   {discount}% OFF
+                </span>
+              ) : (
+                <span className="text-[11px] font-medium text-amber-700 mt-0.5 leading-none">
+                  Special Offer
                 </span>
               )}
             </div>
 
+            {/* Circular Gold Cart Button */}
             {onAddToCart && !isOutOfStock && (
               <button
                 type="button"
                 onClick={handleAddToCartClick}
-                aria-label="Add to cart"
+                aria-label="Add product to shopping cart"
                 className={cn(
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all active-tap-scale shadow-2xs',
+                  'flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-full transition-all duration-200 active:scale-95 shadow-2xs',
                   isAddedAnimation
-                    ? 'bg-emerald-700 text-white'
-                    : 'bg-temple-gold text-stone-950 hover:bg-amber-400',
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gradient-to-r from-amber-400 to-amber-300 text-stone-950 hover:from-amber-300 hover:to-amber-400 border border-amber-300/60',
                 )}
               >
                 {isAddedAnimation ? (
-                  <FiCheck className="w-4 h-4 shrink-0" />
+                  <FiCheck className="w-4 h-4 shrink-0 stroke-[3]" />
                 ) : (
-                  <FiPlus className="w-4 h-4 shrink-0" />
+                  <FiShoppingCart className="w-4 h-4 shrink-0" />
                 )}
               </button>
             )}

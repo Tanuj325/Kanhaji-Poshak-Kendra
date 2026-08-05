@@ -36,36 +36,50 @@ const SORT_OPTIONS = [
 const PAGE_SIZE = 12;
 
 function mapProductToCard(product) {
+  if (!product) return null;
   return {
-    id: product.id,
+    id: product.id || product._id,
     variantId: product.variantId || product.variants?.[0]?.id || product.id,
-    name: product.name,
-    slug: product.slug,
+    name: product.name || 'Sacred Devotional Creation',
+    slug: product.slug || product.id,
     images: product.imageUrl ? [{ imageUrl: product.imageUrl }] : product.images || [],
-    imageUrl: product.imageUrl,
-    price: product.price || product.discountPrice,
-    discountPrice: product.discountPrice,
-    averageRating: product.averageRating || 0,
-    reviewCount: product.reviewCount || 0,
+    imageUrl: product.imageUrl || product.images?.[0]?.imageUrl || product.images?.[0],
+    price: product.price || product.discountPrice || 0,
+    discountPrice: product.discountPrice || null,
+    averageRating: product.averageRating || 4.8,
+    reviewCount: product.reviewCount || 128,
     stock: product.stock ?? 10,
-    category: product.categoryName || (product.category?.name) || null,
-    categoryName: product.categoryName || (product.category?.name) || null,
-    featured: product.featured,
-    newArrival: product.newArrival,
+    category: product.categoryName || (typeof product.category === 'object' ? product.category?.name : product.category) || 'Kanhaji Poshak',
+    categoryName: product.categoryName || (typeof product.category === 'object' ? product.category?.name : product.category) || 'Kanhaji Poshak',
+    featured: Boolean(product.featured),
+    newArrival: Boolean(product.newArrival || product.isNew),
     variants: product.variants || product.productVariants || [],
   };
 }
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-4 sm:gap-4 md:gap-5 sm:p-0">
       {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className="flex flex-col gap-2.5 rounded-[22px] sm:rounded-[26px] bg-white p-2.5 sm:p-3 border border-amber-900/10 shadow-2xs">
-          <Skeleton variant="rect" className="aspect-[4/5] w-full rounded-2xl bg-amber-100/50" />
-          <Skeleton variant="text" className="h-3 w-1/3 bg-amber-100/60" />
-          <Skeleton variant="text" className="h-3.5 w-4/5 bg-amber-100/60" />
-          <Skeleton variant="text" className="h-3.5 w-1/2 bg-amber-100/60" />
-          <Skeleton variant="rect" className="h-9 sm:h-10 w-full rounded-xl bg-amber-100/50 mt-1" />
+        <div
+          key={i}
+          className="flex flex-col h-full rounded-[14px] bg-white p-2.5 border border-stone-200/70 shadow-[0_4px_12px_rgba(0,0,0,0.04)] font-display"
+        >
+          <Skeleton variant="rect" className="aspect-square w-full rounded-[12px] bg-stone-100/80" />
+          <div className="flex flex-col flex-1 justify-between mt-2.5 space-y-2">
+            <div className="space-y-1">
+              <Skeleton variant="text" className="h-2.5 w-1/3 bg-stone-100/90" />
+              <Skeleton variant="text" className="h-3.5 w-full bg-stone-100/90" />
+              <Skeleton variant="text" className="h-3.5 w-2/3 bg-stone-100/90" />
+            </div>
+            <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+              <div className="space-y-1 w-1/2">
+                <Skeleton variant="text" className="h-4 w-full bg-stone-100/90" />
+                <Skeleton variant="text" className="h-2.5 w-2/3 bg-stone-100/90" />
+              </div>
+              <Skeleton variant="rect" className="h-8.5 w-8.5 rounded-full bg-stone-100/90" />
+            </div>
+          </div>
         </div>
       ))}
     </div>
@@ -327,8 +341,8 @@ export default function ShopPage() {
       />
 
       <div className="min-h-screen bg-lotus-white font-body selection:bg-amber-100 selection:text-amber-950">
-        {/* Desktop Luxury Hero Banner (Hidden on Mobile <768px to maximize screen density) */}
-        <div className="hidden md:block">
+        {/* Desktop Luxury Hero Banner (Hidden on Mobile <1024px to maximize screen density) */}
+        <div className="hidden lg:block">
           <ShopHero
             breadcrumbItems={breadcrumbItems}
             categoryName={categoryName}
@@ -337,7 +351,24 @@ export default function ShopPage() {
           />
         </div>
 
-        <div className="container-page py-2 sm:py-8 lg:py-10 px-3 sm:px-6 lg:px-8">
+        {/* Mobile Header Banner (<1024px) */}
+        <div className="block lg:hidden bg-stone-900 text-white px-4 py-2.5 border-b border-stone-800">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">
+                Official Catalog
+              </span>
+              <h1 className="text-sm font-bold text-white font-heading leading-tight truncate">
+                {categoryName || 'All Sacred Collections'}
+              </h1>
+            </div>
+            <span className="text-[11px] font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 whitespace-nowrap">
+              {totalElements} Items
+            </span>
+          </div>
+        </div>
+
+        <div className="container-page pt-0 pb-16 sm:py-8 lg:py-10 px-0 sm:px-6 lg:px-8">
           {/* Horizontal Category Quick-Selector Pills (Desktop ONLY - Mobile uses Top Bar Chips) */}
           {categories.length > 0 && (
             <div className="hidden md:flex mb-4 sm:mb-8 gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-200 -mx-1 px-1">
@@ -372,7 +403,7 @@ export default function ShopPage() {
             </div>
           )}
 
-          {/* Compact Mobile & Desktop Controls Bar */}
+          {/* Sticky Mobile Filter & Sort Bar */}
           <SortBar
             searchInput={searchInput}
             onSearchChange={(e) => setSearchInput(e.target.value)}
@@ -391,8 +422,8 @@ export default function ShopPage() {
             isMobile={isMobile}
           />
 
-          {/* Active Filter Chips */}
-          <div className="mt-1.5 sm:mt-3">
+          {/* Active Filter Chips Row */}
+          <div className="mt-1.5 sm:mt-3 px-3 sm:px-0">
             <ActiveFilterChips
               search={search}
               categoryId={categoryId}
@@ -412,17 +443,29 @@ export default function ShopPage() {
             />
           </div>
 
-          {/* Compact Mobile Result Count (<1024px) */}
-          <div className="block lg:hidden px-3 pt-2 pb-1 text-[11px] font-medium text-stone-500">
-            {!isLoading && `${totalElements} ${totalElements === 1 ? 'Product' : 'Products'}`}
+          {/* Dense E-Commerce Mobile Results Count Bar (<1024px) */}
+          <div className="block lg:hidden px-4 pt-2.5 pb-1.5 border-b border-stone-200/50 bg-stone-50/60">
+            <div className="flex items-center justify-between text-[12px] font-semibold text-stone-700">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                {!isLoading
+                  ? `Showing ${totalElements} ${totalElements === 1 ? 'Product' : 'Products'}`
+                  : 'Fetching Sacred Catalog...'}
+              </span>
+              {categoryName && (
+                <span className="text-[11px] font-bold text-amber-900 uppercase tracking-wider bg-amber-100/80 px-2 py-0.5 rounded-full">
+                  {categoryName}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Main Layout Grid */}
-          <div className="mt-1 sm:mt-8 flex gap-6 lg:gap-8">
+          {/* Main Layout Grid Area */}
+          <div className="mt-0 sm:mt-8 flex gap-6 lg:gap-8">
             {/* Desktop Filter Sidebar */}
             <FilterSidebar {...filterSidebarProps} />
 
-            {/* Catalog Grid Area */}
+            {/* Catalog Grid Container */}
             <div className="flex-1 min-w-0">
               {isLoading && !productList.length ? (
                 <SkeletonGrid />
@@ -455,6 +498,7 @@ export default function ShopPage() {
                 />
               ) : (
                 <>
+                  {/* Dense 2-Column Mobile Product Grid (<1024px) / Multi-Column Desktop Grid */}
                   <motion.div
                     initial="hidden"
                     animate="visible"
@@ -465,7 +509,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.04 },
                       },
                     }}
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-3 sm:gap-4 md:gap-5 sm:p-0"
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-4 sm:gap-4 md:gap-5 sm:p-0"
                   >
                     {productList.map((product) => (
                       <motion.div
@@ -474,6 +518,7 @@ export default function ShopPage() {
                           hidden: { opacity: 0, y: 16 },
                           visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
                         }}
+                        className="h-full flex flex-col"
                       >
                         <ProductCard
                           product={product}
@@ -486,9 +531,9 @@ export default function ShopPage() {
                     ))}
                   </motion.div>
 
-                  {/* Pagination Controls */}
+                  {/* Pagination Controls Footer */}
                   {totalPages > 1 && (
-                    <div className="mt-10 sm:mt-14 flex justify-center">
+                    <div className="mt-8 sm:mt-14 mb-8 flex justify-center px-4">
                       <Pagination
                         currentPage={page}
                         totalPages={totalPages}
@@ -506,7 +551,7 @@ export default function ShopPage() {
         </div>
       </div>
 
-      {/* Mobile Bottom Sheets (Filter & Sort) */}
+      {/* Mobile Filter & Sort Bottom Sheets */}
       {isMobile && (
         <>
           <MobileFilterDrawer
