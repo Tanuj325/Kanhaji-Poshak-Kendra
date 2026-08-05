@@ -25,6 +25,7 @@ import { ROUTE_PATHS } from '@/routes/routePaths';
 import { useAuth } from '@/context/AuthContext';
 import { useCartContext } from '@/context/CartContext';
 import { useWishlist } from '@/hooks/useWishlist';
+import { isAdmin } from '@/utils/roleChecker';
 import { cn } from '@/utils/cn';
 
 const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
@@ -35,6 +36,8 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
   const { data: wishlist } = useWishlist();
 
   const currentPath = location.pathname;
+  const userRole = user?.role || user?.roles?.[0] || 'CUSTOMER';
+  const isUserAdmin = isAuthenticated && isAdmin(userRole);
 
   // Lock background scroll when drawer is open
   useEffect(() => {
@@ -64,96 +67,114 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
   // Order count if available on user object
   const ordersCount = user?.ordersCount || user?.orders?.length || 0;
 
-  // Menu items list (Exact requested order)
-  const menuItems = [
-    {
-      id: 'home',
-      label: 'Home',
-      path: ROUTE_PATHS.HOME || '/',
-      icon: FiHome,
-    },
-    {
-      id: 'shop',
-      label: 'Shop',
-      path: ROUTE_PATHS.SHOP || '/shop',
-      icon: FiShoppingBag,
-    },
-    {
-      id: 'categories',
-      label: 'Categories',
-      path: ROUTE_PATHS.CATEGORIES || '/categories',
-      icon: FiGrid,
-    },
-    {
-      id: 'wishlist',
-      label: 'Wishlist',
-      path: ROUTE_PATHS.WISHLIST || '/account/wishlist',
-      icon: FiHeart,
-      badge: wishlistCount > 0 ? { type: 'red', count: wishlistCount } : null,
-    },
-    {
-      id: 'cart',
-      label: 'Cart',
-      path: ROUTE_PATHS.CART || '/cart',
-      icon: FiShoppingCart,
-      badge: cartCount > 0 ? { type: 'gold', count: cartCount } : null,
-    },
-    {
-      id: 'orders',
-      label: 'Orders',
-      path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
-      icon: FiPackage,
-      badge: ordersCount > 0 ? { type: 'blue', count: ordersCount } : null,
-    },
-    {
-      id: 'track-order',
-      label: 'Track Order',
-      path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
-      icon: FiTruck,
-    },
-    {
-      id: 'offers',
-      label: 'Offers',
-      path: `${ROUTE_PATHS.SHOP || '/shop'}?discount=10`,
-      icon: FiTag,
-    },
-    {
-      id: 'new-arrivals',
-      label: 'New Arrivals',
-      path: `${ROUTE_PATHS.SHOP || '/shop'}?sort=createdAt,desc`,
-      icon: FiZap,
-    },
-    {
-      id: 'contact',
-      label: 'Contact',
-      path: ROUTE_PATHS.CONTACT || '/contact',
-      icon: FiPhone,
-    },
-    {
-      id: 'about',
-      label: 'About',
-      path: ROUTE_PATHS.ABOUT || '/about',
-      icon: FiInfo,
-    },
-    {
-      id: 'faq',
-      label: 'FAQ',
-      path: ROUTE_PATHS.FAQ || '/faq',
-      icon: FiHelpCircle,
-    },
-    {
-      id: 'privacy',
-      label: 'Privacy Policy',
-      path: ROUTE_PATHS.PRIVACY || '/privacy',
-      icon: FiShield,
-    },
-    {
-      id: 'terms',
-      label: 'Terms',
-      path: ROUTE_PATHS.TERMS || '/terms',
-      icon: FiFileText,
-    },
-  ];
+  // Menu items list (Exact requested order + Admin Control Panel if admin)
+  const menuItems = useMemo(() => {
+    const items = [
+      {
+        id: 'home',
+        label: 'Home',
+        path: ROUTE_PATHS.HOME || '/',
+        icon: FiHome,
+      },
+      {
+        id: 'shop',
+        label: 'Shop',
+        path: ROUTE_PATHS.SHOP || '/shop',
+        icon: FiShoppingBag,
+      },
+      {
+        id: 'categories',
+        label: 'Categories',
+        path: ROUTE_PATHS.CATEGORIES || '/categories',
+        icon: FiGrid,
+      },
+    ];
+
+    // Admin option if logged in user is Admin
+    if (isUserAdmin) {
+      items.push({
+        id: 'admin-panel',
+        label: 'Admin Control Panel',
+        path: ROUTE_PATHS.ADMIN || '/admin',
+        icon: FiShield,
+        badge: { type: 'gold', count: 'ADMIN' },
+      });
+    }
+
+    items.push(
+      {
+        id: 'wishlist',
+        label: 'Wishlist',
+        path: ROUTE_PATHS.WISHLIST || '/account/wishlist',
+        icon: FiHeart,
+        badge: wishlistCount > 0 ? { type: 'red', count: wishlistCount } : null,
+      },
+      {
+        id: 'cart',
+        label: 'Cart',
+        path: ROUTE_PATHS.CART || '/cart',
+        icon: FiShoppingCart,
+        badge: cartCount > 0 ? { type: 'gold', count: cartCount } : null,
+      },
+      {
+        id: 'orders',
+        label: 'Orders',
+        path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
+        icon: FiPackage,
+        badge: ordersCount > 0 ? { type: 'blue', count: ordersCount } : null,
+      },
+      {
+        id: 'track-order',
+        label: 'Track Order',
+        path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
+        icon: FiTruck,
+      },
+      {
+        id: 'offers',
+        label: 'Offers',
+        path: `${ROUTE_PATHS.SHOP || '/shop'}?discount=10`,
+        icon: FiTag,
+      },
+      {
+        id: 'new-arrivals',
+        label: 'New Arrivals',
+        path: `${ROUTE_PATHS.SHOP || '/shop'}?sort=createdAt,desc`,
+        icon: FiZap,
+      },
+      {
+        id: 'contact',
+        label: 'Contact',
+        path: ROUTE_PATHS.CONTACT || '/contact',
+        icon: FiPhone,
+      },
+      {
+        id: 'about',
+        label: 'About',
+        path: ROUTE_PATHS.ABOUT || '/about',
+        icon: FiInfo,
+      },
+      {
+        id: 'faq',
+        label: 'FAQ',
+        path: ROUTE_PATHS.FAQ || '/faq',
+        icon: FiHelpCircle,
+      },
+      {
+        id: 'privacy',
+        label: 'Privacy Policy',
+        path: ROUTE_PATHS.PRIVACY || '/privacy',
+        icon: FiShield,
+      },
+      {
+        id: 'terms',
+        label: 'Terms',
+        path: ROUTE_PATHS.TERMS || '/terms',
+        icon: FiFileText,
+      }
+    );
+
+    return items;
+  }, [isUserAdmin, wishlistCount, cartCount, isAuthenticated, ordersCount]);
 
   const isRouteActive = (path) => {
     if (path === '/') return currentPath === '/';
@@ -217,13 +238,25 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                       {user?.firstName} {user?.lastName}
                     </p>
                     <p className="text-stone-400 text-[12px] truncate mt-0.5">{user?.email}</p>
-                    <Link
-                      to={ROUTE_PATHS.ACCOUNT_DASHBOARD || '/account/dashboard'}
-                      onClick={onClose}
-                      className="inline-flex items-center justify-center h-[32px] px-3.5 mt-2 bg-temple-gold hover:bg-temple-gold-dark text-stone-950 text-[11px] font-extrabold rounded-lg shadow-xs active:scale-95 transition-transform"
-                    >
-                      My Account
-                    </Link>
+                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                      <Link
+                        to={ROUTE_PATHS.ACCOUNT_DASHBOARD || '/account/dashboard'}
+                        onClick={onClose}
+                        className="inline-flex items-center justify-center h-[32px] px-3 bg-temple-gold hover:bg-temple-gold-dark text-stone-950 text-[11px] font-extrabold rounded-lg shadow-xs active:scale-95 transition-transform"
+                      >
+                        My Account
+                      </Link>
+                      {isUserAdmin && (
+                        <Link
+                          to={ROUTE_PATHS.ADMIN || '/admin'}
+                          onClick={onClose}
+                          className="inline-flex items-center justify-center h-[32px] px-2.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-extrabold rounded-lg shadow-xs active:scale-95 transition-transform gap-1"
+                        >
+                          <FiShield className="w-3.5 h-3.5" />
+                          <span>Admin Panel</span>
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -293,7 +326,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                       {item.label}
                     </span>
 
-                    {/* Badge (Red for Wishlist, Gold for Cart, Blue for Orders) */}
+                    {/* Badge */}
                     {item.badge && (
                       <span
                         className={cn(
@@ -319,7 +352,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
               })}
             </div>
 
-            {/* ─── 3. STICKY BOTTOM SECTION (Always at bottom) ─── */}
+            {/* ─── 3. STICKY BOTTOM SECTION ─── */}
             {isAuthenticated && (
               <div className="sticky bottom-0 z-20 border-t border-black/[0.06] bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                 <button
