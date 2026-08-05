@@ -83,13 +83,13 @@ const ProductCard = memo(function ProductCard({
       {/* ─── MOBILE PRODUCT CARD (<1024px - App-Native Dense Layout) ─── */}
       <div
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-xl bg-white border border-stone-200/80 shadow-2xs hover:shadow-xs transition-all duration-200 font-display block lg:hidden',
+          'group relative flex flex-col h-full overflow-hidden m-rounded-card rounded-[14px] bg-white border border-stone-200/80 shadow-2xs hover:shadow-xs transition-all duration-200 font-display block lg:hidden',
           className,
         )}
       >
         {/* Mobile Image Stage (1:1 Square, 65-70% Card Height) */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-t-xl bg-stone-100 cursor-pointer"
+          className="relative aspect-square w-full overflow-hidden rounded-t-[14px] bg-stone-100 cursor-pointer"
           onClick={handleCardClick}
         >
           <OptimizedImage
@@ -103,7 +103,7 @@ const ProductCard = memo(function ProductCard({
           {/* Mobile Top Left: Small 18px Discount Badge */}
           {discount > 0 && (
             <div className="absolute left-1.5 top-1.5 z-10 pointer-events-none">
-              <span className="h-[18px] px-1.5 py-0 inline-flex items-center justify-center rounded-full bg-stone-900/90 text-[10px] font-bold text-amber-300 tracking-tight shadow-xs whitespace-nowrap">
+              <span className="h-[18px] px-1.5 py-0 inline-flex items-center justify-center rounded-full bg-stone-900/90 text-m-badge text-[10px] font-bold text-amber-300 tracking-tight shadow-2xs whitespace-nowrap">
                 -{discount}%
               </span>
             </div>
@@ -124,7 +124,7 @@ const ProductCard = memo(function ProductCard({
                   isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-700 hover:text-rose-600',
                 )}
               >
-                <FiHeart className={cn('h-3.5 w-3.5 transition-transform', isInWishlist && 'fill-current scale-110')} />
+                <FiHeart className={cn('icon-m-wishlist w-[18px] h-[18px] transition-transform', isInWishlist && 'fill-current scale-110')} />
               </button>
             </div>
           )}
@@ -132,23 +132,23 @@ const ProductCard = memo(function ProductCard({
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs">
-              <span className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-amber-950 uppercase tracking-wider shadow-sm">
+              <span className="rounded-full bg-white px-2.5 py-0.5 text-m-badge text-[10px] font-bold text-amber-950 uppercase tracking-wider shadow-sm">
                 Out of Stock
               </span>
             </div>
           )}
         </div>
 
-        {/* Mobile Content Body (10px Compact Padding, 6px Spacing) */}
+        {/* Mobile Content Body (10px Compact Padding, 4-8px Spacing) */}
         <div className="flex flex-col flex-1 p-2.5 justify-between font-display bg-white space-y-1">
           <div className="space-y-0.5">
-            <span className="text-[10px] font-medium text-stone-500 uppercase tracking-wider truncate block line-clamp-1">
+            <span className="text-m-category text-[11px] font-medium text-stone-500 uppercase tracking-wider truncate block line-clamp-1">
               {displayCategory}
             </span>
 
             <h3
               onClick={handleCardClick}
-              className="text-[13px] font-medium text-stone-900 leading-snug line-clamp-2 min-h-[2.2rem] cursor-pointer hover:text-amber-900 transition-colors"
+              className="text-m-body text-[13px] font-semibold text-stone-900 leading-snug line-clamp-2 min-h-[2.2rem] cursor-pointer hover:text-amber-900 transition-colors"
               title={name}
             >
               {name}
@@ -167,18 +167,18 @@ const ProductCard = memo(function ProductCard({
           <div className="pt-1.5 border-t border-stone-100 space-y-1.5">
             <div className="flex items-baseline justify-between gap-1 flex-wrap whitespace-nowrap">
               <div className="flex items-baseline gap-1">
-                <span className="text-base font-extrabold text-stone-950">
+                <span className="text-m-price text-[18px] font-bold text-stone-950">
                   ₹{Number(finalPrice).toFixed(0)}
                 </span>
                 {originalPrice && (
-                  <span className="text-[11px] text-stone-400 line-through font-normal">
+                  <span className="text-m-old-price text-[12px] text-stone-400 line-through font-normal">
                     ₹{Number(originalPrice).toFixed(0)}
                   </span>
                 )}
               </div>
 
               {savings > 0 && (
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">
+                <span className="text-m-badge text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">
                   Save ₹{savings.toFixed(0)}
                 </span>
               )}
@@ -189,7 +189,7 @@ const ProductCard = memo(function ProductCard({
                 type="button"
                 onClick={handleAddToCartClick}
                 className={cn(
-                  'flex w-full items-center justify-center gap-1.5 rounded-xl py-2 px-3 text-xs font-bold transition-all h-10 min-h-[40px] active-tap-scale shadow-2xs',
+                  'flex w-full items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] py-2 px-4 text-m-button text-[13px] font-semibold transition-all h-10 min-h-[40px] active-tap-scale shadow-2xs',
                   isAddedAnimation
                     ? 'bg-emerald-700 text-white'
                     : 'bg-temple-gold text-dark-charcoal hover:bg-amber-400',
@@ -197,12 +197,12 @@ const ProductCard = memo(function ProductCard({
               >
                 {isAddedAnimation ? (
                   <>
-                    <FiCheck className="h-3.5 w-3.5 shrink-0" />
+                    <FiCheck className="icon-m-card w-[18px] h-[18px] shrink-0" />
                     <span>Added to Cart</span>
                   </>
                 ) : (
                   <>
-                    <FiShoppingBag className="h-3.5 w-3.5 shrink-0" />
+                    <FiShoppingBag className="icon-m-card w-[18px] h-[18px] shrink-0" />
                     <span>Add to Cart</span>
                   </>
                 )}

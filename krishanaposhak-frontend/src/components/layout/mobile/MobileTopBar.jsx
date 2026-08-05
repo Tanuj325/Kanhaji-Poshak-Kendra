@@ -135,48 +135,61 @@ export default function MobileTopBar({ onOpenDrawer }) {
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
-      {/* ─── ROW 1: APP HEADER BAR (Height: 46px) ─────────────── */}
-      <div className="flex items-center justify-between h-[46px] px-4 max-w-full">
+      {/* ─── ROW 1: APP HEADER BAR (Height: 52px - Senior Design System) ───────── */}
+      <div className="flex items-center justify-between h-[52px] px-3 max-w-full">
         {/* Left: Drawer Trigger Menu Icon */}
         <button
           type="button"
           onClick={onOpenDrawer}
           aria-label="Open Navigation Drawer"
-          className="flex h-10 w-10 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-full"
+          className="flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
         >
-          <FiMenu className="w-5 h-5" aria-hidden="true" />
+          <FiMenu className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
         </button>
 
-        {/* Center: "Kanhaji Poshak" Title ONLY */}
+        {/* Center: "Kanhaji Poshak" App Title (18-20px 700 Bold) */}
         <Link
           to="/"
           aria-label="Kanhaji Poshak Home"
           className="flex items-center active-tap-scale truncate"
         >
-          <span className="font-heading text-sm font-extrabold text-white tracking-tight truncate">
+          <span className="font-heading text-m-section-heading text-[18px] font-bold text-white tracking-tight truncate">
             Kanhaji Poshak
           </span>
         </Link>
 
-        {/* Right: Wishlist Icon ONLY */}
-        <div className="flex items-center">
+        {/* Right: Action Icons (Wishlist + Cart) */}
+        <div className="flex items-center gap-1">
           <Link
             to={ROUTE_PATHS.WISHLIST || '/customer/wishlist'}
             aria-label={`Wishlist (${wishlistCount} items)`}
-            className="relative flex h-10 w-10 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-full"
+            className="relative flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
           >
-            <FiHeart className="w-5 h-5" aria-hidden="true" />
+            <FiHeart className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
             {wishlistCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-xs">
+              <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-2xs">
                 {wishlistCount > 99 ? '99+' : wishlistCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            to={ROUTE_PATHS.CART || '/cart'}
+            aria-label={`Cart (${cartCount} items)`}
+            className="relative flex h-9 w-9 items-center justify-center text-white hover:text-amber-300 active-tap-scale rounded-lg"
+          >
+            <FiShoppingBag className="icon-m-nav w-[20px] h-[20px]" aria-hidden="true" />
+            {cartCount > 0 && (
+              <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 flex items-center justify-center bg-amber-400 text-stone-950 text-[9px] font-extrabold rounded-full border border-deep-navy shadow-2xs">
+                {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
           </Link>
         </div>
       </div>
 
-      {/* ─── ROW 2: SEARCH BAR (Height: 36px) ────────────────── */}
-      <div className="px-4 pb-1.5 relative" ref={searchContainerRef}>
+      {/* ─── ROW 2: SEARCH BAR (Height: 42px - Controlled 16px Radius) ───────── */}
+      <div className="px-3 pb-2 relative" ref={searchContainerRef}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -185,13 +198,13 @@ export default function MobileTopBar({ onOpenDrawer }) {
           role="search"
           className="relative flex items-center w-full"
         >
-          <div className="relative flex items-center w-full h-[36px] min-h-[36px] bg-white rounded-full shadow-xs overflow-hidden border border-stone-200/60 focus-within:ring-2 focus-within:ring-amber-500 transition-all">
-            {/* Search Icon */}
+          <div className="relative flex items-center w-full h-[42px] min-h-[42px] m-rounded-search rounded-[16px] bg-white shadow-2xs overflow-hidden border border-stone-200/60 focus-within:ring-2 focus-within:ring-amber-500 transition-all">
+            {/* Search Icon (18px) */}
             <div className="pl-3 pr-2 text-stone-400 flex items-center justify-center">
-              <FiSearch className="w-3.5 h-3.5 text-stone-500" aria-hidden="true" />
+              <FiSearch className="icon-m-search w-[18px] h-[18px] text-stone-500" aria-hidden="true" />
             </div>
 
-            {/* Search Input */}
+            {/* Search Input (12px Text) */}
             <input
               ref={searchInputRef}
               type="text"
@@ -206,13 +219,13 @@ export default function MobileTopBar({ onOpenDrawer }) {
               aria-label="Search items"
               aria-autocomplete="list"
               aria-expanded={isSearchOpen}
-              className="w-full h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-[11px] font-medium focus:outline-none pr-7"
+              className="w-full h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-m-secondary text-[12px] font-medium focus:outline-none pr-8"
             />
 
             {/* Loading Indicator or Clear Button */}
             {isSearchLoading ? (
-              <div className="absolute right-2.5 text-amber-600 animate-spin">
-                <FiLoader className="w-3.5 h-3.5" aria-hidden="true" />
+              <div className="absolute right-3 text-amber-600 animate-spin">
+                <FiLoader className="w-4 h-4" aria-hidden="true" />
               </div>
             ) : query ? (
               <button
@@ -222,9 +235,9 @@ export default function MobileTopBar({ onOpenDrawer }) {
                   if (searchInputRef.current) searchInputRef.current.focus();
                 }}
                 aria-label="Clear search input"
-                className="absolute right-1.5 text-stone-400 hover:text-stone-900 p-1 active-tap-scale"
+                className="absolute right-2 text-stone-400 hover:text-stone-900 p-1 active-tap-scale"
               >
-                <FiX className="w-3.5 h-3.5" aria-hidden="true" />
+                <FiX className="w-4 h-4" aria-hidden="true" />
               </button>
             ) : null}
           </div>
@@ -238,7 +251,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-4 right-4 top-[42px] z-50 bg-white rounded-2xl shadow-2xl border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
+              className="absolute left-3 right-3 top-[48px] z-50 bg-white rounded-2xl shadow-2xl border border-stone-200/80 overflow-hidden text-stone-900 max-h-[65vh] flex flex-col"
             >
               {/* Active Search Live Product Results */}
               {debouncedQuery.length >= 2 ? (
@@ -258,25 +271,26 @@ export default function MobileTopBar({ onOpenDrawer }) {
                             setIsSearchOpen(false);
                           }}
                           className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-colors active-tap-scale ${
-                            selectedIndex === idx ? 'bg-amber-500/15 text-stone-950 font-semibold' : 'hover:bg-stone-50'
+                            selectedIndex === idx ? 'bg-amber-50 text-amber-950 font-bold' : 'hover:bg-stone-50'
                           }`}
                         >
-                          <div className="w-9 h-9 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200">
+                          {product.imageUrl && (
                             <OptimizedImage
-                              src={product.images?.[0]?.url || product.primaryImage || '/ogImage.jpeg'}
+                              src={product.imageUrl}
                               alt={product.name}
-                              className="w-full h-full object-cover"
+                              aspectRatio="aspect-square"
+                              className="w-10 h-10 object-cover rounded-lg shrink-0 border border-stone-200/60"
                             />
-                          </div>
+                          )}
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold truncate text-stone-900">
+                            <p className="text-xs font-semibold text-stone-900 truncate">
                               {highlightMatch(product.name, debouncedQuery)}
                             </p>
-                            <p className="text-[11px] font-bold text-amber-700">
-                              {formatPrice(product.discountPrice || product.price)}
+                            <p className="text-[10px] text-amber-800 font-bold">
+                              {formatPrice(product.price || product.discountPrice)}
                             </p>
                           </div>
-                          <FiArrowRight className="w-4 h-4 text-stone-400 shrink-0" aria-hidden="true" />
+                          <FiArrowRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
                         </button>
                       ))}
 
@@ -286,7 +300,6 @@ export default function MobileTopBar({ onOpenDrawer }) {
                         className="w-full py-2 px-3 bg-amber-500/10 text-amber-900 font-bold text-xs rounded-xl flex items-center justify-center gap-2 active-tap-scale mt-1"
                       >
                         <span>View all results for "{debouncedQuery}"</span>
-                        <FiArrowRight className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </div>
                   ) : !isSearchLoading ? (

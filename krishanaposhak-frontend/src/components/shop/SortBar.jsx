@@ -21,7 +21,7 @@ const SortBar = memo(function SortBar({
 
   return (
     <div className="bg-transparent sm:bg-white p-0 sm:p-4 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200/80 shadow-none sm:shadow-xs">
-      {/* Mobile Top Search + Dual Action Toolbar (<768px) */}
+      {/* Mobile Top Search + Dual Action Toolbar (<768px - Senior Design Tokens) */}
       {isMobile ? (
         <div className="flex flex-col gap-2">
           {/* Compact Mobile Search Input */}
@@ -31,21 +31,21 @@ const SortBar = memo(function SortBar({
             onChange={onSearchChange}
             onClear={onSearchClear}
             size="md"
-            className="w-full h-10 rounded-full bg-white shadow-xs border border-stone-200/80"
+            className="w-full h-[42px] min-h-[42px] m-rounded-search rounded-[16px] bg-white shadow-2xs border border-stone-200/80"
           />
 
-          {/* App-Style Dual Action Toolbar (44px Height, Equal Width) */}
+          {/* App-Style Dual Action Toolbar (12px Radius, 40px Height) */}
           <div className="grid grid-cols-2 gap-2 pt-0.5">
             <button
               type="button"
               onClick={onOpenMobileFilters}
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-stone-200/80 bg-white text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px]"
+              className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] border border-stone-200/80 bg-white text-m-secondary text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale"
               aria-label="Open filter menu"
             >
-              <FiFilter className="h-4 w-4 text-amber-800 shrink-0" />
+              <FiFilter className="icon-m-toolbar w-[18px] h-[18px] text-amber-800 shrink-0" />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-stone-950 text-[10px] font-bold text-amber-300 ml-0.5">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-stone-950 text-m-badge text-[10px] font-bold text-amber-300 ml-0.5">
                   {activeFilterCount}
                 </span>
               )}
@@ -54,10 +54,10 @@ const SortBar = memo(function SortBar({
             <button
               type="button"
               onClick={onOpenMobileSort}
-              className="flex h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200/80 bg-white text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px] px-3 overflow-hidden"
+              className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] border border-stone-200/80 bg-white text-m-secondary text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale px-3 overflow-hidden"
               aria-label="Open sort menu"
             >
-              <FiArrowDown className="h-4 w-4 text-amber-800 shrink-0" />
+              <FiArrowDown className="icon-m-toolbar w-[18px] h-[18px] text-amber-800 shrink-0" />
               <span className="truncate">{currentSortLabel}</span>
             </button>
           </div>
