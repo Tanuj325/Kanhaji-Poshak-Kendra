@@ -25,20 +25,22 @@ const itemVariants = {
 };
 
 function mapProductToCard(product) {
+  if (!product) return null;
   return {
-    id: product.id,
-    variantId: product.variantId || product.id,
+    ...product,
+    id: product.id || product._id,
+    variantId: product.variantId || product.variants?.[0]?.id || product.id,
     name: product.name,
-    slug: product.slug,
+    slug: product.slug || product.id,
     images: product.imageUrl ? [{ imageUrl: product.imageUrl }] : product.images || [],
-    price: product.price || product.discountPrice,
-    discountPrice: product.discountPrice,
-    averageRating: product.averageRating || 0,
-    reviewCount: product.reviewCount || 0,
-    stock: product.stock ?? 10,
-    category: product.categoryName || (product.category?.name) || null,
-    featured: product.featured,
-    newArrival: product.newArrival,
+    price: product.price || product.discountPrice || 0,
+    discountPrice: product.discountPrice || null,
+    averageRating: product.averageRating ?? product.rating ?? 0,
+    reviewCount: product.reviewCount ?? product.numReviews ?? 0,
+    stock: product.stock,
+    category: product.categoryName || (typeof product.category === 'object' ? product.category?.name : product.category) || null,
+    featured: Boolean(product.featured),
+    newArrival: Boolean(product.newArrival || product.isNew),
   };
 }
 

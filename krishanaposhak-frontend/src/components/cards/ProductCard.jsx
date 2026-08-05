@@ -30,16 +30,11 @@ const ProductCard = memo(function ProductCard({
     averageRating,
     rating,
     reviewCount,
-    numReviews,
     stock,
     category,
     categoryName,
     brand,
   } = product;
-
-  console.log(product)
-  console.log(numReviews)
-  console.log(reviewCount)
 
 
   // Primary & secondary images strictly derived from product data
