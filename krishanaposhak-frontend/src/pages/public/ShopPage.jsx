@@ -369,7 +369,7 @@ export default function ShopPage() {
           </div>
         </div>
 
-        <div className="container-page pt-0 pb-16 sm:py-8 lg:py-10 px-0 sm:px-6 lg:px-8">
+        <div className="container-page pt-0 pb-bottom-nav lg:py-10 px-0 sm:px-6 lg:px-8">
           {/* Horizontal Category Quick-Selector Pills (Desktop ONLY - Mobile uses Top Bar Chips) */}
           {categories.length > 0 && (
             <div className="hidden md:flex mb-4 sm:mb-8 gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-200 -mx-1 px-1">

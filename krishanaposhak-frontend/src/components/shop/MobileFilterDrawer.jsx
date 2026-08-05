@@ -65,13 +65,13 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* 1. Backdrop Overlay (40% Black, 4px Blur) */}
+          {/* 1. Backdrop Overlay (40% Black, 4px Blur, z-[60] to sit above MobileBottomNav) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px]"
+            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-[4px]"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -82,7 +82,7 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 320 }}
-            className="fixed inset-x-0 bottom-0 z-50 flex h-[90vh] flex-col rounded-t-[28px] bg-white shadow-2xl overflow-hidden font-body"
+            className="fixed inset-x-0 bottom-0 z-[60] flex h-[90vh] flex-col rounded-t-[28px] bg-white shadow-2xl overflow-hidden font-body"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile catalog filter drawer"
@@ -352,8 +352,8 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
 
             </div>
 
-            {/* ─── STICKY FOOTER (72px Height) ─── */}
-            <div className="sticky bottom-0 z-20 flex h-[72px] shrink-0 items-center gap-3 px-5 border-t border-black/[0.06] bg-white">
+            {/* ─── STICKY FOOTER (72px Height + Safe Area Bottom Inset) ─── */}
+            <div className="sticky bottom-0 z-20 flex min-h-[72px] shrink-0 items-center gap-3 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-black/[0.06] bg-white">
               {/* Left: Reset Outlined Button */}
               <button
                 type="button"
