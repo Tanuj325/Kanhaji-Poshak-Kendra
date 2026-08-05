@@ -35,10 +35,9 @@ export default function MobileBottomNav({ onOpenDrawer }) {
     {
       id: 'categories',
       label: 'Categories',
-      path: '#categories',
+      path: ROUTE_PATHS.CATEGORIES || '/categories',
       icon: FiGrid,
       badge: 0,
-      onClick: onOpenDrawer,
     },
     {
       id: 'cart',

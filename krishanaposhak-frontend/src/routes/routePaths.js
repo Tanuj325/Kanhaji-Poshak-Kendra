@@ -1,6 +1,7 @@
 export const ROUTE_PATHS = {
   HOME: '/',
   SHOP: '/shop',
+  CATEGORIES: '/categories',
   PRODUCT_DETAIL: '/product/:slug',
   CATEGORY: '/category/:slug',
   ABOUT: '/about',

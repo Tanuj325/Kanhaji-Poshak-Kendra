@@ -16,6 +16,7 @@ const AdminLayout = lazy(() => import('@/components/layout/AdminLayout'));
 // Pages (lazy loaded)
 const HomePage = lazy(() => import('@/pages/public/HomePage'));
 const ShopPage = lazy(() => import('@/pages/public/ShopPage'));
+const CategoriesPage = lazy(() => import('@/pages/public/CategoriesPage'));
 const ProductDetailPage = lazy(() => import('@/pages/public/ProductDetailPage'));
 const CategoryPage = lazy(() => import('@/pages/public/CategoryPage'));
 const AboutPage = lazy(() => import('@/pages/public/AboutPage'));
@@ -83,6 +84,7 @@ export default function AppRouter() {
             <Route element={<PublicLayout />}>
               <Route index element={<HomePage />} />
               <Route path={ROUTE_PATHS.SHOP} element={<ShopPage />} />
+              <Route path={ROUTE_PATHS.CATEGORIES} element={<CategoriesPage />} />
               <Route path={ROUTE_PATHS.PRODUCT_DETAIL} element={<ProductDetailPage />} />
               <Route path={ROUTE_PATHS.CATEGORY} element={<CategoryPage />} />
               <Route path={ROUTE_PATHS.ABOUT} element={<AboutPage />} />
