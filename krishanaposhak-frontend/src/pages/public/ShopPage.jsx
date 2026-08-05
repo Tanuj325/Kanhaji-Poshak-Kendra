@@ -15,6 +15,7 @@ import Pagination from '@/components/navigation/Pagination';
 import ShopHero from '@/components/shop/ShopHero';
 import FilterSidebar from '@/components/shop/FilterSidebar';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
+import MobileSortBottomSheet from '@/components/shop/MobileSortBottomSheet';
 import SortBar from '@/components/shop/SortBar';
 import ActiveFilterChips from '@/components/shop/ActiveFilterChips';
 
@@ -75,6 +76,7 @@ export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const isMobile = useMediaQuery('(max-width: 1279px)');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [mobileSortOpen, setMobileSortOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const { isAuthenticated } = useAuth();
 
@@ -380,6 +382,7 @@ export default function ShopPage() {
             onSortChange={handleSortChange}
             sortOptions={SORT_OPTIONS}
             onOpenMobileFilters={() => setMobileFiltersOpen(true)}
+            onOpenMobileSort={() => setMobileSortOpen(true)}
             activeFilterCount={activeFilterCount}
             totalElements={totalElements}
             isLoading={isLoading}
@@ -496,13 +499,22 @@ export default function ShopPage() {
         </div>
       </div>
 
-      {/* Mobile Drawer Filter */}
+      {/* Mobile Bottom Sheets (Filter & Sort) */}
       {isMobile && (
-        <MobileFilterDrawer
-          isOpen={mobileFiltersOpen}
-          onClose={() => setMobileFiltersOpen(false)}
-          {...filterSidebarProps}
-        />
+        <>
+          <MobileFilterDrawer
+            isOpen={mobileFiltersOpen}
+            onClose={() => setMobileFiltersOpen(false)}
+            {...filterSidebarProps}
+          />
+          <MobileSortBottomSheet
+            isOpen={mobileSortOpen}
+            onClose={() => setMobileSortOpen(false)}
+            currentSort={sort}
+            onSortChange={handleSortChange}
+            sortOptions={SORT_OPTIONS}
+          />
+        </>
       )}
 
       {/* Quick View Popup Modal */}
