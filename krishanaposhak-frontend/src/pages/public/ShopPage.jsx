@@ -59,14 +59,14 @@ function mapProductToCard(product) {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-4 sm:gap-4 md:gap-5 sm:p-0">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1.5 p-2 sm:gap-4 md:gap-5 sm:p-0">
       {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
-          className="flex flex-col h-full rounded-[14px] bg-white p-2.5 border border-stone-200/70 shadow-[0_4px_12px_rgba(0,0,0,0.04)] font-display"
+          className="flex flex-col h-full rounded-[16px] bg-white border border-black/[0.04] shadow-[0_6px_20px_rgba(0,0,0,0.05)] sm:rounded-xl sm:border-stone-200/70 sm:shadow-2xs sm:p-2.5 sm:font-display font-body"
         >
-          <Skeleton variant="rect" className="aspect-square w-full rounded-[12px] bg-stone-100/80" />
-          <div className="flex flex-col flex-1 justify-between mt-2.5 space-y-2">
+          <Skeleton variant="rect" className="aspect-[4/5] w-full rounded-t-[16px] sm:aspect-square sm:rounded-t-xl sm:rounded-[12px] bg-stone-100/80" />
+          <div className="flex flex-col flex-1 justify-between mt-2.5 space-y-2 p-2 sm:p-0">
             <div className="space-y-1">
               <Skeleton variant="text" className="h-2.5 w-1/3 bg-stone-100/90" />
               <Skeleton variant="text" className="h-3.5 w-full bg-stone-100/90" />
@@ -351,18 +351,18 @@ export default function ShopPage() {
           />
         </div>
 
-        {/* Mobile Header Banner (<1024px) */}
-        <div className="block lg:hidden bg-stone-900 text-white px-4 py-2.5 border-b border-stone-800">
+{/* Mobile Header Banner (<1024px) — compact, dense, Myntra feel */}
+        <div className="block lg:hidden bg-white px-4 pt-3 pb-2 border-b border-stone-200/60">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-temple-gold-dark block">
                 Official Catalog
               </span>
-              <h1 className="text-sm font-bold text-white font-heading leading-tight truncate">
+              <h1 className="text-[15px] font-bold text-stone-900 leading-tight truncate">
                 {categoryName || 'All Sacred Collections'}
               </h1>
             </div>
-            <span className="text-[11px] font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 whitespace-nowrap">
+            <span className="text-[11px] font-bold text-stone-700 bg-stone-100 px-2.5 py-1 rounded-full border border-stone-200 whitespace-nowrap">
               {totalElements} Items
             </span>
           </div>
@@ -443,20 +443,14 @@ export default function ShopPage() {
             />
           </div>
 
-          {/* Dense E-Commerce Mobile Results Count Bar (<1024px) */}
-          <div className="block lg:hidden px-4 pt-2.5 pb-1.5 border-b border-stone-200/50 bg-stone-50/60">
-            <div className="flex items-center justify-between text-[12px] font-semibold text-stone-700">
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+{/* Dense E-Commerce Mobile Results Count Bar (<1024px) */}
+          <div className="block lg:hidden px-4 pt-2 pb-1">
+            <div className="flex items-center justify-between text-[12px] font-semibold text-stone-500">
+              <span>
                 {!isLoading
-                  ? `Showing ${totalElements} ${totalElements === 1 ? 'Product' : 'Products'}`
-                  : 'Fetching Sacred Catalog...'}
+                  ? `${totalElements} ${totalElements === 1 ? 'Product' : 'Products'}`
+                  : 'Loading...'}
               </span>
-              {categoryName && (
-                <span className="text-[11px] font-bold text-amber-900 uppercase tracking-wider bg-amber-100/80 px-2 py-0.5 rounded-full">
-                  {categoryName}
-                </span>
-              )}
             </div>
           </div>
 
@@ -509,7 +503,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.04 },
                       },
                     }}
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 p-4 sm:gap-4 md:gap-5 sm:p-0"
+className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1.5 p-2 sm:gap-4 md:gap-5 sm:p-0"
                   >
                     {productList.map((product) => (
                       <motion.div

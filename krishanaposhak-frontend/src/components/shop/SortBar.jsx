@@ -22,14 +22,14 @@ const SortBar = memo(function SortBar({
 
   return (
     <div className="bg-transparent sm:bg-white p-0 sm:p-4 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200/80 shadow-none sm:shadow-xs">
-      {/* Mobile Sticky Compact Filter Chips Bar (<1024px) */}
+{/* Mobile Sticky Compact Filter Chips Bar (<1024px) — premium Myntra filter row */}
       {isMobile ? (
-        <div className="sticky top-[108px] z-30 bg-white/95 backdrop-blur-md py-2 -mx-3 px-3 border-b border-stone-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-x-auto scrollbar-hide flex items-center gap-2">
+        <div className="sticky top-[108px] z-30 bg-white/95 backdrop-blur-md py-2 -mx-2 px-2 border-b border-stone-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-x-auto scrollbar-hide flex items-center gap-1.5">
           {/* Sort Button Chip */}
           <button
             type="button"
             onClick={onOpenMobileSort}
-            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active:scale-95 transition-all flex items-center gap-1.5 hover:bg-stone-50"
+            className="shrink-0 h-[34px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active:scale-95 transition-all flex items-center gap-1.5 hover:bg-stone-50"
             aria-label="Open sort menu"
           >
             <FiArrowDown className="w-3.5 h-3.5 text-amber-700 shrink-0" />
@@ -41,14 +41,14 @@ const SortBar = memo(function SortBar({
             type="button"
             onClick={onOpenMobileFilters}
             className={cn(
-              'shrink-0 h-[36px] px-3.5 rounded-full border text-[12px] font-semibold shadow-2xs active:scale-95 transition-all flex items-center gap-1.5',
+              'shrink-0 h-[34px] px-3.5 rounded-full border text-[12px] font-semibold shadow-2xs active:scale-95 transition-all flex items-center gap-1.5',
               activeFilterCount > 0
-                ? 'border-amber-500 bg-amber-50 text-stone-950 font-bold'
+                ? 'border-temple-gold bg-temple-gold/10 text-stone-950 font-bold'
                 : 'border-stone-300/80 bg-white text-stone-900 hover:bg-stone-50'
             )}
             aria-label="Open filter menu"
           >
-            <FiFilter className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+            <FiFilter className="w-3.5 h-3.5 text-temple-gold-dark shrink-0" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
               <span className="flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-stone-950 text-[10px] font-bold text-amber-300 ml-0.5">
@@ -61,9 +61,9 @@ const SortBar = memo(function SortBar({
           <button
             type="button"
             onClick={onOpenMobileFilters}
-            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
+            className="shrink-0 h-[34px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
           >
-            <span>Price Range</span>
+            <span>Price</span>
           </button>
 
           {/* Quick Newest Chip */}
@@ -71,20 +71,20 @@ const SortBar = memo(function SortBar({
             type="button"
             onClick={() => onSortChange && onSortChange({ target: { value: 'createdAt,desc' } })}
             className={cn(
-              'shrink-0 h-[36px] px-3.5 rounded-full border text-[12px] font-medium shadow-2xs active:scale-95 transition-all flex items-center gap-1',
+              'shrink-0 h-[34px] px-3.5 rounded-full border text-[12px] font-medium shadow-2xs active:scale-95 transition-all flex items-center gap-1',
               sort === 'createdAt,desc'
                 ? 'border-stone-900 bg-stone-900 text-amber-300 font-bold'
                 : 'border-stone-300/80 bg-white text-stone-700 hover:bg-stone-50'
             )}
           >
-            <span>✨ Newest</span>
+            <span>Newest</span>
           </button>
 
           {/* Quick Rating Chip */}
           <button
             type="button"
             onClick={onOpenMobileFilters}
-            className="shrink-0 h-[36px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
+            className="shrink-0 h-[34px] px-3.5 rounded-full border border-stone-300/80 bg-white text-[12px] font-medium text-stone-700 shadow-2xs active:scale-95 transition-all flex items-center gap-1 hover:bg-stone-50"
           >
             <span>Rating 4.0+</span>
           </button>
