@@ -60,6 +60,7 @@ export const ROUTE_PATHS = {
 /** Build concrete paths from parameterized route templates */
 export const buildPath = {
   product: (slug) => `/product/${slug}`,
+  productDetail: (slug) => `/product/${slug}`,
   category: (slug) => `/category/${slug}`,
   shopCategory: (categoryId) => `/shop?categoryId=${categoryId}`,
   orderConfirmation: (orderId) => `/order/confirmation/${orderId}`,
