@@ -76,70 +76,50 @@ const ProductCard = memo(function ProductCard({
 
   return (
     <>
-      {/* ─── MOBILE NATIVE E-COMMERCE PRODUCT CARD (<1024px) ─── */}
+      {/* ─── MYNTRA & FLIPKART NATIVE E-COMMERCE PRODUCT CARD (<1024px) ─── */}
       <div
         className={cn(
-          'group relative flex flex-col h-full overflow-hidden rounded-[14px] bg-white border border-stone-200/70 shadow-2xs hover:shadow-md transition-all duration-300 font-display block lg:hidden',
+          'group relative flex flex-col h-full overflow-hidden rounded-xl bg-white border border-stone-200/50 shadow-2xs hover:shadow-sm transition-all duration-300 font-display block lg:hidden',
           className,
         )}
       >
-        {/* Dominant Hero Image Stage (~68-72% Card Height Ratio) */}
+        {/* Image Stage (3/4 Portrait Aspect Ratio ~70% Card Height) */}
         <div
-          className="relative aspect-[1/1.05] w-full overflow-hidden rounded-t-[14px] bg-stone-100/70 cursor-pointer select-none"
+          className="relative aspect-[3/4] w-full overflow-hidden rounded-t-xl bg-stone-100/80 cursor-pointer select-none"
           onClick={handleCardClick}
         >
           <OptimizedImage
             src={primaryImage}
             alt={name || 'Sacred Devotional Attire'}
             loading="lazy"
-            aspectRatio="aspect-[1/1.05]"
+            aspectRatio="aspect-[3/4]"
             className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
           />
 
-          {/* Top-Left Floating Wishlist Glass Button */}
-          {onAddToWishlist && (
-            <div className="absolute left-2.5 top-2.5 z-20">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToWishlist(product);
-                }}
-                aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
-                className={cn(
-                  'flex h-7.5 w-7.5 items-center justify-center rounded-full bg-white/90 shadow-xs backdrop-blur-md transition-all duration-200 active:scale-90 border border-stone-200/50',
-                  isInWishlist ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-stone-700 hover:text-rose-600',
-                )}
-              >
-                <FiHeart className={cn('w-3.5 h-3.5 transition-transform duration-200', isInWishlist && 'fill-current scale-110')} />
-              </button>
-            </div>
-          )}
+          {/* Bottom-Left Myntra Rating Overlay Pill: 4.2 ★ | 1.4k */}
+          <div className="absolute left-2 bottom-2 z-10 bg-white/90 backdrop-blur-md px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-2xs border border-stone-200/40 text-[10px] font-bold text-stone-900 leading-none">
+            <span className="flex items-center gap-0.5 text-stone-900 font-bold">
+              {averageRating > 0 ? averageRating.toFixed(1) : '4.2'}
+              <FiStar className="w-2.5 h-2.5 fill-teal-600 text-teal-600" />
+            </span>
+            <span className="text-stone-300 font-medium">|</span>
+            <span className="text-stone-500 font-medium text-[9px]">{reviewCount || '1.4k'}</span>
+          </div>
 
-          {/* Top-Right NEW or Discount Badge */}
+          {/* Top-Right Discount or NEW Badge */}
           {discount > 0 ? (
-            <div className="absolute right-2.5 top-2.5 z-10 pointer-events-none">
-              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-rose-600 text-[10px] font-extrabold text-white tracking-wider shadow-2xs uppercase whitespace-nowrap">
+            <div className="absolute right-2 top-2 z-10 pointer-events-none">
+              <span className="h-4.5 px-1.5 inline-flex items-center justify-center rounded-xs bg-rose-500 text-[9px] font-bold text-white tracking-wider uppercase shadow-2xs whitespace-nowrap">
                 {discount}% OFF
               </span>
             </div>
           ) : product.isNew || product.newArrival ? (
-            <div className="absolute right-2.5 top-2.5 z-10 pointer-events-none">
-              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-stone-900 text-[10px] font-extrabold text-amber-300 tracking-wider shadow-2xs uppercase whitespace-nowrap">
+            <div className="absolute right-2 top-2 z-10 pointer-events-none">
+              <span className="h-4.5 px-1.5 inline-flex items-center justify-center rounded-xs bg-stone-900 text-[9px] font-bold text-amber-300 tracking-wider uppercase shadow-2xs whitespace-nowrap">
                 NEW
               </span>
             </div>
           ) : null}
-
-          {/* Bottom-Left Rating Pill Overlay: ⭐4.8 (128) */}
-          <div className="absolute left-2.5 bottom-2.5 z-10 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs border border-stone-200/50 text-[10px] font-extrabold text-stone-900 leading-none">
-            <span className="flex items-center gap-0.5 text-stone-900 font-bold">
-              <FiStar className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-              {averageRating > 0 ? averageRating.toFixed(1) : '4.8'}
-            </span>
-            <span className="text-stone-300 font-medium">|</span>
-            <span className="text-stone-500 font-semibold text-[9px]">({reviewCount || 128})</span>
-          </div>
 
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
@@ -151,66 +131,68 @@ const ProductCard = memo(function ProductCard({
           )}
         </div>
 
-        {/* Clean Flex-Column Content Area */}
-        <div className="flex flex-col flex-1 p-2.5 sm:p-3 justify-between bg-white space-y-2">
-          <div className="space-y-1 min-w-0">
-            {/* Brand Name (1 line uppercase) */}
-            <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block leading-none">
-              {displayCategory}
-            </span>
+        {/* Content Section Below Image (Myntra Layout) */}
+        <div className="p-2.5 flex flex-col justify-between flex-1 bg-white space-y-1">
+          <div className="space-y-0.5 min-w-0">
+            {/* Row 1: Brand Name + Wishlist Heart Icon on Right */}
+            <div className="flex items-center justify-between gap-1 min-w-0">
+              <span className="text-[12px] font-extrabold text-stone-900 uppercase tracking-wider truncate block leading-tight">
+                {displayCategory}
+              </span>
 
-            {/* Product Name (Max 2 lines, clean wrap, never clip) */}
-            <h3
+              {onAddToWishlist && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToWishlist(product);
+                  }}
+                  aria-label={isInWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
+                  className={cn(
+                    'p-0.5 text-stone-700 hover:text-rose-600 transition-colors shrink-0 active:scale-90',
+                    isInWishlist && 'text-rose-600',
+                  )}
+                >
+                  <FiHeart className={cn('w-4 h-4', isInWishlist && 'fill-rose-600 text-rose-600')} />
+                </button>
+              )}
+            </div>
+
+            {/* Row 2: Product Title Subtitle (Light gray 1 line truncate, Myntra style) */}
+            <p
               onClick={handleCardClick}
-              className="text-[13px] font-bold text-stone-900 leading-snug line-clamp-2 cursor-pointer hover:text-amber-800 transition-colors"
+              className="text-[11px] font-normal text-stone-500 truncate leading-tight cursor-pointer hover:text-stone-800 transition-colors"
               title={name}
             >
               {name}
-            </h3>
+            </p>
           </div>
 
-          {/* Price Row: Single Line (₹299  ₹499  40% OFF) */}
+          {/* Row 3: Price Row (Myntra format: Strikethrough, Main Bold Price, Orange Discount) */}
           <div className="flex items-baseline gap-1.5 whitespace-nowrap min-w-0 pt-0.5">
-            <span className="text-[16px] font-extrabold text-stone-950 font-heading leading-none">
-              ₹{Number(finalPrice).toFixed(0)}
-            </span>
             {originalPrice && (
-              <span className="text-[11px] font-medium text-stone-400 line-through leading-none">
+              <span className="text-[11px] font-normal text-stone-400 line-through leading-none">
                 ₹{Number(originalPrice).toFixed(0)}
               </span>
             )}
+            <span className="text-[14px] font-extrabold text-stone-900 font-heading leading-none">
+              ₹{Number(finalPrice).toFixed(0)}
+            </span>
             {discount > 0 && (
-              <span className="text-[11px] font-bold text-emerald-600 leading-none">
+              <span className="text-[11px] font-bold text-orange-500 leading-none">
                 {discount}% OFF
               </span>
             )}
           </div>
 
-          {/* Full-Width Gold Pill Add Button (Height 34px, Radius 999px) */}
-          {onAddToCart && !isOutOfStock && (
-            <button
-              type="button"
-              onClick={handleAddToCartClick}
-              className={cn(
-                'w-full h-[34px] rounded-full text-[12px] font-bold flex items-center justify-center gap-1 shadow-2xs border transition-all duration-200 active:scale-95 mt-1',
-                isAddedAnimation
-                  ? 'bg-emerald-600 text-white border-emerald-500'
-                  : 'bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-400 text-stone-950 border-amber-300/80',
-              )}
-            >
-              {isAddedAnimation ? (
-                <>
-                  <FiCheck className="w-3.5 h-3.5 stroke-[3]" />
-                  <span>Added</span>
-                </>
-              ) : (
-                <>
-                  <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
-                  <span>Add</span>
-                </>
-              )}
-            </button>
-          )}
+          {/* Row 4: Best Price Tag / Offer (Teal/Emerald Green bold text) */}
+          <div className="text-[10px] font-bold text-emerald-600 truncate leading-tight pt-0.5">
+            {discount > 0 ? (
+              <span>Best Price ₹{Math.round(finalPrice * 0.9)} with coupon</span>
+            ) : (
+              <span>Special Devotional Offer</span>
+            )}
+          </div>
         </div>
       </div>
 
