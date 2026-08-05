@@ -175,7 +175,7 @@ export default function HeroBanner() {
 
   return (
     <section
-      className="relative overflow-hidden outline-none bg-deep-navy select-none touch-pan-y"
+      className="relative overflow-hidden outline-none bg-deep-navy select-none touch-pan-y px-4 pt-3 pb-2 sm:p-0"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -186,7 +186,7 @@ export default function HeroBanner() {
       aria-roledescription="carousel"
       aria-label="Featured banners carousel"
     >
-      <div className="relative h-[min(55svh,36rem)] min-h-[24rem] sm:h-[65svh] sm:min-h-[28rem] lg:h-[85vh]">
+      <div className="relative h-[44vh] min-h-[300px] max-h-[380px] sm:h-[65svh] sm:min-h-[28rem] sm:max-h-none lg:h-[85vh] rounded-3xl sm:rounded-none overflow-hidden shadow-xl border border-white/10 sm:border-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={banner.id || currentIndex}
@@ -207,12 +207,12 @@ export default function HeroBanner() {
             />
             {/* Multi-layered luxury gradient overlay */}
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,36,64,0.95),rgba(15,36,64,0.58),transparent)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.9),transparent_55%,rgba(15,36,64,0.85))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,36,64,0.85),transparent_55%,rgba(15,36,64,0.85))]" />
           </motion.div>
         </AnimatePresence>
 
         {/* Hero Text & CTA Content */}
-        <div className="absolute inset-0 flex items-center">
+        <div className="absolute inset-0 flex items-center p-5 sm:p-0">
           <div className="container-page w-full">
             <AnimatePresence mode="wait">
               <motion.div key={banner.id || currentIndex} className="max-w-2xl">
@@ -221,9 +221,9 @@ export default function HeroBanner() {
                   variants={textVariants}
                   initial="hidden"
                   animate="visible"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-temple-gold/20 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-temple-gold backdrop-blur-md border border-temple-gold/30 mb-3 sm:mb-4"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-300 border border-white/20 mb-3"
                 >
-                  <FiStar className="h-3.5 w-3.5" /> Authentic Meerut Handloom
+                  <FiStar className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Authentic Meerut Handloom
                 </motion.span>
 
                 {banner.title && (
@@ -232,7 +232,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="font-display text-[clamp(1.5rem,5.5vw,1.875rem)] font-semibold text-lotus-white sm:text-4xl lg:text-6xl leading-[1.15] drop-shadow-md text-balance"
+                    className="font-display text-2xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-white leading-tight drop-shadow-md text-balance"
                   >
                     {banner.title}
                   </motion.h1>
@@ -244,7 +244,7 @@ export default function HeroBanner() {
                     variants={textVariants}
                     initial="hidden"
                     animate="visible"
-                    className="mt-2 sm:mt-4 text-[13px] text-lotus-white/80 sm:text-base lg:text-xl max-w-xl font-light leading-relaxed drop-shadow-xs text-balance line-clamp-3 sm:line-clamp-none"
+                    className="mt-2 sm:mt-4 text-xs sm:text-base lg:text-xl text-white/80 max-w-xl font-light leading-relaxed drop-shadow-xs text-balance line-clamp-1 sm:line-clamp-none"
                   >
                     {banner.subtitle}
                   </motion.p>
@@ -255,11 +255,11 @@ export default function HeroBanner() {
                   variants={textVariants}
                   initial="hidden"
                   animate="visible"
-                  className="mt-4 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4"
+                  className="mt-4 sm:mt-8 flex flex-row items-center gap-2.5 sm:gap-4"
                 >
                   <Link
                     to={banner.redirectUrl || '/shop'}
-                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-5 py-3 text-[13px] sm:text-sm font-bold text-dark-charcoal shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold sm:w-auto sm:px-8"
+                    className="inline-flex h-11 min-h-[44px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-2 text-xs sm:text-sm font-bold text-stone-950 shadow-md active-tap-scale hover:scale-[1.02] transition-all duration-300 sm:px-8"
                   >
                     Shop Collection
                     <FiChevronRight className="h-4 w-4" />
@@ -267,9 +267,9 @@ export default function HeroBanner() {
 
                   <Link
                     to="/about"
-                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-5 py-3 text-[13px] sm:text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:w-auto sm:px-7"
+                    className="hidden sm:inline-flex h-11 min-h-[44px] items-center justify-center gap-2 rounded-full border border-lotus-white/30 bg-lotus-white/10 px-5 py-2 text-xs sm:text-sm font-semibold text-lotus-white backdrop-blur-md transition-all duration-300 hover:bg-lotus-white/20 hover:border-temple-gold/50 sm:px-7"
                   >
-                    Our Heritage Story
+                    Our Story
                   </Link>
                 </motion.div>
               </motion.div>
@@ -299,38 +299,30 @@ export default function HeroBanner() {
           </>
         )}
 
-        {/* Banner Slide Counter & Progress Bar */}
+        {/* Banner Slide Dots */}
         {bannerList.length > 1 && (
-          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 sm:gap-3 pb-[env(safe-area-inset-bottom,0px)]">
-            {/* Slide Index Counter
-            <span className="text-xs font-bold text-temple-gold tracking-widest font-mono bg-black/30 px-3 py-0.5 rounded-full border border-temple-gold/30 backdrop-blur-md">
-              0{currentIndex + 1} / 0{bannerList.length}
-            </span> */}
-
-            {/* Dots + Animated Progress Line */}
-            <div className="flex items-center gap-2.5" role="tablist" aria-label="Banner navigation">
-              {bannerList.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  className={cn(
-                    'relative h-2 rounded-full overflow-hidden transition-all duration-300',
-                    i === currentIndex ? 'w-10 bg-white/30' : 'w-2.5 bg-white/40 hover:bg-white/70',
-                  )}
-                  role="tab"
-                  aria-selected={i === currentIndex}
-                  aria-label={`Go to slide ${i + 1}`}
-                >
-                  {i === currentIndex && (
-                    <motion.div
-                      className="absolute inset-y-0 left-0 bg-temple-gold"
-                      style={{ width: `${progress}%` }}
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
+          <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+            {bannerList.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => goTo(i)}
+                className={cn(
+                  'relative h-2 rounded-full overflow-hidden transition-all duration-300',
+                  i === currentIndex ? 'w-8 bg-white/30' : 'w-2 bg-white/40 hover:bg-white/70',
+                )}
+                role="tab"
+                aria-selected={i === currentIndex}
+                aria-label={`Go to slide ${i + 1}`}
+              >
+                {i === currentIndex && (
+                  <motion.div
+                    className="absolute inset-y-0 left-0 bg-amber-400"
+                    style={{ width: `${progress}%` }}
+                  />
+                )}
+              </button>
+            ))}
           </div>
         )}
 

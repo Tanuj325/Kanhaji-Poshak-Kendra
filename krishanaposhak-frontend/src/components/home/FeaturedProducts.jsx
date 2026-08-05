@@ -119,41 +119,41 @@ const FeaturedProducts = memo(function FeaturedProducts() {
   if (!productList.length) return null;
 
   return (
-    <section className="section-padding bg-lotus-white font-display">
+    <section className="py-6 sm:py-10 bg-lotus-white font-display">
       <div className="container-page">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="mb-6 text-center sm:mb-8 lg:mb-10"
-        >
-          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-900 bg-amber-100/70 px-3 py-1 sm:py-1.5 rounded-full border border-amber-800/20 font-display">
-            <FiStar className="h-3.5 w-3.5 text-amber-800" /> Curated Selection
-          </span>
-          <h2 className="mt-2 sm:mt-3 font-heading text-2xl sm:text-3xl lg:text-5xl font-extrabold text-amber-950">
-            Featured Products
-          </h2>
-          <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm lg:text-base text-stone-600 max-w-md mx-auto font-body">
-            Handpicked devotional treasures and sacred Meerut attire
-          </p>
+        {/* Mobile App Section Header */}
+        <div className="flex items-center justify-between mb-3.5 sm:mb-8 text-left sm:text-center px-4 sm:px-0">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] text-amber-900 bg-amber-100/70 px-2.5 py-0.5 sm:px-3 sm:py-1.5 rounded-full border border-amber-800/20 font-display">
+              <FiStar className="h-3.5 w-3.5 text-amber-800" /> Curated Selection
+            </span>
+            <h2 className="mt-1 sm:mt-3 font-heading text-xl sm:text-3xl lg:text-5xl font-extrabold text-amber-950">
+              Featured Products
+            </h2>
+          </div>
           <Link
             to={ROUTE_PATHS.SHOP}
-            className="mt-3.5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-amber-900 hover:text-amber-950 transition-colors group font-display min-h-[44px]"
+            className="touch-target inline-flex items-center gap-1 text-xs font-semibold text-amber-900 hover:text-amber-950 transition-colors group shrink-0 active-tap-scale font-display"
           >
-            <span>Explore All Featured</span>
-            <FiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+            <span>View All</span>
+            <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-        </motion.div>
+        </div>
 
+        {/* Product Carousel on Mobile with Edge Padding, Grid on Desktop */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-2 gap-2.5 min-[480px]:gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
+          className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-4 pb-2 md:px-0 md:grid md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
         >
           {productList.map((product) => (
-            <motion.div key={product.slug || product.id} variants={itemVariants}>
+            <motion.div
+              key={product.slug || product.id}
+              variants={itemVariants}
+              className="snap-start w-[160px] xs:w-[185px] shrink-0 md:w-auto"
+            >
               <ProductCard
                 product={product}
                 onAddToCart={handleAddToCart}

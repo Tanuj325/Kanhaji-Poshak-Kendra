@@ -26,8 +26,8 @@ export default function CustomerLayout() {
       {/* Mobile App Navigation Drawer */}
       <MobileAppDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
-      <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col md:flex-row gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-4 sm:py-8 lg:py-10 font-display">
-        {/* Account Sidebar Section (Hidden on mobile app view or collapsible) */}
+      <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col md:flex-row gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-[140px] md:pt-8 py-4 sm:py-8 lg:py-10 font-display">
+        {/* Account Sidebar Section */}
         <aside className="w-full md:w-64 lg:w-72 shrink-0">
           <AccountSidebar />
         </aside>

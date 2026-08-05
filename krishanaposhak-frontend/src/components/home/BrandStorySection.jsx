@@ -30,73 +30,72 @@ const trustPillars = [
 
 const BrandStorySection = memo(function BrandStorySection() {
   return (
-    <section className="section-padding bg-[linear-gradient(180deg,#0f2440_0%,#081427_100%)] text-lotus-white relative overflow-hidden">
+    <section className="py-8 sm:py-20 bg-[linear-gradient(180deg,#0f2440_0%,#081427_100%)] text-lotus-white relative overflow-hidden">
       {/* Subtle background radial glow & pattern */}
       <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-temple-gold/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-royal-blue/10 blur-3xl pointer-events-none" />
 
-      <div className="container-page relative z-10">
-        {/* Brand Story Banner Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center mb-10 sm:mb-16 lg:mb-20">
+      <div className="container-page relative z-10 px-4 sm:px-0">
+        {/* Brand Story Showcase Card Container */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center mb-8 sm:mb-16 lg:mb-20">
+          {/* Image Stage */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-5 order-first lg:order-last"
+          >
+            <div className="relative rounded-3xl border border-amber-500/30 bg-deep-navy/90 p-2.5 sm:p-3 shadow-xl overflow-hidden group">
+              <div className="relative h-48 sm:h-72 w-full rounded-2xl overflow-hidden">
+                <img
+                  src="/logo2.jpeg"
+                  alt="Krishana Poshak Sacred Heritage Craftsmanship"
+                  className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/30 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-stone-950/85 border border-amber-400/30 backdrop-blur-md">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 font-serif text-sm font-bold shrink-0">
+                      🪔
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xs sm:text-base font-semibold text-white">The Meerut Standard</h3>
+                      <p className="text-[10px] text-amber-300 font-mono">100% Authentic Handcrafts</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Story Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-5"
+            className="lg:col-span-7 space-y-3 sm:space-y-5 order-last lg:order-first"
           >
-            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-amber-300 bg-amber-500/15 px-3 py-1 sm:py-1.5 rounded-full border border-amber-400/30 font-display">
+            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] text-amber-300 bg-amber-500/15 px-2.5 py-0.5 sm:px-3 sm:py-1.5 rounded-full border border-amber-400/30 font-display">
               <FiStar className="h-3.5 w-3.5 text-amber-300" /> Our Sacred Heritage
             </span>
-            <h2 className="font-heading text-2xl sm:text-3xl lg:text-5xl font-extrabold leading-tight text-white text-balance">
+            <h2 className="font-heading text-xl sm:text-3xl lg:text-5xl font-extrabold leading-tight text-white text-balance">
               Weaving Devotion into Every Thread
             </h2>
             <p className="text-stone-200 text-xs sm:text-sm lg:text-base font-light leading-relaxed font-body">
-              At <strong className="text-amber-300 font-semibold">{siteConfig.name}</strong>, we honor the rich spiritual lineage of Meerut by crafting divine attire for Shri Radha Krishna, Laddu Gopal Ji, and temple deities. Each dress is born from a quiet act of devotion, blending rich heritage techniques with modern elegance.
-            </p>
-            <p className="text-stone-300 text-[11px] sm:text-xs lg:text-sm font-light leading-relaxed font-body line-clamp-3 sm:line-clamp-none">
-              From delicate Mukut crowns and embroidered Dupattas to royal festival Poshaks, our master craftsmen infuse every seam with grace, reverence, and uncompromised quality.
+              At <strong className="text-amber-300 font-semibold">{siteConfig.name}</strong>, we honor the rich spiritual lineage of Meerut by crafting divine attire for Shri Radha Krishna, Laddu Gopal Ji, and temple deities.
             </p>
 
             <div className="pt-2">
               <Link
                 to={ROUTE_PATHS.ABOUT}
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[linear-gradient(135deg,#e8d5a3,#c99a3b,#a87d2e)] px-7 py-3 text-xs font-bold uppercase tracking-wider text-stone-950 shadow-[0_14px_30px_rgba(201,154,59,0.22)] hover:scale-[1.02] transition-all duration-300 font-display"
+                className="touch-target inline-flex h-11 min-h-[44px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-2 text-xs font-bold uppercase tracking-wider text-stone-950 shadow-md active-tap-scale font-display w-full sm:w-auto"
               >
                 Read Our Story <FiArrowRight className="h-4 w-4" />
               </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-5"
-          >
-            <div className="relative rounded-[28px] border border-temple-gold/30 bg-deep-navy/80 p-3 shadow-[0_18px_44px_rgba(15,36,64,0.24)] overflow-hidden group">
-              <div className="relative h-48 sm:h-64 md:h-72 w-full rounded-2xl overflow-hidden">
-<img
-                  src="/logo2.jpeg"
-                  alt="Krishana Poshak Sacred Heritage Craftsmanship"
-                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-deep-navy/90 border border-temple-gold/30 backdrop-blur-md">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-temple-gold/20 border border-temple-gold/40 flex items-center justify-center text-temple-gold font-serif text-lg font-bold shrink-0">
-                      🪔
-                    </div>
-                    <div>
-                      <h3 className="font-display text-base font-semibold text-lotus-white">The Meerut Standard</h3>
-                      <p className="text-[11px] text-temple-gold font-mono">100% Authentic Handcrafts & Garments</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
