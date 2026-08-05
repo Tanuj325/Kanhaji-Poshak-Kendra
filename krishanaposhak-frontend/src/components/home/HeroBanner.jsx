@@ -5,7 +5,7 @@ import { useActiveBanners } from '@/hooks/useBanners';
 import { cn } from '@/utils/cn';
 import Skeleton from '@/components/ui/Skeleton';
 import OptimizedImage from '@/components/ui/OptimizedImage';
-import { FiChevronLeft, FiChevronRight, FiArrowDown, FiStar, FiShoppingBag } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiArrowDown, FiArrowRight, FiStar, FiShoppingBag } from 'react-icons/fi';
 import { siteConfig } from '@/config/siteConfig';
 
 const SLIDE_DURATION = 5000;
@@ -252,7 +252,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ─── OLD DESKTOP UI (>=1024px - 100% UNTOUCHED) ─── */}
-      <div 
+      <div
         className="hidden lg:block relative h-[85vh] overflow-hidden"
         tabIndex={0}
         onKeyDown={handleKeyDown}
