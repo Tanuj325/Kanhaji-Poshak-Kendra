@@ -83,37 +83,22 @@ const ProductCard = memo(function ProductCard({
           className,
         )}
       >
-        {/* Dominant Image Stage (~70% Card Height Ratio - Aspect 1/1.02) */}
+        {/* Dominant Hero Image Stage (~68-72% Card Height Ratio) */}
         <div
-          className="relative aspect-[1/1.02] w-full overflow-hidden rounded-t-[14px] bg-stone-100/70 cursor-pointer select-none"
+          className="relative aspect-[1/1.05] w-full overflow-hidden rounded-t-[14px] bg-stone-100/70 cursor-pointer select-none"
           onClick={handleCardClick}
         >
           <OptimizedImage
             src={primaryImage}
             alt={name || 'Sacred Devotional Attire'}
             loading="lazy"
-            aspectRatio="aspect-[1/1.02]"
+            aspectRatio="aspect-[1/1.05]"
             className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
           />
 
-          {/* Top-Left Premium Discount or NEW Badge */}
-          {discount > 0 ? (
-            <div className="absolute left-2 top-2 z-10 pointer-events-none">
-              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-rose-600 text-[10px] font-extrabold text-white tracking-wider shadow-2xs uppercase whitespace-nowrap">
-                {discount}% OFF
-              </span>
-            </div>
-          ) : product.isNew || product.newArrival ? (
-            <div className="absolute left-2 top-2 z-10 pointer-events-none">
-              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-stone-900 text-[10px] font-extrabold text-amber-300 tracking-wider shadow-2xs uppercase whitespace-nowrap">
-                NEW
-              </span>
-            </div>
-          ) : null}
-
-          {/* Top-Right Floating Wishlist Glass Button (30x30) */}
+          {/* Top-Left Floating Wishlist Glass Button */}
           {onAddToWishlist && (
-            <div className="absolute right-2 top-2 z-20">
+            <div className="absolute left-2.5 top-2.5 z-20">
               <button
                 type="button"
                 onClick={(e) => {
@@ -131,83 +116,98 @@ const ProductCard = memo(function ProductCard({
             </div>
           )}
 
-          {/* Bottom-Left Myntra-Style Rating Overlay Pill */}
-          <div className="absolute left-2 bottom-2 z-10 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs border border-stone-200/50 text-[10px] font-extrabold text-stone-900 leading-none">
+          {/* Top-Right NEW or Discount Badge */}
+          {discount > 0 ? (
+            <div className="absolute right-2.5 top-2.5 z-10 pointer-events-none">
+              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-rose-600 text-[10px] font-extrabold text-white tracking-wider shadow-2xs uppercase whitespace-nowrap">
+                {discount}% OFF
+              </span>
+            </div>
+          ) : product.isNew || product.newArrival ? (
+            <div className="absolute right-2.5 top-2.5 z-10 pointer-events-none">
+              <span className="h-5 px-2 inline-flex items-center justify-center rounded-md bg-stone-900 text-[10px] font-extrabold text-amber-300 tracking-wider shadow-2xs uppercase whitespace-nowrap">
+                NEW
+              </span>
+            </div>
+          ) : null}
+
+          {/* Bottom-Left Rating Pill Overlay: ⭐4.8 (128) */}
+          <div className="absolute left-2.5 bottom-2.5 z-10 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs border border-stone-200/50 text-[10px] font-extrabold text-stone-900 leading-none">
             <span className="flex items-center gap-0.5 text-stone-900 font-bold">
-              {averageRating > 0 ? averageRating.toFixed(1) : '4.8'}
               <FiStar className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+              {averageRating > 0 ? averageRating.toFixed(1) : '4.8'}
             </span>
             <span className="text-stone-300 font-medium">|</span>
-            <span className="text-stone-500 font-semibold text-[9px]">{reviewCount || 128}</span>
+            <span className="text-stone-500 font-semibold text-[9px]">({reviewCount || 128})</span>
           </div>
 
           {/* Out of Stock Overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs">
-              <span className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-extrabold text-stone-950 uppercase tracking-wider shadow-xs">
+              <span className="rounded-full bg-white px-3 py-1 text-[10px] font-extrabold text-stone-950 uppercase tracking-wider shadow-xs">
                 Out of Stock
               </span>
             </div>
           )}
         </div>
 
-        {/* Dense Compact Content Section Below Image (~30% Card Height, 85-95px total) */}
-        <div className="relative flex flex-col justify-between flex-1 p-2.5 pr-10 bg-white space-y-0.5">
-          <div className="space-y-0.5 min-w-0">
-            {/* Category / Brand Name: 10px Uppercase */}
-            <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block truncate leading-tight">
+        {/* Clean Flex-Column Content Area */}
+        <div className="flex flex-col flex-1 p-2.5 sm:p-3 justify-between bg-white space-y-2">
+          <div className="space-y-1 min-w-0">
+            {/* Brand Name (1 line uppercase) */}
+            <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block leading-none">
               {displayCategory}
             </span>
 
-            {/* Title: 12px Semibold, Truncate single line */}
+            {/* Product Name (Max 2 lines, clean wrap, never clip) */}
             <h3
               onClick={handleCardClick}
-              className="text-[12px] font-semibold text-stone-900 leading-snug truncate cursor-pointer hover:text-amber-800 transition-colors"
+              className="text-[13px] font-bold text-stone-900 leading-snug line-clamp-2 cursor-pointer hover:text-amber-800 transition-colors"
               title={name}
             >
               {name}
             </h3>
           </div>
 
-          {/* Single-Line Price Row (₹499   ₹899   45% OFF) */}
-          <div className="flex items-baseline gap-1.5 min-w-0 flex-wrap truncate pt-1">
-            <span className="text-[18px] font-extrabold text-stone-950 font-heading leading-none">
+          {/* Price Row: Single Line (₹299  ₹499  40% OFF) */}
+          <div className="flex items-baseline gap-1.5 whitespace-nowrap min-w-0 pt-0.5">
+            <span className="text-[16px] font-extrabold text-stone-950 font-heading leading-none">
               ₹{Number(finalPrice).toFixed(0)}
             </span>
             {originalPrice && (
-              <span className="text-[12px] font-medium text-stone-400 line-through leading-none">
+              <span className="text-[11px] font-medium text-stone-400 line-through leading-none">
                 ₹{Number(originalPrice).toFixed(0)}
               </span>
             )}
-            {discount > 0 ? (
-              <span className="text-[12px] font-bold text-emerald-600 leading-none">
+            {discount > 0 && (
+              <span className="text-[11px] font-bold text-emerald-600 leading-none">
                 {discount}% OFF
               </span>
-            ) : null}
+            )}
           </div>
 
-          {/* Offer Subtitle */}
-          <div className="text-[10px] font-medium text-amber-700 leading-tight truncate">
-            {discount > 0 ? 'Special Devotional Offer' : 'Handcrafted Quality'}
-          </div>
-
-          {/* Circular Gold Floating FAB Cart Button (34x34) positioned bottom-right */}
+          {/* Full-Width Gold Pill Add Button (Height 34px, Radius 999px) */}
           {onAddToCart && !isOutOfStock && (
             <button
               type="button"
               onClick={handleAddToCartClick}
-              aria-label="Add product to shopping cart"
               className={cn(
-                'absolute bottom-2.5 right-2.5 flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-full transition-all duration-200 active:scale-90 shadow-2xs',
+                'w-full h-[34px] rounded-full text-[12px] font-bold flex items-center justify-center gap-1 shadow-2xs border transition-all duration-200 active:scale-95 mt-1',
                 isAddedAnimation
-                  ? 'bg-emerald-600 text-white border border-emerald-500'
-                  : 'bg-gradient-to-r from-amber-400 to-amber-300 text-stone-950 hover:from-amber-300 hover:to-amber-400 border border-amber-300/80',
+                  ? 'bg-emerald-600 text-white border-emerald-500'
+                  : 'bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-400 text-stone-950 border-amber-300/80',
               )}
             >
               {isAddedAnimation ? (
-                <FiCheck className="w-4 h-4 shrink-0 stroke-[3]" />
+                <>
+                  <FiCheck className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>Added</span>
+                </>
               ) : (
-                <FiShoppingCart className="w-4 h-4 shrink-0 text-stone-950" />
+                <>
+                  <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>Add</span>
+                </>
               )}
             </button>
           )}
