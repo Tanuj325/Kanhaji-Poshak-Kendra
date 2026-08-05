@@ -161,10 +161,10 @@ export default function HeroBanner() {
 
   return (
     <section className="relative overflow-hidden bg-deep-navy font-display select-none">
-      {/* ─── NEW MOBILE UI (<1024px) ─── */}
-      <div className="block lg:hidden px-4 py-2">
+      {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
+      <div className="block lg:hidden w-full overflow-hidden relative bg-stone-950">
         <div
-          className="relative h-[165px] w-full rounded-2xl overflow-hidden border border-white/10 bg-stone-900 shadow-xs group"
+          className="relative h-[185px] w-full overflow-hidden group select-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -175,7 +175,7 @@ export default function HeroBanner() {
               initial={{ opacity: 0, scale: 1.03 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: 'easeOut' }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               className="absolute inset-0"
             >
               <OptimizedImage
@@ -188,31 +188,31 @@ export default function HeroBanner() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent pointer-events-none" />
 
-          {/* Banner Content: Badge, Full Title (2 lines max), CTA Button */}
-          <div className="absolute bottom-4 left-3.5 right-3.5 flex items-end justify-between gap-3 z-10">
-            <div className="space-y-0.5 min-w-0 flex-1">
-              <span className="text-[9px] font-semibold text-amber-300 bg-amber-950/70 border border-amber-500/30 px-2 py-0.5 rounded-full inline-block uppercase tracking-wider mb-0.5 shadow-2xs">
+          {/* Banner Content: Badge, Full Title, CTA Button */}
+          <div className="absolute bottom-5 left-4 right-4 flex items-end justify-between gap-3 z-10">
+            <div className="space-y-1 min-w-0 flex-1">
+              <span className="text-[9px] font-bold text-stone-950 bg-amber-400 px-2 py-0.5 rounded-full inline-block uppercase tracking-wider shadow-xs">
                 {banner.subtitle || 'Special Collection'}
               </span>
-              <h1 className="text-[13px] font-semibold text-white leading-snug line-clamp-2 drop-shadow-xs">
+              <h1 className="text-[14px] font-semibold text-white tracking-tight leading-snug line-clamp-2 drop-shadow-md">
                 {banner.title || siteConfig.name}
               </h1>
             </div>
 
             <Link
               to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full bg-amber-400 hover:bg-amber-300 text-stone-950 text-[11px] font-semibold active-tap-scale shrink-0 shadow-xs"
+              className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-amber-400 hover:bg-amber-300 text-stone-950 text-[11px] font-semibold active-tap-scale shrink-0 shadow-sm"
             >
               <span>Shop Now</span>
-              <FiShoppingBag className="h-3 w-3" />
+              <FiShoppingBag className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           {/* Bottom Running Timeline Progress Dots */}
           {bannerList.length > 1 && (
-            <div className="absolute bottom-1.5 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
+            <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
               {bannerList.map((_, i) => {
                 const isActive = i === currentIndex;
                 return (
@@ -241,9 +241,9 @@ export default function HeroBanner() {
 
           {/* Running Timeline Edge Bar at Very Bottom */}
           {bannerList.length > 1 && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white/10 z-20 overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/15 z-20 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-75 ease-linear"
+                className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-all duration-75 ease-linear"
                 style={{ width: `${progress}%` }}
               />
             </div>
