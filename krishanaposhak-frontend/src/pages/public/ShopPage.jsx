@@ -1,5 +1,7 @@
 import { lazy, Suspense, useState, useMemo, useCallback, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { ROUTE_PATHS } from '@/routes/routePaths';
 import SEO from '@/components/common/SEO';
 import { motion } from 'framer-motion';
 import { useProducts } from '@/hooks/useProducts';
@@ -257,18 +259,30 @@ export default function ShopPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [updateSearchParam]);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleAddToCart = useCallback(
     (product) => {
+      if (!isAuthenticated) {
+        toast.error('Please log in to add items to your cart.');
+        navigate(`${ROUTE_PATHS.LOGIN || '/login'}?redirect=${encodeURIComponent(location.pathname + location.search)}`);
+        return;
+      }
       const targetVariantId = product?.variantId || product?.variants?.[0]?.id || product?.id;
       if (!targetVariantId) return;
       addToCartMutation.mutate({ productVariantId: targetVariantId, quantity: 1 });
     },
-    [addToCartMutation],
+    [isAuthenticated, navigate, location, addToCartMutation],
   );
 
   const handleWishlistToggle = useCallback(
     (product) => {
-      if (!isAuthenticated) return;
+      if (!isAuthenticated) {
+        toast.error('Please log in to manage your wishlist.');
+        navigate(`${ROUTE_PATHS.LOGIN || '/login'}?redirect=${encodeURIComponent(location.pathname + location.search)}`);
+        return;
+      }
       const variantId = product?.variantId || product?.variants?.[0]?.id || product?.id;
       if (!variantId) return;
       if (wishlistVariantIds.has(variantId)) {
@@ -277,7 +291,7 @@ export default function ShopPage() {
         addToWishlistMutation.mutate({ productId: variantId });
       }
     },
-    [isAuthenticated, wishlistVariantIds, addToWishlistMutation, removeFromWishlistMutation],
+    [isAuthenticated, navigate, location, wishlistVariantIds, addToWishlistMutation, removeFromWishlistMutation],
   );
 
   const categoryName = useMemo(() => {
