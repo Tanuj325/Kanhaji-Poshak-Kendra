@@ -21,46 +21,33 @@ const SortBar = memo(function SortBar({
 
   return (
     <div className="bg-transparent sm:bg-white p-0 sm:p-4 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200/80 shadow-none sm:shadow-xs">
-      {/* Mobile Top Search + Dual Action Toolbar (<768px - Senior Design Tokens) */}
+      {/* Mobile Dual Action Toolbar (<768px) - Search is in top bar */}
       {isMobile ? (
-        <div className="flex flex-col gap-2">
-          {/* Compact Mobile Search Input */}
-          <SearchInput
-            placeholder="Search poshak, size, mukut, color..."
-            value={searchInput}
-            onChange={onSearchChange}
-            onClear={onSearchClear}
-            size="md"
-            className="w-full h-[42px] min-h-[42px] m-rounded-search rounded-[16px] bg-white shadow-2xs border border-stone-200/80"
-          />
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={onOpenMobileFilters}
+            className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-stone-200/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale"
+            aria-label="Open filter menu"
+          >
+            <FiFilter className="w-[18px] h-[18px] text-amber-800 shrink-0" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-stone-950 text-[10px] font-bold text-amber-300 ml-0.5">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
 
-          {/* App-Style Dual Action Toolbar (12px Radius, 40px Height) */}
-          <div className="grid grid-cols-2 gap-2 pt-0.5">
-            <button
-              type="button"
-              onClick={onOpenMobileFilters}
-              className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] border border-stone-200/80 bg-white text-m-secondary text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale"
-              aria-label="Open filter menu"
-            >
-              <FiFilter className="icon-m-toolbar w-[18px] h-[18px] text-amber-800 shrink-0" />
-              <span>Filters</span>
-              {activeFilterCount > 0 && (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-stone-950 text-m-badge text-[10px] font-bold text-amber-300 ml-0.5">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={onOpenMobileSort}
-              className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 m-rounded-btn rounded-[12px] border border-stone-200/80 bg-white text-m-secondary text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale px-3 overflow-hidden"
-              aria-label="Open sort menu"
-            >
-              <FiArrowDown className="icon-m-toolbar w-[18px] h-[18px] text-amber-800 shrink-0" />
-              <span className="truncate">{currentSortLabel}</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onOpenMobileSort}
+            className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-stone-200/80 bg-white text-[12px] font-semibold text-stone-900 shadow-2xs active-tap-scale px-3 overflow-hidden"
+            aria-label="Open sort menu"
+          >
+            <FiArrowDown className="w-[18px] h-[18px] text-amber-800 shrink-0" />
+            <span className="truncate">{currentSortLabel}</span>
+          </button>
         </div>
       ) : (
         /* Desktop Layout (>=768px) - UNTOUCHED */
