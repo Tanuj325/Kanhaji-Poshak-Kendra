@@ -37,6 +37,11 @@ const ProductCard = memo(function ProductCard({
     brand,
   } = product;
 
+  console.log(product)
+  console.log(numReviews)
+  console.log(reviewCount)
+
+
   // Primary & secondary images strictly derived from product data
   const primaryImage =
     directImageUrl ||
