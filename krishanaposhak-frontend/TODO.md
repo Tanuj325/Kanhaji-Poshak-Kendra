@@ -10,5 +10,5 @@ Rebuild the mobile (<1024px) product card + shop page + sort bar to feel like My
 - [x] Rebuild `ShopPage.jsx` mobile layout (grid-cols-2, gap-12px, padding-16px)
 - [x] Rebuild `SortBar.jsx` mobile sticky filter chips
 - [x] Update `SkeletonGrid` mobile to match new card shape
-- [x] Verify `npm run build` passes
+- [x] Verify `npm run build` passes (✓ built in 47.29s)
 - [x] Final responsive / pixel-perfect review
