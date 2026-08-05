@@ -60,7 +60,7 @@ function mapProductToCard(product) {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 p-1 sm:p-0">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1.5 p-1 sm:gap-4 md:gap-5 sm:p-0">
       {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
@@ -504,7 +504,7 @@ export default function ShopPage() {
                         transition: { staggerChildren: 0.04 },
                       },
                     }}
-className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 lg:gap-6 p-1 sm:p-0"
+className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1.5 p-1 sm:gap-4 md:gap-5 sm:p-0"
                   >
                     {productList.map((product) => (
                       <motion.div
