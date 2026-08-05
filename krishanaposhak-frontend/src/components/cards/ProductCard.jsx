@@ -240,7 +240,7 @@ const ProductCard = memo(function ProductCard({
               type="button"
               onClick={handleAddToCartClick}
               className={cn(
-                'w-full flex items-center justify-center gap-1.5 rounded-lg py-1.5 px-2 text-xs font-bold transition-all duration-200 active:scale-95 border',
+                'w-full flex items-center justify-center gap-1 rounded-lg py-1.5 px-0.5 text-xs font-bold transition-all duration-200 active:scale-95 border',
                 isAddedAnimation
                   ? 'bg-emerald-700 text-white border-emerald-700 shadow-2xs'
                   : 'bg-stone-50 hover:bg-stone-900 text-stone-800 hover:text-white border-stone-200/80 shadow-2xs'
