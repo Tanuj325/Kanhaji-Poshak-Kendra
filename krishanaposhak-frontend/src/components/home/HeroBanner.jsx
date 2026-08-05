@@ -203,10 +203,10 @@ export default function HeroBanner() {
 
             <Link
               to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-amber-400 hover:bg-amber-300 text-stone-950 text-[11px] font-semibold active-tap-scale shrink-0 shadow-sm"
+              className="inline-flex items-center gap-1 h-[25px] px-2.5 rounded-full bg-amber-400 text-stone-950 text-[10px] font-semibold active-tap-scale shrink-0 shadow-none"
             >
               <span>Shop Now</span>
-              <FiShoppingBag className="h-3.5 w-3.5" />
+              <FiArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
