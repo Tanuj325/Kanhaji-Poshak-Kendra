@@ -164,49 +164,88 @@ export default function HeroBanner() {
       {/* ─── NEW MOBILE UI (<1024px) ─── */}
       <div className="block lg:hidden px-4 py-2">
         <div
-          className="relative h-[148px] w-full rounded-xl overflow-hidden border border-stone-200/20 bg-stone-900 shadow-none"
+          className="relative h-[165px] w-full rounded-2xl overflow-hidden border border-white/10 bg-stone-900 shadow-xs group"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <OptimizedImage
-            src={banner.imageUrl}
-            alt={banner.title || 'Krishana Poshak Banner'}
-            className="h-full w-full object-cover object-center"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent" />
-          <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
-            <div className="space-y-1 max-w-[70%]">
-              <span className="text-[9px] font-medium text-amber-300 uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded border border-white/10 inline-block">
-                Special Collection
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={banner.id || currentIndex}
+              initial={{ opacity: 0, scale: 1.03 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+              className="absolute inset-0"
+            >
+              <OptimizedImage
+                src={banner.imageUrl}
+                alt={banner.title || 'Krishana Poshak Banner'}
+                className="h-full w-full object-cover object-center"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/35 to-transparent pointer-events-none" />
+
+          {/* Banner Content: Badge, Full Title (2 lines max), CTA Button */}
+          <div className="absolute bottom-4 left-3.5 right-3.5 flex items-end justify-between gap-3 z-10">
+            <div className="space-y-0.5 min-w-0 flex-1">
+              <span className="text-[9px] font-semibold text-amber-300 bg-amber-950/70 border border-amber-500/30 px-2 py-0.5 rounded-full inline-block uppercase tracking-wider mb-0.5 shadow-2xs">
+                {banner.subtitle || 'Special Collection'}
               </span>
-              <h1 className="text-sm font-semibold text-white leading-tight line-clamp-1">
+              <h1 className="text-[13px] font-semibold text-white leading-snug line-clamp-2 drop-shadow-xs">
                 {banner.title || siteConfig.name}
               </h1>
             </div>
+
             <Link
               to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1 h-[26px] px-2.5 rounded bg-amber-400 text-stone-950 text-[10px] font-medium active-tap-scale shrink-0 shadow-none"
+              className="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full bg-amber-400 hover:bg-amber-300 text-stone-950 text-[11px] font-semibold active-tap-scale shrink-0 shadow-xs"
             >
               <span>Shop Now</span>
               <FiShoppingBag className="h-3 w-3" />
             </Link>
           </div>
 
-          {/* Swipe Indicator Dots */}
+          {/* Bottom Running Timeline Progress Dots */}
           {bannerList.length > 1 && (
-            <div className="absolute top-2.5 right-3 flex items-center gap-1 z-10 bg-black/30 px-2 py-0.5 rounded-full backdrop-blur-xs">
-              {bannerList.map((_, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    'h-1.5 rounded-full transition-all duration-300',
-                    i === currentIndex ? 'w-3 bg-amber-400' : 'w-1.5 bg-white/40'
-                  )}
-                />
-              ))}
+            <div className="absolute bottom-1.5 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
+              {bannerList.map((_, i) => {
+                const isActive = i === currentIndex;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className="p-1 focus:outline-none"
+                  >
+                    {isActive ? (
+                      <div className="h-1.5 w-6 rounded-full bg-white/30 overflow-hidden relative">
+                        <div
+                          className="h-full bg-amber-400 rounded-full transition-all duration-75 ease-linear"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-colors" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Running Timeline Edge Bar at Very Bottom */}
+          {bannerList.length > 1 && (
+            <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white/10 z-20 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-75 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
             </div>
           )}
         </div>
