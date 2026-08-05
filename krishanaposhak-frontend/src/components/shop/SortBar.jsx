@@ -20,26 +20,26 @@ const SortBar = memo(function SortBar({
   const currentSortLabel = sortOptions?.find((o) => o.value === sort)?.label || 'Sort';
 
   return (
-    <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-stone-200/80 shadow-xs backdrop-blur-md">
-      {/* Mobile Top Sticky Bar + App Toolbar (<768px) */}
+    <div className="bg-transparent sm:bg-white p-0 sm:p-4 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200/80 shadow-none sm:shadow-xs">
+      {/* Mobile Top Search + Dual Action Toolbar (<768px) */}
       {isMobile ? (
-        <div className="flex flex-col gap-2.5">
-          {/* Search Input */}
+        <div className="flex flex-col gap-2">
+          {/* Compact Mobile Search Input */}
           <SearchInput
             placeholder="Search poshak, size, mukut, color..."
             value={searchInput}
             onChange={onSearchChange}
             onClear={onSearchClear}
             size="md"
-            className="w-full h-12 rounded-full"
+            className="w-full h-10 rounded-full bg-white shadow-xs border border-stone-200/80"
           />
 
-          {/* App-Style Dual Action Toolbar */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          {/* App-Style Dual Action Toolbar (44px Height, Equal Width) */}
+          <div className="grid grid-cols-2 gap-2 pt-0.5">
             <button
               type="button"
               onClick={onOpenMobileFilters}
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-stone-200 bg-stone-50/90 text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px]"
+              className="flex h-11 items-center justify-center gap-2 rounded-full border border-stone-200/80 bg-white text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px]"
               aria-label="Open filter menu"
             >
               <FiFilter className="h-4 w-4 text-amber-800 shrink-0" />
@@ -54,7 +54,7 @@ const SortBar = memo(function SortBar({
             <button
               type="button"
               onClick={onOpenMobileSort}
-              className="flex h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200 bg-stone-50/90 text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px] px-3 overflow-hidden"
+              className="flex h-11 items-center justify-center gap-1.5 rounded-full border border-stone-200/80 bg-white text-xs font-bold text-stone-900 shadow-2xs active-tap-scale min-h-[44px] px-3 overflow-hidden"
               aria-label="Open sort menu"
             >
               <FiArrowDown className="h-4 w-4 text-amber-800 shrink-0" />

@@ -327,18 +327,20 @@ export default function ShopPage() {
       />
 
       <div className="min-h-screen bg-lotus-white font-body selection:bg-amber-100 selection:text-amber-950">
-        {/* Luxury Hero Banner */}
-        <ShopHero
-          breadcrumbItems={breadcrumbItems}
-          categoryName={categoryName}
-          totalElements={totalElements}
-          isLoading={isLoading}
-        />
+        {/* Desktop Luxury Hero Banner (Hidden on Mobile <768px to maximize screen density) */}
+        <div className="hidden md:block">
+          <ShopHero
+            breadcrumbItems={breadcrumbItems}
+            categoryName={categoryName}
+            totalElements={totalElements}
+            isLoading={isLoading}
+          />
+        </div>
 
-        <div className="container-page py-4 sm:py-8 lg:py-10 px-3 sm:px-6 lg:px-8">
-          {/* Horizontal Category Quick-Selector Pills */}
+        <div className="container-page py-2 sm:py-8 lg:py-10 px-3 sm:px-6 lg:px-8">
+          {/* Horizontal Category Quick-Selector Pills (Desktop ONLY - Mobile uses Top Bar Chips) */}
           {categories.length > 0 && (
-            <div className="mb-4 sm:mb-8 flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-200 -mx-1 px-1">
+            <div className="hidden md:flex mb-4 sm:mb-8 gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-amber-200 -mx-1 px-1">
               <button
                 type="button"
                 onClick={() => handleCategoryChange('')}
@@ -370,7 +372,7 @@ export default function ShopPage() {
             </div>
           )}
 
-          {/* Controls Bar */}
+          {/* Compact Mobile & Desktop Controls Bar */}
           <SortBar
             searchInput={searchInput}
             onSearchChange={(e) => setSearchInput(e.target.value)}
@@ -390,7 +392,7 @@ export default function ShopPage() {
           />
 
           {/* Active Filter Chips */}
-          <div className="mt-3">
+          <div className="mt-1.5 sm:mt-3">
             <ActiveFilterChips
               search={search}
               categoryId={categoryId}
@@ -411,7 +413,7 @@ export default function ShopPage() {
           </div>
 
           {/* Main Layout Grid */}
-          <div className="mt-6 sm:mt-8 flex gap-6 lg:gap-8">
+          <div className="mt-2.5 sm:mt-8 flex gap-6 lg:gap-8">
             {/* Desktop Filter Sidebar */}
             <FilterSidebar {...filterSidebarProps} />
 
