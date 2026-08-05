@@ -341,8 +341,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
           </AnimatePresence>
         </div>
 
-        {/* ROW 3: Category Chips (Ultra-compact 26px height, scrollable) */}
-        <div className="w-full bg-[#0f2440] border-t border-white/5 px-3 py-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
+        {/* ROW 3: Category Chips (Glassmorphism UI Look) */}
+        <div className="w-full bg-white/10 backdrop-blur-lg border-t border-white/10 px-3 py-1 overflow-x-auto scrollbar-hide snap-x snap-mandatory flex items-center gap-2">
           {categoryChips.map((chip) => {
             const isActive =
               chip.id === 'all'
@@ -355,8 +355,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
                 type="button"
                 onClick={() => handleCategorySelect(chip)}
                 className={`snap-start shrink-0 h-[26px] px-3 rounded-full text-[11px] font-medium transition-all duration-150 active-tap-scale flex items-center justify-center ${isActive
-                  ? 'bg-amber-400 text-stone-950 font-semibold'
-                  : 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/10'
+                  ? 'bg-amber-400 text-stone-950 font-semibold shadow-xs border border-amber-300/40'
+                  : 'bg-white/10 hover:bg-white/20 text-white/90 border border-white/15 backdrop-blur-xs'
                   }`}
               >
                 <span className="truncate max-w-[120px]">{chip.name}</span>
