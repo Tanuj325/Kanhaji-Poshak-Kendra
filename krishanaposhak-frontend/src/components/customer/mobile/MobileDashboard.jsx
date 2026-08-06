@@ -317,7 +317,7 @@ export default function MobileDashboard() {
                   transition={{ duration: 0.15, delay: idx * 0.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(action.href)}
-                  className="w-full h-[96px] sm:h-[108px] rounded-[18px] bg-white border border-stone-200/80 p-3.5 shadow-2xs hover:border-amber-400/60 cursor-pointer flex flex-col justify-between transition-all group"
+                  className="w-full h-full sm:h-[108px] rounded-[18px] bg-white border border-stone-200/80 p-2 shadow-2xs hover:border-amber-400/60 cursor-pointer flex flex-col justify-between transition-all group"
                 >
                   {/* TOP ROW: Icon (Left) & Chevron (Right) */}
                   <div className="flex items-center justify-between w-full">
