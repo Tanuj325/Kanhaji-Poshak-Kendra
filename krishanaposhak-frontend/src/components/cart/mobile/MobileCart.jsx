@@ -716,9 +716,12 @@ export default function MobileCart({
             </div>
 
             {safeDiscount > 0 && (
-              <div className="flex justify-between text-emerald-700 font-medium">
-                <span>Discount Saved</span>
-                <span className="font-bold">-₹{safeDiscount.toLocaleString('en-IN')}</span>
+              <div className="flex justify-between text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg border border-emerald-200/60 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <FiTag className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Promo Discount {appliedCoupon?.code ? `(${appliedCoupon.code})` : ''}</span>
+                </span>
+                <span className="font-bold font-mono">-₹{safeDiscount.toLocaleString('en-IN')}</span>
               </div>
             )}
 

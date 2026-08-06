@@ -275,9 +275,12 @@ export default function MobileCheckoutSummary({
 
           {/* Coupon / Discount */}
           {discount > 0 && (
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-emerald-700 font-semibold">Promo Discount</span>
-              <span className="font-bold text-emerald-700">- {formatPrice(discount)}</span>
+            <div className="flex justify-between items-center text-xs text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg border border-emerald-200/60 font-semibold">
+              <span className="flex items-center gap-1.5">
+                <FiTag className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Promo Discount {appliedCoupon?.code ? `(${appliedCoupon.code})` : ''}</span>
+              </span>
+              <span className="font-bold text-emerald-700 font-mono">- {formatPrice(discount)}</span>
             </div>
           )}
 

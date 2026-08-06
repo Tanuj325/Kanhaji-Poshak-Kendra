@@ -31,18 +31,6 @@ export default function MobileOrderSuccess({ orderData }) {
       : featuredData?.data || featuredData?.content || [];
   }, [featuredData]);
 
-  // Calculate estimated delivery dates (3 - 5 days from order date)
-  const estimatedDeliveryText = useMemo(() => {
-    const baseDate = orderData?.createdAt || orderData?.orderDate ? new Date(orderData.createdAt || orderData.orderDate) : new Date();
-    const startDate = new Date(baseDate);
-    startDate.setDate(startDate.getDate() + 3);
-    const endDate = new Date(baseDate);
-    endDate.setDate(endDate.getDate() + 5);
-
-    const options = { month: 'short', day: 'numeric', weekday: 'short' };
-    return `${startDate.toLocaleDateString('en-IN', options)} – ${endDate.toLocaleDateString('en-IN', options)}`;
-  }, [orderData]);
-
   const handleCopyOrderNumber = () => {
     const numToCopy = orderData?.orderNumber || orderData?.id;
     if (numToCopy) {
@@ -150,7 +138,7 @@ export default function MobileOrderSuccess({ orderData }) {
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* 2. ESTIMATED DELIVERY & TRACKING TIMELINE */}
+        {/* 2. ORDER STATUS & TRACKING TIMELINE */}
         {/* ---------------------------------------------------- */}
         <section className="rounded-3xl bg-white border border-amber-900/10 p-4 sm:p-5 shadow-sm space-y-4 font-display">
           <div className="flex items-center justify-between pb-3 border-b border-amber-900/10">
@@ -160,10 +148,10 @@ export default function MobileOrderSuccess({ orderData }) {
               </div>
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900 block">
-                  Estimated Delivery
+                  Order Status
                 </span>
                 <h2 className="font-heading text-xs sm:text-sm font-extrabold text-amber-950">
-                  {estimatedDeliveryText}
+                  Processing & Packing
                 </h2>
               </div>
             </div>
