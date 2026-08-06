@@ -121,7 +121,7 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
   const activePrice = item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price;
   const oldPrice = item.discountPrice && item.discountPrice < item.price ? item.price : null;
   const brandName = item.brand || item.product?.brand || item.product?.brandName || siteConfig.name;
-  const rating = item.rating || item.product?.rating || 4.8;
+  const rating = item.rating || item.product?.rating || null;
 
   return (
     <motion.div
@@ -161,10 +161,12 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
         </motion.button>
 
         {/* Rating Pill Overlay */}
-        <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[9px] font-bold text-stone-800 px-1.5 py-0.5 rounded-md border border-stone-200/80 shadow-2xs flex items-center gap-0.5">
-          <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-          <span>{rating}</span>
-        </div>
+        {rating ? (
+          <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[9px] font-bold text-stone-800 px-1.5 py-0.5 rounded-md border border-stone-200/80 shadow-2xs flex items-center gap-0.5">
+            <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+            <span>{rating}</span>
+          </div>
+        ) : null}
       </div>
 
       {/* Details Container */}
@@ -224,7 +226,7 @@ function MobileRecommendedCard({ product }) {
   const navigate = useNavigate();
   const imgSrc = resolveWishlistImage(product);
   const activePrice = product.discountPrice && product.discountPrice < product.price ? product.discountPrice : product.price;
-  const rating = product.rating || product.avgRating || 4.8;
+  const rating = product.rating || product.avgRating || null;
 
   return (
     <motion.div
@@ -259,10 +261,12 @@ function MobileRecommendedCard({ product }) {
             ₹{(activePrice || 0).toLocaleString('en-IN')}
           </span>
 
-          <div className="flex items-center gap-0.5 text-[9px] font-bold text-[#98631B]">
-            <FiStar className="h-2.5 w-2.5 fill-[#98631B]" />
-            <span>{rating}</span>
-          </div>
+          {rating ? (
+            <div className="flex items-center gap-0.5 text-[9px] font-bold text-[#98631B]">
+              <FiStar className="h-2.5 w-2.5 fill-[#98631B]" />
+              <span>{rating}</span>
+            </div>
+          ) : null}
         </div>
       </div>
     </motion.div>
