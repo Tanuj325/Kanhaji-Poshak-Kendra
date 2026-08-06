@@ -98,20 +98,6 @@ export default function MobileDashboard() {
       href: ROUTE_PATHS.ADDRESSES,
     },
     {
-      id: 'coupons',
-      label: 'Coupons',
-      subtitle: couponCount > 0 ? `${couponCount} Active Offers` : 'Special Discounts',
-      icon: FiTag,
-      href: ROUTE_PATHS.SHOP,
-    },
-    {
-      id: 'rewards',
-      label: 'Rewards',
-      subtitle: 'Devotee Club Gold',
-      icon: FiGift,
-      href: ROUTE_PATHS.SHOP,
-    },
-    {
       id: 'support',
       label: 'Support',
       subtitle: '24/7 Customer Care',
@@ -142,12 +128,6 @@ export default function MobileDashboard() {
       icon: FiMapPin,
       href: ROUTE_PATHS.ADDRESSES,
       count: addrList.length > 0 ? addrList.length : null,
-    },
-    {
-      id: 'payments',
-      label: 'Payment Methods',
-      icon: FiCreditCard,
-      href: ROUTE_PATHS.SETTINGS,
     },
     {
       id: 'notifications',
@@ -191,7 +171,7 @@ export default function MobileDashboard() {
   return (
     <div className="w-full min-h-screen bg-[#F9F7F4] text-stone-900 font-display antialiased pb-24 overflow-x-hidden">
       {/* ─── 1. STICKY HEADER ─── */}
-      <header className="sticky top-0 z-30 h-[56px] w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
+      <header className="sticky top-0 z-30 h-[56px] w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-0.5 flex items-center justify-between shadow-2xs">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -220,7 +200,7 @@ export default function MobileDashboard() {
       </header>
 
       {/* ─── MAIN CONTENT CONTAINER (Full Width, Exact Spacing) ─── */}
-      <main className="w-full px-4 pt-4 space-y-[18px]">
+      <main className="w-full px-0.5 pt-4 space-y-[18px]">
         {/* ─── 2. PROFILE CARD (Height 170-190px, Radius 22px, Gold Gradient) ─── */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
