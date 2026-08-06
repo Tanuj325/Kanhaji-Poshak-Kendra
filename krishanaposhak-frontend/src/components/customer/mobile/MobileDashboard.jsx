@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Avatar from '@/components/ui/Avatar';
@@ -21,14 +21,13 @@ import {
   FiHelpCircle,
   FiChevronRight,
   FiCreditCard,
-  FiLock,
   FiSettings,
   FiInfo,
   FiLogOut,
   FiEdit3,
-  FiUser,
   FiShield,
   FiHeadphones,
+  FiFileText,
 } from 'react-icons/fi';
 
 /**
@@ -54,7 +53,6 @@ export default function MobileDashboard() {
 
   const fullName = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Valued Devotee';
   const email = user?.email || 'devotee@krishanaposhak.com';
-  const phone = user?.phoneNumber || 'No phone added';
   const memberSince = user?.createdAt ? formatDate(user.createdAt, { format: 'MMM YYYY' }) : 'Jan 2024';
 
   const handleLogout = async () => {
@@ -122,9 +120,9 @@ export default function MobileDashboard() {
   ];
 
   const menuRows = [
-    { id: 'orders', label: 'My Orders', icon: FiShoppingBag, href: ROUTE_PATHS.ORDERS },
-    { id: 'addresses', label: 'Addresses Book', icon: FiMapPin, href: ROUTE_PATHS.ADDRESSES },
-    { id: 'payments', label: 'Saved Payments & UPI', icon: FiCreditCard, href: ROUTE_PATHS.SETTINGS },
+    { id: 'orders', label: 'Orders', icon: FiShoppingBag, href: ROUTE_PATHS.ORDERS },
+    { id: 'addresses', label: 'Addresses', icon: FiMapPin, href: ROUTE_PATHS.ADDRESSES },
+    { id: 'payments', label: 'Payments', icon: FiCreditCard, href: ROUTE_PATHS.SETTINGS },
     {
       id: 'notifications',
       label: 'Notifications',
@@ -132,16 +130,18 @@ export default function MobileDashboard() {
       href: ROUTE_PATHS.NOTIFICATIONS,
       count: unreadCount > 0 ? unreadCount : null,
     },
-    { id: 'password', label: 'Change Password', icon: FiLock, href: ROUTE_PATHS.PROFILE },
-    { id: 'settings', label: 'Account Settings', icon: FiSettings, href: ROUTE_PATHS.SETTINGS },
-    { id: 'help', label: 'Help & FAQs', icon: FiHelpCircle, href: ROUTE_PATHS.FAQ },
-    { id: 'about', label: 'About Krishna Poshak', icon: FiInfo, href: ROUTE_PATHS.ABOUT },
+    { id: 'settings', label: 'Settings', icon: FiSettings, href: ROUTE_PATHS.SETTINGS },
+    { id: 'help', label: 'Help', icon: FiHelpCircle, href: ROUTE_PATHS.FAQ },
+    { id: 'about', label: 'About', icon: FiInfo, href: ROUTE_PATHS.ABOUT },
+    { id: 'privacy', label: 'Privacy', icon: FiShield, href: ROUTE_PATHS.PRIVACY },
+    { id: 'terms', label: 'Terms', icon: FiFileText, href: ROUTE_PATHS.TERMS },
+    { id: 'logout', label: 'Logout', icon: FiLogOut, action: handleLogout, isDanger: true },
   ];
 
   return (
-    <div className="min-h-dvh w-full bg-[#FAF8F5] text-stone-900 font-display antialiased pb-28 md:pb-16">
-      {/* ─── 1. HEADER (56px Height, Sticky, Back Button, Title, Notification) ─── */}
-      <header className="sticky top-0 z-40 h-[56px] bg-white/95 backdrop-blur-xl border-b border-amber-900/10 px-4 flex items-center justify-between shadow-2xs">
+    <div className="min-h-dvh w-full overflow-x-hidden bg-[#FAF8F5] text-stone-900 font-display antialiased pb-24 md:pb-16">
+      {/* ─── 1. HEADER (56px Sticky, Back Button, Center Title, Notification Icon, Profile Avatar) ─── */}
+      <header className="sticky top-0 z-40 h-[56px] w-full bg-white/95 backdrop-blur-xl border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -151,104 +151,105 @@ export default function MobileDashboard() {
           <FiChevronLeft className="h-5 w-5 stroke-[2.5]" />
         </button>
 
-        <h1 className="text-[15px] font-heading font-extrabold text-amber-950 tracking-wide">
+        <h1 className="text-[16px] font-heading font-extrabold text-amber-950 tracking-wide text-center flex-1 mx-2 truncate">
           My Account
         </h1>
 
-        <Link
-          to={ROUTE_PATHS.NOTIFICATIONS}
-          className="relative h-9 w-9 rounded-full bg-stone-100 hover:bg-amber-50 text-stone-800 flex items-center justify-center active:scale-95 transition-transform"
-          aria-label="Notifications"
-        >
-          <FiBell className="h-4.5 w-4.5 text-stone-700" />
-          {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 h-4 min-w-[16px] px-1 rounded-full bg-rose-600 text-white text-[9px] font-extrabold flex items-center justify-center shadow-xs">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </span>
-          )}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to={ROUTE_PATHS.NOTIFICATIONS}
+            className="relative h-9 w-9 rounded-full bg-stone-100 hover:bg-amber-50 text-stone-800 flex items-center justify-center active:scale-95 transition-transform"
+            aria-label="Notifications"
+          >
+            <FiBell className="h-4.5 w-4.5 text-stone-700" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 h-4 min-w-[16px] px-1 rounded-full bg-rose-600 text-white text-[9px] font-extrabold flex items-center justify-center shadow-xs">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            to={ROUTE_PATHS.PROFILE}
+            className="h-9 w-9 rounded-full border border-amber-400/80 overflow-hidden active:scale-95 transition-transform shrink-0"
+            aria-label="Profile"
+          >
+            <Avatar name={fullName} src={user?.profileImageUrl} size="sm" className="h-full w-full" />
+          </Link>
+        </div>
       </header>
 
-      <main className="px-4 py-4 max-w-2xl mx-auto space-y-4">
-        {/* ─── 2. PROFILE CARD (Premium Glass Card, 22px Radius, Soft Gold Gradient) ─── */}
+      {/* ─── MAIN CONTENT WRAPPER (Full Width w-full, px-4 outer padding) ─── */}
+      <main className="w-full px-4 py-4 space-y-4">
+        {/* ─── 2. WELCOME CARD (Full Width, Rounded 22px, Soft Gold Gradient, Height ~110px) ─── */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="relative rounded-[22px] bg-gradient-to-br from-white via-amber-50/70 to-amber-100/40 border border-amber-900/10 p-4 sm:p-5 shadow-sm overflow-hidden backdrop-blur-md space-y-3.5"
+          transition={{ duration: 0.25 }}
+          className="w-full rounded-[22px] bg-gradient-to-br from-[#FFFBF0] via-[#FAF0D9] to-[#F5E5C9] border border-amber-400/30 p-4 shadow-sm overflow-hidden relative flex flex-col justify-between gap-3 min-h-[110px]"
         >
-          {/* Soft Gold Background Glow */}
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
+          {/* Ambient Soft Gold Background Glow */}
+          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-36 h-36 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="flex items-start justify-between gap-3 relative z-10">
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <Avatar
-                  name={fullName}
-                  src={user?.profileImageUrl}
-                  size="lg"
-                  className="border-2 border-amber-400 shadow-md ring-2 ring-amber-200/50"
-                />
-                <span
-                  className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-2xs"
-                  title="Active Member"
-                />
-              </div>
+          <div className="flex items-center justify-between gap-3 relative z-10 w-full">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <Avatar
+                name={fullName}
+                src={user?.profileImageUrl}
+                size="lg"
+                className="h-14 w-14 rounded-full border-2 border-amber-500/80 shadow-sm shrink-0"
+              />
 
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="bg-amber-200/80 text-amber-950 text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full border border-amber-300/60 inline-flex items-center gap-1 font-heading">
-                    <FiShield className="h-2.5 w-2.5 text-amber-800" /> Devotee Member
-                  </span>
-                </div>
-                <h2 className="text-base sm:text-lg font-heading font-extrabold text-amber-950 truncate leading-snug">
+              <div className="min-w-0 flex-1">
+                <span className="text-[13px] font-bold text-amber-900/80 font-heading block">
+                  Welcome back
+                </span>
+                <h2 className="text-[18px] font-heading font-extrabold text-amber-950 leading-tight truncate">
                   {fullName}
                 </h2>
-                <p className="text-xs text-stone-600 truncate font-mono">{email}</p>
-                <p className="text-[11px] text-stone-500 font-medium truncate pt-0.5">{phone}</p>
+                <p className="text-[13px] text-stone-600 truncate font-mono">{email}</p>
               </div>
             </div>
 
-            <Link
-              to={ROUTE_PATHS.PROFILE}
-              className="shrink-0 h-8 px-3 rounded-full bg-amber-900 text-white font-extrabold text-[11px] hover:bg-amber-950 transition-all flex items-center gap-1 shadow-xs active:scale-95"
+            <button
+              type="button"
+              onClick={() => navigate(ROUTE_PATHS.PROFILE)}
+              className="h-[44px] px-3.5 rounded-[14px] bg-amber-900 hover:bg-amber-950 text-white text-[13px] font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0"
             >
-              <FiEdit3 className="h-3 w-3" />
+              <FiEdit3 className="h-4 w-4" />
               <span>Edit</span>
-            </Link>
+            </button>
           </div>
 
-          <div className="pt-2.5 border-t border-amber-900/10 flex items-center justify-between text-[11px] font-medium text-stone-600 relative z-10">
-            <span>Member Since: <strong className="text-amber-950 font-bold">{memberSince}</strong></span>
-            <span className="text-emerald-700 font-bold flex items-center gap-1">
-              ✓ Verified Account
+          <div className="pt-2 border-t border-amber-900/10 flex items-center justify-between text-[13px] font-medium text-stone-700 relative z-10 w-full">
+            <span>Member since: <strong className="text-amber-950 font-extrabold">{memberSince}</strong></span>
+            <span className="text-emerald-800 font-extrabold flex items-center gap-1 text-[12px] bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
+              <FiShield className="h-3 w-3" /> Devotee Member
             </span>
           </div>
         </motion.div>
 
-        {/* ─── 3. QUICK ACTION GRID (2 Columns, 90px Height Cards, Rounded 18px) ─── */}
-        <section className="space-y-2">
-          <h3 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-900/70 px-1 font-heading">
+        {/* ─── 3. QUICK ACTIONS (2 Columns, Equal Width, Gap 12px, Height 90px, Rounded 18px) ─── */}
+        <section className="w-full space-y-2">
+          <h3 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
             Quick Actions
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-[12px] w-full">
             {quickActions.map((action, idx) => {
               const Icon = action.icon;
               return (
                 <motion.div
                   key={action.id}
-                  initial={{ opacity: 0, scale: 0.96 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.25, delay: idx * 0.04 }}
+                  transition={{ duration: 0.2, delay: idx * 0.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => navigate(action.href)}
-                  className="h-[90px] rounded-[18px] bg-white border border-amber-900/10 p-3 shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between transition-all group relative overflow-hidden"
+                  className="w-full h-[90px] rounded-[18px] bg-white border border-stone-200/80 p-3 shadow-xs hover:border-amber-400/50 cursor-pointer flex flex-col justify-between transition-all group relative overflow-hidden"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="h-9 w-9 rounded-xl bg-amber-50 group-hover:bg-amber-100 text-amber-900 flex items-center justify-center transition-colors">
-                      <Icon className="h-4.5 w-4.5 stroke-[2]" />
-                    </div>
+                  <div className="flex items-center justify-between w-full">
+                    <Icon className="h-[28px] w-[28px] text-amber-900 stroke-[1.8] shrink-0" />
 
                     {action.count !== null && (
                       <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full font-mono shadow-2xs ${action.badgeColor}`}>
@@ -263,11 +264,11 @@ export default function MobileDashboard() {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-[13px] font-bold text-amber-950 font-heading">
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-[13px] font-heading font-bold text-stone-900 group-hover:text-amber-950 truncate">
                       {action.label}
                     </span>
-                    <FiChevronRight className="h-4 w-4 text-stone-400 group-hover:translate-x-0.5 transition-transform" />
+                    <FiChevronRight className="h-4 w-4 text-stone-400 group-hover:text-amber-900 group-hover:translate-x-0.5 transition-all shrink-0" />
                   </div>
                 </motion.div>
               );
@@ -275,27 +276,29 @@ export default function MobileDashboard() {
           </div>
         </section>
 
-        {/* ─── 4. ACCOUNT MENU (Premium List Cards, 56px Row Height, Chevron, Soft Divider) ─── */}
-        <section className="space-y-2">
-          <h3 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-900/70 px-1 font-heading">
+        {/* ─── 4. ACCOUNT MENU (Full Width, White Card, Rounded 18px, 56px Row Height) ─── */}
+        <section className="w-full space-y-2">
+          <h3 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
             Account Details & Preferences
           </h3>
 
-          <div className="rounded-[22px] bg-white border border-amber-900/10 shadow-xs divide-y divide-amber-900/10 overflow-hidden">
+          <div className="w-full rounded-[18px] bg-white border border-stone-200/80 shadow-xs divide-y divide-stone-100 overflow-hidden">
             {menuRows.map((row) => {
               const Icon = row.icon;
+              const handleClick = row.action ? row.action : () => navigate(row.href);
+
               return (
                 <motion.div
                   key={row.id}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(row.href)}
-                  className="h-[56px] px-4 flex items-center justify-between hover:bg-amber-50/50 cursor-pointer transition-colors group"
+                  onClick={handleClick}
+                  className={`h-[56px] px-4 flex items-center justify-between hover:bg-amber-50/40 cursor-pointer transition-colors group ${
+                    row.isDanger ? 'hover:bg-rose-50/40' : ''
+                  }`}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="h-8 w-8 rounded-xl bg-amber-50/80 group-hover:bg-amber-100 text-amber-900 flex items-center justify-center shrink-0 transition-colors">
-                      <Icon className="h-4 w-4 stroke-[2]" />
-                    </div>
-                    <span className="text-[13px] font-bold text-stone-900 font-heading truncate">
+                    <Icon className={`h-5 w-5 stroke-[2] shrink-0 ${row.isDanger ? 'text-rose-600' : 'text-amber-900'}`} />
+                    <span className={`text-[15px] font-heading font-bold truncate ${row.isDanger ? 'text-rose-600' : 'text-stone-900'}`}>
                       {row.label}
                     </span>
                   </div>
@@ -306,7 +309,7 @@ export default function MobileDashboard() {
                         {row.count}
                       </span>
                     )}
-                    <FiChevronRight className="h-4 w-4 text-stone-400 group-hover:text-amber-900 group-hover:translate-x-0.5 transition-all" />
+                    <FiChevronRight className={`h-4.5 w-4.5 transition-all ${row.isDanger ? 'text-rose-400' : 'text-stone-400 group-hover:text-amber-900 group-hover:translate-x-0.5'}`} />
                   </div>
                 </motion.div>
               );
@@ -314,20 +317,21 @@ export default function MobileDashboard() {
           </div>
         </section>
 
-        {/* ─── 5. LOGOUT BUTTON (Outlined, 14px Radius, Height ~46px, Not Oversized) ─── */}
-        <div className="pt-2 pb-6">
+        {/* ─── 5. LOGOUT BUTTON (Height 44px, Rounded 14px, Not Oversized) ─── */}
+        <div className="w-full pt-2 pb-6">
           <motion.button
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
             type="button"
             disabled={isLoggingOut}
             onClick={handleLogout}
-            className="w-full h-[46px] rounded-[14px] border border-rose-300 bg-white hover:bg-rose-50 text-rose-700 font-bold text-[13px] shadow-2xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+            className="w-full h-[44px] rounded-[14px] border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-[13px] shadow-2xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
           >
             <FiLogOut className="h-4 w-4 text-rose-600" />
-            <span>{isLoggingOut ? 'Signing Out...' : 'Sign Out of Account'}</span>
+            <span>{isLoggingOut ? 'Signing out...' : 'Sign Out of Account'}</span>
           </motion.button>
         </div>
       </main>
     </div>
   );
 }
+
