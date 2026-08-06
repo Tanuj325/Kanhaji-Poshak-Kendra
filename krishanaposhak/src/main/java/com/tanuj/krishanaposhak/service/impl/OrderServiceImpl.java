@@ -8,6 +8,7 @@ import com.tanuj.krishanaposhak.dto.order.OrderSummaryResponse;
 import com.tanuj.krishanaposhak.dto.order.PlaceOrderRequest;
 import com.tanuj.krishanaposhak.entity.*;
 import com.tanuj.krishanaposhak.enums.OrderStatus;
+import com.tanuj.krishanaposhak.enums.PaymentMethod;
 import com.tanuj.krishanaposhak.enums.PaymentStatus;
 import com.tanuj.krishanaposhak.exception.BadRequestException;
 import com.tanuj.krishanaposhak.exception.ForbiddenException;
@@ -19,6 +20,7 @@ import com.tanuj.krishanaposhak.repository.CartRepository;
 import com.tanuj.krishanaposhak.repository.CouponRepository;
 import com.tanuj.krishanaposhak.repository.CouponUsageRepository;
 import com.tanuj.krishanaposhak.repository.OrderRepository;
+import com.tanuj.krishanaposhak.repository.PaymentRepository;
 import com.tanuj.krishanaposhak.repository.ProductVariantRepository;
 import com.tanuj.krishanaposhak.repository.UserRepository;
 import com.tanuj.krishanaposhak.service.CouponService;
@@ -69,12 +71,32 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final EmailService emailService;
     private final com.tanuj.krishanaposhak.service.RefundService refundService;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public OrderResponse placeOrder(Long userId, PlaceOrderRequest request) {
-        // Create the pending order (not saved yet)
+        // Create the pending order object (not saved yet)
         Order order = createPendingOrder(userId, request);
-        // Now save the order so we have an ID and it's in the database (as PENDING)
+
+        // Determine PaymentMethod (default to COD for direct placeOrder if not specified)
+        PaymentMethod method = PaymentMethod.COD;
+        if (request.getPaymentMethod() != null && !request.getPaymentMethod().isBlank()) {
+            try {
+                method = PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                method = PaymentMethod.COD;
+            }
+        }
+
+        if (method == PaymentMethod.COD) {
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+            order.setPaymentStatus(PaymentStatus.PENDING);
+        } else {
+            order.setOrderStatus(OrderStatus.PENDING);
+            order.setPaymentStatus(PaymentStatus.PENDING);
+        }
+
+        // Now save the order so we have an ID and it's in the database
         order = orderRepository.save(order);
 
         // Reduce stock for each variant in the order
@@ -86,6 +108,19 @@ public class OrderServiceImpl implements OrderService {
                     productVariantRepository.save(variant);
                 }
             }
+        }
+
+        // Create and save Payment record for COD orders
+        if (method == PaymentMethod.COD) {
+            Payment payment = Payment.builder()
+                    .order(order)
+                    .paymentMethod(PaymentMethod.COD)
+                    .paymentStatus(PaymentStatus.PENDING)
+                    .amount(order.getTotalAmount())
+                    .transactionId("TXN-COD-" + order.getOrderNumber())
+                    .build();
+            payment = paymentRepository.save(payment);
+            order.setPayment(payment);
         }
 
         Coupon coupon = null;

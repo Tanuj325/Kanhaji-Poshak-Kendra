@@ -104,6 +104,12 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Invalid payment method: " + request.getPaymentMethod());
         }
 
+        // Return existing payment if already created (e.g. for COD during order placement)
+        java.util.Optional<Payment> existingPayment = paymentRepository.findByOrderId(order.getId());
+        if (existingPayment.isPresent()) {
+            return paymentMapper.toResponse(existingPayment.get());
+        }
+
         Payment payment = Payment.builder()
                 .order(order)
                 .paymentMethod(paymentMethod)
@@ -857,6 +863,11 @@ public class PaymentServiceImpl implements PaymentService {
             Payment payment = order.getPayment();
             if (payment != null && payment.getPaymentStatus() == PaymentStatus.PAID) {
                 continue; // Payment captured, do not cancel
+            }
+
+            // Cash on Delivery (COD) orders must NEVER be cancelled by unpaid cleanup
+            if (payment != null && payment.getPaymentMethod() == PaymentMethod.COD) {
+                continue;
             }
 
             // Double check Razorpay API before cancelling
