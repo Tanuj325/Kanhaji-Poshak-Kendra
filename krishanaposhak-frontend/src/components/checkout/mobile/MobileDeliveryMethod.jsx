@@ -6,8 +6,6 @@ import { calculateShipping } from '@/utils/shippingCalculator';
 import {
   FiChevronLeft,
   FiTruck,
-  FiZap,
-  FiClock,
   FiCheck,
   FiArrowRight,
   FiShield,
@@ -21,82 +19,45 @@ export default function MobileDeliveryMethod({
   onContinue,
   onBack,
 }) {
-  const [option, setOption] = useState(selectedDeliveryOption || 'standard');
+  const [option, setOption] = useState('standard');
 
   const { shipping: baseShipping } = useMemo(() => calculateShipping(subtotal), [subtotal]);
 
-  // Dynamic estimated dates calculation
+  // Dynamic estimated date calculation
   const dates = useMemo(() => {
     const today = new Date();
-
     const stdDate = new Date(today);
     stdDate.setDate(today.getDate() + 4);
-
-    const expDate = new Date(today);
-    expDate.setDate(today.getDate() + 2);
 
     const formatDateStr = (d) =>
       d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
 
     return {
       standard: formatDateStr(stdDate),
-      express: formatDateStr(expDate),
-      sameDay: 'Today by 9:00 PM',
     };
   }, []);
 
   const deliveryOptions = useMemo(() => {
     const stdCost = baseShipping;
-    const expCost = baseShipping + 149;
-    const sameDayCost = baseShipping + 299;
 
     return [
       {
         id: 'standard',
         title: 'Standard Delivery',
         icon: FiTruck,
-        tag: 'Most Popular',
+        tag: 'Official Shipping',
         estimatedDate: `Delivered by ${dates.standard}`,
         etaText: '3–5 Business Days',
         cost: stdCost,
         costText: stdCost === 0 ? 'FREE' : formatPrice(stdCost),
-        description: 'Reliable doorstep delivery via top tier courier partners',
-        available: true,
-      },
-      {
-        id: 'express',
-        title: 'Express Delivery',
-        icon: FiZap,
-        tag: 'Fastest Transit',
-        estimatedDate: `Delivered by ${dates.express}`,
-        etaText: '1–2 Business Days',
-        cost: expCost,
-        costText: formatPrice(expCost),
-        description: 'Priority handling & air dispatch for urgent occasions',
-        available: true,
-      },
-      {
-        id: 'sameday',
-        title: 'Same Day Delivery',
-        icon: FiClock,
-        tag: 'Select Pincodes',
-        estimatedDate: dates.sameDay,
-        etaText: 'Order before 4:00 PM',
-        cost: sameDayCost,
-        costText: formatPrice(sameDayCost),
-        description: 'Guaranteed same-day delivery in NCR & major metro hubs',
+        description: 'Sanctified & insured doorstep delivery via trusted courier partners',
         available: true,
       },
     ];
   }, [baseShipping, dates]);
 
-  const handleSelect = (id) => {
-    setOption(id);
-    onSelectDeliveryOption?.(id);
-  };
-
   const handleProceed = () => {
-    onSelectDeliveryOption?.(option);
+    onSelectDeliveryOption?.('standard');
     onContinue?.();
   };
 
@@ -155,62 +116,36 @@ export default function MobileDeliveryMethod({
 
         <div className="pt-1 pb-1">
           <h2 className="text-xs font-extrabold uppercase tracking-widest text-amber-900">
-            Select Delivery Speed
+            Selected Shipping Method
           </h2>
         </div>
 
         {/* ---------------------------------------------------- */}
-        {/* DELIVERY CARDS (Width 100%, Rounded 18px, Padding 16px, Temple Gold Border) */}
+        {/* SINGLE DELIVERY CARD (Width 100%, Rounded 18px, Padding 16px, Temple Gold Border) */}
         {/* ---------------------------------------------------- */}
         <div className="space-y-3" role="radiogroup" aria-label="Select delivery option">
           {deliveryOptions.map((item) => {
-            const isSelected = option === item.id;
+            const isSelected = true;
             const Icon = item.icon;
 
             return (
               <motion.div
                 key={item.id}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleSelect(item.id)}
-                role="radio"
-                aria-checked={isSelected}
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleSelect(item.id);
-                  }
-                }}
+                whileTap={{ scale: 0.99 }}
                 className={cn(
                   'relative w-full rounded-[18px] p-4 transition-all duration-200 cursor-pointer font-display overflow-hidden text-left flex flex-col justify-between gap-3',
-                  isSelected
-                    ? 'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20'
-                    : 'border border-amber-900/10 bg-white hover:border-amber-700/30 shadow-xs hover:shadow-sm',
+                  'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20',
                 )}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3.5 min-w-0 flex-1">
                     {/* Custom Radio Selection */}
-                    <div
-                      className={cn(
-                        'mt-1 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
-                        isSelected
-                          ? 'border-[#D4AF37] bg-[#D4AF37] text-amber-950'
-                          : 'border-stone-300 bg-white',
-                      )}
-                    >
-                      {isSelected && <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />}
+                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-[#D4AF37] bg-[#D4AF37] text-amber-950 flex-shrink-0 flex items-center justify-center transition-all">
+                      <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />
                     </div>
 
                     {/* Delivery Icon Box */}
-                    <div
-                      className={cn(
-                        'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors',
-                        isSelected
-                          ? 'bg-amber-900 text-white shadow-xs'
-                          : 'bg-amber-100/70 text-amber-900',
-                      )}
-                    >
+                    <div className="w-10 h-10 rounded-xl bg-amber-900 text-white shadow-xs flex items-center justify-center shrink-0">
                       <Icon className="w-5 h-5" />
                     </div>
 
@@ -220,20 +155,9 @@ export default function MobileDeliveryMethod({
                         <span className="font-heading font-extrabold text-sm sm:text-base text-amber-950">
                           {item.title}
                         </span>
-                        {item.tag && (
-                          <span
-                            className={cn(
-                              'text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider',
-                              item.id === 'standard'
-                                ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                                : item.id === 'express'
-                                ? 'bg-amber-100 text-amber-950 border-amber-300'
-                                : 'bg-blue-50 text-blue-900 border-blue-200',
-                            )}
-                          >
-                            {item.tag}
-                          </span>
-                        )}
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider bg-emerald-50 text-emerald-900 border-emerald-200">
+                          {item.tag}
+                        </span>
                       </div>
 
                       <p className="text-xs font-bold text-amber-900 flex items-center gap-1 font-display pt-0.5">
