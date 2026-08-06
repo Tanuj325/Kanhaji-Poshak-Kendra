@@ -52,16 +52,16 @@ const resolveWishlistImage = (item) => {
  */
 function EmptyWishlistIllustration() {
   return (
-    <div className="relative w-44 h-44 mx-auto flex items-center justify-center my-2">
+    <div className="relative w-36 h-36 mx-auto flex items-center justify-center my-2">
       {/* Background Soft Cream Circle */}
       <div className="absolute inset-0 rounded-full bg-[#FBF6ED]" />
 
       {/* Sparkles */}
-      <div className="absolute top-3 right-6 text-[#D49E41] text-xs animate-pulse">✨</div>
-      <div className="absolute bottom-8 left-5 text-[#D49E41] text-[10px]">✨</div>
+      <div className="absolute top-2 right-4 text-[#D49E41] text-[10px] animate-pulse">✨</div>
+      <div className="absolute bottom-6 left-4 text-[#D49E41] text-[9px]">✨</div>
 
       {/* Vector Canvas */}
-      <svg className="relative z-10 w-32 h-32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className="relative z-10 w-28 h-28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Shopping Bag Base */}
         <path
           d="M34 46L40 98C40 101.314 42.6863 104 46 104H74C77.3137 104 80 101.314 80 98L86 46H34Z"
@@ -111,8 +111,8 @@ function EmptyWishlistIllustration() {
 
 /**
  * MobileGridWishlistCard
- * Myntra / AJIO Style 2-Column Vertical Wishlist Card.
- * Ultra spacious layout with full width Move to Cart action bar.
+ * Ultra Luxury 2-Column Vertical Card (Myntra / Zara Style).
+ * Sleek micro typography, balanced proportions, and 100% full width inside column.
  */
 const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
   item,
@@ -132,13 +132,13 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className="bg-white rounded-[18px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full w-full font-sans relative group"
+      exit={{ opacity: 0, scale: 0.92 }}
+      className="bg-white rounded-[16px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between h-full w-full font-sans relative group"
     >
       {/* Top Image Container */}
-      <div className="relative aspect-[4/4.5] w-full bg-[#F5F2ED] overflow-hidden">
+      <div className="relative aspect-[4/4.2] w-full bg-[#F5F2ED] overflow-hidden">
         <Link to={`/product/${item.slug || item.productId}`} className="block w-full h-full">
           {imgSrc ? (
             <OptimizedImage
@@ -148,72 +148,72 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
             />
           ) : (
             <div className="flex flex-col items-center justify-center h-full w-full p-4 text-stone-400">
-              <FiPackage className="h-8 w-8 text-amber-700/40 mb-1" />
-              <span className="text-[10px] font-bold text-stone-500">Poshak</span>
+              <FiPackage className="h-7 w-7 text-amber-700/40 mb-1" />
+              <span className="text-[9px] font-bold text-stone-500">Poshak</span>
             </div>
           )}
         </Link>
 
-        {/* Floating Remove Button */}
+        {/* Floating Remove Circle Button */}
         <motion.button
           whileTap={{ scale: 0.85 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="absolute top-2 right-2 z-10 h-7 w-7 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
+          className="absolute top-2 right-2 z-10 h-6.5 w-6.5 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
           aria-label="Remove item"
         >
-          <FiTrash2 className="h-3.5 w-3.5" />
+          <FiTrash2 className="h-3 w-3" />
         </motion.button>
 
         {/* Rating Pill Overlay */}
-        <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[10px] font-bold text-stone-800 px-1.5 py-0.5 rounded-md border border-stone-200 shadow-2xs flex items-center gap-0.5">
+        <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[9px] font-bold text-stone-800 px-1.5 py-0.5 rounded-md border border-stone-200/80 shadow-2xs flex items-center gap-0.5">
           <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
           <span>{rating}</span>
         </div>
       </div>
 
       {/* Details Container */}
-      <div className="p-3 flex-1 flex flex-col justify-between space-y-1.5">
+      <div className="p-2.5 flex-1 flex flex-col justify-between space-y-1">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#98631B] block line-clamp-1">
+          <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#98631B]/90 block line-clamp-1">
             {brandName}
           </span>
           <Link
             to={`/product/${item.slug || item.productId}`}
-            className="text-[13px] font-semibold text-stone-900 line-clamp-1 leading-snug hover:text-amber-800 transition-colors block mt-0.5"
+            className="text-[12px] sm:text-[13px] font-medium text-stone-900 line-clamp-1 leading-snug hover:text-amber-800 transition-colors block mt-0.5"
           >
             {item.productName || 'Divine Krishna Poshak'}
           </Link>
         </div>
 
         {/* Price Row */}
-        <div className="flex items-baseline gap-1 flex-wrap font-sans">
-          <span className="text-[15px] font-extrabold text-stone-900 leading-none">
+        <div className="flex items-baseline gap-1 flex-wrap font-sans pt-0.5">
+          <span className="text-[14px] sm:text-[15px] font-bold text-stone-900 leading-none">
             ₹{(activePrice || 0).toLocaleString('en-IN')}
           </span>
           {oldPrice && (
-            <span className="text-[11px] text-stone-400 line-through">
+            <span className="text-[10px] text-stone-400 line-through">
               ₹{oldPrice.toLocaleString('en-IN')}
             </span>
           )}
           {discountPercent > 0 && (
-            <span className="text-[10px] font-bold text-emerald-600">
+            <span className="text-[9px] font-bold text-emerald-600">
               {discountPercent}% OFF
             </span>
           )}
         </div>
       </div>
 
-      {/* Bottom Move to Cart Full-Width Action Bar */}
+      {/* Bottom Move to Cart Full-Width Action Button */}
       <div className="p-2 pt-0">
         <motion.button
           whileTap={isInStock && !isItemMoving ? { scale: 0.96 } : {}}
           type="button"
           disabled={!isInStock || isItemMoving}
           onClick={() => onMoveToCart(item)}
-          className="w-full h-9 rounded-[12px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[12px] shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-8 rounded-[10px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[11px] shadow-xs flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <FiShoppingCart className="h-3.5 w-3.5 text-white" />
+          <FiShoppingCart className="h-3 w-3 text-white" />
           <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
         </motion.button>
       </div>
@@ -223,8 +223,8 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
 
 /**
  * MobileHorizontalWishlistCard
- * Nike / Apple Store Style Horizontal Card.
- * Generous 2-Row layout: Top image + details, Bottom divider action bar.
+ * Ultra Luxury Nike / Apple Store Style Horizontal Card.
+ * Generous full-width product row with integrated bottom action bar.
  */
 const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard({
   item,
@@ -240,25 +240,24 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
   const oldPrice = item.discountPrice && item.discountPrice < item.price ? item.price : null;
   const brandName = item.brand || item.product?.brand || item.product?.brandName || siteConfig.name;
   const rating = item.rating || item.product?.rating || 4.8;
-  const reviewCount = item.reviewCount || item.product?.reviewCount || 128;
   const isNew = item.isNew || item.product?.isNew || false;
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, height: 0 }}
-      transition={{ duration: 0.22 }}
-      className="bg-white rounded-[18px] border border-[#EFECE6] p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] space-y-3 w-full font-sans"
+      transition={{ duration: 0.2 }}
+      className="bg-white rounded-[16px] border border-[#EFECE6] p-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-2.5 w-full font-sans"
     >
-      {/* Top Section: Left Image + Right Spacious Content */}
-      <div className="flex gap-3.5 items-start">
-        {/* Left Square Image (105x105) */}
-        <div className="relative shrink-0 w-[105px] h-[105px]">
+      {/* Top Section: Left Square Image + Right 100% Width Details */}
+      <div className="flex gap-3 items-start">
+        {/* Left Square Image (95x95) */}
+        <div className="relative shrink-0 w-[95px] h-[95px]">
           <Link
             to={`/product/${item.slug || item.productId}`}
-            className="w-[105px] h-[105px] rounded-[14px] overflow-hidden bg-[#F5F2ED] border border-stone-100 block"
+            className="w-[95px] h-[95px] rounded-[12px] overflow-hidden bg-[#F5F2ED] border border-stone-100 block"
           >
             {imgSrc ? (
               <OptimizedImage
@@ -268,26 +267,26 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
               />
             ) : (
               <div className="flex flex-col items-center justify-center h-full w-full p-2 text-stone-400 bg-amber-50/40">
-                <FiPackage className="h-7 w-7 text-amber-700/40 mb-1" />
-                <span className="text-[9px] font-bold text-stone-500">Poshak</span>
+                <FiPackage className="h-6 w-6 text-amber-700/40 mb-1" />
+                <span className="text-[8px] font-bold text-stone-500">Poshak</span>
               </div>
             )}
           </Link>
 
           {isNew && (
-            <span className="absolute top-1.5 left-1.5 z-10 text-[9px] font-extrabold uppercase tracking-wider bg-[#C68D33] text-white px-1.5 py-0.5 rounded-md shadow-2xs">
+            <span className="absolute top-1 left-1 z-10 text-[8px] font-extrabold uppercase tracking-wider bg-[#C68D33] text-white px-1.5 py-0.5 rounded shadow-2xs">
               NEW
             </span>
           )}
         </div>
 
-        {/* Right Details (Takes remaining 100% width) */}
+        {/* Right Details (Takes ALL remaining width) */}
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-center justify-between gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block line-clamp-1">
+            <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#98631B]/90 block line-clamp-1">
               {brandName}
             </span>
-            <div className="inline-flex items-center gap-1 text-[10px] font-bold text-stone-800 bg-white border border-stone-200 px-1.5 py-0.5 rounded-md shadow-2xs">
+            <div className="inline-flex items-center gap-0.5 text-[9px] font-bold text-stone-800 bg-white border border-stone-200 px-1.5 py-0.5 rounded shadow-2xs">
               <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
               <span>{rating}</span>
             </div>
@@ -295,30 +294,30 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
 
           <Link
             to={`/product/${item.slug || item.productId}`}
-            className="text-[14px] font-semibold text-stone-900 line-clamp-2 leading-snug hover:text-amber-800 transition-colors block"
+            className="text-[13px] sm:text-[14px] font-medium text-stone-900 line-clamp-2 leading-snug hover:text-amber-800 transition-colors block"
           >
             {item.productName || 'Divine Krishna Poshak'}
           </Link>
 
           {/* Price Hierarchy */}
           <div className="flex items-baseline gap-1.5 flex-wrap pt-0.5">
-            <span className="text-[18px] font-bold text-stone-900 leading-none">
+            <span className="text-[16px] font-bold text-stone-900 leading-none">
               ₹{(activePrice || 0).toLocaleString('en-IN')}
             </span>
             {oldPrice && (
-              <span className="text-[12px] text-stone-400 line-through font-normal">
+              <span className="text-[11px] text-stone-400 line-through font-normal">
                 ₹{oldPrice.toLocaleString('en-IN')}
               </span>
             )}
             {discountPercent > 0 && (
-              <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
                 {discountPercent}% OFF
               </span>
             )}
           </div>
 
           {/* Stock & Delivery line */}
-          <div className="flex items-center gap-2 text-[11px] text-stone-500 pt-0.5">
+          <div className="flex items-center gap-2 text-[10px] text-stone-500 pt-0.5">
             {isInStock ? (
               <span className="font-semibold text-emerald-600 flex items-center gap-0.5">
                 <FiCheck className="h-3 w-3 stroke-[3]" />
@@ -337,15 +336,15 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
       </div>
 
       {/* Bottom Integrated Action Bar */}
-      <div className="pt-2.5 border-t border-stone-100 flex items-center justify-between">
+      <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
         <motion.button
           whileTap={{ scale: 0.92 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="text-[12px] font-medium text-stone-400 hover:text-rose-600 transition-colors flex items-center gap-1 cursor-pointer px-1 py-1"
+          className="text-[11px] font-medium text-stone-400 hover:text-rose-600 transition-colors flex items-center gap-1 cursor-pointer px-1 py-0.5"
           title="Remove item"
         >
-          <FiTrash2 className="h-3.5 w-3.5 text-stone-400" />
+          <FiTrash2 className="h-3 w-3 text-stone-400" />
           <span>Remove</span>
         </motion.button>
 
@@ -354,9 +353,9 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
           type="button"
           disabled={!isInStock || isItemMoving}
           onClick={() => onMoveToCart(item)}
-          className="h-[38px] px-4 rounded-[12px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[12px] shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-[34px] px-3.5 rounded-[10px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[11px] shadow-xs flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <FiShoppingCart className="h-3.5 w-3.5 text-white" />
+          <FiShoppingCart className="h-3 w-3 text-white" />
           <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
         </motion.button>
       </div>
@@ -378,9 +377,9 @@ function MobileRecommendedCard({ product }) {
     <motion.div
       whileTap={{ scale: 0.96 }}
       onClick={() => navigate(`/product/${product.slug || product.id}`)}
-      className="w-[140px] shrink-0 snap-start bg-white rounded-[14px] border border-[#EFECE6] p-2.5 cursor-pointer flex flex-col justify-between space-y-2 shadow-2xs font-sans"
+      className="w-[130px] shrink-0 snap-start bg-white rounded-[14px] border border-[#EFECE6] p-2 cursor-pointer flex flex-col justify-between space-y-1.5 shadow-2xs font-sans"
     >
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <div className="aspect-square w-full rounded-[10px] bg-stone-50 overflow-hidden relative border border-stone-100">
           <OptimizedImage
             src={imgSrc}
@@ -389,25 +388,25 @@ function MobileRecommendedCard({ product }) {
           />
           <button
             type="button"
-            className="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-white/90 backdrop-blur-xs text-stone-600 flex items-center justify-center text-xs shadow-2xs"
+            className="absolute top-1.5 right-1.5 h-5.5 w-5.5 rounded-full bg-white/90 backdrop-blur-xs text-stone-600 flex items-center justify-center text-xs shadow-2xs"
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            <FiHeart className="h-3 w-3" />
+            <FiHeart className="h-2.5 w-2.5 text-stone-600" />
           </button>
         </div>
 
-        <h3 className="text-[12px] font-bold text-stone-900 line-clamp-1 leading-tight font-sans">
+        <h3 className="text-[11px] font-semibold text-stone-900 line-clamp-1 leading-tight font-sans">
           {product.name}
         </h3>
 
         <div className="flex items-center justify-between">
-          <span className="text-[13px] font-extrabold text-stone-900 font-sans">
+          <span className="text-[12px] font-bold text-stone-900 font-sans">
             ₹{(activePrice || 0).toLocaleString('en-IN')}
           </span>
 
-          <div className="flex items-center gap-0.5 text-[10px] font-bold text-[#98631B]">
+          <div className="flex items-center gap-0.5 text-[9px] font-bold text-[#98631B]">
             <FiStar className="h-2.5 w-2.5 fill-[#98631B]" />
             <span>{rating}</span>
           </div>
@@ -424,21 +423,21 @@ function MobileRecommendedCard({ product }) {
 function MobileWishlistSkeleton() {
   return (
     <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans pb-28">
-      <div className="h-[54px] bg-white border-b border-stone-200/80 px-4 flex items-center justify-between">
-        <div className="h-8 w-8 rounded-full bg-stone-200 animate-pulse" />
-        <div className="h-5 w-28 rounded-md bg-stone-200 animate-pulse" />
-        <div className="h-8 w-8 rounded-full bg-stone-200 animate-pulse" />
+      <div className="h-[50px] bg-white border-b border-stone-200/80 px-3.5 flex items-center justify-between">
+        <div className="h-7 w-7 rounded-full bg-stone-200 animate-pulse" />
+        <div className="h-4 w-24 rounded-md bg-stone-200 animate-pulse" />
+        <div className="h-7 w-7 rounded-full bg-stone-200 animate-pulse" />
       </div>
 
-      <div className="px-4 py-4 max-w-[767px] mx-auto space-y-3">
-        <div className="h-[90px] rounded-[18px] bg-amber-100/50 animate-pulse" />
-        <div className="grid grid-cols-2 gap-3.5">
+      <div className="px-3.5 py-3 max-w-[767px] mx-auto space-y-3">
+        <div className="h-[76px] rounded-[16px] bg-amber-100/40 animate-pulse" />
+        <div className="grid grid-cols-2 gap-3">
           {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="h-64 rounded-[18px] bg-white border border-stone-200 p-2 space-y-2">
-              <div className="w-full aspect-square rounded-[14px] bg-stone-200 animate-pulse" />
+            <div key={n} className="h-56 rounded-[16px] bg-white border border-stone-200 p-2 space-y-2">
+              <div className="w-full aspect-square rounded-[12px] bg-stone-200 animate-pulse" />
               <div className="h-3 w-16 bg-stone-200 rounded animate-pulse" />
               <div className="h-4 w-3/4 bg-stone-200 rounded animate-pulse" />
-              <div className="h-8 w-full bg-stone-200 rounded-[12px] animate-pulse" />
+              <div className="h-8 w-full bg-stone-200 rounded-[10px] animate-pulse" />
             </div>
           ))}
         </div>
@@ -519,19 +518,19 @@ export default function MobileWishlist({
   if (isError) {
     return (
       <div className="min-h-dvh w-full bg-[#F8F6F2] flex flex-col items-center justify-center p-4 text-center font-sans">
-        <div className="h-16 w-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-3 border border-rose-200">
-          <FiAlertCircle className="h-8 w-8" />
+        <div className="h-14 w-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-3 border border-rose-200">
+          <FiAlertCircle className="h-7 w-7" />
         </div>
-        <h2 className="text-lg font-bold text-stone-900 mb-1">Failed to load Wishlist</h2>
+        <h2 className="text-base font-bold text-stone-900 mb-1">Failed to load Wishlist</h2>
         <p className="text-xs text-stone-500 max-w-xs mb-4">
           {error?.message || 'Unable to fetch your saved items at this time.'}
         </p>
         <button
           type="button"
           onClick={onRetry}
-          className="h-10 px-5 rounded-xl bg-[#C68D33] hover:bg-[#B87E2B] text-white font-bold text-xs flex items-center gap-2 shadow-md"
+          className="h-9 px-4 rounded-xl bg-[#C68D33] hover:bg-[#B87E2B] text-white font-bold text-xs flex items-center gap-2 shadow-md"
         >
-          <FiRefreshCw className="h-4 w-4" />
+          <FiRefreshCw className="h-3.5 w-3.5" />
           <span>Retry Loading</span>
         </button>
       </div>
@@ -539,25 +538,25 @@ export default function MobileWishlist({
   }
 
   return (
-    <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-28 md:pb-20">
-      {/* ─── 1. HEADER (Sticky, Height: 54px) ─── */}
-      <header className="sticky top-0 z-40 h-[54px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
+    <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
+      {/* ─── 1. HEADER (Sticky, Height: 50px) ─── */}
+      <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
         <motion.button
           whileTap={{ scale: 0.92 }}
           type="button"
           onClick={() => navigate(-1)}
-          className="h-8 w-8 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
+          className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
           aria-label="Back"
         >
-          <FiArrowLeft className="h-4 w-4" />
+          <FiArrowLeft className="h-3.5 w-3.5" />
         </motion.button>
 
         {/* Center Title & Count */}
         <div className="flex items-center gap-1.5">
-          <span className="text-[16px] font-bold text-stone-900 tracking-wide font-sans">
+          <span className="text-[15px] font-semibold text-stone-900 tracking-wide font-sans">
             Wishlist
           </span>
-          <span className="text-[11px] font-bold text-[#98631B] bg-[#FFF5E5] border border-[#F3E2C8] px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-[#98631B] bg-[#FFF5E5] border border-[#F3E2C8] px-1.5 py-0.5 rounded-full">
             {items.length}
           </span>
         </div>
@@ -574,7 +573,7 @@ export default function MobileWishlist({
                 title="Grid View"
                 aria-label="Grid View"
               >
-                <FiGrid className="h-3.5 w-3.5" />
+                <FiGrid className="h-3 w-3" />
               </button>
               <button
                 type="button"
@@ -584,7 +583,7 @@ export default function MobileWishlist({
                 title="List View"
                 aria-label="List View"
               >
-                <FiList className="h-3.5 w-3.5" />
+                <FiList className="h-3 w-3" />
               </button>
             </div>
           )}
@@ -593,40 +592,40 @@ export default function MobileWishlist({
             whileTap={{ scale: 0.92 }}
             type="button"
             onClick={handleShare}
-            className="h-8 w-8 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
+            className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
             aria-label="Share Wishlist"
             title="Share Wishlist"
           >
-            <FiShare2 className="h-4 w-4" />
+            <FiShare2 className="h-3.5 w-3.5" />
           </motion.button>
         </div>
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-4 py-4 max-w-[767px] mx-auto space-y-3.5">
+      <main className="px-2.5 sm:px-4 py-3 max-w-[767px] mx-auto space-y-3">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
-          <div className="py-6 space-y-6">
+          <div className="py-6 space-y-5">
             <EmptyWishlistIllustration />
 
-            <div className="text-center space-y-2 max-w-xs mx-auto">
-              <h1 className="text-2xl font-serif text-stone-900 tracking-tight font-normal">
+            <div className="text-center space-y-1.5 max-w-xs mx-auto">
+              <h1 className="text-xl font-serif text-stone-900 tracking-tight font-normal">
                 Your Wishlist is Empty
               </h1>
-              <p className="text-[13px] text-stone-500 leading-relaxed font-sans">
+              <p className="text-[12px] text-stone-500 leading-relaxed font-sans">
                 Explore our divine Krishna Poshak, Mukut, and Accessories collection and save your favorites.
               </p>
             </div>
 
-            <div className="w-full max-w-xs mx-auto space-y-2.5 pt-2">
+            <div className="w-full max-w-xs mx-auto space-y-2 pt-1">
               <Link to={ROUTE_PATHS.SHOP || '/shop'} className="block w-full">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"
-                  className="w-full h-11 rounded-full bg-[#C68D33] hover:bg-[#B87E2B] text-white font-bold text-[13px] shadow-md shadow-amber-900/15 flex items-center justify-center gap-2 transition-all"
+                  className="w-full h-10 rounded-full bg-[#C68D33] hover:bg-[#B87E2B] text-white font-bold text-[12px] shadow-sm shadow-amber-900/15 flex items-center justify-center gap-1.5 transition-all"
                 >
                   <span>Continue Shopping</span>
-                  <FiArrowRight className="h-4 w-4 text-white" />
+                  <FiArrowRight className="h-3.5 w-3.5 text-white" />
                 </motion.button>
               </Link>
 
@@ -634,7 +633,7 @@ export default function MobileWishlist({
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"
-                  className="w-full h-11 rounded-full bg-white border border-[#D4C3A3] text-stone-900 font-bold text-[13px] hover:bg-stone-50 flex items-center justify-center gap-2 transition-all"
+                  className="w-full h-10 rounded-full bg-white border border-[#D4C3A3] text-stone-900 font-bold text-[12px] hover:bg-stone-50 flex items-center justify-center gap-1.5 transition-all"
                 >
                   <span>Explore Collections</span>
                 </motion.button>
@@ -642,17 +641,17 @@ export default function MobileWishlist({
             </div>
 
             {recommendedProducts.length > 0 && (
-              <div className="pt-8 border-t border-stone-200/70 space-y-3">
+              <div className="pt-6 border-t border-stone-200/70 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-[14px] font-bold text-stone-900 font-sans">
+                  <h2 className="text-[13px] font-bold text-stone-900 font-sans">
                     You May Also Like
                   </h2>
-                  <Link to={ROUTE_PATHS.SHOP || '/shop'} className="text-[12px] font-bold text-[#C68D33] hover:underline">
+                  <Link to={ROUTE_PATHS.SHOP || '/shop'} className="text-[11px] font-bold text-[#C68D33] hover:underline">
                     View All
                   </Link>
                 </div>
 
-                <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-none snap-x -mx-4 px-4">
+                <div className="flex overflow-x-auto gap-2.5 pb-1 scrollbar-none snap-x -mx-2.5 px-2.5">
                   {recommendedProducts.slice(0, 6).map((prod) => (
                     <MobileRecommendedCard key={`rec-${prod.id}`} product={prod} />
                   ))}
@@ -664,29 +663,29 @@ export default function MobileWishlist({
           /* ─── POPULATED WISHLIST VIEW ─── */
           <>
             {/* ─── 2. SAVED COLLECTION BANNER CARD ─── */}
-            <div className="h-[90px] rounded-[18px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD] px-4 flex items-center justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-[#F6E7D2] text-[#9E691A] flex items-center justify-center shrink-0">
-                  <FiBookmark className="h-4 w-4 fill-[#9E691A]" />
+            <div className="h-[76px] rounded-[16px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD]/80 px-3.5 flex items-center justify-between shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-[#F6E7D2] text-[#9E691A] flex items-center justify-center shrink-0">
+                  <FiBookmark className="h-3.5 w-3.5 fill-[#9E691A]" />
                 </div>
                 <div>
-                  <h1 className="text-[17px] font-bold text-stone-900 font-sans leading-tight">
+                  <h1 className="text-[15px] font-bold text-stone-900 font-sans leading-tight">
                     Saved Collection
                   </h1>
-                  <p className="text-[12px] text-stone-500 font-medium font-sans">
+                  <p className="text-[11px] text-stone-500 font-medium font-sans">
                     {items.length} {items.length === 1 ? 'item' : 'items'} saved for later
                   </p>
                 </div>
               </div>
 
-              <HiSparkles className="h-5 w-5 text-[#D49E41] shrink-0" />
+              <HiSparkles className="h-4.5 w-4.5 text-[#D49E41] shrink-0" />
             </div>
 
             {/* ─── 3. WISHLIST PRODUCT CARDS (GRID VS LIST) ─── */}
             <AnimatePresence mode="popLayout">
               {viewMode === 'grid' ? (
                 /* MYNTRA / AJIO NATIVE 2-COLUMN GRID */
-                <div className="grid grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
                   {items.map((item) => {
                     const variantId = item.variantId || item.productId;
                     const isItemMoving = movingItemId === variantId;
@@ -704,7 +703,7 @@ export default function MobileWishlist({
                 </div>
               ) : (
                 /* APPLE STORE / NIKE NATIVE HORIZONTAL LIST */
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {items.map((item) => {
                     const variantId = item.variantId || item.productId;
                     const isItemMoving = movingItemId === variantId;
@@ -728,25 +727,25 @@ export default function MobileWishlist({
 
       {/* ─── 4. STICKY BOTTOM BAR ─── */}
       {items.length > 0 && (
-        <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 h-[64px] bg-white border-t border-stone-200/80 px-4 py-2 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex items-center justify-between">
+        <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 h-[58px] bg-white/98 backdrop-blur-md border-t border-stone-200/80 px-3.5 py-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] flex items-center justify-between">
           <div className="max-w-[767px] w-full mx-auto flex items-center justify-between gap-2">
             {/* Left: Items Count & Estimated Total */}
             <div className="flex flex-col font-sans">
-              <span className="text-[12px] font-bold text-stone-900 leading-tight">
+              <span className="text-[11px] font-bold text-stone-900 leading-tight">
                 {items.length} {items.length === 1 ? 'Item' : 'Items'}
               </span>
-              <span className="text-[13px] font-semibold text-stone-500">
+              <span className="text-[12px] font-medium text-stone-500">
                 Est. Total
               </span>
             </div>
 
             {/* Middle: Price & Savings */}
             <div className="flex flex-col font-sans text-right mr-1">
-              <span className="text-[16px] font-extrabold text-stone-900 leading-none">
+              <span className="text-[15px] font-extrabold text-stone-900 leading-none">
                 ₹{estimatedTotal.toLocaleString('en-IN')}
               </span>
               {totalDiscount > 0 && (
-                <span className="text-[10px] font-bold text-emerald-600 mt-0.5">
+                <span className="text-[9px] font-bold text-emerald-600 mt-0.5">
                   Save ₹{totalDiscount.toLocaleString('en-IN')}
                 </span>
               )}
@@ -758,9 +757,9 @@ export default function MobileWishlist({
               type="button"
               disabled={inStockCount === 0 || isMovingAll}
               onClick={onMoveAllToCart}
-              className="h-[44px] px-4 rounded-[14px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[13px] shadow-md shadow-amber-900/15 flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+              className="h-[38px] px-3.5 rounded-full bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[12px] shadow-sm shadow-amber-900/10 flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
             >
-              <FiShoppingCart className="h-4 w-4 text-white" />
+              <FiShoppingCart className="h-3.5 w-3.5 text-white" />
               <span>{isMovingAll ? 'Moving All...' : 'Move All to Cart'}</span>
             </motion.button>
           </div>
