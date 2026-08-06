@@ -159,11 +159,6 @@ function CheckoutPage() {
       }
 
       if (orderId) {
-        try {
-          await paymentService.initiate({ orderId, paymentMethod: 'COD' });
-        } catch {
-          // Non-blocking
-        }
         await loadCart();
         toast.success('Order placed successfully!');
         navigate(buildPath.orderConfirmation(orderId));
