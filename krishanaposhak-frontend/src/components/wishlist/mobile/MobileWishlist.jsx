@@ -135,7 +135,7 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      className="bg-white rounded-[18px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full font-sans relative group"
+      className="bg-white rounded-[18px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full w-full font-sans relative group"
     >
       {/* Top Image Container */}
       <div className="relative aspect-[4/4.5] w-full bg-[#F5F2ED] overflow-hidden">
@@ -501,7 +501,7 @@ export default function MobileWishlist({
           text: 'Check out my saved Krishna Poshak collection!',
           url: window.location.href,
         })
-        .catch(() => {});
+        .catch(() => { });
     } else {
       try {
         navigator.clipboard.writeText(window.location.href);
@@ -569,9 +569,8 @@ export default function MobileWishlist({
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-full text-xs transition-all ${
-                  viewMode === 'grid' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
-                }`}
+                className={`p-1.5 rounded-full text-xs transition-all ${viewMode === 'grid' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
+                  }`}
                 title="Grid View"
                 aria-label="Grid View"
               >
@@ -580,9 +579,8 @@ export default function MobileWishlist({
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-full text-xs transition-all ${
-                  viewMode === 'list' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
-                }`}
+                className={`p-1.5 rounded-full text-xs transition-all ${viewMode === 'list' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
+                  }`}
                 title="List View"
                 aria-label="List View"
               >
