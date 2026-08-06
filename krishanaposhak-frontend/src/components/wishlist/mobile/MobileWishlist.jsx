@@ -109,9 +109,9 @@ function EmptyWishlistIllustration() {
 
 /**
  * MobileHorizontalWishlistCard
- * Rebuilt Horizontal Wishlist Card matching premium native app design.
- * Height: ~150-170px
- * Layout: Image 30% (110x110 square), Content 45% (Middle), Actions 25% (Right vertical column).
+ * Rebuilt 3-Column Horizontal Wishlist Card matching premium native app design.
+ * Height: 150-165px
+ * Layout: Image 30% (110x110 square), Content 50% (min-w-0), Actions 20% (88px shrink-0 vertical column).
  */
 const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard({
   item,
@@ -138,10 +138,10 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
       exit={{ opacity: 0, scale: 0.95, height: 0 }}
       whileHover={{ scale: 1.005 }}
       transition={{ duration: 0.22 }}
-      className="bg-white rounded-[16px] border border-[#EFECE6] p-3 shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex gap-3 items-center relative overflow-hidden min-h-[155px] max-h-[175px] w-full font-sans"
+      className="bg-white rounded-[18px] border border-[#EFECE6] p-[14px] shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex items-center gap-[14px] relative overflow-hidden h-[155px] w-full font-sans"
     >
-      {/* ─── LEFT COLUMN: IMAGE (30% ~110x110 Square Image) ─── */}
-      <div className="relative shrink-0 w-[110px] h-[110px]">
+      {/* ─── LEFT COLUMN: IMAGE (30% ~ 110x110 Square Image) ─── */}
+      <div className="relative shrink-0 flex-shrink-0 w-[110px] h-[110px]">
         <Link
           to={`/product/${item.slug || item.productId}`}
           className="w-[110px] h-[110px] rounded-[16px] overflow-hidden bg-[#F5F2ED] border border-stone-100 relative block"
@@ -180,15 +180,15 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
         </motion.button>
       </div>
 
-      {/* ─── MIDDLE COLUMN: CONTENT (45% ~ Flex-1) ─── */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-0.5 space-y-1">
+      {/* ─── CENTER COLUMN: CONTENT (50% ~ flex-1 min-w-0) ─── */}
+      <div className="flex-1 min-w-0 flex flex-col justify-center space-y-1 py-0.5">
         <div>
           {/* Brand Name (11px, Uppercase, Grey) */}
           <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block line-clamp-1">
             {brandName}
           </span>
 
-          {/* Title (15px, Semibold, Max 2 lines) */}
+          {/* Product Name (15px, SemiBold, Maximum 2 lines) */}
           <Link
             to={`/product/${item.slug || item.productId}`}
             className="text-[15px] font-semibold text-stone-900 line-clamp-2 leading-tight hover:text-amber-800 transition-colors block mt-0.5"
@@ -206,7 +206,7 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
           <span className="text-[11px] text-stone-400 font-normal">({reviewCount})</span>
         </div>
 
-        {/* Price Row: 20px Bold Price, 13px Line-through, Green Discount Pill */}
+        {/* Price Row: 20px Bold Price, 13px Line-through, Green Discount */}
         <div className="flex items-baseline gap-1.5 flex-wrap pt-0.5">
           <span className="text-[20px] font-bold text-stone-900 leading-none">
             ₹{(activePrice || 0).toLocaleString('en-IN')}
@@ -225,15 +225,15 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
           )}
         </div>
 
-        {/* Stock & Delivery Info */}
+        {/* Stock & Free Delivery (12px Stock, 11px Free Delivery) */}
         <div className="flex items-center gap-2 text-[11px] pt-0.5 text-stone-500">
           {isInStock ? (
-            <span className="font-semibold text-emerald-600 flex items-center gap-0.5">
+            <span className="text-[12px] font-semibold text-emerald-600 flex items-center gap-0.5">
               <FiCheck className="h-3 w-3 stroke-[3]" />
               <span>In Stock</span>
             </span>
           ) : (
-            <span className="font-semibold text-rose-600">Out of Stock</span>
+            <span className="text-[12px] font-semibold text-rose-600">Out of Stock</span>
           )}
           <span className="text-stone-300">•</span>
           <span className="flex items-center gap-0.5 text-stone-500 font-medium">
@@ -243,15 +243,15 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
         </div>
       </div>
 
-      {/* ─── RIGHT COLUMN: ACTIONS (25% ~ 95px Vertical Area) ─── */}
-      <div className="w-[95px] shrink-0 flex flex-col items-center justify-center gap-2 self-stretch border-l border-stone-100 pl-2.5 my-0.5">
-        {/* Move to Cart Button (Height: 40px, Rounded: 14px, Gold Gradient, 95px Width) */}
+      {/* ─── RIGHT COLUMN: ACTIONS (20% ~ 88px shrink-0) ─── */}
+      <div className="flex-shrink-0 shrink-0 w-[88px] flex flex-col items-center justify-center gap-2 border-l border-stone-100 pl-2.5 my-auto">
+        {/* Move to Cart Button (Width: 88px, Height: 40px, Rounded: 14px, Temple Gold) */}
         <motion.button
           whileTap={isInStock && !isItemMoving ? { scale: 0.94 } : {}}
           type="button"
           disabled={!isInStock || isItemMoving}
           onClick={() => onMoveToCart(item)}
-          className="w-full h-[40px] rounded-[14px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[13px] shadow-xs shadow-amber-900/15 flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="w-[88px] h-[40px] rounded-[14px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[13px] shadow-xs shadow-amber-900/15 flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
           <FiShoppingCart className="h-3.5 w-3.5 text-white" />
           <span>{isItemMoving ? 'Moving...' : 'Cart'}</span>
@@ -262,7 +262,7 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
           whileTap={{ scale: 0.92 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="text-[12px] font-medium text-stone-400 hover:text-rose-600 transition-colors py-1 flex items-center justify-center gap-1 cursor-pointer"
+          className="text-[12px] font-medium text-stone-400 hover:text-rose-600 transition-colors py-0.5 flex items-center justify-center cursor-pointer"
           title="Remove item"
         >
           <span>Remove</span>
