@@ -16,6 +16,7 @@ import {
   FiCheck,
 } from 'react-icons/fi';
 import { useAuth } from '@/context/AuthContext';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { registerSchema } from '@/validators/authSchemas';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import { ROUTE_PATHS } from '@/routes/routePaths';
@@ -47,6 +48,7 @@ function getPasswordStrength(password) {
 }
 
 export default function RegisterPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -190,8 +192,182 @@ export default function RegisterPage() {
         noindex
       />
 
-      {/* ─── MOBILE & TABLET REDESIGN (<1024px) ─── */}
-      <div className="block lg:hidden">
+      {isDesktop ? (
+        /* ─── DESKTOP VIEW (>=1024px - 100% UNCHANGED) ─── */
+        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
+          {/* Header */}
+          <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="mb-6 text-center">
+            <h1 className="font-serif text-2xl font-bold tracking-wide text-white sm:text-3xl">
+              Create Account
+            </h1>
+            <p className="mt-1.5 text-sm text-slate-400">Join the Krishana Poshak family</p>
+          </motion.div>
+
+          {/* Root error */}
+          {errors.root && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mb-4 overflow-hidden rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-300"
+              role="alert"
+            >
+              {errors.root.message}
+            </motion.div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+            {/* Name row */}
+            <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
+              {renderField('firstName', 'First Name', FiUser, 'text', 'Rahul', 1, {
+                autoComplete: 'given-name',
+              })}
+              {renderField('lastName', 'Last Name', FiUser, 'text', 'Sharma', 2, {
+                autoComplete: 'family-name',
+              })}
+            </div>
+
+            {renderField('email', 'Email Address', FiMail, 'email', 'rahul@example.com', 3, {
+              autoComplete: 'email',
+            })}
+
+            {renderField('phoneNumber', 'Phone Number', FiPhone, 'tel', '9876543210', 4, {
+              autoComplete: 'tel',
+            })}
+
+            {/* Password + Strength */}
+            {renderField('password', 'Password', FiLock, 'password', 'Min. 8 characters', 5, {
+              autoComplete: 'new-password',
+            })}
+
+            {/* Strength Indicator */}
+            {passwordValue && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="overflow-hidden"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex flex-1 gap-1">
+                    {[1, 2, 3, 4].map((level) => (
+                      <div
+                        key={level}
+                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                          strength.score >= level ? strength.color : 'bg-white/10'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span
+                    className={`text-[10px] font-bold ${
+                      strength.score <= 1
+                        ? 'text-rose-400'
+                        : strength.score === 2
+                        ? 'text-orange-400'
+                        : strength.score === 3
+                        ? 'text-amber-400'
+                        : 'text-emerald-400'
+                    }`}
+                  >
+                    {strength.label}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Gender & DOB row */}
+            <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
+              {renderField('gender', 'Gender', FiUser, 'select', '', 6, {
+                options: [
+                  { value: '', label: 'Select' },
+                  { value: 'MALE', label: 'Male' },
+                  { value: 'FEMALE', label: 'Female' },
+                  { value: 'KIDS', label: 'Kids' },
+                  { value: 'UNISEX', label: 'Unisex' },
+                ],
+              })}
+              <motion.div custom={7} variants={fadeUp} initial="hidden" animate="visible">
+                <label htmlFor="reg-dateOfBirth" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Date of Birth
+                </label>
+                <div className="relative">
+                  <FiUser className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-400/60" />
+                  <input
+                    id="reg-dateOfBirth"
+                    type="date"
+                    {...register('dateOfBirth')}
+                    className={`${inputBase} ${errors.dateOfBirth ? inputErr : inputOk}`}
+                  />
+                </div>
+                {errors.dateOfBirth && (
+                  <p className="mt-1.5 text-xs text-rose-400" role="alert">
+                    {errors.dateOfBirth.message}
+                  </p>
+                )}
+              </motion.div>
+            </div>
+
+            {/* Terms */}
+            <motion.div custom={8} variants={fadeUp} initial="hidden" animate="visible">
+              <label className="group flex cursor-pointer items-start gap-2.5">
+                <div className="relative mt-0.5 shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <div className="h-[18px] w-[18px] rounded-md border border-white/20 bg-white/5 transition-all peer-checked:border-amber-400 peer-checked:bg-amber-400 peer-focus-visible:ring-2 peer-focus-visible:ring-amber-400/50" />
+                  <FiCheck className="pointer-events-none absolute left-[3px] top-[3px] h-3 w-3 text-[#060E1A] opacity-0 transition-opacity peer-checked:opacity-100" />
+                </div>
+                <span className="text-xs leading-relaxed text-slate-400">
+                  I agree to the{' '}
+                  <Link to={ROUTE_PATHS.TERMS} className="text-amber-400/80 underline underline-offset-2 hover:text-amber-300">
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link to={ROUTE_PATHS.PRIVACY} className="text-amber-400/80 underline underline-offset-2 hover:text-amber-300">
+                    Privacy Policy
+                  </Link>
+                </span>
+              </label>
+            </motion.div>
+
+            {/* Submit */}
+            <motion.div custom={9} variants={fadeUp} initial="hidden" animate="visible">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-3.5 text-sm font-bold tracking-wide text-[#0B1728] shadow-lg shadow-amber-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Create Account</span>
+                    <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </>
+                )}
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+              </button>
+            </motion.div>
+          </form>
+
+          {/* Login Link */}
+          <motion.p custom={10} variants={fadeUp} initial="hidden" animate="visible" className="mt-6 text-center text-sm text-slate-500">
+            Already have an account?{' '}
+            <Link to={ROUTE_PATHS.LOGIN} className="font-semibold text-amber-400/80 transition-colors hover:text-amber-300">
+              Sign in
+            </Link>
+          </motion.p>
+        </div>
+      ) : (
+        /* ─── MOBILE & TABLET VIEW (<1024px) ─── */
         <MobileRegister
           register={register}
           handleSubmit={handleSubmit}
@@ -205,181 +381,7 @@ export default function RegisterPage() {
           formValues={formValues}
           strength={strength}
         />
-      </div>
-
-      {/* ─── DESKTOP VIEW (>=1024px - 100% UNCHANGED) ─── */}
-      <div className="hidden lg:block rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
-        {/* Header */}
-        <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="mb-6 text-center">
-          <h1 className="font-serif text-2xl font-bold tracking-wide text-white sm:text-3xl">
-            Create Account
-          </h1>
-          <p className="mt-1.5 text-sm text-slate-400">Join the Krishana Poshak family</p>
-        </motion.div>
-
-        {/* Root error */}
-        {errors.root && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="mb-4 overflow-hidden rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-300"
-            role="alert"
-          >
-            {errors.root.message}
-          </motion.div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          {/* Name row */}
-          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
-            {renderField('firstName', 'First Name', FiUser, 'text', 'Rahul', 1, {
-              autoComplete: 'given-name',
-            })}
-            {renderField('lastName', 'Last Name', FiUser, 'text', 'Sharma', 2, {
-              autoComplete: 'family-name',
-            })}
-          </div>
-
-          {renderField('email', 'Email Address', FiMail, 'email', 'rahul@example.com', 3, {
-            autoComplete: 'email',
-          })}
-
-          {renderField('phoneNumber', 'Phone Number', FiPhone, 'tel', '9876543210', 4, {
-            autoComplete: 'tel',
-          })}
-
-          {/* Password + Strength */}
-          {renderField('password', 'Password', FiLock, 'password', 'Min. 8 characters', 5, {
-            autoComplete: 'new-password',
-          })}
-
-          {/* Strength Indicator */}
-          {passwordValue && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="overflow-hidden"
-            >
-              <div className="flex items-center gap-2">
-                <div className="flex flex-1 gap-1">
-                  {[1, 2, 3, 4].map((level) => (
-                    <div
-                      key={level}
-                      className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                        strength.score >= level ? strength.color : 'bg-white/10'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span
-                  className={`text-[10px] font-bold ${
-                    strength.score <= 1
-                      ? 'text-rose-400'
-                      : strength.score === 2
-                      ? 'text-orange-400'
-                      : strength.score === 3
-                      ? 'text-amber-400'
-                      : 'text-emerald-400'
-                  }`}
-                >
-                  {strength.label}
-                </span>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Gender & DOB row */}
-          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
-            {renderField('gender', 'Gender', FiUser, 'select', '', 6, {
-              options: [
-                { value: '', label: 'Select' },
-                { value: 'MALE', label: 'Male' },
-                { value: 'FEMALE', label: 'Female' },
-                { value: 'KIDS', label: 'Kids' },
-                { value: 'UNISEX', label: 'Unisex' },
-              ],
-            })}
-            <motion.div custom={7} variants={fadeUp} initial="hidden" animate="visible">
-              <label htmlFor="reg-dateOfBirth" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Date of Birth
-              </label>
-              <div className="relative">
-                <FiUser className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-400/60" />
-                <input
-                  id="reg-dateOfBirth"
-                  type="date"
-                  {...register('dateOfBirth')}
-                  className={`${inputBase} ${errors.dateOfBirth ? inputErr : inputOk}`}
-                />
-              </div>
-              {errors.dateOfBirth && (
-                <p className="mt-1.5 text-xs text-rose-400" role="alert">
-                  {errors.dateOfBirth.message}
-                </p>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Terms */}
-          <motion.div custom={8} variants={fadeUp} initial="hidden" animate="visible">
-            <label className="group flex cursor-pointer items-start gap-2.5">
-              <div className="relative mt-0.5 shrink-0">
-                <input
-                  type="checkbox"
-                  checked={acceptTerms}
-                  onChange={(e) => setAcceptTerms(e.target.checked)}
-                  className="peer sr-only"
-                />
-                <div className="h-[18px] w-[18px] rounded-md border border-white/20 bg-white/5 transition-all peer-checked:border-amber-400 peer-checked:bg-amber-400 peer-focus-visible:ring-2 peer-focus-visible:ring-amber-400/50" />
-                <FiCheck className="pointer-events-none absolute left-[3px] top-[3px] h-3 w-3 text-[#060E1A] opacity-0 transition-opacity peer-checked:opacity-100" />
-              </div>
-              <span className="text-xs leading-relaxed text-slate-400">
-                I agree to the{' '}
-                <Link to={ROUTE_PATHS.TERMS} className="text-amber-400/80 underline underline-offset-2 hover:text-amber-300">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to={ROUTE_PATHS.PRIVACY} className="text-amber-400/80 underline underline-offset-2 hover:text-amber-300">
-                  Privacy Policy
-                </Link>
-              </span>
-            </label>
-          </motion.div>
-
-          {/* Submit */}
-          <motion.div custom={9} variants={fadeUp} initial="hidden" animate="visible">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-6 py-3.5 text-sm font-bold tracking-wide text-[#0B1728] shadow-lg shadow-amber-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  <span>Creating Account...</span>
-                </>
-              ) : (
-                <>
-                  <span>Create Account</span>
-                  <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </>
-              )}
-              <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-            </button>
-          </motion.div>
-        </form>
-
-        {/* Login Link */}
-        <motion.p custom={10} variants={fadeUp} initial="hidden" animate="visible" className="mt-6 text-center text-sm text-slate-500">
-          Already have an account?{' '}
-          <Link to={ROUTE_PATHS.LOGIN} className="font-semibold text-amber-400/80 transition-colors hover:text-amber-300">
-            Sign in
-          </Link>
-        </motion.p>
-      </div>
+      )}
     </>
   );
 }

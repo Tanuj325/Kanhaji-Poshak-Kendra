@@ -84,15 +84,6 @@ export default function MobileLogin({
             {/* EMAIL FIELD */}
             <div className="space-y-1">
               <div className="relative h-[56px] w-full rounded-xl border border-slate-200 bg-slate-50/50 transition-all duration-200 focus-within:border-[#C99A3B] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#C99A3B]/20">
-                <FiMail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
-
-                <label
-                  htmlFor="mobile-login-email"
-                  className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
-                >
-                  Email Address
-                </label>
-
                 <input
                   id="mobile-login-email"
                   type="email"
@@ -103,6 +94,15 @@ export default function MobileLogin({
                   {...register('email')}
                   className="peer h-full w-full bg-transparent pl-10 pr-4 pt-4 pb-1 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none"
                 />
+
+                <FiMail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
+
+                <label
+                  htmlFor="mobile-login-email"
+                  className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
+                >
+                  Email Address
+                </label>
               </div>
 
               {errors.email && (
@@ -121,16 +121,7 @@ export default function MobileLogin({
 
             {/* PASSWORD FIELD */}
             <div className="space-y-1">
-              <div className="relative h-[56px] w-full rounded-xl border border-[#slate-200] bg-slate-50/50 transition-all duration-200 focus-within:border-[#C99A3B] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#C99A3B]/20">
-                <FiLock className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
-
-                <label
-                  htmlFor="mobile-login-password"
-                  className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
-                >
-                  Password
-                </label>
-
+              <div className="relative h-[56px] w-full rounded-xl border border-slate-200 bg-slate-50/50 transition-all duration-200 focus-within:border-[#C99A3B] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#C99A3B]/20">
                 <input
                   id="mobile-login-password"
                   type={showPassword ? 'text' : 'password'}
@@ -140,6 +131,15 @@ export default function MobileLogin({
                   {...register('password')}
                   className="peer h-full w-full bg-transparent pl-10 pr-10 pt-4 pb-1 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none"
                 />
+
+                <FiLock className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
+
+                <label
+                  htmlFor="mobile-login-password"
+                  className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
+                >
+                  Password
+                </label>
 
                 <button
                   type="button"

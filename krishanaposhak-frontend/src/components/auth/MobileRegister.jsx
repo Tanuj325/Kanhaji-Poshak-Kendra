@@ -36,18 +36,6 @@ export default function MobileRegister({
     return (
       <div key={name} className="space-y-1 w-full">
         <div className="relative h-[56px] w-full rounded-xl border border-slate-200 bg-slate-50/50 transition-all duration-200 focus-within:border-[#C99A3B] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#C99A3B]/20">
-          
-          {/* Left Icon */}
-          <IconComponent className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
-
-          {/* Fixed Inset Top Label */}
-          <label
-            htmlFor={`mobile-reg-${name}`}
-            className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
-          >
-            {label}
-          </label>
-
           {/* Input / Select */}
           {isSelect ? (
             <select
@@ -74,6 +62,17 @@ export default function MobileRegister({
               } pt-4 pb-1 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none`}
             />
           )}
+
+          {/* Left Icon */}
+          <IconComponent className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 peer-focus:text-[#C99A3B]" />
+
+          {/* Fixed Inset Top Label */}
+          <label
+            htmlFor={`mobile-reg-${name}`}
+            className="pointer-events-none absolute left-10 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-focus:text-[#C99A3B]"
+          >
+            {label}
+          </label>
 
           {/* Password Eye Toggle */}
           {isPassword && (
