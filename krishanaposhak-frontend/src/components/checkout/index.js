@@ -12,4 +12,6 @@ export { default as CheckoutSkeleton } from './CheckoutSkeleton';
 export { default as CheckoutMobileBar } from './CheckoutMobileBar';
 export { default as OrderNotesSection } from './OrderNotesSection';
 export { default as MobileShippingAddress } from './mobile/MobileShippingAddress';
+export { default as MobileDeliveryMethod } from './mobile/MobileDeliveryMethod';
+
 
