@@ -9,6 +9,7 @@ import {
   FiCheck,
   FiArrowRight,
   FiShield,
+  FiCalendar,
 } from 'react-icons/fi';
 
 export default function MobileDeliveryMethod({
@@ -91,7 +92,7 @@ export default function MobileDeliveryMethod({
       {/* ---------------------------------------------------- */}
       {/* MAIN CONTENT (16px outer padding, 12px card spacing) */}
       {/* ---------------------------------------------------- */}
-      <main className="flex-1 px-4 py-4 space-y-3 pb-28">
+      <main className="flex-1 px-4 py-4 space-y-3.5 pb-28">
         {/* Delivery Address Summary Mini Card */}
         {selectedAddress && (
           <div className="rounded-[16px] bg-amber-900/5 border border-amber-900/10 p-3.5 flex items-center justify-between gap-3 shadow-2xs font-display">
@@ -114,18 +115,17 @@ export default function MobileDeliveryMethod({
           </div>
         )}
 
-        <div className="pt-1 pb-1">
+        <div className="pt-1">
           <h2 className="text-xs font-extrabold uppercase tracking-widest text-amber-900">
             Selected Shipping Method
           </h2>
         </div>
 
         {/* ---------------------------------------------------- */}
-        {/* SINGLE DELIVERY CARD (Width 100%, Rounded 18px, Padding 16px, Temple Gold Border) */}
+        {/* RE-ARRANGED SINGLE DELIVERY CARD */}
         {/* ---------------------------------------------------- */}
         <div className="space-y-3" role="radiogroup" aria-label="Select delivery option">
           {deliveryOptions.map((item) => {
-            const isSelected = true;
             const Icon = item.icon;
 
             return (
@@ -133,14 +133,15 @@ export default function MobileDeliveryMethod({
                 key={item.id}
                 whileTap={{ scale: 0.99 }}
                 className={cn(
-                  'relative w-full rounded-[18px] p-4 transition-all duration-200 cursor-pointer font-display overflow-hidden text-left flex flex-col justify-between gap-3',
+                  'relative w-full rounded-[18px] p-4 transition-all duration-200 cursor-pointer font-display overflow-hidden text-left flex flex-col gap-3.5',
                   'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20',
                 )}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3.5 min-w-0 flex-1">
-                    {/* Custom Radio Selection */}
-                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-[#D4AF37] bg-[#D4AF37] text-amber-950 flex-shrink-0 flex items-center justify-center transition-all">
+                {/* Top Row: Radio, Icon, Title, Tag & Price */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    {/* Custom Radio Selection Circle */}
+                    <div className="h-5 w-5 rounded-full border-2 border-[#D4AF37] bg-[#D4AF37] text-amber-950 flex-shrink-0 flex items-center justify-center shadow-2xs">
                       <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />
                     </div>
 
@@ -149,52 +150,60 @@ export default function MobileDeliveryMethod({
                       <Icon className="w-5 h-5" />
                     </div>
 
-                    {/* Delivery Details */}
-                    <div className="min-w-0 flex-1 space-y-1">
+                    {/* Title & Tag */}
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-heading font-extrabold text-sm sm:text-base text-amber-950">
+                        <h3 className="font-heading font-extrabold text-sm sm:text-base text-amber-950 truncate">
                           {item.title}
-                        </span>
-                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider bg-emerald-50 text-emerald-900 border-emerald-200">
+                        </h3>
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider bg-emerald-100 text-emerald-900 border-emerald-300/80">
                           {item.tag}
                         </span>
                       </div>
-
-                      <p className="text-xs font-bold text-amber-900 flex items-center gap-1 font-display pt-0.5">
-                        <span>{item.estimatedDate}</span>
-                        <span className="text-stone-400 font-normal">• ({item.etaText})</span>
-                      </p>
-
-                      <p className="text-xs text-stone-600 font-body leading-relaxed pt-0.5">
-                        {item.description}
+                      <p className="text-[11px] text-stone-500 font-medium font-body pt-0.5">
+                        Standard Insured Shipping
                       </p>
                     </div>
                   </div>
 
-                  {/* Delivery Cost */}
+                  {/* Price Tag Pill */}
                   <div className="text-right shrink-0">
                     <span
                       className={cn(
-                        'font-heading font-extrabold text-sm sm:text-base block',
-                        item.cost === 0 ? 'text-emerald-700' : 'text-amber-950',
+                        'font-heading font-extrabold text-sm sm:text-base block px-3 py-1 rounded-xl border shadow-2xs',
+                        item.cost === 0
+                          ? 'bg-emerald-100/90 text-emerald-900 border-emerald-300/80'
+                          : 'bg-amber-100/90 text-amber-950 border-amber-300/80',
                       )}
                     >
                       {item.costText}
                     </span>
-                    {item.cost === 0 && (
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 block">
-                        Free Shipping
-                      </span>
-                    )}
                   </div>
                 </div>
+
+                {/* Middle Row: Estimated Delivery Date Banner */}
+                <div className="rounded-xl bg-white/90 border border-amber-900/10 p-2.5 flex items-center justify-between gap-2 shadow-2xs font-display">
+                  <div className="flex items-center gap-2 text-xs font-bold text-amber-950">
+                    <FiCalendar className="w-4 h-4 text-amber-800 shrink-0" />
+                    <span className="text-stone-600 font-medium">Estimated Delivery:</span>
+                    <span className="text-amber-950 font-extrabold">{dates.standard}</span>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-stone-600 bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-300/60 uppercase tracking-wider shrink-0">
+                    {item.etaText}
+                  </span>
+                </div>
+
+                {/* Bottom Row: Description */}
+                <p className="text-xs text-stone-600 font-body leading-relaxed px-0.5">
+                  {item.description}
+                </p>
               </motion.div>
             );
           })}
         </div>
 
         {/* Security & Delivery Guarantee Badge */}
-        <div className="pt-2">
+        <div className="pt-1">
           <div className="rounded-[16px] bg-white border border-amber-900/10 p-3.5 flex items-center gap-3 shadow-2xs font-display">
             <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
               <FiShield className="w-4 h-4" />
