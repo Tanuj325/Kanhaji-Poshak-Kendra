@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from 'react';
+import { useMemo, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -14,10 +14,6 @@ import {
   FiAlertCircle,
   FiRefreshCw,
   FiPackage,
-  FiCheck,
-  FiTruck,
-  FiGrid,
-  FiList,
 } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
 import OptimizedImage from '@/components/ui/OptimizedImage';
@@ -111,8 +107,8 @@ function EmptyWishlistIllustration() {
 
 /**
  * MobileGridWishlistCard
- * Ultra Luxury 2-Column Vertical Card (Myntra / Zara Style).
- * Sleek micro typography, balanced proportions, and 100% full width inside column.
+ * 2-Column Grid Vertical Card (50% Screen Width per Card).
+ * Styled after Myntra, AJIO, and Zara native mobile shopping apps.
  */
 const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
   item,
@@ -222,148 +218,6 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
 });
 
 /**
- * MobileHorizontalWishlistCard
- * Ultra Luxury Nike / Apple Store Style Horizontal Card.
- * Generous full-width product row with integrated bottom action bar.
- */
-const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard({
-  item,
-  onMoveToCart,
-  onRemove,
-  isItemMoving,
-}) {
-  const discountPercent = calculateDiscount(item.price, item.discountPrice);
-  const isInStock = item.inStock !== false;
-  const imgSrc = resolveWishlistImage(item);
-  const variantId = item.variantId || item.productId;
-  const activePrice = item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price;
-  const oldPrice = item.discountPrice && item.discountPrice < item.price ? item.price : null;
-  const brandName = item.brand || item.product?.brand || item.product?.brandName || siteConfig.name;
-  const rating = item.rating || item.product?.rating || 4.8;
-  const isNew = item.isNew || item.product?.isNew || false;
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, height: 0 }}
-      transition={{ duration: 0.2 }}
-      className="bg-white rounded-[16px] border border-[#EFECE6] p-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-2.5 w-full font-sans"
-    >
-      {/* Top Section: Left Square Image + Right 100% Width Details */}
-      <div className="flex gap-3 items-start">
-        {/* Left Square Image (95x95) */}
-        <div className="relative shrink-0 w-[95px] h-[95px]">
-          <Link
-            to={`/product/${item.slug || item.productId}`}
-            className="w-[95px] h-[95px] rounded-[12px] overflow-hidden bg-[#F5F2ED] border border-stone-100 block"
-          >
-            {imgSrc ? (
-              <OptimizedImage
-                src={imgSrc}
-                alt={item.productName || 'Product'}
-                className="h-full w-full object-cover object-center"
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full w-full p-2 text-stone-400 bg-amber-50/40">
-                <FiPackage className="h-6 w-6 text-amber-700/40 mb-1" />
-                <span className="text-[8px] font-bold text-stone-500">Poshak</span>
-              </div>
-            )}
-          </Link>
-
-          {isNew && (
-            <span className="absolute top-1 left-1 z-10 text-[8px] font-extrabold uppercase tracking-wider bg-[#C68D33] text-white px-1.5 py-0.5 rounded shadow-2xs">
-              NEW
-            </span>
-          )}
-        </div>
-
-        {/* Right Details (Takes ALL remaining width) */}
-        <div className="flex-1 min-w-0 space-y-1">
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#98631B]/90 block line-clamp-1">
-              {brandName}
-            </span>
-            <div className="inline-flex items-center gap-0.5 text-[9px] font-bold text-stone-800 bg-white border border-stone-200 px-1.5 py-0.5 rounded shadow-2xs">
-              <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-              <span>{rating}</span>
-            </div>
-          </div>
-
-          <Link
-            to={`/product/${item.slug || item.productId}`}
-            className="text-[13px] sm:text-[14px] font-medium text-stone-900 line-clamp-2 leading-snug hover:text-amber-800 transition-colors block"
-          >
-            {item.productName || 'Divine Krishna Poshak'}
-          </Link>
-
-          {/* Price Hierarchy */}
-          <div className="flex items-baseline gap-1.5 flex-wrap pt-0.5">
-            <span className="text-[16px] font-bold text-stone-900 leading-none">
-              ₹{(activePrice || 0).toLocaleString('en-IN')}
-            </span>
-            {oldPrice && (
-              <span className="text-[11px] text-stone-400 line-through font-normal">
-                ₹{oldPrice.toLocaleString('en-IN')}
-              </span>
-            )}
-            {discountPercent > 0 && (
-              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                {discountPercent}% OFF
-              </span>
-            )}
-          </div>
-
-          {/* Stock & Delivery line */}
-          <div className="flex items-center gap-2 text-[10px] text-stone-500 pt-0.5">
-            {isInStock ? (
-              <span className="font-semibold text-emerald-600 flex items-center gap-0.5">
-                <FiCheck className="h-3 w-3 stroke-[3]" />
-                <span>In Stock</span>
-              </span>
-            ) : (
-              <span className="font-semibold text-rose-600">Out of Stock</span>
-            )}
-            <span className="text-stone-300">•</span>
-            <span className="flex items-center gap-0.5 text-stone-500 font-medium">
-              <FiTruck className="h-3 w-3 text-stone-400" />
-              <span>Free Delivery</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Integrated Action Bar */}
-      <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
-        <motion.button
-          whileTap={{ scale: 0.92 }}
-          type="button"
-          onClick={() => onRemove(variantId)}
-          className="text-[11px] font-medium text-stone-400 hover:text-rose-600 transition-colors flex items-center gap-1 cursor-pointer px-1 py-0.5"
-          title="Remove item"
-        >
-          <FiTrash2 className="h-3 w-3 text-stone-400" />
-          <span>Remove</span>
-        </motion.button>
-
-        <motion.button
-          whileTap={isInStock && !isItemMoving ? { scale: 0.95 } : {}}
-          type="button"
-          disabled={!isInStock || isItemMoving}
-          onClick={() => onMoveToCart(item)}
-          className="h-[34px] px-3.5 rounded-[10px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[11px] shadow-xs flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <FiShoppingCart className="h-3 w-3 text-white" />
-          <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
-        </motion.button>
-      </div>
-    </motion.div>
-  );
-});
-
-/**
  * MobileRecommendedCard
  * Product card for "You May Also Like" horizontal scroll section in Empty Wishlist view.
  */
@@ -418,7 +272,7 @@ function MobileRecommendedCard({ product }) {
 
 /**
  * MobileWishlistSkeleton
- * Loading skeleton matching vertical & horizontal layouts.
+ * Loading skeleton for 2-column grid layout.
  */
 function MobileWishlistSkeleton() {
   return (
@@ -429,9 +283,9 @@ function MobileWishlistSkeleton() {
         <div className="h-7 w-7 rounded-full bg-stone-200 animate-pulse" />
       </div>
 
-      <div className="px-3.5 py-3 max-w-[767px] mx-auto space-y-3">
+      <div className="px-2.5 sm:px-4 py-3 max-w-[767px] mx-auto space-y-3">
         <div className="h-[76px] rounded-[16px] bg-amber-100/40 animate-pulse" />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
           {[1, 2, 3, 4].map((n) => (
             <div key={n} className="h-56 rounded-[16px] bg-white border border-stone-200 p-2 space-y-2">
               <div className="w-full aspect-square rounded-[12px] bg-stone-200 animate-pulse" />
@@ -448,8 +302,8 @@ function MobileWishlistSkeleton() {
 
 /**
  * MobileWishlist
- * Native App Style Mobile (<768px) and Tablet (768-1023px) Wishlist Page.
- * Inspired by Myntra, AJIO, Zara, Nike, and Apple Store layout standards.
+ * Native App Style 2-Column Grid Wishlist Page (<1024px).
+ * Inspired by Myntra, AJIO, and Zara native mobile shopping apps.
  */
 export default function MobileWishlist({
   items = [],
@@ -464,7 +318,6 @@ export default function MobileWishlist({
   movingItemId = null,
 }) {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
   // Fetch featured products for empty wishlist recommendations
   const { data: featuredData } = useFeaturedProducts();
@@ -561,44 +414,17 @@ export default function MobileWishlist({
           </span>
         </div>
 
-        {/* Right Actions: View Mode Switcher + Share */}
-        <div className="flex items-center gap-1.5">
-          {items.length > 0 && (
-            <div className="flex items-center bg-stone-100 rounded-full p-0.5 border border-stone-200/80">
-              <button
-                type="button"
-                onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-full text-xs transition-all ${viewMode === 'grid' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
-                  }`}
-                title="Grid View"
-                aria-label="Grid View"
-              >
-                <FiGrid className="h-3 w-3" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-full text-xs transition-all ${viewMode === 'list' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
-                  }`}
-                title="List View"
-                aria-label="List View"
-              >
-                <FiList className="h-3 w-3" />
-              </button>
-            </div>
-          )}
-
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            type="button"
-            onClick={handleShare}
-            className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
-            aria-label="Share Wishlist"
-            title="Share Wishlist"
-          >
-            <FiShare2 className="h-3.5 w-3.5" />
-          </motion.button>
-        </div>
+        {/* Right Actions: Share Button */}
+        <motion.button
+          whileTap={{ scale: 0.92 }}
+          type="button"
+          onClick={handleShare}
+          className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
+          aria-label="Share Wishlist"
+          title="Share Wishlist"
+        >
+          <FiShare2 className="h-3.5 w-3.5" />
+        </motion.button>
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
@@ -681,45 +507,24 @@ export default function MobileWishlist({
               <HiSparkles className="h-4.5 w-4.5 text-[#D49E41] shrink-0" />
             </div>
 
-            {/* ─── 3. WISHLIST PRODUCT CARDS (GRID VS LIST) ─── */}
+            {/* ─── 3. 2-COLUMN GRID WISHLIST PRODUCT CARDS (WIDTH / 2 PER CARD) ─── */}
             <AnimatePresence mode="popLayout">
-              {viewMode === 'grid' ? (
-                /* MYNTRA / AJIO NATIVE 2-COLUMN GRID */
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
-                  {items.map((item) => {
-                    const variantId = item.variantId || item.productId;
-                    const isItemMoving = movingItemId === variantId;
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+                {items.map((item) => {
+                  const variantId = item.variantId || item.productId;
+                  const isItemMoving = movingItemId === variantId;
 
-                    return (
-                      <MobileGridWishlistCard
-                        key={`mobile-grid-item-${item.wishlistId || item.id || variantId}`}
-                        item={item}
-                        onMoveToCart={onMoveToCart}
-                        onRemove={onRemove}
-                        isItemMoving={isItemMoving}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                /* APPLE STORE / NIKE NATIVE HORIZONTAL LIST */
-                <div className="space-y-2.5">
-                  {items.map((item) => {
-                    const variantId = item.variantId || item.productId;
-                    const isItemMoving = movingItemId === variantId;
-
-                    return (
-                      <MobileHorizontalWishlistCard
-                        key={`mobile-list-item-${item.wishlistId || item.id || variantId}`}
-                        item={item}
-                        onMoveToCart={onMoveToCart}
-                        onRemove={onRemove}
-                        isItemMoving={isItemMoving}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+                  return (
+                    <MobileGridWishlistCard
+                      key={`mobile-grid-item-${item.wishlistId || item.id || variantId}`}
+                      item={item}
+                      onMoveToCart={onMoveToCart}
+                      onRemove={onRemove}
+                      isItemMoving={isItemMoving}
+                    />
+                  );
+                })}
+              </div>
             </AnimatePresence>
           </>
         )}
