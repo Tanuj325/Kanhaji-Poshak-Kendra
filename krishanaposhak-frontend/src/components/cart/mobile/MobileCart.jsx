@@ -26,6 +26,7 @@ import { calculateDiscount } from '@/utils/calculateDiscount';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 import { siteConfig } from '@/config/siteConfig';
+import CouponInput from '@/components/cart/CouponInput';
 
 // Helper function to extract image URL safely
 const resolveCartImage = (item) => {
@@ -642,65 +643,20 @@ export default function MobileCart({
 
         {/* ─── COUPON SECTION ─── */}
         <section className="bg-white rounded-[14px] border border-stone-200/80 p-3 shadow-2xs space-y-2">
-          <div
-            onClick={() => setShowCouponForm((prev) => !prev)}
-            className="flex items-center justify-between cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <FiTag className="h-4 w-4 text-amber-700" />
-              <span className="text-[13px] font-bold text-stone-800">
-                {appliedCoupon ? `Applied Coupon: ${appliedCoupon.code}` : 'Apply Coupon Code'}
-              </span>
-            </div>
-
-            <span className="text-[11px] font-bold text-amber-800 flex items-center gap-0.5">
-              <span>{appliedCoupon ? 'Change' : showCouponForm ? 'Close' : 'Select'}</span>
-              <FiChevronRight className={`h-3.5 w-3.5 transition-transform ${showCouponForm ? 'rotate-90' : ''}`} />
+          <div className="flex items-center gap-2 pb-1.5 border-b border-stone-100">
+            <FiTag className="h-4 w-4 text-amber-700 shrink-0" />
+            <span className="text-[13px] font-bold text-stone-900">
+              Apply Coupon Code
             </span>
           </div>
 
-          {appliedCoupon ? (
-            <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200/70 p-2.5 rounded-xl text-xs">
-              <div className="flex items-center gap-2">
-                <FiCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                <div>
-                  <span className="font-bold text-emerald-900 text-[12px]">{appliedCoupon.code}</span>
-                  {appliedCoupon.discountAmount > 0 && (
-                    <p className="text-[10px] text-emerald-700 font-medium">
-                      Saved ₹{appliedCoupon.discountAmount} with code!
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={onRemoveCoupon}
-                className="text-[11px] font-bold text-rose-600 hover:underline"
-              >
-                Remove
-              </button>
-            </div>
-          ) : (
-            showCouponForm && (
-              <form onSubmit={handleCouponSubmit} className="flex gap-2 pt-1">
-                <input
-                  type="text"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                  placeholder="Enter Code (e.g. KRISHNA10)"
-                  className="flex-1 h-9 rounded-xl border border-stone-200 px-3 text-xs uppercase text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-amber-700"
-                />
-                <button
-                  type="submit"
-                  disabled={!couponInput.trim()}
-                  className="h-9 px-4 rounded-xl bg-stone-900 text-white font-bold text-xs disabled:opacity-50"
-                >
-                  Apply
-                </button>
-              </form>
-            )
-          )}
+          <CouponInput
+            orderAmount={subtotal}
+            appliedCoupon={appliedCoupon}
+            onApply={onApplyCoupon}
+            onRemove={onRemoveCoupon}
+            isEmbedded={true}
+          />
         </section>
 
         {/* ─── 10. CART SUMMARY (PRICE DETAILS) ─── */}

@@ -114,7 +114,8 @@ function CartPage() {
   }, [clearCart]);
 
   const handleApplyCoupon = useCallback((code, discountAmount) => {
-    const couponData = { code, discountAmount };
+    const validAmount = Number(discountAmount) || 0;
+    const couponData = { code, discountAmount: validAmount };
     setAppliedCoupon(couponData);
     try {
       sessionStorage.setItem('kp_applied_coupon', JSON.stringify(couponData));
@@ -165,8 +166,9 @@ function CartPage() {
     );
   }
 
-  const finalDiscount = appliedCoupon ? discount + appliedCoupon.discountAmount : discount;
-  const finalGrandTotal = appliedCoupon ? Math.max(0, grandTotal - appliedCoupon.discountAmount) : grandTotal;
+  const couponSavings = Number(appliedCoupon?.discountAmount) || 0;
+  const finalDiscount = (Number(discount) || 0) + couponSavings;
+  const finalGrandTotal = Math.max(0, (Number(grandTotal) || 0) - couponSavings);
 
   // Render Mobile/Tablet view (<1024px) vs Desktop view (>=1024px)
   if (!isDesktop) {

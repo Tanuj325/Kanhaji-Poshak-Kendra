@@ -106,13 +106,14 @@ function CheckoutPage() {
     return true;
   }, [cartCount, selectedAddressId]);
 
-  const couponDiscount = appliedCoupon?.discountAmount || 0;
-  const finalDiscount = (discount || 0) + couponDiscount;
+  const couponDiscount = Number(appliedCoupon?.discountAmount) || 0;
+  const finalDiscount = (Number(discount) || 0) + couponDiscount;
   const { shipping: activeShippingCharge } = calculateShipping(subtotal);
   const finalGrandTotal = Math.max(0, (subtotal + activeShippingCharge) - finalDiscount);
 
   const handleCouponApply = useCallback((code, discountAmount) => {
-    const couponData = { code, discountAmount };
+    const validAmount = Number(discountAmount) || 0;
+    const couponData = { code, discountAmount: validAmount };
     setAppliedCoupon(couponData);
     setCouponCode(code);
     try {
