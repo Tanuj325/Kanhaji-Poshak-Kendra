@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,8 +17,10 @@ import {
   FiStar,
   FiArrowRight,
   FiGrid,
+  FiAlertTriangle,
 } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
+import { FaWhatsapp } from 'react-icons/fa';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 import { calculateDiscount } from '@/utils/calculateDiscount';
 import { ROUTE_PATHS } from '@/routes/routePaths';
@@ -46,54 +48,81 @@ const resolveCartImage = (item) => {
 
 /**
  * CartQuantityInput
- * Dedicated input component maintaining local string state to allow full backspacing & smooth multi-digit typing.
+ * Standalone top-level input component.
+ * Uses local state + debounced parent update to maintain cursor position,
+ * keep mobile keyboard open, and provide instant typing feedback.
  */
 function CartQuantityInput({ quantity, maxStock, isUpdating, onUpdate }) {
   const [localValue, setLocalValue] = useState(() => String(quantity ?? 1));
+  const debounceTimerRef = useRef(null);
 
+  // Synchronize local state when parent quantity prop changes externally (e.g. plus/minus click)
   useEffect(() => {
-    setLocalValue(String(quantity ?? 0));
+    setLocalValue((prev) => {
+      const parsedPrev = parseInt(prev, 10);
+      if (parsedPrev === quantity) return prev;
+      return String(quantity ?? 0);
+    });
   }, [quantity]);
+
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     const raw = e.target.value;
     setLocalValue(raw);
 
-    if (raw === '') {
-      onUpdate(0);
-      return;
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
 
-    const parsed = parseInt(raw, 10);
-    if (!isNaN(parsed)) {
-      const clamped = Math.max(0, Math.min(maxStock, parsed));
-      onUpdate(clamped);
-    }
+    // Debounce parent update by 300ms so soft keyboard stays focused and open
+    debounceTimerRef.current = setTimeout(() => {
+      if (raw === '') {
+        onUpdate(0);
+        return;
+      }
+      const parsed = parseInt(raw, 10);
+      if (!isNaN(parsed)) {
+        onUpdate(Math.max(0, parsed));
+      }
+    }, 300);
   };
 
   const handleBlur = () => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
     if (localValue === '' || isNaN(parseInt(localValue, 10))) {
       setLocalValue('0');
       onUpdate(0);
     } else {
-      const parsed = parseInt(localValue, 10);
-      const clamped = Math.max(0, Math.min(maxStock, parsed));
-      setLocalValue(String(clamped));
-      onUpdate(clamped);
+      const parsed = Math.max(0, parseInt(localValue, 10));
+      setLocalValue(String(parsed));
+      onUpdate(parsed);
     }
   };
+
+  const isExceeded = (parseInt(localValue, 10) || 0) > maxStock;
+  const isZero = localValue === '0' || localValue === '';
 
   return (
     <input
       type="number"
       min={0}
-      max={maxStock}
       disabled={isUpdating}
       value={localValue}
       onChange={handleChange}
       onBlur={handleBlur}
-      className={`w-8 text-center text-[13px] font-bold bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-        localValue === '0' || localValue === '' ? 'text-rose-600 font-extrabold' : 'text-stone-900'
+      className={`w-10 text-center text-[13px] font-bold bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+        isZero || isExceeded ? 'text-rose-600 font-extrabold' : 'text-stone-900'
       }`}
       aria-label="Item quantity"
     />
@@ -198,12 +227,30 @@ export default function MobileCart({
     ? Math.max(0, grandTotal)
     : Math.max(0, safeSubtotal - safeDiscount + safeShipping);
 
-  // Disable checkout if items array is empty, updating, or if ANY item has quantity <= 0
-  const hasInvalidQuantity = useMemo(() => {
-    return items.some((item) => item.quantity === undefined || item.quantity === null || item.quantity <= 0);
+  // Check if any item has 0 quantity or exceeds available stock
+  const invalidItemInfo = useMemo(() => {
+    let zeroQty = false;
+    let exceededStock = false;
+
+    items.forEach((item) => {
+      const q = item.quantity ?? 0;
+      const stock = item.stock ?? 10;
+      if (q <= 0) {
+        zeroQty = true;
+      }
+      if (q > stock) {
+        exceededStock = true;
+      }
+    });
+
+    return { zeroQty, exceededStock };
   }, [items]);
 
-  const isCheckoutDisabled = items.length === 0 || hasInvalidQuantity || isUpdating;
+  const isCheckoutDisabled =
+    items.length === 0 ||
+    invalidItemInfo.zeroQty ||
+    invalidItemInfo.exceededStock ||
+    isUpdating;
 
   // Fetch featured products for Myntra style horizontal scroll
   const { data: featuredData } = useFeaturedProducts();
@@ -510,52 +557,78 @@ export default function MobileCart({
                     </div>
                   </div>
 
-                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height, TYPEABLE INPUT INCLUDING 0) + 5. SAVE FOR LATER ghost chip */}
-                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-2 flex-wrap">
-                    {/* 3. Quantity Control (Entire height: 32px, minus 28x28, count input center, plus 28x28) */}
-                    <div className="h-[32px] inline-flex items-center bg-stone-100/90 border border-stone-200/70 rounded-full px-1 gap-0.5 shadow-inner">
-                      <motion.button
-                        whileTap={{ scale: 0.85 }}
-                        type="button"
-                        disabled={quantity <= 0 || isUpdating}
-                        onClick={() => onUpdateQuantity(targetId, Math.max(0, quantity - 1))}
-                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
-                        aria-label="Decrease quantity"
-                      >
-                        <FiMinus className="h-3 w-3" />
-                      </motion.button>
+                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height, TYPEABLE INPUT) + 5. SAVE FOR LATER ghost chip */}
+                  <div className="pt-2 border-t border-stone-100 space-y-2">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      {/* 3. Quantity Control */}
+                      <div className="h-[32px] inline-flex items-center bg-stone-100/90 border border-stone-200/70 rounded-full px-1 gap-0.5 shadow-inner">
+                        <motion.button
+                          whileTap={{ scale: 0.85 }}
+                          type="button"
+                          disabled={quantity <= 0 || isUpdating}
+                          onClick={() => onUpdateQuantity(targetId, Math.max(0, quantity - 1))}
+                          className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
+                          aria-label="Decrease quantity"
+                        >
+                          <FiMinus className="h-3 w-3" />
+                        </motion.button>
 
-                      {/* Typeable Input Field for Quantity */}
-                      <CartQuantityInput
-                        quantity={quantity}
-                        maxStock={maxStock}
-                        isUpdating={isUpdating}
-                        onUpdate={(val) => onUpdateQuantity(targetId, val)}
-                      />
+                        {/* Fast & Non-blocking Typeable Input */}
+                        <CartQuantityInput
+                          quantity={quantity}
+                          maxStock={maxStock}
+                          isUpdating={isUpdating}
+                          onUpdate={(val) => onUpdateQuantity(targetId, val)}
+                        />
 
-                      <motion.button
-                        whileTap={{ scale: 0.85 }}
-                        type="button"
-                        disabled={quantity >= maxStock || isUpdating}
-                        onClick={() => onUpdateQuantity(targetId, Math.min(maxStock, quantity + 1))}
-                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
-                        aria-label="Increase quantity"
-                      >
-                        <FiPlus className="h-3 w-3" />
-                      </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.85 }}
+                          type="button"
+                          disabled={isUpdating}
+                          onClick={() => onUpdateQuantity(targetId, quantity + 1)}
+                          className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
+                          aria-label="Increase quantity"
+                        >
+                          <FiPlus className="h-3 w-3" />
+                        </motion.button>
+                      </div>
+
+                      {/* 5. Save For Later (Small ghost chip) */}
+                      {onMoveToWishlist && (
+                        <motion.button
+                          whileTap={{ scale: 0.95 }}
+                          type="button"
+                          onClick={() => onMoveToWishlist(item)}
+                          className="text-[11px] font-semibold text-stone-600 bg-stone-100/80 hover:bg-amber-50 hover:text-amber-800 px-2.5 py-1 rounded-full border border-stone-200/70 flex items-center gap-1 transition-all"
+                        >
+                          <FiHeart className="h-3 w-3 text-amber-700" />
+                          <span>Save for Later</span>
+                        </motion.button>
+                      )}
                     </div>
 
-                    {/* 5. Save For Later (Small ghost chip) */}
-                    {onMoveToWishlist && (
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        type="button"
-                        onClick={() => onMoveToWishlist(item)}
-                        className="text-[11px] font-semibold text-stone-600 bg-stone-100/80 hover:bg-amber-50 hover:text-amber-800 px-2.5 py-1 rounded-full border border-stone-200/70 flex items-center gap-1 transition-all"
-                      >
-                        <FiHeart className="h-3 w-3 text-amber-700" />
-                        <span>Save for Later</span>
-                      </motion.button>
+                    {/* Out of Stock / Exceeds Stock Warning with WhatsApp Contact Link */}
+                    {isExceeded && (
+                      <div className="bg-amber-50/90 border border-amber-300/80 rounded-[10px] p-2.5 text-[11px] text-amber-950 space-y-1.5 mt-1">
+                        <div className="flex items-start gap-1.5 font-bold">
+                          <FiAlertTriangle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" />
+                          <span>Currently only {maxStock} units available in stock.</span>
+                        </div>
+                        <p className="text-[10px] text-stone-600 leading-snug">
+                          Need more quantities for festival or temple order? Contact our team directly on WhatsApp for bulk availability!
+                        </p>
+                        <a
+                          href={`https://wa.me/${siteConfig.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                            `Hari Om! I want to order ${quantity} units of "${productName || item.product?.name || 'Poshak'}" (Available stock: ${maxStock}). Please help me place this order.`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-2.5 py-1 rounded-lg transition-colors shadow-2xs"
+                        >
+                          <FaWhatsapp className="h-3.5 w-3.5" />
+                          <span>Contact Us on WhatsApp for Bulk Order</span>
+                        </a>
+                      </div>
                     )}
                   </div>
                 </motion.div>
