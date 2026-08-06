@@ -35,30 +35,30 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full bg-white border border-amber-900/10 rounded-2xl p-4 sm:p-6 xl:p-7 shadow-[0_2px_12px_rgba(44,40,36,0.03)] space-y-3.5 font-body text-left transition-all hover:border-amber-900/20"
+      transition={{ duration: 0.2 }}
+      className="w-full bg-white border border-slate-100 rounded-xl p-3 sm:p-4 shadow-2xs space-y-2.5 font-sans text-left transition-all hover:border-slate-200"
     >
       {/* Header: Avatar + Name + Actions */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-start justify-between gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
           {/* Avatar */}
-          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-amber-900 text-amber-50 font-bold text-sm font-display flex items-center justify-center shrink-0 shadow-xs border border-amber-700/30">
+          <div className="h-8 w-8 rounded-full bg-slate-900 text-amber-200 font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs border border-slate-800 font-mono">
             {userInitial}
           </div>
 
           <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm sm:text-base font-bold text-amber-950 leading-snug font-display truncate">
+              <span className="text-xs sm:text-sm font-semibold text-slate-900 leading-snug truncate">
                 {displayName}
               </span>
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/80 shrink-0 font-display">
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
                 <FiCheckCircle className="h-3 w-3 text-emerald-600" /> Verified
               </span>
             </div>
 
-            <p className="text-[11px] sm:text-xs text-stone-500 font-medium font-mono">
+            <p className="text-[10px] text-slate-400 font-mono">
               {createdAt ? formatDate(createdAt, { format: 'date' }) : 'Verified Order'}
             </p>
           </div>
@@ -70,47 +70,47 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
             <button
               type="button"
               onClick={() => onEdit?.(review)}
-              className="flex items-center justify-center h-10 w-10 sm:h-9 sm:w-9 rounded-lg text-amber-800 hover:bg-amber-100/60 transition-colors min-h-[44px] min-w-[44px]"
+              className="flex items-center justify-center h-7 w-7 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
               aria-label="Edit review"
             >
-              <FiEdit2 className="h-4 w-4" />
+              <FiEdit2 className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
               onClick={() => onDelete?.(id)}
-              className="flex items-center justify-center h-10 w-10 sm:h-9 sm:w-9 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors min-h-[44px] min-w-[44px]"
+              className="flex items-center justify-center h-7 w-7 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors"
               aria-label="Delete review"
             >
-              <FiTrash2 className="h-4 w-4" />
+              <FiTrash2 className="h-3.5 w-3.5" />
             </button>
           </div>
         )}
       </div>
 
       {/* Rating & Comment */}
-      <div className="w-full space-y-2 min-w-0">
+      <div className="w-full space-y-1 min-w-0">
         <Rating rating={rating || 5} size="xs" />
-        <p className="w-full max-w-none text-xs sm:text-base text-stone-800 leading-relaxed font-normal break-words whitespace-normal font-body">
+        <p className="w-full max-w-none text-xs text-slate-700 leading-relaxed font-normal break-words whitespace-normal">
           "{comment}"
         </p>
       </div>
 
       {/* Footer: Helpful + Purchase Tag */}
-      <div className="flex items-center justify-between text-xs pt-3 border-t border-amber-900/10 flex-wrap gap-2">
+      <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-100 flex-wrap gap-2">
         <button
           type="button"
           onClick={handleHelpfulClick}
-          className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-bold transition-colors font-display min-h-[44px] ${
+          className={`inline-flex items-center justify-center gap-1 h-7 px-2.5 rounded-lg border text-[11px] font-semibold transition-colors ${
             hasVotedHelpful
-              ? 'bg-amber-900 text-amber-50 border-amber-900'
-              : 'bg-amber-50/60 border-amber-900/10 text-stone-700 hover:bg-amber-100/60'
+              ? 'bg-slate-900 text-white border-slate-900'
+              : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
           }`}
         >
-          <FiThumbsUp className="h-3.5 w-3.5 shrink-0" />
+          <FiThumbsUp className="h-3 w-3 shrink-0" />
           <span>Helpful {helpfulCount > 0 ? `(${helpfulCount})` : ''}</span>
         </button>
 
-        <span className="inline-flex items-center gap-1 font-bold text-amber-900 font-display text-[10px] sm:text-[11px]">
+        <span className="inline-flex items-center gap-1 font-semibold text-slate-500 text-[10px]">
           <FiShoppingBag className="h-3 w-3 text-amber-700 shrink-0" /> Verified Purchase
         </span>
       </div>

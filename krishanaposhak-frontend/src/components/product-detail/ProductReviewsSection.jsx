@@ -109,28 +109,27 @@ export default function ProductReviewsSection({ productId, productAverageRating 
   }, [reviewsList, selectedStarFilter]);
 
   return (
-    <section className="w-full font-display space-y-6 xl:space-y-8">
+    <section className="w-full font-display space-y-3.5 sm:space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-amber-900/10">
-        <div className="space-y-1">
-          <h2 className="text-xl sm:text-2xl xl:text-3xl font-extrabold text-amber-950 tracking-tight flex items-center gap-2.5 font-heading">
-            <FiMessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-amber-800" />
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div className="space-y-0.5">
+          <h2 className="text-sm sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2 font-heading">
+            <FiMessageSquare className="h-4 w-4 text-[#C99A3B]" />
             <span>Customer Reviews</span>
           </h2>
-          <p className="text-xs sm:text-sm text-stone-500 font-medium font-body">
+          <p className="text-[11px] text-slate-500 font-medium font-body">
             Real experiences & verified ratings ({totalReviews})
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="md"
+        <button
+          type="button"
           onClick={openCreateModal}
-          leftIcon={<FiEdit3 className="h-4 w-4 text-amber-200" />}
-          className="w-full sm:w-auto flex justify-center items-center rounded-xl bg-amber-900 hover:bg-amber-950 text-amber-50 font-bold py-3 px-5 text-xs sm:text-sm shrink-0 shadow-md border border-amber-500/20 min-h-[48px]"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#C99A3B] hover:bg-[#B3832B] text-white font-bold text-[11px] shrink-0 shadow-2xs transition-all active:scale-95"
         >
-          Write a Review
-        </Button>
+          <FiEdit3 className="h-3.5 w-3.5" />
+          <span>Write Review</span>
+        </button>
       </div>
 
       {/* Summary Card */}
@@ -142,16 +141,16 @@ export default function ProductReviewsSection({ productId, productAverageRating 
 
       {/* Filter Chips */}
       {totalReviews > 0 && (
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-950">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
               Filter by Rating
             </h3>
             {selectedStarFilter !== 'ALL' && (
               <button
                 type="button"
                 onClick={() => setSelectedStarFilter('ALL')}
-                className="text-xs font-bold text-amber-800 hover:underline"
+                className="text-[11px] font-semibold text-[#C99A3B] hover:underline"
               >
                 Clear
               </button>
@@ -169,7 +168,7 @@ export default function ProductReviewsSection({ productId, productAverageRating 
 
       {/* Review Cards */}
       {isLoadingReviews ? (
-        <div className="py-12 text-center">
+        <div className="py-8 text-center">
           <Spinner label="Loading reviews..." />
         </div>
       ) : filteredReviews.length === 0 ? (
@@ -181,13 +180,13 @@ export default function ProductReviewsSection({ productId, productAverageRating 
               : 'Be the first devotee to share your thoughts on this sacred poshak!'
           }
           action={
-            <Button variant="primary" size="md" onClick={openCreateModal} className="rounded-xl bg-amber-900 text-white min-h-[44px]">
+            <Button variant="primary" size="sm" onClick={openCreateModal} className="rounded-xl bg-[#C99A3B] text-white">
               Write Review
             </Button>
           }
         />
       ) : (
-        <div className="w-full grid grid-cols-1 gap-3 sm:gap-4 pt-1">
+        <div className="w-full space-y-2.5 sm:space-y-3 pt-1">
           {filteredReviews.map((rev) => (
             <ReviewCard
               key={rev.id}

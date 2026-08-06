@@ -6,21 +6,32 @@ import { ROUTE_PATHS } from '@/routes/routePaths';
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 export default function RelatedProductsSection({ categoryId, currentProductSlug, currentProductId }) {
-  const { data: relatedData, isLoading } = useProducts(
-    categoryId ? { categoryId, size: 8, page: 0 } : undefined,
+  // Query 1: By Category ID (if available)
+  const categoryQuery = useProducts(
+    categoryId ? { categoryId, size: 8, page: 0 } : undefined
   );
+
+  // Query 2: Fallback general products (if category query returns no items or categoryId missing)
+  const fallbackQuery = useProducts(
+    !categoryId || (categoryQuery.isSuccess && !categoryQuery.data?.content?.length)
+      ? { size: 8, page: 0 }
+      : undefined
+  );
+
+  const activeData = categoryId && categoryQuery.data ? categoryQuery.data : fallbackQuery.data;
+  const isLoading = categoryQuery.isLoading || fallbackQuery.isLoading;
 
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
   const relatedProducts = useMemo(() => {
-    if (!categoryId || !relatedData) return [];
+    if (!activeData) return [];
     const raw =
-      relatedData?.content ||
-      relatedData?.data?.content ||
-      relatedData?.data ||
-      (Array.isArray(relatedData) ? relatedData : []);
+      activeData?.content ||
+      activeData?.data?.content ||
+      activeData?.data ||
+      (Array.isArray(activeData) ? activeData : []);
     return raw
       .filter((p) => p.slug !== currentProductSlug && p.id !== currentProductId)
       .slice(0, 6)
@@ -37,7 +48,7 @@ export default function RelatedProductsSection({ categoryId, currentProductSlug,
         stock: p.stock ?? 10,
         category: p.categoryName || p.category?.name || 'Collection',
       }));
-  }, [relatedData, categoryId, currentProductSlug, currentProductId]);
+  }, [activeData, currentProductSlug, currentProductId]);
 
   const updateScrollState = useCallback(() => {
     if (!scrollRef.current) return;
@@ -55,7 +66,7 @@ export default function RelatedProductsSection({ categoryId, currentProductSlug,
     });
   }, []);
 
-  if (!categoryId || (!isLoading && relatedProducts.length === 0)) return null;
+  if (!isLoading && relatedProducts.length === 0) return null;
 
   return (
     <div className="space-y-6 font-display">
