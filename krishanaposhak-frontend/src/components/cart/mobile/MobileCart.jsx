@@ -16,7 +16,6 @@ import {
   FiPlus,
   FiStar,
   FiArrowRight,
-  FiRefreshCw,
   FiGrid,
 } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
@@ -112,7 +111,7 @@ function MobileHorizontalProductCard({ product }) {
 
 /**
  * MobileCart
- * App-style Mobile (<768px) and Tablet (768px-1023px) Cart UI Rebuild.
+ * App-style Mobile (<768px) and Tablet (768px-1023px) Cart UI Page Rebuild.
  * Inspiring E-Commerce App UI (Nike, Myntra, Zara, Apple Store).
  */
 export default function MobileCart({
@@ -135,6 +134,14 @@ export default function MobileCart({
   const [couponInput, setCouponInput] = useState('');
   const [showCouponForm, setShowCouponForm] = useState(false);
 
+  // Safe numerical conversions to strictly avoid NaN display
+  const safeSubtotal = Number(subtotal) || 0;
+  const safeDiscount = Number(discount) || 0;
+  const safeShipping = Number(shippingCharge) || 0;
+  const safeGrandTotal = typeof grandTotal === 'number' && !isNaN(grandTotal)
+    ? Math.max(0, grandTotal)
+    : Math.max(0, safeSubtotal - safeDiscount + safeShipping);
+
   // Fetch featured products for Myntra style horizontal scroll
   const { data: featuredData } = useFeaturedProducts();
   const trendingProducts = useMemo(() => {
@@ -155,11 +162,11 @@ export default function MobileCart({
   };
 
   // ══════════════════════════════════════════════════════════════
-  // 9. EMPTY CART STATE
+  // 9. EMPTY CART STATE (Full Page View)
   // ══════════════════════════════════════════════════════════════
   if (items.length === 0) {
     return (
-      <div className="min-h-dvh w-full bg-[#FAF8F5] text-stone-800 font-sans antialiased pb-24">
+      <div className="min-h-dvh w-full bg-[#FAF8F5] text-stone-800 font-sans antialiased pb-28 md:pb-16">
         {/* Sticky Header (52px) */}
         <header className="sticky top-0 z-40 h-[52px] bg-white/92 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
           <button
@@ -254,10 +261,10 @@ export default function MobileCart({
   }
 
   // ══════════════════════════════════════════════════════════════
-  // CART WITH ITEMS
+  // CART WITH ITEMS (Full Page View)
   // ══════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-dvh w-full bg-[#FAF8F5] text-stone-800 font-sans antialiased pb-36">
+    <div className="min-h-dvh w-full bg-[#FAF8F5] text-stone-800 font-sans antialiased pb-48 md:pb-28">
       {/* ─── 1. MOBILE HEADER (52px Height, Sticky Glass) ─── */}
       <header className="sticky top-0 z-40 h-[52px] bg-white/92 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
         <button
@@ -296,13 +303,13 @@ export default function MobileCart({
           <div className="flex items-center gap-2">
             <FiTruck className="h-4 w-4 text-emerald-600 shrink-0" />
             <span className="font-semibold text-emerald-900">
-              {shippingCharge === 0
+              {safeShipping === 0
                 ? '🚚 Free Express Delivery • Dispatch in 24 hrs'
-                : `🚚 Express Delivery • ₹${shippingCharge} Shipping`}
+                : `🚚 Express Delivery • ₹${safeShipping} Shipping`}
             </span>
           </div>
           <span className="text-[10px] font-bold uppercase bg-emerald-100 px-2 py-0.5 rounded-full text-emerald-800">
-            {shippingCharge === 0 ? 'Free' : 'Standard'}
+            {safeShipping === 0 ? 'Free' : 'Standard'}
           </span>
         </section>
 
@@ -400,7 +407,7 @@ export default function MobileCart({
                       {/* 6. PRICE SECTION: 18px bold price, 11px old price, 11px green discount, 10px tax note */}
                       <div className="flex items-baseline gap-1.5 flex-wrap pt-1">
                         <span className="text-[18px] font-bold text-stone-900 leading-none">
-                          ₹{activeUnitPrice.toLocaleString('en-IN')}
+                          ₹{(activeUnitPrice || 0).toLocaleString('en-IN')}
                         </span>
 
                         {strikeUnitPrice && (
@@ -433,36 +440,49 @@ export default function MobileCart({
                     </div>
                   </div>
 
-                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height) + 5. SAVE FOR LATER ghost chip */}
+                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height, TYPEABLE INPUT) + 5. SAVE FOR LATER ghost chip */}
                   <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-2 flex-wrap">
-                    {/* 3. Quantity Control (Entire height: 32px, minus 28x28, count center, plus 28x28) */}
-                    <div className="h-[32px] inline-flex items-center bg-stone-100/90 border border-stone-200/70 rounded-full px-1 gap-1 shadow-inner">
+                    {/* 3. Quantity Control (Entire height: 32px, minus 28x28, count input center, plus 28x28) */}
+                    <div className="h-[32px] inline-flex items-center bg-stone-100/90 border border-stone-200/70 rounded-full px-1 gap-0.5 shadow-inner">
                       <motion.button
                         whileTap={{ scale: 0.85 }}
                         type="button"
                         disabled={quantity <= 1 || isUpdating}
                         onClick={() => onUpdateQuantity(targetId, Math.max(1, quantity - 1))}
-                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform"
+                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
                         aria-label="Decrease quantity"
                       >
                         <FiMinus className="h-3 w-3" />
                       </motion.button>
 
-                      <motion.span
-                        key={`qty-${quantity}`}
-                        initial={{ scale: 1.25 }}
-                        animate={{ scale: 1 }}
-                        className="w-7 text-center text-[13px] font-bold text-stone-900 font-mono"
-                      >
-                        {quantity}
-                      </motion.span>
+                      {/* Typeable Input Field for Quantity */}
+                      <input
+                        type="number"
+                        min={1}
+                        max={maxStock}
+                        value={quantity}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val)) {
+                            onUpdateQuantity(targetId, Math.max(1, Math.min(maxStock, val)));
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (isNaN(val) || val < 1) {
+                            onUpdateQuantity(targetId, 1);
+                          }
+                        }}
+                        className="w-8 text-center text-[13px] font-bold text-stone-900 bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        aria-label="Item quantity"
+                      />
 
                       <motion.button
                         whileTap={{ scale: 0.85 }}
                         type="button"
                         disabled={quantity >= maxStock || isUpdating}
                         onClick={() => onUpdateQuantity(targetId, Math.min(maxStock, quantity + 1))}
-                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform"
+                        className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
                         aria-label="Increase quantity"
                       >
                         <FiPlus className="h-3 w-3" />
@@ -560,28 +580,28 @@ export default function MobileCart({
           <div className="space-y-2 text-[13px]">
             <div className="flex justify-between text-stone-600">
               <span>Item Total</span>
-              <span className="font-semibold text-stone-900">₹{subtotal.toLocaleString('en-IN')}</span>
+              <span className="font-semibold text-stone-900">₹{safeSubtotal.toLocaleString('en-IN')}</span>
             </div>
 
-            {discount > 0 && (
+            {safeDiscount > 0 && (
               <div className="flex justify-between text-emerald-700 font-medium">
                 <span>Discount Saved</span>
-                <span className="font-bold">-₹{discount.toLocaleString('en-IN')}</span>
+                <span className="font-bold">-₹{safeDiscount.toLocaleString('en-IN')}</span>
               </div>
             )}
 
             <div className="flex justify-between text-stone-600">
               <span>Delivery Fee</span>
-              {shippingCharge === 0 ? (
+              {safeShipping === 0 ? (
                 <span className="font-bold text-emerald-700">FREE</span>
               ) : (
-                <span className="font-semibold text-stone-900">₹{shippingCharge.toLocaleString('en-IN')}</span>
+                <span className="font-semibold text-stone-900">₹{safeShipping.toLocaleString('en-IN')}</span>
               )}
             </div>
 
             <div className="pt-2 border-t border-dashed border-stone-200 flex justify-between items-baseline">
               <span className="text-[14px] font-bold text-stone-900">Grand Total</span>
-              <span className="text-[18px] font-bold text-stone-900">₹{grandTotal.toLocaleString('en-IN')}</span>
+              <span className="text-[18px] font-bold text-stone-900">₹{safeGrandTotal.toLocaleString('en-IN')}</span>
             </div>
           </div>
 
@@ -626,8 +646,8 @@ export default function MobileCart({
         )}
       </main>
 
-      {/* ─── 11. STICKY CHECKOUT BAR (Mobile/Tablet Fixed Bottom) ─── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/80 px-4 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      {/* ─── 11. STICKY CHECKOUT BAR (Positioned above MobileBottomNav on mobile: bottom-[56px] md:bottom-0) ─── */}
+      <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/80 px-4 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
         <div className="max-w-[767px] mx-auto flex items-center justify-between gap-3">
           {/* Left: Total Price 18px Bold */}
           <div className="flex flex-col shrink-0">
@@ -635,7 +655,7 @@ export default function MobileCart({
               Grand Total
             </span>
             <span className="text-[18px] font-bold text-stone-900 leading-none">
-              ₹{grandTotal.toLocaleString('en-IN')}
+              ₹{safeGrandTotal.toLocaleString('en-IN')}
             </span>
           </div>
 
