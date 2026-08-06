@@ -429,7 +429,7 @@ export default function MobileWishlist({
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-1.5 sm:px-3 py-2.5 max-w-[767px] mx-auto space-y-2.5">
+      <main className="px-0.5 sm:px-1.5 py-0.5 max-w-[767px] mx-auto space-y-2.5">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
           <div className="py-6 space-y-5">
