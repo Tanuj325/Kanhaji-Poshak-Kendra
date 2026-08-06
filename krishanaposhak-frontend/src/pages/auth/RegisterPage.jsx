@@ -19,6 +19,7 @@ import { useAuth } from '@/context/AuthContext';
 import { registerSchema } from '@/validators/authSchemas';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import { ROUTE_PATHS } from '@/routes/routePaths';
+import MobileRegister from '@/components/auth/MobileRegister';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -71,7 +72,8 @@ export default function RegisterPage() {
     },
   });
 
-  const passwordValue = watch('password');
+  const formValues = watch();
+  const passwordValue = formValues.password;
   const strength = useMemo(() => getPasswordStrength(passwordValue), [passwordValue]);
 
   const onSubmit = useCallback(
@@ -188,7 +190,25 @@ export default function RegisterPage() {
         noindex
       />
 
-      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
+      {/* ─── MOBILE & TABLET REDESIGN (<1024px) ─── */}
+      <div className="block lg:hidden">
+        <MobileRegister
+          register={register}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          isSubmitting={isSubmitting}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          acceptTerms={acceptTerms}
+          setAcceptTerms={setAcceptTerms}
+          formValues={formValues}
+          strength={strength}
+        />
+      </div>
+
+      {/* ─── DESKTOP VIEW (>=1024px - 100% UNCHANGED) ─── */}
+      <div className="hidden lg:block rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
         {/* Header */}
         <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="mb-6 text-center">
           <h1 className="font-serif text-2xl font-bold tracking-wide text-white sm:text-3xl">

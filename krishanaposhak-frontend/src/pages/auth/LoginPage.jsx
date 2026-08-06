@@ -11,6 +11,7 @@ import { loginSchema } from '@/validators/authSchemas';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { siteConfig } from '@/config/siteConfig';
+import MobileLogin from '@/components/auth/MobileLogin';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -32,11 +33,15 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
+
+  const emailValue = watch('email');
+  const passwordValue = watch('password');
 
   const onSubmit = useCallback(
     async (data) => {
@@ -82,7 +87,25 @@ export default function LoginPage() {
         noindex
       />
 
-      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
+      {/* ─── MOBILE & TABLET REDESIGN (<1024px) ─── */}
+      <div className="block lg:hidden">
+        <MobileLogin
+          register={register}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          isLoading={isLoading}
+          rememberMe={rememberMe}
+          setRememberMe={setRememberMe}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          emailValue={emailValue}
+          passwordValue={passwordValue}
+        />
+      </div>
+
+      {/* ─── DESKTOP VIEW (>=1024px - 100% UNCHANGED) ─── */}
+      <div className="hidden lg:block rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
         {/* Header */}
         <motion.div
           custom={0}
