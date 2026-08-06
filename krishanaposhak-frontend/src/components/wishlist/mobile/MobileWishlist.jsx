@@ -155,10 +155,10 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
           whileTap={{ scale: 0.85 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="absolute top-2 right-2 z-10 h-6.5 w-6.5 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
+          className="absolute top-2 right-2 z-10 h-7.5 w-7.5 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
           aria-label="Remove item"
         >
-          <FiTrash2 className="h-3 w-3" />
+          <FiTrash2 className="h-2.5 w-2.5" />
         </motion.button>
 
         {/* Rating Pill Overlay */}
