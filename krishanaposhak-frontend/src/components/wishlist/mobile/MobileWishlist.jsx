@@ -1,14 +1,12 @@
 import { useMemo, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import toast from 'react-hot-toast';
 import {
   FiArrowLeft,
   FiHeart,
   FiShoppingCart,
   FiTrash2,
   FiStar,
-  FiShare2,
   FiArrowRight,
   FiBookmark,
   FiAlertCircle,
@@ -346,25 +344,6 @@ export default function MobileWishlist({
     return { estimatedTotal: est, totalDiscount: disc };
   }, [items]);
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: `My Wishlist | ${siteConfig.name}`,
-          text: 'Check out my saved Krishna Poshak collection!',
-          url: window.location.href,
-        })
-        .catch(() => { });
-    } else {
-      try {
-        navigator.clipboard.writeText(window.location.href);
-        toast.success('Wishlist link copied to clipboard!');
-      } catch {
-        toast.error('Unable to copy link.');
-      }
-    }
-  };
-
   if (isLoading) {
     return <MobileWishlistSkeleton />;
   }
@@ -393,7 +372,7 @@ export default function MobileWishlist({
 
   return (
     <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
-      {/* ─── 1. HEADER (Sticky, Height: 50px) ─── */}
+      {/* ─── 1. HEADER (Sticky, Height: 50px, Centered Title) ─── */}
       <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
         <motion.button
           whileTap={{ scale: 0.92 }}
@@ -415,17 +394,8 @@ export default function MobileWishlist({
           </span>
         </div>
 
-        {/* Right Actions: Share Button */}
-        <motion.button
-          whileTap={{ scale: 0.92 }}
-          type="button"
-          onClick={handleShare}
-          className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
-          aria-label="Share Wishlist"
-          title="Share Wishlist"
-        >
-          <FiShare2 className="h-3.5 w-3.5" />
-        </motion.button>
+        {/* Right Spacer (Keeps Title Centered) */}
+        <div className="h-7.5 w-7.5" aria-hidden="true" />
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
