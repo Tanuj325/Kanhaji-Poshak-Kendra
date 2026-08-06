@@ -18,8 +18,10 @@ import TrustBadges from '@/components/product-detail/TrustBadges';
 import ProductTabs from '@/components/product-detail/ProductTabs';
 import ProductReviewsSection from '@/components/product-detail/ProductReviewsSection';
 import RelatedProductsSection from '@/components/product-detail/RelatedProductsSection';
+import MobileProductDetail from '@/components/product-detail/mobile/MobileProductDetail';
 
 import { useProduct, useProductBySlug } from '@/hooks/useProducts';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useCartContext } from '@/context/CartContext';
 import { ROUTE_PATHS, buildPath } from '@/routes/routePaths';
 import { siteConfig } from '@/config/siteConfig';
@@ -28,6 +30,7 @@ import toast from 'react-hot-toast';
 import { FiShoppingBag } from 'react-icons/fi';
 
 export default function ProductDetailPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { slug } = useParams();
 
   const isNumericId = Boolean(slug && /^\d+$/.test(slug));
@@ -182,6 +185,33 @@ export default function ProductDetailPage() {
     );
   }
 
+  // Render Mobile/Tablet view (<1024px) vs Desktop view (>=1024px)
+  if (!isDesktop) {
+    return (
+      <>
+        <SEO
+          title={product.name}
+          description={product.shortDescription || product.description || `Handcrafted ${product.name} from Kanhaji Poshak Kendra Meerut. Premium devotional wear.`}
+          canonicalUrl={canonicalUrl}
+          ogImage={productImage}
+          ogType="product"
+          jsonLd={productSchemas}
+        />
+        <MobileProductDetail
+          product={product}
+          variants={variants}
+          selectedVariant={selectedVariant}
+          setSelectedVariant={setSelectedVariant}
+          breadcrumbItems={breadcrumbItems}
+          canonicalUrl={canonicalUrl}
+        />
+      </>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
       <SEO
@@ -291,3 +321,4 @@ export default function ProductDetailPage() {
     </div>
   );
 }
+
