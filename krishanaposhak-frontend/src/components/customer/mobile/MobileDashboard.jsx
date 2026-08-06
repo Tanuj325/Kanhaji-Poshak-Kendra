@@ -28,12 +28,15 @@ import {
   FiShield,
   FiHeadphones,
   FiFileText,
+  FiMail,
+  FiPhone,
 } from 'react-icons/fi';
 
 /**
  * MobileDashboard
- * Native App-style Account Dashboard Rebuild for Mobile (<768px) and Tablet (768px-1023px).
- * Inspired by Apple Store, Nike App, Myntra, AJIO, Shopify Plus.
+ * Premium Full-Screen Account Dashboard Page for Mobile (<768px) and Tablet (768px-1023px).
+ * Complete full-page experience (like Apple Store, Nike, Myntra, Flipkart, Amazon).
+ * Desktop view (>=1024px) remains 100% untouched.
  */
 export default function MobileDashboard() {
   const navigate = useNavigate();
@@ -51,9 +54,10 @@ export default function MobileDashboard() {
   const totalOrders = ordersData?.totalElements || (ordersData?.content || ordersData?.data || []).length || 0;
   const addrList = Array.isArray(addresses) ? addresses : addresses?.data || [];
 
-  const fullName = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Valued Devotee';
-  const email = user?.email || 'devotee@krishanaposhak.com';
-  const memberSince = user?.createdAt ? formatDate(user.createdAt, { format: 'MMM YYYY' }) : 'Jan 2024';
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Valued Devotee';
+  const email = user?.email || '';
+  const phone = user?.phoneNumber || '';
+  const memberSince = user?.createdAt ? formatDate(user.createdAt, { format: 'short' }) : 'Devotee';
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -120,8 +124,20 @@ export default function MobileDashboard() {
   ];
 
   const menuRows = [
-    { id: 'orders', label: 'Orders', icon: FiShoppingBag, href: ROUTE_PATHS.ORDERS },
-    { id: 'addresses', label: 'Addresses', icon: FiMapPin, href: ROUTE_PATHS.ADDRESSES },
+    {
+      id: 'orders',
+      label: 'Orders',
+      icon: FiShoppingBag,
+      href: ROUTE_PATHS.ORDERS,
+      count: totalOrders > 0 ? totalOrders : null,
+    },
+    {
+      id: 'addresses',
+      label: 'Addresses',
+      icon: FiMapPin,
+      href: ROUTE_PATHS.ADDRESSES,
+      count: addrList.length > 0 ? addrList.length : null,
+    },
     { id: 'payments', label: 'Payments', icon: FiCreditCard, href: ROUTE_PATHS.SETTINGS },
     {
       id: 'notifications',
@@ -139,23 +155,23 @@ export default function MobileDashboard() {
   ];
 
   return (
-    <div className="min-h-dvh w-full overflow-x-hidden bg-[#FAF8F5] text-stone-900 font-display antialiased pb-24 md:pb-16">
-      {/* ─── 1. HEADER (56px Sticky, Back Button, Center Title, Notification Icon, Profile Avatar) ─── */}
+    <div className="min-h-screen w-full max-w-full bg-[#FAF8F5] text-stone-900 font-display antialiased">
+      {/* ─── 1. HEADER (Sticky, Height 56px, Back Button, Centered Title, Notification Icon, Profile Avatar) ─── */}
       <header className="sticky top-0 z-40 h-[56px] w-full bg-white/95 backdrop-blur-xl border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="h-9 w-9 rounded-full bg-stone-100 hover:bg-stone-200/80 text-stone-800 flex items-center justify-center active:scale-95 transition-transform"
+          className="h-9 w-9 rounded-full bg-stone-100 hover:bg-stone-200/80 text-stone-800 flex items-center justify-center active:scale-95 transition-transform shrink-0"
           aria-label="Back"
         >
           <FiChevronLeft className="h-5 w-5 stroke-[2.5]" />
         </button>
 
-        <h1 className="text-[16px] font-heading font-extrabold text-amber-950 tracking-wide text-center flex-1 mx-2 truncate">
+        <h1 className="text-[22px] font-heading font-extrabold text-amber-950 tracking-tight text-center flex-1 mx-2 truncate">
           My Account
         </h1>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Link
             to={ROUTE_PATHS.NOTIFICATIONS}
             className="relative h-9 w-9 rounded-full bg-stone-100 hover:bg-amber-50 text-stone-800 flex items-center justify-center active:scale-95 transition-transform"
@@ -179,16 +195,16 @@ export default function MobileDashboard() {
         </div>
       </header>
 
-      {/* ─── MAIN CONTENT WRAPPER (Full Width w-full, px-4 outer padding) ─── */}
-      <main className="w-full px-4 py-4 space-y-4">
-        {/* ─── 2. WELCOME CARD (Full Width, Rounded 22px, Soft Gold Gradient, Height ~110px) ─── */}
+      {/* ─── MAIN CONTENT CONTAINER (Full Width, px-4 pt-4 pb-24 space-y-4) ─── */}
+      <main className="w-full px-4 pt-4 pb-24 space-y-4">
+        {/* ─── 2. PROFILE CARD (100% Width, Rounded 20px, Soft Luxury Gradient) ─── */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="w-full rounded-[22px] bg-gradient-to-br from-[#FFFBF0] via-[#FAF0D9] to-[#F5E5C9] border border-amber-400/30 p-4 shadow-sm overflow-hidden relative flex flex-col justify-between gap-3 min-h-[110px]"
+          className="w-full rounded-[20px] bg-gradient-to-br from-[#FFFBF0] via-[#FAF0D9] to-[#F5E5C9] border border-amber-400/30 p-4 shadow-xs relative overflow-hidden flex flex-col justify-between gap-3.5"
         >
-          {/* Ambient Soft Gold Background Glow */}
+          {/* Ambient Soft Glow Accent */}
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-36 h-36 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
 
           <div className="flex items-center justify-between gap-3 relative z-10 w-full">
@@ -207,35 +223,48 @@ export default function MobileDashboard() {
                 <h2 className="text-[18px] font-heading font-extrabold text-amber-950 leading-tight truncate">
                   {fullName}
                 </h2>
-                <p className="text-[13px] text-stone-600 truncate font-mono">{email}</p>
+                {email && (
+                  <p className="text-[13px] text-stone-600 truncate font-mono flex items-center gap-1.5">
+                    <FiMail className="h-3.5 w-3.5 text-amber-800 shrink-0" />
+                    <span className="truncate">{email}</span>
+                  </p>
+                )}
+                {phone && (
+                  <p className="text-[13px] text-stone-600 truncate font-mono flex items-center gap-1.5 mt-0.5">
+                    <FiPhone className="h-3.5 w-3.5 text-amber-800 shrink-0" />
+                    <span>{phone}</span>
+                  </p>
+                )}
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => navigate(ROUTE_PATHS.PROFILE)}
-              className="h-[44px] px-3.5 rounded-[14px] bg-amber-900 hover:bg-amber-950 text-white text-[13px] font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0"
+              className="h-[44px] rounded-[14px] px-4 bg-amber-900 hover:bg-amber-950 text-white text-[13px] font-bold shadow-2xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0"
             >
               <FiEdit3 className="h-4 w-4" />
               <span>Edit</span>
             </button>
           </div>
 
-          <div className="pt-2 border-t border-amber-900/10 flex items-center justify-between text-[13px] font-medium text-stone-700 relative z-10 w-full">
-            <span>Member since: <strong className="text-amber-950 font-extrabold">{memberSince}</strong></span>
-            <span className="text-emerald-800 font-extrabold flex items-center gap-1 text-[12px] bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200">
+          <div className="pt-2.5 border-t border-amber-900/10 flex items-center justify-between text-[13px] font-medium text-stone-700 relative z-10 w-full">
+            <span>
+              Member since: <strong className="text-amber-950 font-extrabold">{memberSince}</strong>
+            </span>
+            <span className="text-emerald-800 font-extrabold flex items-center gap-1 text-[12px] bg-emerald-100/80 px-2.5 py-0.5 rounded-full border border-emerald-200">
               <FiShield className="h-3 w-3" /> Devotee Member
             </span>
           </div>
         </motion.div>
 
-        {/* ─── 3. QUICK ACTIONS (2 Columns, Equal Width, Gap 12px, Height 90px, Rounded 18px) ─── */}
+        {/* ─── 3. QUICK ACTION GRID (2 Equal Columns, 100% Width, Gap 12px, Height 88px, Rounded 18px) ─── */}
         <section className="w-full space-y-2">
-          <h3 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
+          <h2 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
             Quick Actions
-          </h3>
+          </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-[12px] w-full">
+          <div className="grid grid-cols-2 gap-[12px] w-full">
             {quickActions.map((action, idx) => {
               const Icon = action.icon;
               return (
@@ -244,12 +273,12 @@ export default function MobileDashboard() {
                   initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, delay: idx * 0.03 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(action.href)}
-                  className="w-full h-[90px] rounded-[18px] bg-white border border-stone-200/80 p-3 shadow-xs hover:border-amber-400/50 cursor-pointer flex flex-col justify-between transition-all group relative overflow-hidden"
+                  className="w-full h-[88px] rounded-[18px] bg-white border border-stone-200/80 p-3.5 shadow-xs hover:border-amber-400/50 cursor-pointer flex flex-col justify-between transition-all group relative overflow-hidden"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <Icon className="h-[28px] w-[28px] text-amber-900 stroke-[1.8] shrink-0" />
+                    <Icon className="h-[26px] w-[26px] text-amber-900 stroke-[1.8] shrink-0" />
 
                     {action.count !== null && (
                       <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full font-mono shadow-2xs ${action.badgeColor}`}>
@@ -258,7 +287,7 @@ export default function MobileDashboard() {
                     )}
 
                     {action.badge && (
-                      <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${action.badgeColor}`}>
+                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider ${action.badgeColor}`}>
                         {action.badge}
                       </span>
                     )}
@@ -276,11 +305,11 @@ export default function MobileDashboard() {
           </div>
         </section>
 
-        {/* ─── 4. ACCOUNT MENU (Full Width, White Card, Rounded 18px, 56px Row Height) ─── */}
+        {/* ─── 4. ACCOUNT MENU (Full Width, Large White Card, Rounded 18px, 56px Row Height) ─── */}
         <section className="w-full space-y-2">
-          <h3 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
-            Account Details & Preferences
-          </h3>
+          <h2 className="text-[16px] font-heading font-extrabold text-amber-950 px-1">
+            Account Options
+          </h2>
 
           <div className="w-full rounded-[18px] bg-white border border-stone-200/80 shadow-xs divide-y divide-stone-100 overflow-hidden">
             {menuRows.map((row) => {
@@ -292,8 +321,8 @@ export default function MobileDashboard() {
                   key={row.id}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleClick}
-                  className={`h-[56px] px-4 flex items-center justify-between hover:bg-amber-50/40 cursor-pointer transition-colors group ${
-                    row.isDanger ? 'hover:bg-rose-50/40' : ''
+                  className={`h-[56px] px-4 flex items-center justify-between hover:bg-amber-50/40 active:bg-stone-100 cursor-pointer transition-colors group ${
+                    row.isDanger ? 'hover:bg-rose-50/40 active:bg-rose-100/50' : ''
                   }`}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -317,7 +346,7 @@ export default function MobileDashboard() {
           </div>
         </section>
 
-        {/* ─── 5. LOGOUT BUTTON (Height 44px, Rounded 14px, Not Oversized) ─── */}
+        {/* ─── 5. STANDALONE LOGOUT BUTTON (Height 44px, Rounded 14px, Premium) ─── */}
         <div className="w-full pt-2 pb-6">
           <motion.button
             whileTap={{ scale: 0.98 }}
@@ -334,4 +363,3 @@ export default function MobileDashboard() {
     </div>
   );
 }
-
