@@ -98,15 +98,13 @@ export default function MobileBottomNav({ onOpenDrawer }) {
               to={item.path}
               aria-current={active ? 'page' : undefined}
               aria-label={item.label}
-              className={`flex-1 flex flex-col items-center justify-center py-1 relative active-tap-scale transition-colors ${
-                active ? 'text-amber-900 font-bold' : 'text-stone-500 hover:text-stone-900'
-              }`}
+              className={`flex-1 flex flex-col items-center justify-center py-1 relative active-tap-scale transition-colors ${active ? 'text-amber-900 font-bold' : 'text-stone-500 hover:text-stone-900'
+                }`}
             >
               <div className="relative flex items-center justify-center mb-0.5">
                 <Icon
-                  className={`icon-m-bottom-nav w-[20px] h-[20px] transition-transform ${
-                    active ? 'scale-105 text-amber-900' : 'text-stone-500'
-                  }`}
+                  className={`icon-m-bottom-nav w-[20px] h-[20px] transition-transform ${active ? 'scale-105 text-amber-900' : 'text-stone-500'
+                    }`}
                   aria-hidden="true"
                 />
                 {item.badge > 0 && (
@@ -117,16 +115,15 @@ export default function MobileBottomNav({ onOpenDrawer }) {
               </div>
 
               <span
-                className={`text-m-nav text-[10px] tracking-tight leading-none text-center ${
-                  active ? 'font-bold text-amber-900' : 'font-medium text-stone-500'
-                }`}
+                className={`text-m-nav text-[10px] tracking-tight leading-none text-center ${active ? 'font-bold text-amber-900' : 'font-medium text-stone-500'
+                  }`}
               >
                 {item.label}
               </span>
 
               {/* Active Tab Accent Indicator */}
               {active && (
-                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-amber-600" />
+                <span className="absolute bottom-0 w-1 h-1 rounded-full bg-amber-600" />
               )}
             </Link>
           );
