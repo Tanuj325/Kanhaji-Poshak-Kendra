@@ -28,6 +28,7 @@ import { useCartContext } from '@/context/CartContext';
 import { useWishlistContext } from '@/context/WishlistContext';
 import { useAuth } from '@/context/AuthContext';
 import { ROUTE_PATHS, buildPath } from '@/routes/routePaths';
+import { FREE_SHIPPING_THRESHOLD } from '@/utils/shippingCalculator';
 import toast from 'react-hot-toast';
 
 export default function MobileProductDetail({
@@ -79,6 +80,10 @@ export default function MobileProductDetail({
 
   const isWishlisted = selectedVariant ? isInWishlist(selectedVariant.id) : false;
 
+  // Actual product rating & reviews (no hardcoding)
+  const averageRating = product?.averageRating != null ? Number(product.averageRating).toFixed(1) : null;
+  const reviewCount = product?.reviewCount ?? 0;
+
   // Swipe gesture handling for image carousel
   const handleTouchStart = (e) => {
     touchStartRef.current = e.touches[0].clientX;
@@ -98,6 +103,8 @@ export default function MobileProductDetail({
   };
 
   // Handlers
+  const numericQuantity = Math.max(1, Number(quantity) || 1);
+
   const handleAddToCart = useCallback(async () => {
     if (!isAuthenticated) {
       toast.error('Please log in to add items to cart');
@@ -108,8 +115,8 @@ export default function MobileProductDetail({
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, quantity);
-  }, [isAuthenticated, selectedVariant, quantity, addItem, navigate]);
+    await addItem(selectedVariant.id, numericQuantity);
+  }, [isAuthenticated, selectedVariant, numericQuantity, addItem, navigate]);
 
   const handleBuyNow = useCallback(async () => {
     if (!isAuthenticated) {
@@ -121,9 +128,9 @@ export default function MobileProductDetail({
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, quantity);
+    await addItem(selectedVariant.id, numericQuantity);
     navigate(ROUTE_PATHS.CHECKOUT);
-  }, [isAuthenticated, selectedVariant, quantity, addItem, navigate]);
+  }, [isAuthenticated, selectedVariant, numericQuantity, addItem, navigate]);
 
   const handleWishlistToggle = useCallback(async () => {
     if (!isAuthenticated) {
@@ -158,8 +165,10 @@ export default function MobileProductDetail({
     setOpenAccordion((prev) => (prev === name ? null : name));
   };
 
+  const freeShippingThresholdFormatted = FREE_SHIPPING_THRESHOLD.toLocaleString('en-IN');
+
   return (
-    <div className="min-h-dvh w-full bg-[#FAF8F5] text-slate-800 font-sans antialiased pb-28">
+    <div className="min-h-dvh w-full bg-[#FAF8F5] text-slate-800 font-sans antialiased pb-36 md:pb-28">
       {/* ─── STICKY HEADER (52px Height, 36x36 Buttons, 10px Category) ─── */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-4 h-[52px] flex items-center justify-between shadow-2xs">
         <button
@@ -172,7 +181,7 @@ export default function MobileProductDetail({
         </button>
 
         <div className="flex flex-col items-center text-center max-w-[55%]">
-          <span className="text-[10px] font-medium tracking-wider uppercase text-amber-800 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 truncate">
+          <span className="text-[10px] font-medium tracking-wider uppercase text-amber-800 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 truncate">
             {product?.categoryName || product?.category?.name || 'Devotional Attire'}
           </span>
           <span className="text-[11px] font-semibold text-slate-900 truncate mt-0.5 w-full">
@@ -314,7 +323,7 @@ export default function MobileProductDetail({
           )}
         </section>
 
-        {/* ─── 2. PRODUCT INFO CARD (12px Card Padding, Compact Typography) ─── */}
+        {/* ─── 2. PRODUCT INFO CARD (12px Card Padding, Compact Typography, Real Rating Data) ─── */}
         <section className="bg-white rounded-[16px] p-3 sm:p-4 border border-slate-100 shadow-2xs space-y-2.5">
           
           {/* Brand + Rating Pill */}
@@ -323,12 +332,12 @@ export default function MobileProductDetail({
               Kanhaji Poshak Kendra
             </span>
 
-            {/* Rating Glass Pill (Height 24px, 8px Horizontal Padding) */}
+            {/* Rating Glass Pill (Strictly dynamic from backend API - no fake fallbacks) */}
             <div className="h-6 px-2 rounded-full bg-amber-50 border border-amber-200/60 text-[11px] font-medium text-slate-800 inline-flex items-center gap-1">
               <FiStar className="h-3 w-3 fill-amber-400 text-amber-500" />
-              <span>{product?.averageRating ? Number(product.averageRating).toFixed(1) : '4.9'}</span>
+              <span>{averageRating !== null ? averageRating : (reviewCount > 0 ? '0.0' : 'New')}</span>
               <span className="text-slate-400 font-normal">
-                ({product?.reviewCount || 128})
+                ({reviewCount})
               </span>
             </div>
           </div>
@@ -358,12 +367,12 @@ export default function MobileProductDetail({
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-[11px] text-slate-500">
+            <div className="flex items-center gap-2 text-[11px] text-slate-500 flex-wrap">
               <span>Inclusive of all taxes</span>
               <span>•</span>
               <span className="text-emerald-600 font-semibold flex items-center gap-1">
                 <FiTruck className="h-3 w-3" />
-                Free Express Shipping
+                Free Express Shipping over ₹{freeShippingThresholdFormatted}
               </span>
             </div>
           </div>
@@ -435,37 +444,55 @@ export default function MobileProductDetail({
           </section>
         )}
 
-        {/* ─── 4. QUANTITY SELECTOR (Height 38px, Buttons 36x36, Rounded 14px) ─── */}
+        {/* ─── 4. QUANTITY SELECTOR (Editable Input + Stepper Buttons) ─── */}
         <section className="bg-white rounded-[16px] p-3 sm:p-4 border border-slate-100 shadow-2xs flex items-center justify-between">
           <div>
             <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
               Quantity
             </h2>
             <p className="text-[10px] text-slate-400 mt-0.5">
-              Select quantity
+              Select or type quantity
             </p>
           </div>
 
-          <div className="h-[38px] inline-flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-[14px] px-1.5">
+          <div className="h-[38px] inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-[14px] px-1.5">
             <button
               type="button"
-              disabled={quantity <= 1}
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="h-[30px] w-[30px] rounded-[10px] bg-white text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all"
+              disabled={numericQuantity <= 1}
+              onClick={() => setQuantity((q) => Math.max(1, (Number(q) || 1) - 1))}
+              className="h-[30px] w-[30px] rounded-[10px] bg-white text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all shrink-0"
               aria-label="Decrease quantity"
             >
               <FiMinus className="h-3 w-3" />
             </button>
 
-            <span className="w-5 text-center text-xs font-bold text-slate-900 font-mono">
-              {quantity}
-            </span>
+            <input
+              type="number"
+              min={1}
+              max={stock}
+              value={quantity}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === '') {
+                  setQuantity('');
+                } else {
+                  const parsed = parseInt(val, 10);
+                  if (!isNaN(parsed)) {
+                    setQuantity(Math.max(1, Math.min(stock, parsed)));
+                  }
+                }
+              }}
+              onBlur={() => {
+                if (!quantity || Number(quantity) < 1) setQuantity(1);
+              }}
+              className="w-10 text-center text-xs font-bold text-slate-900 bg-transparent focus:outline-none focus:ring-1 focus:ring-[#C99A3B] rounded font-mono p-0"
+            />
 
             <button
               type="button"
-              disabled={quantity >= stock}
-              onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
-              className="h-[30px] w-[30px] rounded-[10px] bg-white text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all"
+              disabled={numericQuantity >= stock}
+              onClick={() => setQuantity((q) => Math.min(stock, (Number(q) || 1) + 1))}
+              className="h-[30px] w-[30px] rounded-[10px] bg-white text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-xs shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all shrink-0"
               aria-label="Increase quantity"
             >
               <FiPlus className="h-3 w-3" />
@@ -587,7 +614,7 @@ export default function MobileProductDetail({
               <div className="px-3.5 pb-3 pt-0 text-[11px] space-y-1.5 text-slate-600 border-t border-slate-50">
                 <div className="flex items-start gap-2">
                   <FiTruck className="h-3.5 w-3.5 text-[#C99A3B] shrink-0 mt-0.5" />
-                  <span>Free Express Shipping across India on orders over ₹499.</span>
+                  <span>Free Express Shipping across India on orders over ₹{freeShippingThresholdFormatted}.</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <FiShield className="h-3.5 w-3.5 text-[#C99A3B] shrink-0 mt-0.5" />
@@ -620,8 +647,8 @@ export default function MobileProductDetail({
         </section>
       </main>
 
-      {/* ─── 9. STICKY BOTTOM BAR (Height 48px, Rounded 14px Buttons, 10px Gap) ─── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 px-4 py-2.5 pb-[calc(0.65rem+env(safe-area-inset-bottom))] shadow-[0_-6px_20px_rgba(0,0,0,0.06)] rounded-t-[18px]">
+      {/* ─── 9. STICKY BOTTOM BAR (Positioned above MobileBottomNav on mobile: bottom-[56px] md:bottom-0) ─── */}
+      <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 px-4 py-2.5 shadow-[0_-6px_20px_rgba(0,0,0,0.06)] rounded-t-[18px]">
         <div className="flex items-center justify-between gap-[10px] max-w-[767px] mx-auto w-full">
           
           {/* Price Summary */}
@@ -629,11 +656,11 @@ export default function MobileProductDetail({
             <span className="text-[9px] uppercase font-semibold text-slate-400 tracking-wider">Total</span>
             <div className="flex items-baseline gap-1">
               <span className="text-[17px] font-bold text-slate-900 tracking-tight leading-none">
-                ₹{(currentDisplayPrice * quantity).toLocaleString('en-IN')}
+                ₹{(currentDisplayPrice * numericQuantity).toLocaleString('en-IN')}
               </span>
               {strikePrice && (
                 <span className="text-[11px] font-medium text-slate-400 line-through">
-                  ₹{(strikePrice * quantity).toLocaleString('en-IN')}
+                  ₹{(strikePrice * numericQuantity).toLocaleString('en-IN')}
                 </span>
               )}
             </div>
