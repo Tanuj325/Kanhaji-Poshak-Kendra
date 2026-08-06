@@ -12,6 +12,8 @@ import DiscountBadge from '@/components/ui/DiscountBadge';
 import Badge from '@/components/ui/Badge';
 import { useWishlistContext } from '@/context/WishlistContext';
 import { useMoveWishlistToCart } from '@/hooks/useMoveWishlistToCart';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileWishlist from '@/components/wishlist/mobile/MobileWishlist';
 import { calculateDiscount } from '@/utils/calculateDiscount';
 import { siteConfig } from '@/config/siteConfig';
 import {
@@ -50,6 +52,8 @@ const resolveWishlistImage = (item) => {
 };
 
 function WishlistPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
   const { wishlist, isLoading, isError, error, refetch, removeFromWishlist } = useWishlistContext();
   const moveToCart = useMoveWishlistToCart();
   const [isMovingAll, setIsMovingAll] = useState(false);
@@ -101,6 +105,35 @@ function WishlistPage() {
     [removeFromWishlist],
   );
 
+  // Render Mobile/Tablet View (<1024px)
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`My Wishlist (${items.length}) | ${siteConfig.name}`}</title>
+          <meta name="description" content="View and manage your saved Krishna Poshak items" />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileWishlist
+          items={items}
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          onRetry={() => refetch?.()}
+          onMoveToCart={handleMoveToCart}
+          onMoveAllToCart={handleMoveAllToCart}
+          onRemove={handleRemove}
+          isMovingAll={isMovingAll}
+          movingItemId={moveToCart.isPending ? moveToCart.variables?.variantId : null}
+        />
+      </>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
   if (isLoading) {
     return (
       <div className="space-y-6 w-full max-w-6xl">
