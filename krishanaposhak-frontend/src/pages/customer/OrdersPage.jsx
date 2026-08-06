@@ -32,6 +32,9 @@ import {
   FiFilter,
 } from 'react-icons/fi';
 
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileOrders from '@/components/orders/mobile/MobileOrders';
+
 const breadcrumbItems = [
   { label: 'Home', href: '/' },
   { label: 'My Account', href: '/account/profile' },
@@ -90,6 +93,7 @@ const sortOptions = [
 ];
 
 export default function OrdersPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [buyingAgainId, setBuyingAgainId] = useState(null);
@@ -159,6 +163,41 @@ export default function OrdersPage() {
     setSearchParams(p);
   };
 
+  // ══════════════════════════════════════════════════════════════
+  // MOBILE & TABLET VIEW (<1024px)
+  // ══════════════════════════════════════════════════════════════
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`My Orders | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <MobileOrders
+          orders={orders}
+          totalOrders={totalOrders}
+          totalPages={totalPages}
+          page={page}
+          status={status}
+          paymentStatus={paymentStatus}
+          sort={sort}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          updateParam={updateParam}
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          refetch={refetch}
+          handleBuyAgain={handleBuyAgain}
+          buyingAgainId={buyingAgainId}
+        />
+      </>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
   if (isLoading) {
     return (
       <div className="space-y-6 w-full max-w-5xl">

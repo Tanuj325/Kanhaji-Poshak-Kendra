@@ -32,7 +32,11 @@ import {
   FiShield,
 } from 'react-icons/fi';
 
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileOrderDetail from '@/components/orders/mobile/MobileOrderDetail';
+
 export default function OrderDetailPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { orderId } = useParams();
   const { data: order, isLoading, isError, error, refetch } = useOrder(orderId);
   const cancelOrder = useCancelOrder();
@@ -112,6 +116,68 @@ export default function OrderDetailPage() {
   const items = order?.items || [];
   const canCancel = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKING'].includes(order?.orderStatus);
   const isDelivered = order?.orderStatus === 'DELIVERED';
+
+  // ══════════════════════════════════════════════════════════════
+  // MOBILE & TABLET VIEW (<1024px)
+  // ══════════════════════════════════════════════════════════════
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`Order #${order?.orderNumber || ''} | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileOrderDetail
+          order={order}
+          orderId={orderId}
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          refetch={refetch}
+          isCancelModalOpen={isCancelModalOpen}
+          setIsCancelModalOpen={setIsCancelModalOpen}
+          selectedReviewProduct={selectedReviewProduct}
+          setSelectedReviewProduct={setSelectedReviewProduct}
+          isBuyingAgain={isBuyingAgain}
+          handleCancelOrder={handleCancelOrder}
+          handleBuyAgain={handleBuyAgain}
+          handlePrintInvoice={handlePrintInvoice}
+          canCancel={canCancel}
+          isDelivered={isDelivered}
+          cancelOrder={cancelOrder}
+        />
+
+        {/* Cancel Order Confirmation Modal */}
+        <ConfirmDialog
+          isOpen={isCancelModalOpen}
+          onClose={() => setIsCancelModalOpen(false)}
+          onConfirm={handleCancelOrder}
+          title="Cancel Order Confirmation"
+          message={`Are you sure you want to cancel Order #${order?.orderNumber}? This action cannot be undone.`}
+          confirmText="Yes, Cancel Order"
+          type="danger"
+          isLoading={cancelOrder.isPending}
+        />
+
+        {/* Review Product Modal */}
+        {selectedReviewProduct && (
+          <WriteReviewModal
+            isOpen={!!selectedReviewProduct}
+            onClose={() => setSelectedReviewProduct(null)}
+            product={selectedReviewProduct}
+          />
+        )}
+
+        {/* Hidden PDF Printable Invoice Document */}
+        <PrintableInvoice order={order} />
+      </>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
 
   return (
     <>
