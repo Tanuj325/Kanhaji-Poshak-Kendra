@@ -64,7 +64,7 @@ export default function MobileOrderSuccess({ orderData }) {
         {/* ---------------------------------------------------- */}
         {/* 1. HERO SUCCESS CELEBRATION HEADER */}
         {/* ---------------------------------------------------- */}
-        <section className="relative text-center pt-6 pb-7 px-4 rounded-3xl bg-gradient-to-b from-amber-900/10 via-amber-50/60 to-white border border-amber-900/10 shadow-sm overflow-hidden font-display">
+        <section className="relative text-center pt-6 pb-7 px-1 rounded-3xl bg-gradient-to-b from-amber-900/10 via-amber-50/60 to-white border border-amber-900/10 shadow-sm overflow-hidden font-display">
           {/* Background Ambient Glow Circles */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -131,7 +131,7 @@ export default function MobileOrderSuccess({ orderData }) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.4 }}
-            className="mt-4 inline-flex items-center gap-2 bg-white/90 backdrop-blur-md py-2.5 rounded-2xl border border-amber-900/10 shadow-xs"
+            className="mt-4 flex flex-col items-center gap-2 bg-white/90 backdrop-blur-md px-1 py-2.5 rounded-2xl border border-amber-900/10 shadow-xs"
           >
             <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Order ID:</span>
             <span className="font-heading font-black text-base sm:text-lg text-amber-950 font-mono tracking-wide">
