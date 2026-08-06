@@ -16,6 +16,8 @@ import {
   FiPackage,
   FiCheck,
   FiTruck,
+  FiGrid,
+  FiList,
 } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
 import OptimizedImage from '@/components/ui/OptimizedImage';
@@ -108,10 +110,121 @@ function EmptyWishlistIllustration() {
 }
 
 /**
+ * MobileGridWishlistCard
+ * Myntra / AJIO Style 2-Column Vertical Wishlist Card.
+ * Ultra spacious layout with full width Move to Cart action bar.
+ */
+const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
+  item,
+  onMoveToCart,
+  onRemove,
+  isItemMoving,
+}) {
+  const discountPercent = calculateDiscount(item.price, item.discountPrice);
+  const isInStock = item.inStock !== false;
+  const imgSrc = resolveWishlistImage(item);
+  const variantId = item.variantId || item.productId;
+  const activePrice = item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price;
+  const oldPrice = item.discountPrice && item.discountPrice < item.price ? item.price : null;
+  const brandName = item.brand || item.product?.brand || item.product?.brandName || siteConfig.name;
+  const rating = item.rating || item.product?.rating || 4.8;
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      className="bg-white rounded-[18px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full font-sans relative group"
+    >
+      {/* Top Image Container */}
+      <div className="relative aspect-[4/4.5] w-full bg-[#F5F2ED] overflow-hidden">
+        <Link to={`/product/${item.slug || item.productId}`} className="block w-full h-full">
+          {imgSrc ? (
+            <OptimizedImage
+              src={imgSrc}
+              alt={item.productName || 'Product'}
+              className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full w-full p-4 text-stone-400">
+              <FiPackage className="h-8 w-8 text-amber-700/40 mb-1" />
+              <span className="text-[10px] font-bold text-stone-500">Poshak</span>
+            </div>
+          )}
+        </Link>
+
+        {/* Floating Remove Button */}
+        <motion.button
+          whileTap={{ scale: 0.85 }}
+          type="button"
+          onClick={() => onRemove(variantId)}
+          className="absolute top-2 right-2 z-10 h-7 w-7 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
+          aria-label="Remove item"
+        >
+          <FiTrash2 className="h-3.5 w-3.5" />
+        </motion.button>
+
+        {/* Rating Pill Overlay */}
+        <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[10px] font-bold text-stone-800 px-1.5 py-0.5 rounded-md border border-stone-200 shadow-2xs flex items-center gap-0.5">
+          <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+          <span>{rating}</span>
+        </div>
+      </div>
+
+      {/* Details Container */}
+      <div className="p-3 flex-1 flex flex-col justify-between space-y-1.5">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#98631B] block line-clamp-1">
+            {brandName}
+          </span>
+          <Link
+            to={`/product/${item.slug || item.productId}`}
+            className="text-[13px] font-semibold text-stone-900 line-clamp-1 leading-snug hover:text-amber-800 transition-colors block mt-0.5"
+          >
+            {item.productName || 'Divine Krishna Poshak'}
+          </Link>
+        </div>
+
+        {/* Price Row */}
+        <div className="flex items-baseline gap-1 flex-wrap font-sans">
+          <span className="text-[15px] font-extrabold text-stone-900 leading-none">
+            ₹{(activePrice || 0).toLocaleString('en-IN')}
+          </span>
+          {oldPrice && (
+            <span className="text-[11px] text-stone-400 line-through">
+              ₹{oldPrice.toLocaleString('en-IN')}
+            </span>
+          )}
+          {discountPercent > 0 && (
+            <span className="text-[10px] font-bold text-emerald-600">
+              {discountPercent}% OFF
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom Move to Cart Full-Width Action Bar */}
+      <div className="p-2 pt-0">
+        <motion.button
+          whileTap={isInStock && !isItemMoving ? { scale: 0.96 } : {}}
+          type="button"
+          disabled={!isInStock || isItemMoving}
+          onClick={() => onMoveToCart(item)}
+          className="w-full h-9 rounded-[12px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[12px] shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FiShoppingCart className="h-3.5 w-3.5 text-white" />
+          <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+});
+
+/**
  * MobileHorizontalWishlistCard
- * Rebuilt 3-Column Horizontal Wishlist Card matching premium native app design.
- * Height: 150-165px
- * Layout: Image 30% (110x110 square), Content 50% (min-w-0), Actions 20% (88px shrink-0 vertical column).
+ * Nike / Apple Store Style Horizontal Card.
+ * Generous 2-Row layout: Top image + details, Bottom divider action bar.
  */
 const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard({
   item,
@@ -136,136 +249,115 @@ const MobileHorizontalWishlistCard = memo(function MobileHorizontalWishlistCard(
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, height: 0 }}
-      whileHover={{ scale: 1.005 }}
       transition={{ duration: 0.22 }}
-      className="bg-white rounded-[18px] border border-[#EFECE6] p-[14px] shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex items-center gap-[14px] relative overflow-hidden h-[155px] w-full font-sans"
+      className="bg-white rounded-[18px] border border-[#EFECE6] p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] space-y-3 w-full font-sans"
     >
-      {/* ─── LEFT COLUMN: IMAGE (30% ~ 110x110 Square Image) ─── */}
-      <div className="relative shrink-0 flex-shrink-0 w-[110px] h-[110px]">
-        <Link
-          to={`/product/${item.slug || item.productId}`}
-          className="w-[110px] h-[110px] rounded-[16px] overflow-hidden bg-[#F5F2ED] border border-stone-100 relative block"
-        >
-          {imgSrc ? (
-            <OptimizedImage
-              src={imgSrc}
-              alt={item.productName || 'Product'}
-              className="h-full w-full object-cover object-center"
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full w-full p-2 text-stone-400 bg-amber-50/40">
-              <FiPackage className="h-7 w-7 text-amber-700/40 mb-1" />
-              <span className="text-[9px] font-bold text-stone-500">Poshak</span>
-            </div>
-          )}
-        </Link>
-
-        {/* Small NEW Badge (Top-Left overlay) */}
-        {isNew && (
-          <span className="absolute top-1.5 left-1.5 z-10 text-[9px] font-extrabold uppercase tracking-wider bg-[#C68D33] text-white px-1.5 py-0.5 rounded-md shadow-2xs">
-            NEW
-          </span>
-        )}
-
-        {/* Wishlist Remove Icon Button (Top-Right overlay: 30x30) */}
-        <motion.button
-          whileTap={{ scale: 0.85 }}
-          type="button"
-          onClick={() => onRemove(variantId)}
-          className="absolute top-1.5 right-1.5 z-10 h-[30px] w-[30px] rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 hover:bg-white flex items-center justify-center shadow-xs transition-colors"
-          title="Remove from Wishlist"
-          aria-label="Remove item"
-        >
-          <FiTrash2 className="h-3.5 w-3.5" />
-        </motion.button>
-      </div>
-
-      {/* ─── CENTER COLUMN: CONTENT (50% ~ flex-1 min-w-0) ─── */}
-      <div className="flex-1 min-w-0 flex flex-col justify-center space-y-1 py-0.5">
-        <div>
-          {/* Brand Name (11px, Uppercase, Grey) */}
-          <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block line-clamp-1">
-            {brandName}
-          </span>
-
-          {/* Product Name (15px, SemiBold, Maximum 2 lines) */}
+      {/* Top Section: Left Image + Right Spacious Content */}
+      <div className="flex gap-3.5 items-start">
+        {/* Left Square Image (105x105) */}
+        <div className="relative shrink-0 w-[105px] h-[105px]">
           <Link
             to={`/product/${item.slug || item.productId}`}
-            className="text-[15px] font-semibold text-stone-900 line-clamp-2 leading-tight hover:text-amber-800 transition-colors block mt-0.5"
+            className="w-[105px] h-[105px] rounded-[14px] overflow-hidden bg-[#F5F2ED] border border-stone-100 block"
+          >
+            {imgSrc ? (
+              <OptimizedImage
+                src={imgSrc}
+                alt={item.productName || 'Product'}
+                className="h-full w-full object-cover object-center"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full w-full p-2 text-stone-400 bg-amber-50/40">
+                <FiPackage className="h-7 w-7 text-amber-700/40 mb-1" />
+                <span className="text-[9px] font-bold text-stone-500">Poshak</span>
+              </div>
+            )}
+          </Link>
+
+          {isNew && (
+            <span className="absolute top-1.5 left-1.5 z-10 text-[9px] font-extrabold uppercase tracking-wider bg-[#C68D33] text-white px-1.5 py-0.5 rounded-md shadow-2xs">
+              NEW
+            </span>
+          )}
+        </div>
+
+        {/* Right Details (Takes remaining 100% width) */}
+        <div className="flex-1 min-w-0 space-y-1">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block line-clamp-1">
+              {brandName}
+            </span>
+            <div className="inline-flex items-center gap-1 text-[10px] font-bold text-stone-800 bg-white border border-stone-200 px-1.5 py-0.5 rounded-md shadow-2xs">
+              <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+              <span>{rating}</span>
+            </div>
+          </div>
+
+          <Link
+            to={`/product/${item.slug || item.productId}`}
+            className="text-[14px] font-semibold text-stone-900 line-clamp-2 leading-snug hover:text-amber-800 transition-colors block"
           >
             {item.productName || 'Divine Krishna Poshak'}
           </Link>
-        </div>
 
-        {/* Rating Pill (★ 4.8 | 128 Reviews) */}
-        <div className="flex items-center gap-1.5 pt-0.5">
-          <div className="inline-flex items-center gap-1 text-[10px] font-bold text-stone-800 bg-white border border-stone-200 px-1.5 py-0.5 rounded-md shadow-2xs">
-            <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-            <span>{rating}</span>
+          {/* Price Hierarchy */}
+          <div className="flex items-baseline gap-1.5 flex-wrap pt-0.5">
+            <span className="text-[18px] font-bold text-stone-900 leading-none">
+              ₹{(activePrice || 0).toLocaleString('en-IN')}
+            </span>
+            {oldPrice && (
+              <span className="text-[12px] text-stone-400 line-through font-normal">
+                ₹{oldPrice.toLocaleString('en-IN')}
+              </span>
+            )}
+            {discountPercent > 0 && (
+              <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                {discountPercent}% OFF
+              </span>
+            )}
           </div>
-          <span className="text-[11px] text-stone-400 font-normal">({reviewCount})</span>
-        </div>
 
-        {/* Price Row: 20px Bold Price, 13px Line-through, Green Discount */}
-        <div className="flex items-baseline gap-1.5 flex-wrap pt-0.5">
-          <span className="text-[20px] font-bold text-stone-900 leading-none">
-            ₹{(activePrice || 0).toLocaleString('en-IN')}
-          </span>
-
-          {oldPrice && (
-            <span className="text-[13px] text-stone-400 line-through font-normal">
-              ₹{oldPrice.toLocaleString('en-IN')}
+          {/* Stock & Delivery line */}
+          <div className="flex items-center gap-2 text-[11px] text-stone-500 pt-0.5">
+            {isInStock ? (
+              <span className="font-semibold text-emerald-600 flex items-center gap-0.5">
+                <FiCheck className="h-3 w-3 stroke-[3]" />
+                <span>In Stock</span>
+              </span>
+            ) : (
+              <span className="font-semibold text-rose-600">Out of Stock</span>
+            )}
+            <span className="text-stone-300">•</span>
+            <span className="flex items-center gap-0.5 text-stone-500 font-medium">
+              <FiTruck className="h-3 w-3 text-stone-400" />
+              <span>Free Delivery</span>
             </span>
-          )}
-
-          {discountPercent > 0 && (
-            <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-              {discountPercent}% OFF
-            </span>
-          )}
-        </div>
-
-        {/* Stock & Free Delivery (12px Stock, 11px Free Delivery) */}
-        <div className="flex items-center gap-2 text-[11px] pt-0.5 text-stone-500">
-          {isInStock ? (
-            <span className="text-[12px] font-semibold text-emerald-600 flex items-center gap-0.5">
-              <FiCheck className="h-3 w-3 stroke-[3]" />
-              <span>In Stock</span>
-            </span>
-          ) : (
-            <span className="text-[12px] font-semibold text-rose-600">Out of Stock</span>
-          )}
-          <span className="text-stone-300">•</span>
-          <span className="flex items-center gap-0.5 text-stone-500 font-medium">
-            <FiTruck className="h-3 w-3 text-stone-400" />
-            <span>Free Delivery</span>
-          </span>
+          </div>
         </div>
       </div>
 
-      {/* ─── RIGHT COLUMN: ACTIONS (20% ~ 88px shrink-0) ─── */}
-      <div className="flex-shrink-0 shrink-0 w-[88px] flex flex-col items-center justify-center gap-2 border-l border-stone-100 pl-2.5 my-auto">
-        {/* Move to Cart Button (Width: 88px, Height: 40px, Rounded: 14px, Temple Gold) */}
-        <motion.button
-          whileTap={isInStock && !isItemMoving ? { scale: 0.94 } : {}}
-          type="button"
-          disabled={!isInStock || isItemMoving}
-          onClick={() => onMoveToCart(item)}
-          className="w-[88px] h-[40px] rounded-[14px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[13px] shadow-xs shadow-amber-900/15 flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-        >
-          <FiShoppingCart className="h-3.5 w-3.5 text-white" />
-          <span>{isItemMoving ? 'Moving...' : 'Cart'}</span>
-        </motion.button>
-
-        {/* Remove Text Button (Small 12px Grey Button - Like Myntra) */}
+      {/* Bottom Integrated Action Bar */}
+      <div className="pt-2.5 border-t border-stone-100 flex items-center justify-between">
         <motion.button
           whileTap={{ scale: 0.92 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="text-[12px] font-medium text-stone-400 hover:text-rose-600 transition-colors py-0.5 flex items-center justify-center cursor-pointer"
+          className="text-[12px] font-medium text-stone-400 hover:text-rose-600 transition-colors flex items-center gap-1 cursor-pointer px-1 py-1"
           title="Remove item"
         >
+          <FiTrash2 className="h-3.5 w-3.5 text-stone-400" />
           <span>Remove</span>
+        </motion.button>
+
+        <motion.button
+          whileTap={isInStock && !isItemMoving ? { scale: 0.95 } : {}}
+          type="button"
+          disabled={!isInStock || isItemMoving}
+          onClick={() => onMoveToCart(item)}
+          className="h-[38px] px-4 rounded-[12px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[12px] shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FiShoppingCart className="h-3.5 w-3.5 text-white" />
+          <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
         </motion.button>
       </div>
     </motion.div>
@@ -327,7 +419,7 @@ function MobileRecommendedCard({ product }) {
 
 /**
  * MobileWishlistSkeleton
- * Loading skeleton matching horizontal card layout.
+ * Loading skeleton matching vertical & horizontal layouts.
  */
 function MobileWishlistSkeleton() {
   return (
@@ -339,22 +431,17 @@ function MobileWishlistSkeleton() {
       </div>
 
       <div className="px-4 py-4 max-w-[767px] mx-auto space-y-3">
-        <div className="h-[92px] rounded-[18px] bg-amber-100/50 animate-pulse" />
-        {[1, 2, 3].map((n) => (
-          <div key={n} className="h-[160px] rounded-[16px] bg-white border border-stone-200 p-3 flex gap-3 items-center">
-            <div className="w-[110px] h-[110px] rounded-[16px] bg-stone-200 animate-pulse shrink-0" />
-            <div className="flex-1 space-y-2">
-              <div className="h-3 w-20 bg-stone-200 rounded animate-pulse" />
+        <div className="h-[90px] rounded-[18px] bg-amber-100/50 animate-pulse" />
+        <div className="grid grid-cols-2 gap-3.5">
+          {[1, 2, 3, 4].map((n) => (
+            <div key={n} className="h-64 rounded-[18px] bg-white border border-stone-200 p-2 space-y-2">
+              <div className="w-full aspect-square rounded-[14px] bg-stone-200 animate-pulse" />
+              <div className="h-3 w-16 bg-stone-200 rounded animate-pulse" />
               <div className="h-4 w-3/4 bg-stone-200 rounded animate-pulse" />
-              <div className="h-3 w-1/2 bg-stone-200 rounded animate-pulse" />
-              <div className="h-5 w-24 bg-stone-200 rounded animate-pulse mt-2" />
+              <div className="h-8 w-full bg-stone-200 rounded-[12px] animate-pulse" />
             </div>
-            <div className="w-[95px] flex flex-col gap-2 items-center">
-              <div className="h-[40px] w-full bg-stone-200 rounded-[14px] animate-pulse" />
-              <div className="h-3 w-12 bg-stone-200 rounded animate-pulse" />
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -362,8 +449,8 @@ function MobileWishlistSkeleton() {
 
 /**
  * MobileWishlist
- * Pixel-Perfect Redesigned Mobile (<768px) and Tablet (768-1023px) Wishlist Page.
- * Styled after native shopping apps (Nike, Myntra, Zara, Apple Store).
+ * Native App Style Mobile (<768px) and Tablet (768-1023px) Wishlist Page.
+ * Inspired by Myntra, AJIO, Zara, Nike, and Apple Store layout standards.
  */
 export default function MobileWishlist({
   items = [],
@@ -378,6 +465,7 @@ export default function MobileWishlist({
   movingItemId = null,
 }) {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
   // Fetch featured products for empty wishlist recommendations
   const { data: featuredData } = useFeaturedProducts();
@@ -452,7 +540,7 @@ export default function MobileWishlist({
 
   return (
     <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-28 md:pb-20">
-      {/* ─── 1. HEADER (Height: 52-56px, Sticky, Perfectly Centered) ─── */}
+      {/* ─── 1. HEADER (Sticky, Height: 54px) ─── */}
       <header className="sticky top-0 z-40 h-[54px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
         <motion.button
           whileTap={{ scale: 0.92 }}
@@ -464,7 +552,7 @@ export default function MobileWishlist({
           <FiArrowLeft className="h-4 w-4" />
         </motion.button>
 
-        {/* Center Title */}
+        {/* Center Title & Count */}
         <div className="flex items-center gap-1.5">
           <span className="text-[16px] font-bold text-stone-900 tracking-wide font-sans">
             Wishlist
@@ -474,8 +562,35 @@ export default function MobileWishlist({
           </span>
         </div>
 
-        {/* Right Action Icons */}
-        <div className="flex items-center gap-2">
+        {/* Right Actions: View Mode Switcher + Share */}
+        <div className="flex items-center gap-1.5">
+          {items.length > 0 && (
+            <div className="flex items-center bg-stone-100 rounded-full p-0.5 border border-stone-200/80">
+              <button
+                type="button"
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 rounded-full text-xs transition-all ${
+                  viewMode === 'grid' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
+                }`}
+                title="Grid View"
+                aria-label="Grid View"
+              >
+                <FiGrid className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded-full text-xs transition-all ${
+                  viewMode === 'list' ? 'bg-white text-[#C68D33] shadow-2xs font-bold' : 'text-stone-500'
+                }`}
+                title="List View"
+                aria-label="List View"
+              >
+                <FiList className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+
           <motion.button
             whileTap={{ scale: 0.92 }}
             type="button"
@@ -486,21 +601,11 @@ export default function MobileWishlist({
           >
             <FiShare2 className="h-4 w-4" />
           </motion.button>
-
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            type="button"
-            onClick={() => navigate(ROUTE_PATHS.SHOP || '/shop')}
-            className="h-8 w-8 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
-            aria-label="Wishlist Heart"
-          >
-            <FiHeart className="h-4 w-4 text-[#C68D33] fill-[#C68D33]" />
-          </motion.button>
         </div>
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-4 py-4 max-w-[767px] mx-auto space-y-3">
+      <main className="px-4 py-4 max-w-[767px] mx-auto space-y-3.5">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
           <div className="py-6 space-y-6">
@@ -560,18 +665,17 @@ export default function MobileWishlist({
         ) : (
           /* ─── POPULATED WISHLIST VIEW ─── */
           <>
-            {/* ─── 2. SAVED COLLECTION BANNER CARD ───
-                Height: ~90-100px, Rounded 18px, Light Gold Gradient, Subtle Shadow, Title 18px, Subtitle 13px */}
-            <div className="h-[92px] rounded-[18px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD] px-4 flex items-center justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+            {/* ─── 2. SAVED COLLECTION BANNER CARD ─── */}
+            <div className="h-[90px] rounded-[18px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD] px-4 flex items-center justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-xl bg-[#F6E7D2] text-[#9E691A] flex items-center justify-center shrink-0">
                   <FiBookmark className="h-4 w-4 fill-[#9E691A]" />
                 </div>
                 <div>
-                  <h1 className="text-[18px] font-bold text-stone-900 font-sans leading-tight">
+                  <h1 className="text-[17px] font-bold text-stone-900 font-sans leading-tight">
                     Saved Collection
                   </h1>
-                  <p className="text-[13px] text-stone-500 font-medium font-sans">
+                  <p className="text-[12px] text-stone-500 font-medium font-sans">
                     {items.length} {items.length === 1 ? 'item' : 'items'} saved for later
                   </p>
                 </div>
@@ -580,30 +684,51 @@ export default function MobileWishlist({
               <HiSparkles className="h-5 w-5 text-[#D49E41] shrink-0" />
             </div>
 
-            {/* ─── 3. HORIZONTAL WISHLIST PRODUCT CARDS LIST ─── */}
+            {/* ─── 3. WISHLIST PRODUCT CARDS (GRID VS LIST) ─── */}
             <AnimatePresence mode="popLayout">
-              <div className="space-y-3">
-                {items.map((item) => {
-                  const variantId = item.variantId || item.productId;
-                  const isItemMoving = movingItemId === variantId;
+              {viewMode === 'grid' ? (
+                /* MYNTRA / AJIO NATIVE 2-COLUMN GRID */
+                <div className="grid grid-cols-2 gap-3.5">
+                  {items.map((item) => {
+                    const variantId = item.variantId || item.productId;
+                    const isItemMoving = movingItemId === variantId;
 
-                  return (
-                    <MobileHorizontalWishlistCard
-                      key={`mobile-wishlist-item-${item.wishlistId || item.id || variantId}`}
-                      item={item}
-                      onMoveToCart={onMoveToCart}
-                      onRemove={onRemove}
-                      isItemMoving={isItemMoving}
-                    />
-                  );
-                })}
-              </div>
+                    return (
+                      <MobileGridWishlistCard
+                        key={`mobile-grid-item-${item.wishlistId || item.id || variantId}`}
+                        item={item}
+                        onMoveToCart={onMoveToCart}
+                        onRemove={onRemove}
+                        isItemMoving={isItemMoving}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                /* APPLE STORE / NIKE NATIVE HORIZONTAL LIST */
+                <div className="space-y-3">
+                  {items.map((item) => {
+                    const variantId = item.variantId || item.productId;
+                    const isItemMoving = movingItemId === variantId;
+
+                    return (
+                      <MobileHorizontalWishlistCard
+                        key={`mobile-list-item-${item.wishlistId || item.id || variantId}`}
+                        item={item}
+                        onMoveToCart={onMoveToCart}
+                        onRemove={onRemove}
+                        isItemMoving={isItemMoving}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </AnimatePresence>
           </>
         )}
       </main>
 
-      {/* ─── 4. STICKY BOTTOM BAR (Height: 64px, Compact & Fitted) ─── */}
+      {/* ─── 4. STICKY BOTTOM BAR ─── */}
       {items.length > 0 && (
         <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 h-[64px] bg-white border-t border-stone-200/80 px-4 py-2 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex items-center justify-between">
           <div className="max-w-[767px] w-full mx-auto flex items-center justify-between gap-2">
@@ -629,7 +754,7 @@ export default function MobileWishlist({
               )}
             </div>
 
-            {/* Right CTA: Move All to Cart (Height: 44px, Rounded: 14px, Temple Gold) */}
+            {/* Right CTA: Move All to Cart */}
             <motion.button
               whileTap={inStockCount > 0 && !isMovingAll ? { scale: 0.95 } : {}}
               type="button"
