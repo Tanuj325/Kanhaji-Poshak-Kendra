@@ -131,7 +131,7 @@ export default function MobileOrderSuccess({ orderData }) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.4 }}
-            className="mt-4 inline-flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-amber-900/10 shadow-xs"
+            className="mt-4 inline-flex items-center gap-2 bg-white/90 backdrop-blur-md py-2.5 rounded-2xl border border-amber-900/10 shadow-xs"
           >
             <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Order ID:</span>
             <span className="font-heading font-black text-base sm:text-lg text-amber-950 font-mono tracking-wide">
