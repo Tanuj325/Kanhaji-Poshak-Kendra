@@ -246,6 +246,8 @@ export default function MobileCart({
     return { zeroQty, exceededStock };
   }, [items]);
 
+  const hasInvalidQuantity = invalidItemInfo.zeroQty;
+
   const isCheckoutDisabled =
     items.length === 0 ||
     invalidItemInfo.zeroQty ||
@@ -743,7 +745,13 @@ export default function MobileCart({
             className="w-full h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
           >
             <FiLock className="h-4 w-4 text-amber-200" />
-            <span>{hasInvalidQuantity ? 'Invalid Quantity (0)' : 'Proceed to Checkout'}</span>
+            <span>
+              {invalidItemInfo.zeroQty
+                ? 'Invalid Quantity (0)'
+                : invalidItemInfo.exceededStock
+                ? 'Stock Exceeded'
+                : 'Proceed to Checkout'}
+            </span>
             <FiArrowRight className="h-4 w-4 text-amber-200" />
           </motion.button>
 
@@ -789,7 +797,7 @@ export default function MobileCart({
             </span>
           </div>
 
-          {/* Right: Checkout Button (46px height, gold gradient, disabled when quantity is 0) */}
+          {/* Right: Checkout Button (46px height, gold gradient, disabled when quantity is invalid or exceeds stock) */}
           <motion.button
             whileTap={isCheckoutDisabled ? {} : { scale: 0.97 }}
             type="button"
@@ -798,7 +806,13 @@ export default function MobileCart({
             className="flex-1 max-w-[240px] h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
           >
             <FiLock className="h-4 w-4 text-amber-200" />
-            <span>{hasInvalidQuantity ? 'Invalid Qty' : 'Checkout'}</span>
+            <span>
+              {invalidItemInfo.zeroQty
+                ? 'Invalid Qty'
+                : invalidItemInfo.exceededStock
+                ? 'Exceeds Stock'
+                : 'Checkout'}
+            </span>
             <FiArrowRight className="h-4 w-4 text-amber-200" />
           </motion.button>
         </div>
