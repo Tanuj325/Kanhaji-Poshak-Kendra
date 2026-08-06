@@ -17,6 +17,8 @@ import { useAddresses } from '@/hooks/useAddresses';
 import { formatDate } from '@/utils/formatDate';
 import { formatPrice } from '@/utils/formatPrice';
 import { siteConfig } from '@/config/siteConfig';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileDashboard from '@/components/customer/mobile/MobileDashboard';
 import {
   FiShoppingBag,
   FiHeart,
@@ -50,6 +52,7 @@ const statusColors = {
 };
 
 export default function DashboardPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const navigate = useNavigate();
   const { user } = useAuth();
   const { wishlist } = useWishlistContext();
@@ -81,6 +84,10 @@ export default function DashboardPage() {
     if (addrList.length > 0) score += 20;
     return score;
   }, [user, addrList]);
+
+  if (!isDesktop) {
+    return <MobileDashboard />;
+  }
 
   return (
     <>
