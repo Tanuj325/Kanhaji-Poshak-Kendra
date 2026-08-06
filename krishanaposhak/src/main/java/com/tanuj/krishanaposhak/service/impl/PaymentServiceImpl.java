@@ -53,6 +53,12 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
 
+        if ((order.getPayment() != null && order.getPayment().getPaymentMethod() == PaymentMethod.COD)
+                || order.getOrderStatus() == OrderStatus.CONFIRMED) {
+            log.warn("[COD] Attempted to create Razorpay order for COD / confirmed order {}. Skipping Razorpay flow.", order.getOrderNumber());
+            throw new BadRequestException("Cannot create Razorpay order for Cash on Delivery payment method.");
+        }
+
         // Create Razorpay order request
         CreateRazorpayOrderRequest razorpayRequest = new CreateRazorpayOrderRequest();
         razorpayRequest.setAmount(order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue()); // Convert to paise
@@ -104,7 +110,25 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Invalid payment method: " + request.getPaymentMethod());
         }
 
-        // Return existing payment if already created (e.g. for COD during order placement)
+        if (paymentMethod == PaymentMethod.COD || (order.getPayment() != null && order.getPayment().getPaymentMethod() == PaymentMethod.COD)) {
+            log.info("[COD] Payment initiation requested for Cash on Delivery Order Number: {}. Returning existing record.", order.getOrderNumber());
+            Payment existing = order.getPayment();
+            if (existing == null) {
+                existing = Payment.builder()
+                        .order(order)
+                        .paymentMethod(PaymentMethod.COD)
+                        .paymentStatus(PaymentStatus.PENDING)
+                        .amount(order.getTotalAmount())
+                        .build();
+                existing = paymentRepository.save(existing);
+                order.setPayment(existing);
+            }
+            PaymentResponse response = paymentMapper.toResponse(existing);
+            response.setMessage("Payment initiation not required for Cash on Delivery.");
+            return response;
+        }
+
+        // Return existing payment if already created
         java.util.Optional<Payment> existingPayment = paymentRepository.findByOrderId(order.getId());
         if (existingPayment.isPresent()) {
             return paymentMapper.toResponse(existingPayment.get());
@@ -134,6 +158,11 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Payment not found for Razorpay order: " + razorpayOrderId));
+
+        if (payment.getPaymentMethod() == PaymentMethod.COD) {
+            log.warn("[COD] Attempted to verify Razorpay payment for COD payment ID {}. Rejecting.", payment.getId());
+            throw new BadRequestException("Payment verification is not applicable for Cash on Delivery orders.");
+        }
 
         // Validate that the payment belongs to the user
         Order order = payment.getOrder();
@@ -743,6 +772,11 @@ public class PaymentServiceImpl implements PaymentService {
                 continue; // Skip recent payments still within normal window
             }
 
+            if (payment.getPaymentMethod() == PaymentMethod.COD) {
+                log.info("[COD] Skipping Reconciliation for COD Payment ID: {}", payment.getId());
+                continue;
+            }
+
             if (payment.getRazorpayOrderId() == null || payment.getRazorpayOrderId().isBlank()) {
                 continue;
             }
@@ -798,6 +832,15 @@ public class PaymentServiceImpl implements PaymentService {
         for (Order order : userOrders) {
             Payment payment = order.getPayment();
             if (payment == null) continue;
+
+            if (payment.getPaymentMethod() == PaymentMethod.COD) {
+                log.info("[COD] Skipping User Reconciliation for COD Order Number: {}", order.getOrderNumber());
+                if (payment.getPaymentStatus() == PaymentStatus.PENDING) {
+                    pendingCount++;
+                    pendingList.add(paymentMapper.toResponse(payment));
+                }
+                continue;
+            }
 
             if (payment.getPaymentStatus() == PaymentStatus.PENDING && payment.getRazorpayOrderId() != null) {
                 try {

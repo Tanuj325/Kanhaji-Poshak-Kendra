@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -99,6 +101,13 @@ public class OrderController {
         Long userId = getUserIdFromRequest(httpRequest);
         if (userId == null) {
             return ResponseEntity.status(401).build();
+        }
+
+        if (placeOrderRequest.getPaymentMethod() != null && "COD".equalsIgnoreCase(placeOrderRequest.getPaymentMethod().trim())) {
+            log.warn("[COD] Attempted to create Razorpay online order for COD request. Rejecting.");
+            throw new com.tanuj.krishanaposhak.exception.BadRequestException(
+                    "Cannot create Razorpay online payment order for Cash on Delivery (COD) payment method."
+            );
         }
 
         // Create and persist the pending order first so it has a valid database ID

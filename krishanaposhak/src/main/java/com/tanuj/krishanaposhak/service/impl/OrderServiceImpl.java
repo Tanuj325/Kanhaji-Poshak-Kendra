@@ -91,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
         if (method == PaymentMethod.COD) {
             order.setOrderStatus(OrderStatus.CONFIRMED);
             order.setPaymentStatus(PaymentStatus.PENDING);
+            log.info("[COD] Order Status set to CONFIRMED for Order Number: {}", order.getOrderNumber());
         } else {
             order.setOrderStatus(OrderStatus.PENDING);
             order.setPaymentStatus(PaymentStatus.PENDING);
@@ -110,26 +111,28 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        // Create and save Payment record for COD orders
+        // Create and save Payment record for COD orders with NULL gateway fields
         if (method == PaymentMethod.COD) {
             Payment payment = Payment.builder()
                     .order(order)
                     .paymentMethod(PaymentMethod.COD)
                     .paymentStatus(PaymentStatus.PENDING)
                     .amount(order.getTotalAmount())
-                    .transactionId("TXN-COD-" + order.getOrderNumber())
+                    .transactionId(null)
+                    .razorpayOrderId(null)
+                    .razorpayPaymentId(null)
+                    .razorpaySignature(null)
                     .build();
             payment = paymentRepository.save(payment);
             order.setPayment(payment);
+            log.info("[COD] Order Created -> Order Number: {}, Payment Record ID: {}", order.getOrderNumber(), payment.getId());
         }
 
         Coupon coupon = null;
 
         if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
-
             coupon = couponRepository.findByCode(request.getCouponCode())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("Coupon not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Coupon not found"));
 
             int currentCount = coupon.getUsedCount() != null ? coupon.getUsedCount() : 0;
             coupon.setUsedCount(currentCount + 1);
@@ -140,8 +143,7 @@ public class OrderServiceImpl implements OrderService {
                         CouponUsage.builder()
                                 .coupon(coupon)
                                 .user(userRepository.findById(userId)
-                                        .orElseThrow(() ->
-                                                new ResourceNotFoundException("User not found")))
+                                        .orElseThrow(() -> new ResourceNotFoundException("User not found")))
                                 .order(order)
                                 .build()
                 );
@@ -150,12 +152,14 @@ public class OrderServiceImpl implements OrderService {
 
         cartRepository.findByUserId(userId).ifPresent(c -> cartItemRepository.deleteByCartId(c.getId()));
 
-        // Send order confirmation email asynchronously
-        try {
-            sendOrderConfirmationEmail(order);
-        } catch (Exception e) {
-            // Log the error but don't fail the order placement
-            log.error("Failed to send order confirmation email for order " + order.getOrderNumber() + ": " + e.getMessage());
+        // Send order confirmation email asynchronously for COD orders
+        if (method == PaymentMethod.COD) {
+            try {
+                sendOrderConfirmationEmail(order);
+                log.info("[COD] Order Confirmation Email sent for Order Number: {}", order.getOrderNumber());
+            } catch (Exception e) {
+                log.error("[COD] Failed to send order confirmation email for order " + order.getOrderNumber() + ": " + e.getMessage());
+            }
         }
 
         return orderMapper.toResponse(order);
