@@ -59,7 +59,7 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
       <div
         className={`rounded-[14px] bg-gradient-to-r from-emerald-50 via-emerald-100/40 to-emerald-50 border border-emerald-300/80 p-3 shadow-2xs font-display ${className || ''}`}
       >
-        <div className="flex items-center justify-between gap-2.5">
+        <div className="flex flex-col items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <div className="h-8 w-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
               <FiCheck className="h-4 w-4 stroke-[3]" />
@@ -86,7 +86,7 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
             type="button"
             onClick={handleRemove}
             disabled={removeCoupon.isPending}
-            className="flex flex-col items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-2.5 h-[34px] rounded-xl border border-rose-200/80 shadow-2xs disabled:opacity-50 shrink-0"
+            className="inline-flex items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-2.5 h-[34px] rounded-xl border border-rose-200/80 shadow-2xs disabled:opacity-50 shrink-0"
           >
             <FiTrash2 className="h-3.5 w-3.5 text-rose-600 shrink-0" />
             <span>{removeCoupon.isPending ? '...' : 'Remove'}</span>
