@@ -86,7 +86,7 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
             type="button"
             onClick={handleRemove}
             disabled={removeCoupon.isPending}
-            className="inline-flex items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-2.5 h-[34px] rounded-xl border border-rose-200/80 shadow-2xs disabled:opacity-50 shrink-0"
+            className="flex flex-col items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-2.5 h-[34px] rounded-xl border border-rose-200/80 shadow-2xs disabled:opacity-50 shrink-0"
           >
             <FiTrash2 className="h-3.5 w-3.5 text-rose-600 shrink-0" />
             <span>{removeCoupon.isPending ? '...' : 'Remove'}</span>
