@@ -8,6 +8,8 @@ import EmptyState from '@/components/ui/EmptyState';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { useOrder } from '@/hooks/useOrders';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileOrderSuccess from '@/components/orders/mobile/MobileOrderSuccess';
 import { formatPrice } from '@/utils/formatPrice';
 import { formatDate } from '@/utils/formatDate';
 import { siteConfig } from '@/config/siteConfig';
@@ -33,6 +35,7 @@ const paymentStatusColor = {
 };
 
 function OrderConfirmationPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const navigate = useNavigate();
   const { orderId } = useParams();
 
@@ -92,6 +95,20 @@ function OrderConfirmationPage() {
           }
         />
       </div>
+    );
+  }
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>Order Confirmed | {siteConfig.name}</title>
+          <meta name="description" content={`Order ${orderData.orderNumber || ''} confirmed successfully`} />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileOrderSuccess orderData={orderData} />
+      </>
     );
   }
 
