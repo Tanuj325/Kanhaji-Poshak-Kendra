@@ -458,6 +458,7 @@ export default function MobileCart({
               const maxStock = stock ?? 10;
               const itemBrand = item.brand || item.product?.brand || item.product?.brandName || siteConfig.name;
               const itemRating = item.rating || item.product?.rating || item.product?.avgRating || 4.8;
+              const isExceeded = quantity > maxStock;
 
               return (
                 <motion.div
