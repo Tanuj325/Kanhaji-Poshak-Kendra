@@ -169,7 +169,7 @@ export default function MobileDashboard() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-[#F9F7F4] text-stone-900 font-display antialiased pb-24 overflow-x-hidden">
+    <div className="w-full min-h-screen bg-[#F9F7F4] text-stone-900 font-display pb-24 overflow-x-hidden">
       {/* ─── 1. STICKY HEADER ─── */}
       <header className="sticky top-0 z-30 h-[56px] w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-0.5 flex items-center justify-between shadow-2xs">
         <button
