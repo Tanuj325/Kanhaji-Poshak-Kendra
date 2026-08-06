@@ -15,8 +15,10 @@ import CartHeader from '@/components/cart/CartHeader';
 import CartTrustBadges from '@/components/cart/CartTrustBadges';
 import CartStickyMobileBar from '@/components/cart/CartStickyMobileBar';
 import CartClearModal from '@/components/cart/CartClearModal';
+import MobileCart from '@/components/cart/mobile/MobileCart';
 
 import { useCartContext } from '@/context/CartContext';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { siteConfig } from '@/config/siteConfig';
 import { FiTrash2, FiArrowRight, FiLock, FiShield, FiRefreshCw } from 'react-icons/fi';
 
@@ -26,6 +28,8 @@ const breadcrumbItems = [
 ];
 
 function CartPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
   const {
     isLoading,
     isError,
@@ -164,6 +168,47 @@ function CartPage() {
   const finalDiscount = appliedCoupon ? discount + appliedCoupon.discountAmount : discount;
   const finalGrandTotal = appliedCoupon ? Math.max(0, grandTotal - appliedCoupon.discountAmount) : grandTotal;
 
+  // Render Mobile/Tablet view (<1024px) vs Desktop view (>=1024px)
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`Shopping Cart (${items.length}) | ${siteConfig.name}`}</title>
+          <meta name="description" content="Review your Krishna Poshak items and proceed to secure luxury checkout" />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileCart
+          items={items}
+          subtotal={subtotal}
+          discount={finalDiscount}
+          shippingCharge={shippingCharge}
+          grandTotal={finalGrandTotal}
+          appliedCoupon={appliedCoupon}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onMoveToWishlist={moveToWishlist}
+          onClearCart={() => setShowClearConfirm(true)}
+          onApplyCoupon={handleApplyCoupon}
+          onRemoveCoupon={handleRemoveCoupon}
+          onProceedToCheckout={handleProceedToCheckout}
+          isUpdating={isUpdating}
+        />
+
+        {/* Clear Cart Confirmation Modal */}
+        <CartClearModal
+          isOpen={showClearConfirm}
+          onClose={() => setShowClearConfirm(false)}
+          onConfirm={handleClearCart}
+          isLoading={isClearing}
+        />
+      </>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
   return (
     <>
       <Helmet>
@@ -284,3 +329,4 @@ function CartPage() {
 }
 
 export default CartPage;
+
