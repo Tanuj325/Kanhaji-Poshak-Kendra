@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -43,6 +43,62 @@ const resolveCartImage = (item) => {
   }
   return '/placeholder.png';
 };
+
+/**
+ * CartQuantityInput
+ * Dedicated input component maintaining local string state to allow full backspacing & smooth multi-digit typing.
+ */
+function CartQuantityInput({ quantity, maxStock, isUpdating, onUpdate }) {
+  const [localValue, setLocalValue] = useState(() => String(quantity ?? 1));
+
+  useEffect(() => {
+    setLocalValue(String(quantity ?? 0));
+  }, [quantity]);
+
+  const handleChange = (e) => {
+    const raw = e.target.value;
+    setLocalValue(raw);
+
+    if (raw === '') {
+      onUpdate(0);
+      return;
+    }
+
+    const parsed = parseInt(raw, 10);
+    if (!isNaN(parsed)) {
+      const clamped = Math.max(0, Math.min(maxStock, parsed));
+      onUpdate(clamped);
+    }
+  };
+
+  const handleBlur = () => {
+    if (localValue === '' || isNaN(parseInt(localValue, 10))) {
+      setLocalValue('0');
+      onUpdate(0);
+    } else {
+      const parsed = parseInt(localValue, 10);
+      const clamped = Math.max(0, Math.min(maxStock, parsed));
+      setLocalValue(String(clamped));
+      onUpdate(clamped);
+    }
+  };
+
+  return (
+    <input
+      type="number"
+      min={0}
+      max={maxStock}
+      disabled={isUpdating}
+      value={localValue}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      className={`w-8 text-center text-[13px] font-bold bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+        localValue === '0' || localValue === '' ? 'text-rose-600 font-extrabold' : 'text-stone-900'
+      }`}
+      aria-label="Item quantity"
+    />
+  );
+}
 
 /**
  * MobileHorizontalProductCard
@@ -469,33 +525,12 @@ export default function MobileCart({
                         <FiMinus className="h-3 w-3" />
                       </motion.button>
 
-                      {/* Typeable Input Field for Quantity (Supports entering 0) */}
-                      <input
-                        type="number"
-                        min={0}
-                        max={maxStock}
-                        value={quantity}
-                        onChange={(e) => {
-                          const raw = e.target.value;
-                          if (raw === '') {
-                            onUpdateQuantity(targetId, 0);
-                            return;
-                          }
-                          const val = parseInt(raw, 10);
-                          if (!isNaN(val)) {
-                            onUpdateQuantity(targetId, Math.max(0, Math.min(maxStock, val)));
-                          }
-                        }}
-                        onBlur={(e) => {
-                          const val = parseInt(e.target.value, 10);
-                          if (isNaN(val) || val < 0) {
-                            onUpdateQuantity(targetId, 0);
-                          }
-                        }}
-                        className={`w-8 text-center text-[13px] font-bold bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                          quantity === 0 ? 'text-rose-600 font-extrabold' : 'text-stone-900'
-                        }`}
-                        aria-label="Item quantity"
+                      {/* Typeable Input Field for Quantity */}
+                      <CartQuantityInput
+                        quantity={quantity}
+                        maxStock={maxStock}
+                        isUpdating={isUpdating}
+                        onUpdate={(val) => onUpdateQuantity(targetId, val)}
                       />
 
                       <motion.button
