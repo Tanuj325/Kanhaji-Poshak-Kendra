@@ -131,7 +131,7 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.92 }}
-      className="bg-white rounded-[16px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between h-full w-full font-sans relative group"
+      className="bg-white rounded-[18px] border border-[#EFECE6] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex flex-col justify-between h-full w-full font-sans relative group"
     >
       {/* Top Image Container */}
       <div className="relative aspect-[4/4.2] w-full bg-[#F5F2ED] overflow-hidden">
@@ -150,15 +150,16 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
           )}
         </Link>
 
-        {/* Floating Remove Circle Button */}
+        {/* Premium Floating Delete Button */}
         <motion.button
           whileTap={{ scale: 0.85 }}
           type="button"
           onClick={() => onRemove(variantId)}
-          className="absolute top-2 right-2 z-10 h-7.5 w-7.5 rounded-full bg-white/90 backdrop-blur-xs text-stone-400 hover:text-rose-600 flex items-center justify-center shadow-xs transition-all"
-          aria-label="Remove item"
+          className="absolute top-2 right-2 z-10 h-8 w-8 rounded-full bg-white/95 backdrop-blur-md text-stone-600 hover:text-rose-600 hover:bg-rose-50 border border-stone-200/80 flex items-center justify-center shadow-md transition-all cursor-pointer"
+          aria-label="Remove item from Wishlist"
+          title="Remove from Wishlist"
         >
-          <FiTrash2 className="h-2.5 w-2.5" />
+          <FiTrash2 className="h-3.5 w-3.5" />
         </motion.button>
 
         {/* Rating Pill Overlay */}
@@ -200,16 +201,16 @@ const MobileGridWishlistCard = memo(function MobileGridWishlistCard({
         </div>
       </div>
 
-      {/* Bottom Move to Cart Full-Width Action Button */}
-      <div className="p-2 pt-0">
+      {/* Bottom Full-Width Move to Cart Action Button */}
+      <div className="p-2.5 pt-0 w-full">
         <motion.button
           whileTap={isInStock && !isItemMoving ? { scale: 0.96 } : {}}
           type="button"
           disabled={!isInStock || isItemMoving}
           onClick={() => onMoveToCart(item)}
-          className="w-full h-8 rounded-[10px] bg-gradient-to-r from-[#D49E41] to-[#C68D33] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[11px] shadow-xs flex items-center justify-center gap-1 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-9 rounded-[12px] bg-gradient-to-r from-[#D49E41] via-[#C68D33] to-[#B87E2B] hover:from-[#C68D33] hover:to-[#B87E2B] text-white font-bold text-[11.5px] sm:text-[12px] shadow-sm shadow-amber-900/15 flex items-center justify-center gap-1.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
-          <FiShoppingCart className="h-3 w-3 text-white" />
+          <FiShoppingCart className="h-3.5 w-3.5 text-white shrink-0" />
           <span>{isItemMoving ? 'Moving...' : 'Move to Cart'}</span>
         </motion.button>
       </div>
@@ -428,7 +429,7 @@ export default function MobileWishlist({
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-2.5 sm:px-4 py-3 max-w-[767px] mx-auto space-y-3">
+      <main className="px-1.5 sm:px-3 py-2.5 max-w-[767px] mx-auto space-y-2.5">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
           <div className="py-6 space-y-5">
