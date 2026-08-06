@@ -29,6 +29,7 @@ import { useWishlistContext } from '@/context/WishlistContext';
 import { useAuth } from '@/context/AuthContext';
 import { ROUTE_PATHS, buildPath } from '@/routes/routePaths';
 import { FREE_SHIPPING_THRESHOLD } from '@/utils/shippingCalculator';
+import { useProductReviews, useAverageRating } from '@/hooks/useReviews';
 import toast from 'react-hot-toast';
 
 export default function MobileProductDetail({
@@ -51,6 +52,44 @@ export default function MobileProductDetail({
   const [openAccordion, setOpenAccordion] = useState('specs'); // 'specs' | 'care' | 'shipping'
 
   const touchStartRef = useRef(null);
+
+  // Live reviews data to ensure review count and average rating are always accurate
+  const { data: reviewsData } = useProductReviews(product?.id, { page: 0, size: 50 });
+  const { data: avgRatingData } = useAverageRating(product?.id);
+
+  const reviewsList = useMemo(() => {
+    if (!reviewsData) return [];
+    return Array.isArray(reviewsData)
+      ? reviewsData
+      : (reviewsData.content || reviewsData.data || []);
+  }, [reviewsData]);
+
+  const reviewCount = useMemo(() => {
+    return Math.max(
+      reviewsData?.totalElements ?? 0,
+      reviewsList.length,
+      product?.reviewCount ?? 0,
+      product?.numReviews ?? 0,
+      product?.reviews?.length ?? 0
+    );
+  }, [reviewsData, reviewsList, product]);
+
+  const averageRating = useMemo(() => {
+    if (typeof avgRatingData === 'number' && avgRatingData > 0) {
+      return Number(avgRatingData).toFixed(1);
+    }
+    if (avgRatingData?.data != null && avgRatingData.data > 0) {
+      return Number(avgRatingData.data).toFixed(1);
+    }
+    if (product?.averageRating != null && product.averageRating > 0) {
+      return Number(product.averageRating).toFixed(1);
+    }
+    if (reviewsList.length > 0) {
+      const sum = reviewsList.reduce((acc, r) => acc + (r.rating || 5), 0);
+      return Number(sum / reviewsList.length).toFixed(1);
+    }
+    return null;
+  }, [avgRatingData, product, reviewsList]);
 
   // Images setup
   const sortedImages = useMemo(() => {
@@ -79,10 +118,6 @@ export default function MobileProductDetail({
   const isOutOfStock = stock <= 0;
 
   const isWishlisted = selectedVariant ? isInWishlist(selectedVariant.id) : false;
-
-  // Actual product rating & reviews (no hardcoding)
-  const averageRating = product?.averageRating != null ? Number(product.averageRating).toFixed(1) : null;
-  const reviewCount = product?.reviewCount ?? 0;
 
   // Swipe gesture handling for image carousel
   const handleTouchStart = (e) => {

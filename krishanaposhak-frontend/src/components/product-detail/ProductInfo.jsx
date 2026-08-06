@@ -5,6 +5,17 @@ import { FiCheckCircle, FiXCircle, FiTag, FiFeather, FiAward, FiHash } from 'rea
 const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, reviewCount = 0 }) {
   if (!product) return null;
 
+  const effectiveReviewCount = Math.max(
+    reviewCount || 0,
+    product.reviewCount || 0,
+    product.numReviews || 0,
+    product.reviews?.length || 0
+  );
+
+  const effectiveAverageRating = averageRating > 0
+    ? averageRating
+    : (product.averageRating > 0 ? product.averageRating : 0);
+
   const categoryName =
     product.categoryName ||
     (typeof product.category === 'string' ? product.category : product.category?.name) ||
@@ -40,15 +51,15 @@ const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, revi
 
       {/* Rating & Review Count */}
       <div className="flex items-center gap-2.5 flex-wrap">
-        {averageRating > 0 ? (
+        {effectiveAverageRating > 0 || effectiveReviewCount > 0 ? (
           <div className="flex items-center gap-2 bg-amber-50/80 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-amber-900/10 shadow-2xs">
-            <Rating rating={averageRating} size="xs" />
+            <Rating rating={effectiveAverageRating || 5} size="xs" />
             <span className="text-xs sm:text-sm font-bold text-amber-950 font-mono">
-              {Number(averageRating).toFixed(1)}
+              {Number(effectiveAverageRating || 5).toFixed(1)}
             </span>
             <span className="text-amber-800/30">|</span>
             <span className="text-xs sm:text-sm font-bold text-amber-900 font-display">
-              {reviewCount} {reviewCount === 1 ? 'Review' : 'Reviews'}
+              {effectiveReviewCount} {effectiveReviewCount === 1 ? 'Review' : 'Reviews'}
             </span>
           </div>
         ) : (
