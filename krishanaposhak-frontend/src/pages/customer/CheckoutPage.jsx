@@ -30,7 +30,7 @@ import { usePlaceOrder } from '@/hooks/useOrders';
 import { usePlaceRazorpayOrder } from '@/hooks/usePlaceRazorpayOrder';
 import { useRazorpayPayment } from '@/hooks/useRazorpayPayment';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { MobileShippingAddress } from '@/components/checkout';
+import { MobileShippingAddress, MobileCheckoutSummary } from '@/components/checkout';
 import { paymentService } from '@/services';
 import { siteConfig } from '@/config/siteConfig';
 import { calculateShipping } from '@/utils/shippingCalculator';
@@ -333,6 +333,40 @@ function CheckoutPage() {
           onContinue={() => setCurrentStep('payment')}
           onBack={() => navigate(ROUTE_PATHS.CART)}
           mode="checkout"
+        />
+      </>
+    );
+  }
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`Checkout Summary | ${siteConfig.name}`}</title>
+          <meta name="description" content="Review your order details and complete payment." />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileCheckoutSummary
+          cartItems={cartItems}
+          subtotal={subtotal}
+          discount={finalDiscount}
+          shippingCharge={activeShippingCharge}
+          grandTotal={finalGrandTotal}
+          selectedAddress={selectedAddress}
+          onChangeAddress={() => setCurrentStep('address')}
+          appliedCoupon={appliedCoupon}
+          onApplyCoupon={handleCouponApply}
+          onRemoveCoupon={handleCouponRemove}
+          paymentMethod={paymentMethod}
+          onSelectPaymentMethod={setPaymentMethod}
+          orderNotes={orderNotes}
+          onChangeOrderNotes={setOrderNotes}
+          onPlaceOrder={handlePlaceOrder}
+          isProcessing={isProcessingOrder || isVerifying || placeOrderMutation.isPending || razorpayOrderMutation.isPending}
+          isOrderValid={isOrderValid}
+          orderError={orderError}
+          onBack={() => setCurrentStep('address')}
         />
       </>
     );
