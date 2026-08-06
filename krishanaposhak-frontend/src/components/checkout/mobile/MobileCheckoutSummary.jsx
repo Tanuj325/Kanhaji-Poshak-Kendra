@@ -183,6 +183,7 @@ export default function MobileCheckoutSummary({
             appliedCoupon={appliedCoupon}
             onApply={onApplyCoupon}
             onRemove={onRemoveCoupon}
+            isEmbedded={true}
           />
         </div>
 
