@@ -142,6 +142,13 @@ export default function MobileCart({
     ? Math.max(0, grandTotal)
     : Math.max(0, safeSubtotal - safeDiscount + safeShipping);
 
+  // Disable checkout if items array is empty, updating, or if ANY item has quantity <= 0
+  const hasInvalidQuantity = useMemo(() => {
+    return items.some((item) => item.quantity === undefined || item.quantity === null || item.quantity <= 0);
+  }, [items]);
+
+  const isCheckoutDisabled = items.length === 0 || hasInvalidQuantity || isUpdating;
+
   // Fetch featured products for Myntra style horizontal scroll
   const { data: featuredData } = useFeaturedProducts();
   const trendingProducts = useMemo(() => {
@@ -152,7 +159,7 @@ export default function MobileCart({
   }, [featuredData]);
 
   // Total items count
-  const itemCount = items.reduce((acc, curr) => acc + (curr.quantity || 1), 0);
+  const itemCount = items.reduce((acc, curr) => acc + (curr.quantity || 0), 0);
 
   const handleCouponSubmit = (e) => {
     e.preventDefault();
@@ -298,6 +305,13 @@ export default function MobileCart({
 
       {/* ─── MAIN CART CONTAINER (12px padding & gaps) ─── */}
       <main className="px-3 py-3 space-y-3 max-w-[767px] mx-auto">
+        {/* Warning Banner if any item has 0 quantity */}
+        {hasInvalidQuantity && (
+          <section className="bg-rose-50 border border-rose-200 rounded-[12px] px-3 py-2 text-rose-800 text-[11px] flex items-center justify-between font-medium">
+            <span>⚠️ Please set quantity above 0 or remove item to proceed.</span>
+          </section>
+        )}
+
         {/* ─── 7. COMPACT DELIVERY CHIP ─── */}
         <section className="bg-emerald-50/90 border border-emerald-200/70 rounded-[12px] px-3 py-2 flex items-center justify-between text-emerald-800 text-[11px]">
           <div className="flex items-center gap-2">
@@ -327,7 +341,7 @@ export default function MobileCart({
                 color,
                 price,
                 discountPrice,
-                quantity,
+                quantity = 1,
                 stock,
               } = item;
 
@@ -440,40 +454,47 @@ export default function MobileCart({
                     </div>
                   </div>
 
-                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height, TYPEABLE INPUT) + 5. SAVE FOR LATER ghost chip */}
+                  {/* Bottom Row: 3. QUANTITY CONTROL (32px height, TYPEABLE INPUT INCLUDING 0) + 5. SAVE FOR LATER ghost chip */}
                   <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-2 flex-wrap">
                     {/* 3. Quantity Control (Entire height: 32px, minus 28x28, count input center, plus 28x28) */}
                     <div className="h-[32px] inline-flex items-center bg-stone-100/90 border border-stone-200/70 rounded-full px-1 gap-0.5 shadow-inner">
                       <motion.button
                         whileTap={{ scale: 0.85 }}
                         type="button"
-                        disabled={quantity <= 1 || isUpdating}
-                        onClick={() => onUpdateQuantity(targetId, Math.max(1, quantity - 1))}
+                        disabled={quantity <= 0 || isUpdating}
+                        onClick={() => onUpdateQuantity(targetId, Math.max(0, quantity - 1))}
                         className="h-[28px] w-[28px] rounded-full bg-white text-stone-800 shadow-2xs flex items-center justify-center font-bold text-xs disabled:opacity-40 transition-transform shrink-0"
                         aria-label="Decrease quantity"
                       >
                         <FiMinus className="h-3 w-3" />
                       </motion.button>
 
-                      {/* Typeable Input Field for Quantity */}
+                      {/* Typeable Input Field for Quantity (Supports entering 0) */}
                       <input
                         type="number"
-                        min={1}
+                        min={0}
                         max={maxStock}
                         value={quantity}
                         onChange={(e) => {
-                          const val = parseInt(e.target.value, 10);
+                          const raw = e.target.value;
+                          if (raw === '') {
+                            onUpdateQuantity(targetId, 0);
+                            return;
+                          }
+                          const val = parseInt(raw, 10);
                           if (!isNaN(val)) {
-                            onUpdateQuantity(targetId, Math.max(1, Math.min(maxStock, val)));
+                            onUpdateQuantity(targetId, Math.max(0, Math.min(maxStock, val)));
                           }
                         }}
                         onBlur={(e) => {
                           const val = parseInt(e.target.value, 10);
-                          if (isNaN(val) || val < 1) {
-                            onUpdateQuantity(targetId, 1);
+                          if (isNaN(val) || val < 0) {
+                            onUpdateQuantity(targetId, 0);
                           }
                         }}
-                        className="w-8 text-center text-[13px] font-bold text-stone-900 bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className={`w-8 text-center text-[13px] font-bold bg-transparent focus:outline-none focus:ring-0 font-mono p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                          quantity === 0 ? 'text-rose-600 font-extrabold' : 'text-stone-900'
+                        }`}
                         aria-label="Item quantity"
                       />
 
@@ -607,13 +628,14 @@ export default function MobileCart({
 
           {/* Checkout Button ONLY (46px height, radius 12px, gold gradient) */}
           <motion.button
-            whileTap={{ scale: 0.97 }}
+            whileTap={isCheckoutDisabled ? {} : { scale: 0.97 }}
             type="button"
+            disabled={isCheckoutDisabled}
             onClick={onProceedToCheckout}
-            className="w-full h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 active:scale-98 transition-all"
+            className="w-full h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
           >
             <FiLock className="h-4 w-4 text-amber-200" />
-            <span>Proceed to Checkout</span>
+            <span>{hasInvalidQuantity ? 'Invalid Quantity (0)' : 'Proceed to Checkout'}</span>
             <FiArrowRight className="h-4 w-4 text-amber-200" />
           </motion.button>
 
@@ -659,15 +681,16 @@ export default function MobileCart({
             </span>
           </div>
 
-          {/* Right: Checkout Button (46px height, gold gradient) */}
+          {/* Right: Checkout Button (46px height, gold gradient, disabled when quantity is 0) */}
           <motion.button
-            whileTap={{ scale: 0.97 }}
+            whileTap={isCheckoutDisabled ? {} : { scale: 0.97 }}
             type="button"
+            disabled={isCheckoutDisabled}
             onClick={onProceedToCheckout}
-            className="flex-1 max-w-[240px] h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 transition-all"
+            className="flex-1 max-w-[240px] h-[46px] rounded-[12px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-white font-bold text-[13px] shadow-md shadow-amber-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none"
           >
             <FiLock className="h-4 w-4 text-amber-200" />
-            <span>Checkout</span>
+            <span>{hasInvalidQuantity ? 'Invalid Qty' : 'Checkout'}</span>
             <FiArrowRight className="h-4 w-4 text-amber-200" />
           </motion.button>
         </div>
