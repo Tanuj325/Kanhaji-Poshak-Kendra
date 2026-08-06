@@ -20,6 +20,8 @@ import {
   useDeleteAddress,
   useSetDefaultAddress,
 } from '@/hooks/useAddresses';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { MobileShippingAddress } from '@/components/checkout';
 import { siteConfig } from '@/config/siteConfig';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import toast from 'react-hot-toast';
@@ -83,6 +85,7 @@ const initialForm = {
 };
 
 export default function AddressesPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { data: addresses, isLoading, isError, error, refetch } = useAddresses();
   const createAddress = useCreateAddress();
   const updateAddress = useUpdateAddress();
@@ -183,6 +186,32 @@ export default function AddressesPage() {
       <div className="py-8 w-full max-w-5xl">
         <ErrorState title="Failed to load addresses" message={getErrorMessage(error)} onRetry={refetch} />
       </div>
+    );
+  }
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`Saved Addresses | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileShippingAddress
+          addresses={addrList}
+          isLoading={isLoading}
+          isError={isError}
+          onRetry={refetch}
+          selectedId={null}
+          onSelect={() => {}}
+          onCreate={(data) => createAddress.mutateAsync(data)}
+          onUpdate={(id, data) => updateAddress.mutateAsync({ addressId: id, data })}
+          onDelete={(id) => deleteAddress.mutateAsync(id)}
+          onSetDefault={(id) => setDefaultAddress.mutateAsync(id)}
+          onBack={() => window.history.back()}
+          mode="management"
+        />
+      </>
     );
   }
 

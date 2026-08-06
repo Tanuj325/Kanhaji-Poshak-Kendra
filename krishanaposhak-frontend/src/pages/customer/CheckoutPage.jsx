@@ -29,6 +29,8 @@ import { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress, use
 import { usePlaceOrder } from '@/hooks/useOrders';
 import { usePlaceRazorpayOrder } from '@/hooks/usePlaceRazorpayOrder';
 import { useRazorpayPayment } from '@/hooks/useRazorpayPayment';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { MobileShippingAddress } from '@/components/checkout';
 import { paymentService } from '@/services';
 import { siteConfig } from '@/config/siteConfig';
 import { calculateShipping } from '@/utils/shippingCalculator';
@@ -42,6 +44,7 @@ const breadcrumbItems = [
 ];
 
 function CheckoutPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -304,6 +307,34 @@ function CheckoutPage() {
           }
         />
       </div>
+    );
+  }
+
+  if (!isDesktop && currentStep === 'address') {
+    return (
+      <>
+        <Helmet>
+          <title>{`Shipping Address | ${siteConfig.name}`}</title>
+          <meta name="description" content="Select shipping address for express checkout." />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+
+        <MobileShippingAddress
+          addresses={addrList}
+          isLoading={addrLoading}
+          isError={addrError}
+          onRetry={refetchAddresses}
+          selectedId={selectedAddressId}
+          onSelect={setSelectedAddressId}
+          onCreate={(data) => createAddr.mutateAsync(data)}
+          onUpdate={(id, data) => updateAddr.mutateAsync({ addressId: id, data })}
+          onDelete={(id) => deleteAddr.mutateAsync(id)}
+          onSetDefault={(id) => setDefaultAddr.mutateAsync(id)}
+          onContinue={() => setCurrentStep('payment')}
+          onBack={() => navigate(ROUTE_PATHS.CART)}
+          mode="checkout"
+        />
+      </>
     );
   }
 
