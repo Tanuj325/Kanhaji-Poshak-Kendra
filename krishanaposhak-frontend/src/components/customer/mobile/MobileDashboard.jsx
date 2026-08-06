@@ -175,7 +175,7 @@ export default function MobileDashboard() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="h-9 w-9 rounded-full bg-white text-stone-800 border border-stone-200/80 flex items-center justify-center active:scale-95 transition-transform shadow-2xs shrink-0"
+          className="h-7 w-7 rounded-full bg-white text-stone-800 border border-stone-200/80 flex items-center justify-center active:scale-95 transition-transform shadow-2xs shrink-0"
           aria-label="Back"
         >
           <FiChevronLeft className="w-[22px] h-[22px] stroke-[2.2]" />
@@ -187,7 +187,7 @@ export default function MobileDashboard() {
 
         <Link
           to={ROUTE_PATHS.NOTIFICATIONS}
-          className="relative h-9 w-9 rounded-full bg-white text-stone-800 border border-stone-200/80 flex items-center justify-center active:scale-95 transition-transform shadow-2xs shrink-0"
+          className="relative h-7 w-7 rounded-full bg-white text-stone-800 border border-stone-200/80 flex items-center justify-center active:scale-95 transition-transform shadow-2xs shrink-0"
           aria-label="Notifications"
         >
           <FiBell className="w-[20px] h-[20px] text-stone-800" />
@@ -246,7 +246,7 @@ export default function MobileDashboard() {
             </div>
 
             {email && (
-              <div className="flex items-center gap-2.5 text-[15px] text-stone-700 font-medium">
+              <div className="flex items-center gap-2.5 text-[13px] text-stone-700 font-medium">
                 <FiMail className="w-[18px] h-[18px] text-amber-900 shrink-0" />
                 <span className="break-all">{email}</span>
               </div>
@@ -300,7 +300,7 @@ export default function MobileDashboard() {
           </div>
         </motion.div>
 
-        {/* ─── 4. QUICK ACTION GRID (2 Columns, Height 96px Mobile / 108px Tablet, 16px Padding) ─── */}
+        {/* ─── 4. QUICK ACTION GRID (2 Columns, Height 96px Mobile / 108px Tablet, Vertical Layout for Full Text Visibility) ─── */}
         <section className="w-full space-y-3">
           <h3 className="text-[16px] font-heading font-extrabold text-amber-950 px-0.5">
             Quick Actions
@@ -317,13 +317,18 @@ export default function MobileDashboard() {
                   transition={{ duration: 0.15, delay: idx * 0.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(action.href)}
-                  className="w-full h-[96px] sm:h-[108px] rounded-[18px] bg-white border border-stone-200/80 p-4 shadow-2xs hover:border-amber-400/60 cursor-pointer flex items-center justify-between gap-3 transition-all group"
+                  className="w-full h-[96px] sm:h-[108px] rounded-[18px] bg-white border border-stone-200/80 p-3.5 shadow-2xs hover:border-amber-400/60 cursor-pointer flex flex-col justify-between transition-all group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-900 shrink-0">
-                    <Icon className="w-[20px] h-[20px] stroke-[1.8] group-hover:scale-105 transition-transform" />
+                  {/* TOP ROW: Icon (Left) & Chevron (Right) */}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-900 shrink-0">
+                      <Icon className="w-[18px] h-[18px] stroke-[1.8] group-hover:scale-105 transition-transform" />
+                    </div>
+                    <FiChevronRight className="w-[16px] h-[16px] text-stone-400 group-hover:text-amber-900 group-hover:translate-x-0.5 transition-all shrink-0" />
                   </div>
 
-                  <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  {/* BOTTOM ROW: Title & Subtitle (Full 130px+ Width for Crisp Text Visibility) */}
+                  <div className="w-full min-w-0">
                     <div className="text-[15px] font-heading font-bold text-stone-900 group-hover:text-amber-950 truncate leading-snug">
                       {action.label}
                     </div>
@@ -331,8 +336,6 @@ export default function MobileDashboard() {
                       {action.subtitle}
                     </div>
                   </div>
-
-                  <FiChevronRight className="w-[18px] h-[18px] text-stone-400 group-hover:text-amber-900 group-hover:translate-x-0.5 transition-all shrink-0" />
                 </motion.div>
               );
             })}
