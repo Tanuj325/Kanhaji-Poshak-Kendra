@@ -57,26 +57,27 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
   if (appliedCoupon) {
     return (
       <div
-        className={`rounded-[14px] bg-gradient-to-r from-emerald-50 via-emerald-100/40 to-emerald-50 border border-emerald-300/80 p-3.5 shadow-2xs font-display ${className || ''}`}
+        className={`rounded-[14px] bg-gradient-to-r from-emerald-50 via-emerald-100/40 to-emerald-50 border border-emerald-300/80 p-3 shadow-2xs font-display ${className || ''}`}
       >
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="h-8 w-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
               <FiCheck className="h-4 w-4 stroke-[3]" />
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800">
-                  Promo Applied
+
+            <div className="min-w-0 flex-1 space-y-0.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs sm:text-sm font-extrabold text-amber-950 font-mono tracking-wider truncate">
+                  {appliedCoupon.code}
                 </span>
                 {appliedCoupon.discountAmount > 0 && (
-                  <span className="bg-emerald-200/80 text-emerald-900 text-[10px] font-extrabold px-1.5 py-0.2 rounded">
-                    SAVED ₹{appliedCoupon.discountAmount}
+                  <span className="bg-emerald-200/90 text-emerald-900 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md whitespace-nowrap shrink-0">
+                    Saved ₹{appliedCoupon.discountAmount}
                   </span>
                 )}
               </div>
-              <p className="text-sm font-extrabold text-amber-950 font-mono tracking-wider truncate">
-                {appliedCoupon.code}
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800">
+                Promo Code Applied
               </p>
             </div>
           </div>
@@ -85,9 +86,9 @@ function CouponInput({ orderAmount = 0, appliedCoupon, onApply, onRemove, classN
             type="button"
             onClick={handleRemove}
             disabled={removeCoupon.isPending}
-            className="inline-flex items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-3 h-[36px] rounded-xl border border-rose-200 shadow-2xs disabled:opacity-50 shrink-0"
+            className="inline-flex items-center gap-1 text-xs font-bold text-rose-700 hover:text-rose-900 bg-white hover:bg-rose-50 transition-all px-2.5 h-[34px] rounded-xl border border-rose-200/80 shadow-2xs disabled:opacity-50 shrink-0"
           >
-            <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
+            <FiTrash2 className="h-3.5 w-3.5 text-rose-600 shrink-0" />
             <span>{removeCoupon.isPending ? '...' : 'Remove'}</span>
           </button>
         </div>
