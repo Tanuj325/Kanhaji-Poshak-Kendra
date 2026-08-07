@@ -248,63 +248,48 @@ export default memo(function MobileOrders({
   }, [featuredData]);
 
   return (
-    <div
-      className="w-full min-h-[100dvh] bg-white flex flex-col -mt-[144px] md:mt-0"
-      style={{ maxWidth: 'none' }}
-    >
+    <div className="fixed inset-0 z-40 bg-white text-stone-900 font-sans antialiased overflow-y-auto lg:hidden pb-24 md:pb-16">
       {/* ══════════════════════════════════════════════════════════════════
-          1. STICKY TOP HEADER — opens from the very top of mobile screen
+          1. STICKY TOP HEADER (52px height, Edge-to-Edge)
           ══════════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-stone-200/80 shadow-2xs">
-        <div className="flex items-center justify-between h-12 md:h-14 px-3 md:px-5">
-          <div className="flex items-center gap-2.5">
-            {/* Back Button */}
-            <button
-              type="button"
-              onClick={() => navigate('/account/profile')}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-stone-800 hover:bg-stone-100 active:scale-95 transition-all shrink-0"
-              aria-label="Go back"
-            >
-              <FiArrowLeft className="h-5 w-5" />
-            </button>
-            {/* Title */}
-            <h1 className="text-lg md:text-xl font-bold text-stone-900 tracking-tight leading-none font-display">
-              My Orders
-            </h1>
-          </div>
+      <header className="sticky top-0 z-40 h-[52px] w-full bg-white/98 backdrop-blur-md border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
+        <button
+          type="button"
+          onClick={() => navigate('/account/profile')}
+          className="h-8 w-8 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-all shrink-0"
+          aria-label="Go back"
+        >
+          <FiArrowLeft className="h-4 w-4" />
+        </button>
 
-          <div className="flex items-center gap-1">
-            {/* Search Button */}
-            <button
-              type="button"
-              onClick={() => setShowSearch((prev) => !prev)}
-              className={`flex h-9 w-9 items-center justify-center rounded-full transition-all shrink-0 ${
-                showSearch
-                  ? 'bg-amber-100 text-amber-900'
-                  : 'text-stone-700 hover:bg-stone-100'
-              }`}
-              aria-label="Toggle search"
-            >
-              <FiSearch className="h-4.5 w-4.5" />
-            </button>
+        <h1 className="text-[16px] font-bold text-stone-900 font-display tracking-tight">
+          My Orders
+        </h1>
 
-            {/* Filter & Sort Toggle */}
-            <button
-              type="button"
-              onClick={() => setShowFiltersDrawer((prev) => !prev)}
-              className={`flex h-9 w-9 items-center justify-center rounded-full transition-all relative shrink-0 ${
-                status || paymentStatus
-                  ? 'bg-amber-950 text-white'
-                  : 'text-stone-700 hover:bg-stone-100'
-              }`}
-              aria-label="Filter & Sort"
-            >
-              <FiSliders className="h-4 w-4" />
-              {(status || paymentStatus) && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-amber-400 ring-1 ring-white" />
-              )}
-            </button>
-          </div>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setShowSearch((prev) => !prev)}
+            className={`h-8 w-8 rounded-full flex items-center justify-center transition-all shrink-0 ${
+              showSearch ? 'bg-amber-100 text-amber-900' : 'text-stone-700 hover:bg-stone-100'
+            }`}
+            aria-label="Toggle search"
+          >
+            <FiSearch className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowFiltersDrawer((prev) => !prev)}
+            className={`h-8 w-8 rounded-full flex items-center justify-center transition-all relative shrink-0 ${
+              status || paymentStatus ? 'bg-amber-950 text-white' : 'text-stone-700 hover:bg-stone-100'
+            }`}
+            aria-label="Filter & Sort"
+          >
+            <FiSliders className="h-4 w-4" />
+            {(status || paymentStatus) && (
+              <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-amber-400 ring-1 ring-white" />
+            )}
+          </button>
         </div>
       </header>
 
