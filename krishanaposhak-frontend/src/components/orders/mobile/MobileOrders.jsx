@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fi';
 import { formatDate } from '@/utils/formatDate';
 import { useFeaturedProducts } from '@/hooks/useProducts';
+import { useOrder } from '@/hooks/useOrders';
 
 /* ═══════════════════════════════════════════════════════════════════════
    FALLBACK IMAGE — inline SVG data URL, zero network requests
@@ -66,8 +67,8 @@ function getOrderItemImage(item) {
 }
 
 /** Resolve product name from nested order item structure */
-function getOrderItemName(item) {
-  if (!item) return 'Krishna Poshak Product';
+function getOrderItemName(item, order) {
+  if (!item) return order?.orderNumber ? `Order #${order.orderNumber}` : 'Krishna Poshak Product';
 
   const name =
     item.productName ||
@@ -82,7 +83,7 @@ function getOrderItemName(item) {
   if (name && typeof name === 'string' && name.trim()) {
     return name;
   }
-  return 'Krishna Poshak Product';
+  return order?.orderNumber ? `Order #${order.orderNumber}` : 'Krishna Poshak Product';
 }
 
 /**
@@ -158,13 +159,15 @@ function SkeletonOrderRow() {
    Image | Status heading + Product name | Chevron
    ═══════════════════════════════════════════════════════════════════════ */
 const OrderRow = memo(function OrderRow({ order }) {
-  const itemsList = order?.items || order?.orderItems || order?.products || [];
+  const { data: orderDetail } = useOrder(order.id);
+  const fullOrder = orderDetail || order;
+  const itemsList = fullOrder?.items || fullOrder?.orderItems || fullOrder?.products || [];
   const firstItem = itemsList[0] || null;
   const extraCount = itemsList.length > 1 ? itemsList.length - 1 : 0;
 
   const imageUrl = getOrderItemImage(firstItem);
-  const productName = getOrderItemName(firstItem);
-  const statusHeading = getStatusHeading(order);
+  const productName = getOrderItemName(firstItem, fullOrder);
+  const statusHeading = getStatusHeading(fullOrder);
 
   return (
     <motion.div
@@ -176,10 +179,10 @@ const OrderRow = memo(function OrderRow({ order }) {
     >
       <Link
         to={`/account/orders/${order.id}`}
-        className="group flex items-center gap-3.5 w-full py-4 hover:bg-stone-50/60 transition-colors"
+        className="group flex items-center gap-3 w-full py-3 hover:bg-stone-50/60 transition-colors"
       >
         {/* Product Image */}
-        <div className="h-[80px] w-[80px] min-w-[80px] md:h-[96px] md:w-[96px] md:min-w-[96px] rounded-xl overflow-hidden bg-[#F5F0E6] border border-stone-200/60 shrink-0">
+        <div className="h-[76px] w-[76px] min-w-[76px] md:h-[88px] md:w-[88px] md:min-w-[88px] rounded-xl overflow-hidden bg-stone-100 border border-stone-200/60 shrink-0">
           <img
             src={imageUrl}
             alt={productName}
@@ -205,7 +208,7 @@ const OrderRow = memo(function OrderRow({ order }) {
 
         {/* Right Chevron */}
         <div className="shrink-0 pl-1">
-          <FiChevronRight className="h-5 w-5 md:h-6 md:w-6 text-stone-400 group-hover:text-stone-700 group-hover:translate-x-0.5 transition-all" />
+          <FiChevronRight className="h-5 w-5 text-stone-400 group-hover:text-stone-700 group-hover:translate-x-0.5 transition-all" />
         </div>
       </Link>
     </motion.div>
@@ -246,42 +249,62 @@ export default memo(function MobileOrders({
 
   return (
     <div
-      className="w-full min-h-[100dvh] bg-[#FAFAF8] flex flex-col"
+      className="w-full min-h-[100dvh] bg-white flex flex-col -mt-[144px] md:mt-0"
       style={{ maxWidth: 'none' }}
     >
       {/* ══════════════════════════════════════════════════════════════════
-          1. PAGE HEADER — 56px mobile, 60px tablet
+          1. STICKY TOP HEADER — opens from the very top of mobile screen
           ══════════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 w-full bg-white/97 backdrop-blur-md border-b border-stone-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-        <div className="flex items-center justify-between h-14 md:h-[60px] px-4 md:px-6">
-          {/* Back Button */}
-          <button
-            type="button"
-            onClick={() => navigate('/account/profile')}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-stone-50 border border-stone-200/60 text-stone-800 hover:bg-stone-100 active:scale-95 transition-all shrink-0"
-            aria-label="Go back"
-          >
-            <FiArrowLeft className="h-[18px] w-[18px]" />
-          </button>
+      <header className="sticky top-0 z-40 w-full bg-white border-b border-stone-200/80 shadow-2xs">
+        <div className="flex items-center justify-between h-12 md:h-14 px-3 md:px-5">
+          <div className="flex items-center gap-2.5">
+            {/* Back Button */}
+            <button
+              type="button"
+              onClick={() => navigate('/account/profile')}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-stone-800 hover:bg-stone-100 active:scale-95 transition-all shrink-0"
+              aria-label="Go back"
+            >
+              <FiArrowLeft className="h-5 w-5" />
+            </button>
+            {/* Title */}
+            <h1 className="text-lg md:text-xl font-bold text-stone-900 tracking-tight leading-none font-display">
+              My Orders
+            </h1>
+          </div>
 
-          {/* Title */}
-          <h1 className="text-xl md:text-[22px] font-bold text-stone-900 tracking-tight leading-none font-display">
-            My Orders
-          </h1>
+          <div className="flex items-center gap-1">
+            {/* Search Button */}
+            <button
+              type="button"
+              onClick={() => setShowSearch((prev) => !prev)}
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-all shrink-0 ${
+                showSearch
+                  ? 'bg-amber-100 text-amber-900'
+                  : 'text-stone-700 hover:bg-stone-100'
+              }`}
+              aria-label="Toggle search"
+            >
+              <FiSearch className="h-4.5 w-4.5" />
+            </button>
 
-          {/* Search Button */}
-          <button
-            type="button"
-            onClick={() => setShowSearch((prev) => !prev)}
-            className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all shrink-0 ${
-              showSearch
-                ? 'bg-amber-100 text-amber-900 border border-amber-200'
-                : 'bg-stone-50 border border-stone-200/60 text-stone-700 hover:bg-stone-100'
-            }`}
-            aria-label="Toggle search"
-          >
-            <FiSearch className="h-[18px] w-[18px]" />
-          </button>
+            {/* Filter & Sort Toggle */}
+            <button
+              type="button"
+              onClick={() => setShowFiltersDrawer((prev) => !prev)}
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-all relative shrink-0 ${
+                status || paymentStatus
+                  ? 'bg-amber-950 text-white'
+                  : 'text-stone-700 hover:bg-stone-100'
+              }`}
+              aria-label="Filter & Sort"
+            >
+              <FiSliders className="h-4 w-4" />
+              {(status || paymentStatus) && (
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-amber-400 ring-1 ring-white" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -295,23 +318,23 @@ export default memo(function MobileOrders({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="overflow-hidden bg-white border-b border-stone-200/60 px-4 md:px-6"
+            className="overflow-hidden bg-white border-b border-stone-200/80 px-3 md:px-5"
           >
-            <div className="relative flex items-center py-2.5">
+            <div className="relative flex items-center py-2">
               <FiSearch className="absolute left-3 h-4 w-4 text-stone-400" />
               <input
                 type="text"
                 placeholder="Search by Order # or Product Name…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full rounded-xl border border-stone-200 bg-stone-50/80 pl-10 pr-9 py-2.5 text-[13px] text-stone-900 placeholder-stone-400 focus:border-amber-700 focus:bg-white focus:outline-none focus:ring-1 focus:ring-amber-700/20 transition-all"
+                className="w-full rounded-lg border border-stone-200 bg-stone-50 pl-9 pr-8 py-2 text-xs text-stone-900 placeholder-stone-400 focus:border-amber-800 focus:bg-white focus:outline-none transition-all"
                 autoFocus
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-3 text-stone-400 hover:text-stone-600"
+                  className="absolute right-2.5 text-stone-400 hover:text-stone-600"
                 >
                   <FiX className="h-4 w-4" />
                 </button>
@@ -322,44 +345,10 @@ export default memo(function MobileOrders({
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════════
-          2. ORDERS SUMMARY + FILTER TOGGLE
+          2. STATUS FILTER TABS — compact horizontal scroll bar
           ══════════════════════════════════════════════════════════════════ */}
-      <div className="w-full bg-white px-4 md:px-6 py-3 border-b border-stone-200/50 flex items-center justify-between">
-        <div>
-          <h2 className="text-lg md:text-xl font-bold text-stone-900 font-display leading-tight">
-            {!isLoading && `${totalOrders} ${totalOrders === 1 ? 'Order' : 'Orders'}`}
-            {isLoading && 'Loading…'}
-          </h2>
-          {(status || paymentStatus || searchTerm) && (
-            <p className="text-[11px] text-amber-800 font-semibold mt-0.5">
-              Filtered results
-            </p>
-          )}
-        </div>
-
-        {/* Filter + Sort toggle */}
-        <button
-          type="button"
-          onClick={() => setShowFiltersDrawer((prev) => !prev)}
-          className={`inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-bold transition-all border ${
-            status || paymentStatus
-              ? 'bg-amber-950 text-white border-amber-950 shadow-sm'
-              : 'bg-stone-50 text-stone-700 border-stone-200/70 hover:bg-stone-100'
-          }`}
-        >
-          <FiSliders className="h-3.5 w-3.5" />
-          Filters
-          {(status || paymentStatus) && (
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 ml-0.5" />
-          )}
-        </button>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          3. STATUS FILTER TABS — horizontally scrollable pills
-          ══════════════════════════════════════════════════════════════════ */}
-      <div className="w-full bg-white border-b border-stone-200/50 px-4 md:px-6 py-2">
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+      <div className="w-full bg-white border-b border-stone-200/80 px-3 md:px-5 py-1.5 shadow-2xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap">
           {statusFilterTabs.map((tab) => {
             const isActive = status === tab.value;
             return (
@@ -367,10 +356,10 @@ export default memo(function MobileOrders({
                 key={tab.value || '__all__'}
                 type="button"
                 onClick={() => updateParam('status', tab.value)}
-                className={`shrink-0 h-[36px] md:h-[38px] rounded-full px-4 md:px-5 text-[12px] md:text-[13px] font-bold transition-all whitespace-nowrap ${
+                className={`shrink-0 h-[30px] rounded-full px-3.5 text-[12px] font-medium transition-all ${
                   isActive
-                    ? 'bg-gradient-to-r from-amber-950 via-amber-900 to-stone-900 text-white shadow-sm'
-                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200/80'
+                    ? 'bg-gradient-to-r from-amber-950 via-amber-900 to-stone-900 text-white font-bold shadow-2xs'
+                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200/70'
                 }`}
               >
                 {tab.label}
@@ -445,9 +434,9 @@ export default memo(function MobileOrders({
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════════
-          4. MAIN CONTENT AREA
+          3. MAIN CONTENT AREA — high density order list
           ══════════════════════════════════════════════════════════════════ */}
-      <main className="flex-1 w-full px-4 md:px-6 py-4 md:py-5 pb-24 md:pb-6">
+      <main className="flex-1 w-full px-3 md:px-5 py-2 pb-24 md:pb-6">
         {/* ── LOADING STATE ── */}
         {isLoading ? (
           <div className="divide-y divide-stone-200/70">
