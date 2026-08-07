@@ -375,35 +375,35 @@ export default function MobileWishlist({
   }
 
   return (
-    <div className="mx-1 sm:-mx-3 lg:mx-0 mt-0 sm:mt-0 lg:mt-0 w-full sm:w-full lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
-      {/* ─── 1. HEADER (Sticky, Height: 50px, Centered Title) ─── */}
-      <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-1.5 flex items-center justify-between shadow-2xs">
+    <div className="fixed inset-0 z-40 bg-[#F8F6F2] text-stone-800 font-sans antialiased overflow-y-auto lg:hidden pb-24 md:pb-16">
+      {/* ─── 1. HEADER (Sticky, Height: 52px, Full Width Edge-to-Edge) ─── */}
+      <header className="sticky top-0 z-40 h-[52px] w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-4 flex items-center justify-between shadow-2xs">
         <motion.button
           whileTap={{ scale: 0.92 }}
           type="button"
           onClick={() => navigate(-1)}
-          className="h-7.5 w-7.5 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
+          className="h-8 w-8 rounded-full bg-stone-100 hover:bg-stone-200/80 flex items-center justify-center text-stone-700 transition-transform"
           aria-label="Back"
         >
-          <FiArrowLeft className="h-3.5 w-3.5" />
+          <FiArrowLeft className="h-4 w-4" />
         </motion.button>
 
         {/* Center Title & Count */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[15px] font-semibold text-stone-900 tracking-wide font-sans">
-            Wishlist
+        <div className="flex items-center gap-2">
+          <span className="text-[16px] font-heading font-extrabold text-stone-900 tracking-tight">
+            My Wishlist
           </span>
-          <span className="text-[10px] font-bold text-[#98631B] bg-[#FFF5E5] border border-[#F3E2C8] px-1.5 py-0.5 rounded-full">
-            {items.length}
+          <span className="text-[11px] font-bold text-[#98631B] bg-[#FFF5E5] border border-[#F3E2C8] px-2 py-0.5 rounded-full">
+            {items.length} {items.length === 1 ? 'item' : 'items'}
           </span>
         </div>
 
         {/* Right Spacer (Keeps Title Centered) */}
-        <div className="h-7.5 w-7.5" aria-hidden="true" />
+        <div className="h-8 w-8" aria-hidden="true" />
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-3 sm:px-5 py-3 w-full max-w-none space-y-3">
+      <main className="px-3 sm:px-4 py-3 w-full max-w-none space-y-3">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
           <div className="py-6 space-y-5">
@@ -484,7 +484,7 @@ export default function MobileWishlist({
 
             {/* ─── 3. 2-COLUMN GRID WISHLIST PRODUCT CARDS (WIDTH / 2 PER CARD) ─── */}
             <AnimatePresence mode="popLayout">
-              <div className="grid grid-cols-2 gap-0.5 sm:gap-1.5 w-full">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
                 {items.map((item) => {
                   const variantId = item.variantId || item.productId;
                   const isItemMoving = movingItemId === variantId;
