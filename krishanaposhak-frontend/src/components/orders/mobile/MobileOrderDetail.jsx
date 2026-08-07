@@ -461,8 +461,10 @@ export default memo(function MobileOrderDetail({
                   {order?.paymentStatus && (
                     <span
                       className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
-                        order.paymentStatus === 'COMPLETED'
+                        order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : order.paymentStatus === 'FAILED'
+                          ? 'bg-rose-50 text-rose-700 border-rose-200'
                           : 'bg-amber-50 text-amber-800 border-amber-200'
                       }`}
                     >
@@ -680,7 +682,11 @@ export default memo(function MobileOrderDetail({
                     <span>Payment Status</span>
                     <span
                       className={`font-bold px-2 py-0.5 rounded text-[11px] ${
-                        order.paymentStatus === 'COMPLETED' ? 'text-emerald-700 bg-emerald-50' : 'text-amber-800 bg-amber-50'
+                        order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
+                          ? 'text-emerald-700 bg-emerald-50'
+                          : order.paymentStatus === 'FAILED'
+                          ? 'text-rose-700 bg-rose-50'
+                          : 'text-amber-800 bg-amber-50'
                       }`}
                     >
                       {order.paymentStatus}

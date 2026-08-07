@@ -300,6 +300,7 @@ public class OrderServiceImpl implements OrderService {
                         .orderNumber(order.getOrderNumber())
                         .totalAmount(order.getTotalAmount() == null ? null : order.getTotalAmount().doubleValue())
                         .orderStatus(order.getOrderStatus())
+                        .paymentStatus(order.getPaymentStatus())
                         .orderDate(order.getCreatedAt())
                         .build())
                 .toList();
@@ -378,7 +379,35 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+
         order.setOrderStatus(status);
+
+        // COD Payment Lifecycle: When admin marks a COD order as DELIVERED, automatically mark payment status as PAID
+        if (status == OrderStatus.DELIVERED) {
+            Payment payment = order.getPayment();
+            if (payment == null) {
+                payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
+            }
+
+            boolean isCod = (payment != null && payment.getPaymentMethod() == PaymentMethod.COD);
+
+            if (isCod && order.getPaymentStatus() != PaymentStatus.PAID) {
+                log.info("[COD] Order #{} marked as DELIVERED by admin. Automatically updating payment status from {} to PAID.",
+                        order.getOrderNumber(), order.getPaymentStatus());
+
+                order.setPaymentStatus(PaymentStatus.PAID);
+
+                if (payment != null) {
+                    payment.setPaymentStatus(PaymentStatus.PAID);
+                    if (payment.getPaidAt() == null) {
+                        payment.setPaidAt(java.time.Instant.now());
+                    }
+                    paymentRepository.save(payment);
+                    order.setPayment(payment);
+                }
+            }
+        }
+
         order = orderRepository.save(order);
         return orderMapper.toResponse(order);
     }

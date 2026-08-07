@@ -70,6 +70,7 @@ export function useUpdateOrderStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_ORDERS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDER] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
       toast.success('Order status updated');
     },
     onError: (err) => {
