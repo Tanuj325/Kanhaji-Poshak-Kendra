@@ -231,10 +231,10 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
               <div key={step.status} className="relative z-10 flex flex-col items-center text-center max-w-[100px]">
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs transition-all ${isCurrent
-                      ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/20 shadow-md scale-110'
-                      : isCompleted
-                        ? 'border-amber-700 bg-amber-700 text-white'
-                        : 'border-stone-300 bg-white text-stone-400'
+                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/20 shadow-md scale-110'
+                    : isCompleted
+                      ? 'border-amber-700 bg-amber-700 text-white'
+                      : 'border-stone-300 bg-white text-stone-400'
                     }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -259,10 +259,13 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
       </div>
 
       {/* ── MOBILE VERTICAL STEP TIMELINE (<768px) ── */}
-      <div className="block md:hidden relative pl-6 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-stone-200">
-        {/* Progress Line */}
+      <div className="block md:hidden relative pl-2 space-y-4">
+        {/* Track Line Background */}
+        <div className="absolute left-[15px] top-3 bottom-3 w-[2px] bg-stone-200" />
+
+        {/* Active Progress Line */}
         <div
-          className="absolute left-[11px] top-2 w-[2px] bg-gradient-to-b from-amber-700 via-amber-600 to-emerald-600 transition-all duration-500"
+          className="absolute left-[15px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-amber-700 via-amber-600 to-emerald-600 transition-all duration-500 origin-top"
           style={{ height: `${progressPercent}%` }}
         />
 
@@ -272,9 +275,10 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
           const Icon = step.icon;
 
           return (
-            <div key={step.status} className="relative flex items-start gap-3">
+            <div key={step.status} className="relative flex items-start">
+              {/* Status Circle Icon (Centered on 15px line) */}
               <span
-                className={`absolute -left-[23px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all ${isCurrent
+                className={`absolute left-[3px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all z-10 ${isCurrent
                     ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-110 shadow-xs'
                     : isCompleted
                       ? 'border-amber-800 bg-amber-800 text-white'
@@ -284,8 +288,9 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
                 <Icon className="h-3 w-3" />
               </span>
 
-              <div className="min-w-0 pt-0.5">
-                <div className="flex items-center gap-2">
+              {/* Step Label & Details (Sufficient left padding to avoid icon overlap) */}
+              <div className="min-w-0 pt-0.5 pl-9">
+                <div className="flex flex-wrap items-center gap-1.5">
                   <h5
                     className={`text-xs font-semibold leading-tight ${isCurrent ? 'text-[#0f2440] font-bold' : isCompleted ? 'text-stone-900' : 'text-stone-400'
                       }`}
@@ -293,7 +298,7 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
                     {step.label}
                   </h5>
                   {isCurrent && (
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-900">
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-900 shrink-0">
                       Current State
                     </span>
                   )}
@@ -389,7 +394,7 @@ export default memo(function MobileOrderDetail({
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* 1. PREMIUM STICKY HEADER (56px) */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-30 flex h-14 min-h-[56px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-4 md:px-6 backdrop-blur-md shadow-2xs">
+      <header className="sticky top-0 z-30 flex h-14 min-h-[56px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-1 md:px-3 backdrop-blur-md shadow-2xs">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -411,7 +416,7 @@ export default memo(function MobileOrderDetail({
         <button
           type="button"
           onClick={handlePrintInvoice}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all border border-stone-200/60"
+          className="flex h-7 w-7 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all border border-stone-200/60"
           title="Print / Download Invoice"
         >
           <FiPrinter className="h-4.5 w-4.5 text-stone-700" />
@@ -421,7 +426,7 @@ export default memo(function MobileOrderDetail({
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* MAIN FULL-WIDTH PAGE CONTENT */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <main className="w-full px-4 md:px-6 py-4 max-w-5xl mx-auto space-y-4">
+      <main className="w-full px-1 md:px-3 py-4 max-w-5xl mx-auto space-y-4">
         {/* TABLET 2-COLUMN GRID WRAPPER (768px-1023px) / MOBILE 1-COLUMN */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-start">
           {/* ── LEFT COLUMN: Summary + Status + Products ── */}
@@ -437,7 +442,7 @@ export default memo(function MobileOrderDetail({
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-amber-800 font-sans">
-                    KRISHANA POSHAK
+                    KANHAJI POSHAK
                   </p>
                   <h2 className="text-base md:text-lg font-bold text-stone-900 font-display">
                     Order #{orderNum}
@@ -457,10 +462,10 @@ export default memo(function MobileOrderDetail({
                   {order?.paymentStatus && (
                     <span
                       className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-md border ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          : order.paymentStatus === 'FAILED'
-                            ? 'bg-rose-50 text-rose-700 border-rose-200'
-                            : 'bg-amber-50 text-amber-800 border-amber-200'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : order.paymentStatus === 'FAILED'
+                          ? 'bg-rose-50 text-rose-700 border-rose-200'
+                          : 'bg-amber-50 text-amber-800 border-amber-200'
                         }`}
                     >
                       Payment: {order.paymentStatus}
@@ -677,10 +682,10 @@ export default memo(function MobileOrderDetail({
                     <span>Payment Status</span>
                     <span
                       className={`font-bold px-2 py-0.5 rounded text-[11px] ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
-                          ? 'text-emerald-700 bg-emerald-50'
-                          : order.paymentStatus === 'FAILED'
-                            ? 'text-rose-700 bg-rose-50'
-                            : 'text-amber-800 bg-amber-50'
+                        ? 'text-emerald-700 bg-emerald-50'
+                        : order.paymentStatus === 'FAILED'
+                          ? 'text-rose-700 bg-rose-50'
+                          : 'text-amber-800 bg-amber-50'
                         }`}
                     >
                       {order.paymentStatus}
