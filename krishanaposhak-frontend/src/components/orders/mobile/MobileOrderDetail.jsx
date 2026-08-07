@@ -279,10 +279,10 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
               {/* Status Circle Icon (Centered on 15px line) */}
               <span
                 className={`absolute left-[3px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all z-10 ${isCurrent
-                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-110 shadow-xs'
-                    : isCompleted
-                      ? 'border-amber-800 bg-amber-800 text-white'
-                      : 'border-stone-300 bg-white text-stone-400'
+                  ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-110 shadow-xs'
+                  : isCompleted
+                    ? 'border-amber-800 bg-amber-800 text-white'
+                    : 'border-stone-300 bg-white text-stone-400'
                   }`}
               >
                 <Icon className="h-3 w-3" />
@@ -437,14 +437,14 @@ export default memo(function MobileOrderDetail({
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3"
+              className="rounded-2xl bg-white p-1 md:p-2 border border-stone-200/80 shadow-xs space-y-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-amber-800 font-sans">
                     KANHAJI POSHAK
                   </p>
-                  <h2 className="text-base md:text-lg font-bold text-stone-900 font-display">
+                  <h2 className="text-base md:text-md font-bold text-stone-900 font-display">
                     Order #{orderNum}
                   </h2>
                   <p className="text-xs text-stone-500 mt-0.5">Placed on {orderDateFormatted}</p>
@@ -452,7 +452,7 @@ export default memo(function MobileOrderDetail({
 
                 <div className="flex flex-col items-end gap-1.5">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold border ${getStatusBadgeStyle(
+                    className={`inline-flex items-center gap-1 rounded-full px-1 py-1 text-xs font-bold border ${getStatusBadgeStyle(
                       order?.orderStatus
                     )}`}
                   >
@@ -461,7 +461,7 @@ export default memo(function MobileOrderDetail({
 
                   {order?.paymentStatus && (
                     <span
-                      className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-md border ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
+                      className={`inline-flex items-center text-[10px] font-semibold px-1 py-0.5 rounded-md border ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : order.paymentStatus === 'FAILED'
                           ? 'bg-rose-50 text-rose-700 border-rose-200'
