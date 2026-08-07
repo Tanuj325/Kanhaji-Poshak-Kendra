@@ -142,9 +142,11 @@ export default function OrdersPage() {
       .catch(() => {});
   }, [refetch]);
 
-  const rawOrders = data?.content || data?.data || [];
+  const rawOrders = Array.isArray(data)
+    ? data
+    : data?.content || data?.data || data?.orders || [];
   const totalPages = data?.totalPages || 1;
-  const totalOrders = data?.totalElements || 0;
+  const totalOrders = data?.totalElements || data?.totalCount || rawOrders.length;
 
   const orders = rawOrders.filter((order) => {
     if (!searchTerm.trim()) return true;
