@@ -375,9 +375,9 @@ export default function MobileWishlist({
   }
 
   return (
-    <div className="-mx-4 sm:-mx-6 lg:mx-0 -mt-4 sm:-mt-8 lg:mt-0 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
+    <div className="-mx-1 sm:-mx-3 lg:mx-0 -mt-4 sm:-mt-8 lg:mt-0 w-full sm:w-full lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
       {/* ─── 1. HEADER (Sticky, Height: 50px, Centered Title) ─── */}
-      <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
+      <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-1.5 flex items-center justify-between shadow-2xs">
         <motion.button
           whileTap={{ scale: 0.92 }}
           type="button"
@@ -484,7 +484,7 @@ export default function MobileWishlist({
 
             {/* ─── 3. 2-COLUMN GRID WISHLIST PRODUCT CARDS (WIDTH / 2 PER CARD) ─── */}
             <AnimatePresence mode="popLayout">
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+              <div className="grid grid-cols-2 gap-0.5 sm:gap-1.5 w-full">
                 {items.map((item) => {
                   const variantId = item.variantId || item.productId;
                   const isItemMoving = movingItemId === variantId;
