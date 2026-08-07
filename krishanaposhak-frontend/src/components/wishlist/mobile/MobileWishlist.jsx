@@ -375,7 +375,7 @@ export default function MobileWishlist({
   }
 
   return (
-    <div className="-mx-1 sm:-mx-3 lg:mx-0 -mt-4 sm:-mt-8 lg:mt-0 w-full sm:w-full lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
+    <div className="mx-1 sm:-mx-3 lg:mx-0 mt-0 sm:mt-0 lg:mt-0 w-full sm:w-full lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
       {/* ─── 1. HEADER (Sticky, Height: 50px, Centered Title) ─── */}
       <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-1.5 flex items-center justify-between shadow-2xs">
         <motion.button
