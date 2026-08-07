@@ -61,6 +61,15 @@ public interface RazorpayService {
     java.util.List<com.razorpay.Payment> fetchPaymentsForOrder(String razorpayOrderId) throws RazorpayException;
 
     /**
+     * Fetches a Razorpay Order by ID.
+     *
+     * @param razorpayOrderId the Razorpay order ID
+     * @return the Razorpay Order object
+     * @throws RazorpayException if the API call fails
+     */
+    com.razorpay.Order fetchOrder(String razorpayOrderId) throws RazorpayException;
+
+    /**
      * Gets the Razorpay client instance.
      *
      * @return the Razorpay client

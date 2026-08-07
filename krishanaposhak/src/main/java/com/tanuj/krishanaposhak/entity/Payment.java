@@ -20,12 +20,16 @@ import java.time.Instant;
         indexes = {
                 @Index(name = "idx_payment_order", columnList = "order_id"),
                 @Index(name = "idx_payment_transaction", columnList = "transaction_id"),
-                @Index(name = "idx_payment_razorpay_payment", columnList = "razorpay_payment_id")
+                @Index(name = "idx_payment_razorpay_payment", columnList = "razorpay_payment_id"),
+                @Index(name = "idx_payment_razorpay_order", columnList = "razorpay_order_id")
         },
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_payment_order",
-                        columnNames = "order_id")
+                        columnNames = "order_id"),
+                @UniqueConstraint(
+                        name = "uk_payment_razorpay_order",
+                        columnNames = "razorpay_order_id")
         }
 )
 public class Payment extends BaseEntity {

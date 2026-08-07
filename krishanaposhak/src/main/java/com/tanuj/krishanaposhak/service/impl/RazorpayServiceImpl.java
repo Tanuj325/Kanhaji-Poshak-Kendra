@@ -154,4 +154,12 @@ public class RazorpayServiceImpl implements RazorpayService {
         }
         return razorpayClient.orders.fetchPayments(razorpayOrderId);
     }
+
+    @Override
+    public com.razorpay.Order fetchOrder(String razorpayOrderId) throws RazorpayException {
+        if (razorpayOrderId == null || razorpayOrderId.isBlank()) {
+            throw new IllegalArgumentException("Razorpay order ID is required");
+        }
+        return razorpayClient.orders.fetch(razorpayOrderId);
+    }
 }

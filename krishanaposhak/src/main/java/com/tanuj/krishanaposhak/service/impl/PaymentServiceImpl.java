@@ -197,20 +197,12 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (existingPayment.getPaymentStatus() == PaymentStatus.PAID
                     || (existingOrder != null && existingOrder.getOrderStatus() == OrderStatus.CONFIRMED)) {
-                log.info("[IDEMPOTENT] Razorpay payment {} for order {} was already verified and fulfilled.",
+                log.info("[FRONTEND_PAYMENT_VERIFICATION] [IDEMPOTENT] Razorpay payment {} for order {} was already verified and fulfilled.",
                         request.getRazorpayPaymentId(), existingOrder != null ? existingOrder.getOrderNumber() : "N/A");
-                return paymentMapper.toResponse(existingPayment);
-            } else {
-                // Backward compatibility: fulfill existing pending order if created prior to payment
-                existingPayment.setRazorpayPaymentId(request.getRazorpayPaymentId());
-                existingPayment.setRazorpaySignature(request.getRazorpaySignature());
-                paymentRepository.save(existingPayment);
-                com.tanuj.krishanaposhak.enums.FulfillmentResult result = fulfillOrder(existingOrder, existingPayment);
                 return paymentMapper.toResponse(existingPayment);
             }
         }
 
-        // Standard flow: Order was NOT created in DB prior to payment. Create and confirm order now.
         Long shippingAddressId = request.getShippingAddressId();
         String couponCode = request.getCouponCode();
         String orderNotes = request.getOrderNotes();
@@ -224,6 +216,29 @@ public class PaymentServiceImpl implements PaymentService {
         placeOrderRequest.setCouponCode(couponCode);
         placeOrderRequest.setOrderNotes(orderNotes);
         placeOrderRequest.setPaymentMethod("RAZORPAY");
+
+        Payment payment = createAndFulfillConfirmedOrder(userId, placeOrderRequest, request.getRazorpayOrderId(), request.getRazorpayPaymentId(), request.getRazorpaySignature());
+
+        return paymentMapper.toResponse(payment);
+    }
+
+    /**
+     * Shared, single-source-of-truth order creation & fulfillment method for online payments.
+     * Used by both frontend payment verification and Razorpay webhook reconciliation (phone-off scenario).
+     */
+    private Payment createAndFulfillConfirmedOrder(Long userId,
+                                                    PlaceOrderRequest placeOrderRequest,
+                                                    String razorpayOrderId,
+                                                    String razorpayPaymentId,
+                                                    String razorpaySignature) {
+
+        // Idempotency / Concurrency Check: If payment already exists for razorpayOrderId, return it
+        java.util.Optional<Payment> existingPaymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+        if (existingPaymentOpt.isPresent()) {
+            Payment existingPayment = existingPaymentOpt.get();
+            log.info("[IDEMPOTENT] Payment and Order already exist for Razorpay Order ID: {}. Returning existing record.", razorpayOrderId);
+            return existingPayment;
+        }
 
         // Validate cart, stock, coupon, address and build pending order
         Order order = orderService.createPendingOrder(userId, placeOrderRequest);
@@ -240,27 +255,40 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        // Save payment record
+        // Build payment record
         Payment payment = Payment.builder()
                 .order(order)
                 .paymentMethod(PaymentMethod.RAZORPAY)
                 .paymentStatus(PaymentStatus.PAID)
                 .amount(order.getTotalAmount())
                 .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
-                .razorpayOrderId(request.getRazorpayOrderId())
-                .razorpayPaymentId(request.getRazorpayPaymentId())
-                .razorpaySignature(request.getRazorpaySignature())
+                .razorpayOrderId(razorpayOrderId)
+                .razorpayPaymentId(razorpayPaymentId)
+                .razorpaySignature(razorpaySignature)
                 .paidAt(Instant.now())
                 .build();
 
-        payment = paymentRepository.save(payment);
+        try {
+            payment = paymentRepository.save(payment);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            // Concurrency protection: If a parallel thread/request saved payment with UK razorpay_order_id first
+            log.warn("[CONCURRENCY_PROTECTION] Duplicate razorpay_order_id caught: {}", razorpayOrderId);
+            return paymentRepository.findByRazorpayOrderId(razorpayOrderId)
+                    .orElseThrow(() -> e);
+        }
+
         order.setPayment(payment);
 
-        // Reduce stock for products in the order
+        // Atomic stock reduction using pessimistic locks on ProductVariant
         if (order.getOrderItems() != null) {
             for (OrderItem item : order.getOrderItems()) {
                 if (item.getProductVariant() != null) {
-                    ProductVariant variant = item.getProductVariant();
+                    ProductVariant variant = productVariantRepository.findByIdWithLock(item.getProductVariant().getId())
+                            .orElse(item.getProductVariant());
+                    if (variant.getStock() < item.getQuantity()) {
+                        log.error("[STOCK_VALIDATION_FAILED] Insufficient stock for variant {} during payment completion", variant.getId());
+                        throw new BadRequestException("Insufficient stock for product " + (variant.getProduct() != null ? variant.getProduct().getName() : ""));
+                    }
                     variant.setStock(variant.getStock() - item.getQuantity());
                     productVariantRepository.save(variant);
                 }
@@ -308,7 +336,9 @@ public class PaymentServiceImpl implements PaymentService {
             log.error("Failed to send order confirmation email for order {}", order.getOrderNumber(), e);
         }
 
-        return paymentMapper.toResponse(payment);
+        log.info("[ORDER_FULFILLED] Successfully created and confirmed Order #{} for Razorpay Order ID: {}", order.getOrderNumber(), razorpayOrderId);
+
+        return payment;
     }
 
     /**
@@ -532,18 +562,27 @@ public class PaymentServiceImpl implements PaymentService {
         String razorpayOrderId = null;
         Integer capturedAmount = null;
 
+        JSONObject paymentEntity = null;
+        JSONObject orderEntity = null;
+
         // Extract fields from standard Razorpay webhook payload structure: payload.payment.entity
         if (json.has("payload") && json.optJSONObject("payload") != null) {
             JSONObject payloadObj = json.getJSONObject("payload");
             if (payloadObj.has("payment") && payloadObj.optJSONObject("payment") != null) {
                 JSONObject paymentObj = payloadObj.getJSONObject("payment");
                 if (paymentObj.has("entity") && paymentObj.optJSONObject("entity") != null) {
-                    JSONObject entity = paymentObj.getJSONObject("entity");
-                    razorpayPaymentId = entity.optString("id", null);
-                    razorpayOrderId = entity.optString("order_id", null);
-                    if (entity.has("amount")) {
-                        capturedAmount = entity.optInt("amount");
+                    paymentEntity = paymentObj.getJSONObject("entity");
+                    razorpayPaymentId = paymentEntity.optString("id", null);
+                    razorpayOrderId = paymentEntity.optString("order_id", null);
+                    if (paymentEntity.has("amount")) {
+                        capturedAmount = paymentEntity.optInt("amount");
                     }
+                }
+            }
+            if (payloadObj.has("order") && payloadObj.optJSONObject("order") != null) {
+                JSONObject orderObj = payloadObj.getJSONObject("order");
+                if (orderObj.has("entity") && orderObj.optJSONObject("entity") != null) {
+                    orderEntity = orderObj.getJSONObject("entity");
                 }
             }
         }
@@ -564,30 +603,90 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         final String targetOrderId = razorpayOrderId;
-        Payment payment = paymentRepository.findByRazorpayOrderId(targetOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found for Razorpay order: " + targetOrderId));
+        java.util.Optional<Payment> existingPaymentOpt = paymentRepository.findByRazorpayOrderId(targetOrderId);
 
-        Order order = payment.getOrder();
-        if (order == null) {
-            throw new IllegalArgumentException("Order not found for Payment ID: " + payment.getId());
-        }
-
-        // Verify captured amount matches expected order total amount (in paise)
-        if (capturedAmount != null) {
-            int expectedAmountInPaise = order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
-            if (capturedAmount != expectedAmountInPaise) {
-                log.error("Payment amount mismatch in webhook for Order {}: expected {} paise, received {} paise",
-                        order.getOrderNumber(), expectedAmountInPaise, capturedAmount);
-                throw new IllegalArgumentException("Captured amount mismatch for Razorpay order: " + razorpayOrderId);
+        if (existingPaymentOpt.isPresent()) {
+            Payment payment = existingPaymentOpt.get();
+            Order order = payment.getOrder();
+            if (order != null) {
+                // Verify captured amount matches expected order total amount (in paise)
+                if (capturedAmount != null) {
+                    int expectedAmountInPaise = order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
+                    if (capturedAmount != expectedAmountInPaise) {
+                        log.error("[AMOUNT_MISMATCH] Webhook amount mismatch for Order {}: expected {} paise, received {} paise",
+                                order.getOrderNumber(), expectedAmountInPaise, capturedAmount);
+                        throw new IllegalArgumentException("Captured amount mismatch for Razorpay order: " + razorpayOrderId);
+                    }
+                }
+                payment.setRazorpayPaymentId(razorpayPaymentId);
+                com.tanuj.krishanaposhak.enums.FulfillmentResult result = fulfillOrder(order, payment);
+                log.info("[WEBHOOK_PAYMENT_CAPTURED] Existing order fulfilled with result: {} for Order {}", result, order.getOrderNumber());
+                return;
             }
         }
 
-        // Set payment ID on payment entity
-        payment.setRazorpayPaymentId(razorpayPaymentId);
+        // Phone-Off / Webhook-First scenario: Payment record does not exist in DB yet.
+        log.info("[PHONE_OFF_RECOVERY] Webhook-first payment captured for Razorpay Order ID: {}. Reconstructing order...", targetOrderId);
 
-        // Delegate fulfillment to shared, pessimistic-locked, idempotent method
-        com.tanuj.krishanaposhak.enums.FulfillmentResult result = fulfillOrder(order, payment);
-        log.info("Webhook handlePaymentCaptured completed with result: {} for Order {}", result, order.getOrderNumber());
+        // Extract notes metadata from webhook payload JSON or fetch from Razorpay API
+        JSONObject notes = null;
+        if (paymentEntity != null && paymentEntity.has("notes") && paymentEntity.optJSONObject("notes") != null) {
+            notes = paymentEntity.getJSONObject("notes");
+        } else if (orderEntity != null && orderEntity.has("notes") && orderEntity.optJSONObject("notes") != null) {
+            notes = orderEntity.getJSONObject("notes");
+        }
+
+        if (notes == null || !notes.has("userId")) {
+            try {
+                com.razorpay.Order rzpOrder = razorpayService.fetchOrder(targetOrderId);
+                if (rzpOrder != null && rzpOrder.has("notes")) {
+                    notes = rzpOrder.get("notes");
+                }
+            } catch (Exception e) {
+                log.error("[PAYMENT_RECONCILIATION_FAILED] Could not fetch Razorpay order notes from API for {}", targetOrderId, e);
+            }
+        }
+
+        if (notes == null || !notes.has("userId") || !notes.has("shippingAddressId")) {
+            log.error("[PAYMENT_RECONCILIATION_FAILED] Razorpay order {} is missing required notes metadata (userId/shippingAddressId)", targetOrderId);
+            throw new IllegalArgumentException("Missing required notes metadata in Razorpay order " + targetOrderId);
+        }
+
+        String userIdStr = notes.optString("userId", null);
+        String addressIdStr = notes.optString("shippingAddressId", null);
+        String couponCode = notes.optString("couponCode", null);
+        String orderNotes = notes.optString("orderNotes", null);
+
+        if (StringUtils.isBlank(userIdStr) || StringUtils.isBlank(addressIdStr)) {
+            log.error("[PAYMENT_RECONCILIATION_FAILED] Blank userId or shippingAddressId in notes for {}", targetOrderId);
+            throw new IllegalArgumentException("Blank userId/shippingAddressId in notes for " + targetOrderId);
+        }
+
+        Long userId = Long.valueOf(userIdStr.trim());
+        Long shippingAddressId = Long.valueOf(addressIdStr.trim());
+
+        PlaceOrderRequest placeOrderRequest = new PlaceOrderRequest();
+        placeOrderRequest.setShippingAddressId(shippingAddressId);
+        placeOrderRequest.setCouponCode(StringUtils.isNotBlank(couponCode) ? couponCode : null);
+        placeOrderRequest.setOrderNotes(StringUtils.isNotBlank(orderNotes) ? orderNotes : null);
+        placeOrderRequest.setPaymentMethod("RAZORPAY");
+
+        // Validate cart and calculate expected total amount from server-side DB
+        Order pendingOrder = orderService.createPendingOrder(userId, placeOrderRequest);
+
+        // Security Financial Check: Compare captured amount vs server-calculated cart total amount
+        if (capturedAmount != null) {
+            int expectedAmountInPaise = pendingOrder.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
+            if (capturedAmount != expectedAmountInPaise) {
+                log.error("[AMOUNT_MISMATCH] Phone-Off Recovery amount mismatch for Razorpay Order {}: expected {} paise, received {} paise",
+                        targetOrderId, expectedAmountInPaise, capturedAmount);
+                throw new IllegalArgumentException("Amount mismatch during phone-off recovery for Razorpay order: " + targetOrderId);
+            }
+        }
+
+        Payment payment = createAndFulfillConfirmedOrder(userId, placeOrderRequest, targetOrderId, razorpayPaymentId, null);
+        log.info("[PHONE_OFF_RECOVERY] Successfully recovered & fulfilled Order #{} via webhook for user {}",
+                payment.getOrder() != null ? payment.getOrder().getOrderNumber() : "N/A", userId);
     }
 
     private void handlePaymentFailed(JSONObject json) {
@@ -595,52 +694,41 @@ public class PaymentServiceImpl implements PaymentService {
         String razorpayOrderId = json.optString("razorpay_order_id", null);
 
         if (razorpayPaymentId == null || razorpayOrderId == null) {
-            throw new IllegalArgumentException("Missing required fields in payment.failed event");
+            log.warn("Missing payment_id or order_id in payment.failed event. Ignoring.");
+            return;
         }
 
-        Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found for Razorpay order: " + razorpayOrderId));
+        java.util.Optional<Payment> paymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            payment.setRazorpayPaymentId(razorpayPaymentId);
+            payment.setPaymentStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
 
-        // Update payment
-        payment.setRazorpayPaymentId(razorpayPaymentId);
-        payment.setPaymentStatus(PaymentStatus.FAILED);
-        paymentRepository.save(payment);
-
-        // Update order if needed (optional, but we can set order payment status to FAILED)
-        Order order = payment.getOrder();
-        order.setPaymentStatus(PaymentStatus.FAILED);
-        // We don't change the order status (it remains as it was, likely PENDING or something else)
-        orderRepository.save(order);
+            Order order = payment.getOrder();
+            if (order != null) {
+                order.setPaymentStatus(PaymentStatus.FAILED);
+                orderRepository.save(order);
+            }
+        } else {
+            log.info("Payment failure reported for Razorpay order {} which was not created in local DB (as expected for unconfirmed payment).", razorpayOrderId);
+        }
     }
 
     private void handleOrderPaid(JSONObject json) {
         String razorpayPaymentId = json.optString("razorpay_payment_id", null);
         String razorpayOrderId = json.optString("razorpay_order_id", null);
 
-        if (razorpayPaymentId == null || razorpayOrderId == null) {
-            throw new IllegalArgumentException("Missing required fields in order.paid event");
+        if (razorpayOrderId != null) {
+            java.util.Optional<Payment> paymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+            if (paymentOpt.isPresent() && paymentOpt.get().getPaymentStatus() == PaymentStatus.PAID) {
+                log.info("[IDEMPOTENT] Razorpay order {} is already paid and fulfilled. Skipping order.paid event.", razorpayOrderId);
+                return;
+            }
         }
 
-        Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found for Razorpay order: " + razorpayOrderId));
-
-        // Prevent duplicate processing: if payment is already paid, skip
-        if (payment.getPaymentStatus() == PaymentStatus.PAID) {
-            log.info("Payment for order {} is already paid. Skipping duplicate order.paid event.", razorpayOrderId);
-            return;
-        }
-
-        // Update payment
-        payment.setRazorpayPaymentId(razorpayPaymentId);
-        payment.setPaymentStatus(PaymentStatus.PAID);
-        payment.setPaidAt(Instant.now());
-        paymentRepository.save(payment);
-
-        // Update order
-        Order order = payment.getOrder();
-        order.setPaymentStatus(PaymentStatus.PAID);
-        order.setOrderStatus(OrderStatus.CONFIRMED); // Assuming CONFIRMED is the status after payment
-        orderRepository.save(order);
+        // Delegate order.paid to handlePaymentCaptured logic for unified recovery
+        handlePaymentCaptured(json);
     }
 
     private void handleRefundProcessed(JSONObject json) {
