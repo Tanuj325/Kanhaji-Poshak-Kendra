@@ -29,7 +29,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         compact: true,
-        experimentalMinChunkSize: 8192,
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('react-dom') || id.includes('react/') || id.includes('react-router') || id.includes('scheduler')) {

@@ -5,7 +5,16 @@ import { queryClient } from '@/config/queryConfig';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/index.css';
 import '@/styles/globals.css';
-import App from '@/App';
+// Vite Preload Error Handler for Production Deployment Stale Chunks
+window.addEventListener('vite:preloadError', (event) => {
+  event.preventDefault();
+  const RELOAD_KEY = 'kp_vite_preload_reloaded';
+  const hasReloaded = sessionStorage.getItem(RELOAD_KEY);
+  if (!hasReloaded) {
+    sessionStorage.setItem(RELOAD_KEY, 'true');
+    window.location.reload();
+  }
+});
 
 const rootElement = document.getElementById('root');
 
