@@ -26,6 +26,7 @@ import { formatDate } from '@/utils/formatDate';
 import { formatPrice } from '@/utils/formatPrice';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import { siteConfig } from '@/config/siteConfig';
+import ConfirmDialog from '@/components/overlay/ConfirmDialog';
 
 /* ═══════════════════════════════════════════════════════════════════════
    FALLBACK IMAGE — Inline SVG Data URL, zero external network dependency
@@ -179,8 +180,8 @@ function MobileOrderDetailSkeleton() {
 
 /* ═══════════════════════════════════════════════════════════════════════
    PREMIUM ORDER TRACKING COMPONENT
-   - Horizontal line & step cards on Tablet (768px-1023px)
-   - Compact vertical step line on Mobile (<768px)
+   - Horizontal stepper on Tablet (768px-1023px)
+   - Premium vertical step line & active status cards on Mobile (<768px)
    ═══════════════════════════════════════════════════════════════════════ */
 const MobileOrderTimeline = memo(function MobileOrderTimeline({
   currentStatus,
@@ -218,7 +219,7 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
           <div className="absolute left-6 right-6 top-4 h-[3px] bg-stone-200 -z-0" />
           {/* Active Progress Line */}
           <div
-            className="absolute left-6 top-4 h-[3px] bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 transition-all duration-500 -z-0"
+            className="absolute left-6 top-4 h-[3px] bg-gradient-to-r from-amber-700 via-amber-600 to-emerald-600 transition-all duration-500 -z-0"
             style={{ width: `calc(${progressPercent}% * 0.88)` }}
           />
 
@@ -230,19 +231,21 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
             return (
               <div key={step.status} className="relative z-10 flex flex-col items-center text-center max-w-[100px]">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs transition-all ${isCurrent
-                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/20 shadow-md scale-110'
-                    : isCompleted
-                      ? 'border-amber-700 bg-amber-700 text-white'
-                      : 'border-stone-300 bg-white text-stone-400'
-                    }`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs transition-all ${
+                    isCurrent
+                      ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/20 shadow-md scale-110'
+                      : isCompleted
+                        ? 'border-amber-700 bg-amber-700 text-white'
+                        : 'border-stone-300 bg-white text-stone-400'
+                  }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
                 </div>
 
                 <p
-                  className={`text-xs mt-2 font-medium leading-tight ${isCurrent ? 'font-bold text-[#0f2440]' : isCompleted ? 'text-stone-900 font-semibold' : 'text-stone-400'
-                    }`}
+                  className={`text-xs mt-2 font-medium leading-tight ${
+                    isCurrent ? 'font-bold text-[#0f2440]' : isCompleted ? 'text-stone-900 font-semibold' : 'text-stone-400'
+                  }`}
                 >
                   {step.shortLabel}
                 </p>
@@ -259,56 +262,76 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
       </div>
 
       {/* ── MOBILE VERTICAL STEP TIMELINE (<768px) ── */}
-      <div className="block md:hidden relative pl-2 space-y-4">
-        {/* Track Line Background */}
-        <div className="absolute left-[15px] top-3 bottom-3 w-[2px] bg-stone-200" />
-
-        {/* Active Progress Line */}
-        <div
-          className="absolute left-[15px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-amber-700 via-amber-600 to-emerald-600 transition-all duration-500 origin-top"
-          style={{ height: `${progressPercent}%` }}
-        />
-
+      <div className="block md:hidden space-y-3.5 py-1">
         {timelineSteps.map((step, idx) => {
           const isCompleted = idx <= currentIdx;
           const isCurrent = idx === currentIdx;
+          const isLast = idx === timelineSteps.length - 1;
           const Icon = step.icon;
 
           return (
-            <div key={step.status} className="relative flex items-start">
-              {/* Status Circle Icon (Centered on 15px line) */}
-              <span
-                className={`absolute left-[3px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all z-10 ${isCurrent
-                  ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-110 shadow-xs'
-                  : isCompleted
-                    ? 'border-amber-800 bg-amber-800 text-white'
-                    : 'border-stone-300 bg-white text-stone-400'
+            <div key={step.status} className="relative flex items-start group">
+              {/* Connecting Vertical Track Segment (Centered on 13px line) */}
+              {!isLast && (
+                <div
+                  className={`absolute left-[13px] top-6 bottom-0 w-[2.5px] -mb-3.5 transition-colors duration-500 ${
+                    idx < currentIdx
+                      ? 'bg-gradient-to-b from-amber-600 to-amber-700'
+                      : 'bg-stone-200/80'
                   }`}
-              >
-                <Icon className="h-3 w-3" />
-              </span>
+                />
+              )}
 
-              {/* Step Label & Details (Sufficient left padding to avoid icon overlap) */}
-              <div className="min-w-0 pt-0.5 pl-9">
-                <div className="flex flex-wrap items-center gap-1.5">
+              {/* Status Circle Icon Badge */}
+              <div
+                className={`relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs transition-all duration-300 ${
+                  isCurrent
+                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/25 shadow-sm scale-105'
+                    : isCompleted
+                      ? 'border-amber-800 bg-amber-800 text-white shadow-2xs'
+                      : 'border-stone-300 bg-stone-100 text-stone-400'
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+              </div>
+
+              {/* Step Content & Details Card */}
+              <div
+                className={`ml-3 flex-1 min-w-0 rounded-xl p-2.5 transition-all ${
+                  isCurrent
+                    ? 'bg-amber-50/70 border border-amber-200/80 shadow-2xs'
+                    : isCompleted
+                      ? 'bg-stone-50/60 border border-stone-200/40'
+                      : 'bg-transparent border border-transparent'
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <h5
-                    className={`text-xs font-semibold leading-tight ${isCurrent ? 'text-[#0f2440] font-bold' : isCompleted ? 'text-stone-900' : 'text-stone-400'
-                      }`}
+                    className={`text-xs leading-tight ${
+                      isCurrent
+                        ? 'font-bold text-[#0f2440]'
+                        : isCompleted
+                          ? 'font-semibold text-stone-900'
+                          : 'font-medium text-stone-400'
+                    }`}
                   >
                     {step.label}
                   </h5>
+
                   {isCurrent && (
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-900 shrink-0">
-                      Current State
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-200/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-950 shrink-0">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-pulse" />
+                      In Progress
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] text-stone-400 mt-0.5 font-medium">
+
+                <p className="text-[11px] text-stone-500 mt-1 font-medium">
                   {idx === 0 && orderDate
-                    ? formatDate(orderDate, { format: 'datetime' })
+                    ? `Placed on ${formatDate(orderDate, { format: 'datetime' })}`
                     : idx === timelineSteps.length - 1 && deliveredDate
-                      ? formatDate(deliveredDate, { format: 'datetime' })
-                      : ''}
+                      ? `Delivered on ${formatDate(deliveredDate, { format: 'datetime' })}`
+                      : step.description || ''}
                 </p>
               </div>
             </div>
@@ -437,7 +460,7 @@ export default memo(function MobileOrderDetail({
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl bg-white p-1 md:p-2 border border-stone-200/80 shadow-xs space-y-3"
+              className="rounded-2xl bg-white p-2 md:p-3 border border-stone-200/80 shadow-xs space-y-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -728,7 +751,7 @@ export default memo(function MobileOrderDetail({
             {/* ══════════════════════════════════════════════════════════ */}
             <div className="space-y-2.5 pt-1">
               {/* Primary Action Button: Buy Again */}
-              {items.length > 0 && items[0]?.variantId && !canCancel && (
+              {items.length > 0 && (
                 <button
                   type="button"
                   onClick={handleBuyAgain}
@@ -778,6 +801,20 @@ export default memo(function MobileOrderDetail({
           </div>
         </div>
       </main>
+
+      {/* Cancel Order Confirmation Modal */}
+      {canCancel && handleCancelOrder && (
+        <ConfirmDialog
+          isOpen={isCancelModalOpen}
+          onClose={() => setIsCancelModalOpen?.(false)}
+          onConfirm={handleCancelOrder}
+          title="Cancel Order Confirmation"
+          message={`Are you sure you want to cancel Order #${orderNum}? This action cannot be undone.`}
+          confirmText="Yes, Cancel Order"
+          type="danger"
+          isLoading={cancelOrder?.isPending}
+        />
+      )}
     </div>
   );
 });

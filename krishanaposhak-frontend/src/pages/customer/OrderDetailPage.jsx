@@ -57,18 +57,25 @@ export default function OrderDetailPage() {
   };
 
   const handleBuyAgain = async () => {
-    const itemsList = order?.items || [];
+    const itemsList = order?.items || order?.orderItems || order?.products || [];
     if (itemsList.length === 0) return;
     setIsBuyingAgain(true);
     try {
+      let addedCount = 0;
       for (const item of itemsList) {
-        if (item.variantId) {
-          await addToCart.mutateAsync({ productVariantId: item.variantId, quantity: item.quantity || 1 });
+        const variantId = item.variantId || item.productVariantId || item.variant?.id || item.productId;
+        if (variantId) {
+          await addToCart.mutateAsync({ productVariantId: variantId, quantity: item.quantity || 1 });
+          addedCount++;
         }
       }
-      toast.success('All items added to your shopping cart');
+      if (addedCount > 0) {
+        toast.success('Items added to your shopping cart');
+      } else {
+        toast.error('Unable to find product variants to re-order');
+      }
     } catch (err) {
-      toast.error('Could not add some items to cart');
+      toast.error(getErrorMessage(err) || 'Could not add items to cart');
     } finally {
       setIsBuyingAgain(false);
     }
