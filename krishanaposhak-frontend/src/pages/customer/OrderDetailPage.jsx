@@ -78,45 +78,6 @@ export default function OrderDetailPage() {
     window.print();
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 max-w-5xl">
-        <Breadcrumb
-          items={[
-            { label: 'Home', href: '/' },
-            { label: 'My Account', href: '/account/profile' },
-            { label: 'Orders', href: '/account/orders' },
-            { label: 'Loading...' },
-          ]}
-        />
-        <Skeleton variant="text" className="h-8 w-48 bg-temple-gold/20" />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-6">
-            <Skeleton variant="card" className="h-64 w-full rounded-3xl bg-temple-gold/15" />
-            <Skeleton variant="card" className="h-40 w-full rounded-3xl bg-temple-gold/15" />
-          </div>
-          <Skeleton variant="card" className="h-64 w-full rounded-3xl bg-temple-gold/15" />
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="py-8 max-w-4xl">
-        <ErrorState
-          title="Order Details Unavailable"
-          message={getErrorMessage(error)}
-          onRetry={refetch}
-        />
-      </div>
-    );
-  }
-
-  const items = order?.items || [];
-  const canCancel = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKING'].includes(order?.orderStatus);
-  const isDelivered = order?.orderStatus === 'DELIVERED';
-
   // ══════════════════════════════════════════════════════════════
   // MOBILE & TABLET VIEW (<1024px)
   // ══════════════════════════════════════════════════════════════
@@ -124,7 +85,7 @@ export default function OrderDetailPage() {
     return (
       <>
         <Helmet>
-          <title>{`Order #${order?.orderNumber || ''} | ${siteConfig.name}`}</title>
+          <title>{`Order #${order?.orderNumber || orderId || ''} | ${siteConfig.name}`}</title>
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
 
@@ -174,6 +135,49 @@ export default function OrderDetailPage() {
       </>
     );
   }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // ══════════════════════════════════════════════════════════════
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 max-w-5xl">
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'My Account', href: '/account/profile' },
+            { label: 'Orders', href: '/account/orders' },
+            { label: 'Loading...' },
+          ]}
+        />
+        <Skeleton variant="text" className="h-8 w-48 bg-temple-gold/20" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-6">
+            <Skeleton variant="card" className="h-64 w-full rounded-3xl bg-temple-gold/15" />
+            <Skeleton variant="card" className="h-40 w-full rounded-3xl bg-temple-gold/15" />
+          </div>
+          <Skeleton variant="card" className="h-64 w-full rounded-3xl bg-temple-gold/15" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="py-8 max-w-4xl">
+        <ErrorState
+          title="Order Details Unavailable"
+          message={getErrorMessage(error)}
+          onRetry={refetch}
+        />
+      </div>
+    );
+  }
+
+  const items = order?.items || [];
+  const canCancel = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKING'].includes(order?.orderStatus);
+  const isDelivered = order?.orderStatus === 'DELIVERED';
 
   // ══════════════════════════════════════════════════════════════
   // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
