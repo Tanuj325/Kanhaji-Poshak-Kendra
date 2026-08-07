@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 
+import { FREE_SHIPPING_THRESHOLD } from '@/utils/shippingCalculator';
+import { formatPrice } from '@/utils/formatPrice';
+
 /**
  * TOP UTILITY BAR (Height 32px)
  * Theme: Royal Midnight Navy (#070D1B) with Temple Gold Accent (#D4AF37)
@@ -13,7 +16,7 @@ export default function HeaderTopBar() {
         {/* Left Promo */}
         <div className="flex items-center gap-1.5 font-medium text-slate-200 truncate">
           <span className="text-[#D4AF37] shrink-0" aria-hidden="true">✨</span>
-          <span className="truncate">Free Shipping across India on orders above <strong className="text-white font-semibold">₹999</strong></span>
+          <span className="truncate">Free Shipping across India on orders above <strong className="text-white font-semibold">{formatPrice(FREE_SHIPPING_THRESHOLD)}</strong></span>
         </div>
 
         {/* Right Utility Links */}

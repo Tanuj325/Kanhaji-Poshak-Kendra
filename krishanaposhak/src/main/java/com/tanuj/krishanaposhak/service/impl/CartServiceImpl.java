@@ -17,6 +17,7 @@ import com.tanuj.krishanaposhak.repository.CartRepository;
 import com.tanuj.krishanaposhak.repository.ProductVariantRepository;
 import com.tanuj.krishanaposhak.repository.UserRepository;
 import com.tanuj.krishanaposhak.service.CartService;
+import com.tanuj.krishanaposhak.util.ShippingCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class CartServiceImpl implements CartService {
-
-    private static final double FREE_SHIPPING_THRESHOLD = 999.0;
-    private static final double STANDARD_SHIPPING_CHARGE = 50.0;
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -146,9 +144,7 @@ public class CartServiceImpl implements CartService {
         }
 
         double discount = 0.0; // Coupon discount, if any, is applied at checkout (OrderService).
-        double shippingCharge = subTotal >= FREE_SHIPPING_THRESHOLD || subTotal == 0.0
-                ? 0.0
-                : STANDARD_SHIPPING_CHARGE;
+        double shippingCharge = ShippingCalculator.calculateShippingCharge(subTotal);
 
         response.setTotalItems(totalItems);
         response.setSubTotal(subTotal);

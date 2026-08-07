@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import com.tanuj.krishanaposhak.util.ShippingCalculator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -52,9 +53,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class OrderServiceImpl implements OrderService {
-
-    private static final double FREE_SHIPPING_THRESHOLD = 999.0;
-    private static final double STANDARD_SHIPPING_CHARGE = 50.0;
 
     private static final Set<OrderStatus> CANCELLABLE_STATUSES =
             Set.of(OrderStatus.PENDING, OrderStatus.CONFIRMED, OrderStatus.PACKING);
@@ -215,9 +213,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         BigDecimal amountAfterDiscount = subtotal.subtract(discount);
-        BigDecimal shippingCharge = amountAfterDiscount.doubleValue() >= FREE_SHIPPING_THRESHOLD
-                ? BigDecimal.ZERO
-                : BigDecimal.valueOf(STANDARD_SHIPPING_CHARGE);
+        BigDecimal shippingCharge = ShippingCalculator.calculateShippingCharge(amountAfterDiscount);
         BigDecimal totalAmount = amountAfterDiscount.add(shippingCharge);
 
         // Generate order number
