@@ -26,57 +26,8 @@ export default defineConfig({
   build: {
     target: 'es2020',
     minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        compact: true,
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react-dom') || id.includes('react/') || id.includes('react-router') || id.includes('scheduler')) {
-              return 'vendor-react';
-            }
-            if (id.includes('react-icons/fi')) {
-              return 'vendor-icons-feather';
-            }
-            if (id.includes('react-icons/fa')) {
-              return 'vendor-icons-fa';
-            }
-            if (id.includes('react-icons/hi')) {
-              return 'vendor-icons-hi';
-            }
-            if (id.includes('react-icons')) {
-              return 'vendor-icons-other';
-            }
-            if (id.includes('@tanstack/react-query')) {
-              return 'vendor-query';
-            }
-            if (id.includes('framer-motion')) {
-              return 'vendor-animation';
-            }
-            if (id.includes('recharts')) {
-              return 'vendor-charts';
-            }
-            if (id.includes('d3')) {
-              return 'vendor-d3';
-            }
-            if (id.includes('react-hook-form') || id.includes('zod') || id.includes('@hookform/resolvers')) {
-              return 'vendor-forms';
-            }
-            if (id.includes('swiper')) {
-              return 'vendor-swiper';
-            }
-            if (id.includes('axios')) {
-              return 'vendor-http';
-            }
-            if (id.includes('react-hot-toast') || id.includes('react-helmet-async') || id.includes('clsx') || id.includes('tailwind-merge')) {
-              return 'vendor-utils';
-            }
-            return 'vendor-other';
-          }
-        },
-      },
-    },
     sourcemap: false,
-    chunkSizeWarningLimit: 250,
+    chunkSizeWarningLimit: 1000,
     reportCompressedSize: false,
   },
   server: {
