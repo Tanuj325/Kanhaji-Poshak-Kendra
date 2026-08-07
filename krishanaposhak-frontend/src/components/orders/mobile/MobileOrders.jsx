@@ -12,14 +12,8 @@ import {
   FiRefreshCw,
   FiFilter,
   FiXCircle,
-  FiPackage,
-  FiTruck,
-  FiCheckCircle,
-  FiClock,
-  FiCalendar,
 } from 'react-icons/fi';
 import { formatDate } from '@/utils/formatDate';
-import { formatPrice } from '@/utils/formatPrice';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -40,23 +34,6 @@ const statusFilterTabs = [
   { value: 'CANCELLED', label: 'Cancelled' },
 ];
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STATUS → VISUAL MAPPING
-   ═══════════════════════════════════════════════════════════════════════ */
-const statusConfig = {
-  PENDING: { label: 'Pending', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200', icon: FiClock },
-  CONFIRMED: { label: 'Confirmed', bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200', icon: FiCheckCircle },
-  PACKING: { label: 'Processing', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200', icon: FiPackage },
-  PROCESSING: { label: 'Processing', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200', icon: FiPackage },
-  PACKED: { label: 'Packed', bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200', icon: FiPackage },
-  SHIPPED: { label: 'Shipped', bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200', icon: FiTruck },
-  OUT_FOR_DELIVERY: { label: 'Out for Delivery', bg: 'bg-violet-50', text: 'text-violet-800', border: 'border-violet-200', icon: FiTruck },
-  DELIVERED: { label: 'Delivered', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200', icon: FiCheckCircle },
-  CANCELLED: { label: 'Cancelled', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200', icon: FiXCircle },
-  RETURNED: { label: 'Returned', bg: 'bg-orange-50', text: 'text-orange-800', border: 'border-orange-200', icon: FiRefreshCw },
-};
-
-const defaultStatusConfig = { label: 'Unknown', bg: 'bg-stone-50', text: 'text-stone-700', border: 'border-stone-200', icon: FiPackage };
 
 /* ═══════════════════════════════════════════════════════════════════════
    DATA RESOLVERS — multi-schema safe extraction from real API fields
@@ -108,26 +85,39 @@ function getOrderItemName(item) {
   return 'Krishna Poshak Product';
 }
 
-/** Resolve variant/size info from order item */
-function getOrderItemVariant(item) {
-  if (!item) return null;
-  return (
-    item.size ||
-    item.variantName ||
-    item.variant?.name ||
-    item.variant?.size ||
-    item.variant?.optionLabel ||
-    item.variantLabel ||
-    item.color ||
-    item.variant?.color ||
-    null
-  );
-}
+/**
+ * Status heading generator — Flipkart/Amazon style
+ * "Delivered on 7 Aug 2026", "Shipped on 5 Aug 2026", "Order Placed", etc.
+ */
+function getStatusHeading(order) {
+  const status = order?.orderStatus?.toUpperCase();
+  const deliveredDate = order?.deliveredDate;
+  const orderDate = order?.orderDate;
 
-/** Resolve item price */
-function getOrderItemPrice(item) {
-  if (!item) return 0;
-  return item.totalPrice || item.price || item.unitPrice || item.amount || 0;
+  switch (status) {
+    case 'DELIVERED': {
+      const d = deliveredDate || orderDate;
+      return d ? `Delivered on ${formatDate(d, { format: 'short' })}` : 'Delivered';
+    }
+    case 'SHIPPED':
+    case 'OUT_FOR_DELIVERY': {
+      const d = order?.shippedDate || orderDate;
+      return d ? `Shipped on ${formatDate(d, { format: 'short' })}` : 'Shipped';
+    }
+    case 'PROCESSING':
+    case 'PACKING':
+    case 'PACKED':
+    case 'CONFIRMED':
+      return 'Processing Order';
+    case 'CANCELLED':
+      return 'Order Cancelled';
+    case 'RETURNED':
+      return 'Refund Completed';
+    case 'PENDING':
+    default: {
+      return orderDate ? `Order Placed on ${formatDate(orderDate, { format: 'short' })}` : 'Order Placed';
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -148,181 +138,74 @@ function EmptyOrdersIllustration() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SKELETON ORDER CARD — matches final card layout exactly
+   SKELETON ORDER ROW — matches the simple flat row layout
    ═══════════════════════════════════════════════════════════════════════ */
-function SkeletonOrderCard() {
+function SkeletonOrderRow() {
   return (
-    <div className="bg-white rounded-2xl md:rounded-[18px] border border-stone-100 p-3.5 md:p-5 animate-pulse">
-      {/* Header skeleton */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="space-y-1.5">
-          <div className="h-3 w-24 bg-stone-200 rounded-md" />
-          <div className="h-2.5 w-16 bg-stone-100 rounded-md" />
-        </div>
-        <div className="h-6 w-20 bg-stone-200 rounded-full" />
+    <div className="flex items-center gap-3.5 py-4 animate-pulse">
+      <div className="h-[80px] w-[80px] md:h-[96px] md:w-[96px] rounded-xl bg-stone-200 shrink-0" />
+      <div className="flex-1 min-w-0 space-y-2 py-1">
+        <div className="h-4 w-3/5 bg-stone-200 rounded" />
+        <div className="h-3.5 w-4/5 bg-stone-100 rounded" />
       </div>
-      {/* Product row skeleton */}
-      <div className="flex gap-3">
-        <div className="h-[84px] w-[84px] md:h-[104px] md:w-[104px] rounded-xl bg-stone-200 shrink-0" />
-        <div className="flex-1 py-1 space-y-2">
-          <div className="h-2.5 w-16 bg-stone-100 rounded" />
-          <div className="h-3.5 w-3/4 bg-stone-200 rounded" />
-          <div className="h-2.5 w-12 bg-stone-100 rounded" />
-          <div className="h-4 w-14 bg-stone-200 rounded" />
-        </div>
-      </div>
-      {/* Footer skeleton */}
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
-        <div className="h-4 w-20 bg-stone-200 rounded" />
-        <div className="h-8 w-24 bg-stone-200 rounded-lg" />
-      </div>
+      <div className="h-5 w-5 bg-stone-200 rounded-full shrink-0" />
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   STATUS BADGE COMPONENT
+   ORDER ROW — Flipkart-style simple flat row
+   Image | Status heading + Product name | Chevron
    ═══════════════════════════════════════════════════════════════════════ */
-function StatusBadge({ status }) {
-  const config = statusConfig[status] || defaultStatusConfig;
-  const Icon = config.icon;
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-wide border ${config.bg} ${config.text} ${config.border}`}
-    >
-      <Icon className="h-3 w-3 shrink-0" />
-      {config.label}
-    </span>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   ORDER CARD COMPONENT — premium horizontal ecommerce card
-   ═══════════════════════════════════════════════════════════════════════ */
-const OrderCard = memo(function OrderCard({ order }) {
+const OrderRow = memo(function OrderRow({ order }) {
   const itemsList = order?.items || order?.orderItems || order?.products || [];
   const firstItem = itemsList[0] || null;
-  const secondItem = itemsList.length > 1 ? itemsList[1] : null;
-  const extraCount = itemsList.length > 2 ? itemsList.length - 2 : 0;
+  const extraCount = itemsList.length > 1 ? itemsList.length - 1 : 0;
 
   const imageUrl = getOrderItemImage(firstItem);
   const productName = getOrderItemName(firstItem);
-  const variant = getOrderItemVariant(firstItem);
-  const quantity = firstItem?.quantity || 1;
+  const statusHeading = getStatusHeading(order);
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.2 }}
-      className="bg-white rounded-2xl md:rounded-[18px] border border-stone-200/70 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_2px_10px_rgba(0,0,0,0.07)] transition-shadow duration-200"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
     >
       <Link
         to={`/account/orders/${order.id}`}
-        className="block p-3.5 md:p-5"
+        className="group flex items-center gap-3.5 w-full py-4 hover:bg-stone-50/60 transition-colors"
       >
-        {/* ── Card Header: Order # + Date + Status ── */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="min-w-0">
-            <p className="text-[11px] md:text-xs font-bold text-stone-500 tracking-wide truncate">
-              #{order.orderNumber}
-            </p>
-            <div className="flex items-center gap-1 mt-0.5 text-[10px] md:text-[11px] text-stone-400 font-medium">
-              <FiCalendar className="h-3 w-3 shrink-0" />
-              <span>{order.orderDate ? formatDate(order.orderDate, { format: 'short' }) : '—'}</span>
-            </div>
-          </div>
-          <StatusBadge status={order.orderStatus} />
+        {/* Product Image */}
+        <div className="h-[80px] w-[80px] min-w-[80px] md:h-[96px] md:w-[96px] md:min-w-[96px] rounded-xl overflow-hidden bg-[#F5F0E6] border border-stone-200/60 shrink-0">
+          <img
+            src={imageUrl}
+            alt={productName}
+            className="h-full w-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = FALLBACK_IMAGE;
+            }}
+          />
         </div>
 
-        {/* ── Product Row: Image + Details ── */}
-        <div className="flex gap-3 md:gap-4">
-          {/* Product Image */}
-          <div className="relative h-[84px] w-[84px] min-w-[84px] md:h-[104px] md:w-[104px] md:min-w-[104px] rounded-xl md:rounded-2xl overflow-hidden bg-[#FAF6EF] border border-stone-100 shrink-0">
-            <img
-              src={imageUrl}
-              alt={productName}
-              className="h-full w-full object-cover"
-              loading="lazy"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = FALLBACK_IMAGE;
-              }}
-            />
-            {/* Multi-item overlay: show second product thumbnail peek */}
-            {secondItem && (
-              <div className="absolute bottom-0 right-0 h-6 w-6 md:h-7 md:w-7 rounded-tl-lg overflow-hidden border-t border-l border-white bg-stone-50">
-                <img
-                  src={getOrderItemImage(secondItem)}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = FALLBACK_IMAGE;
-                  }}
-                />
-              </div>
-            )}
-            {/* "+N more" badge on image */}
-            {extraCount > 0 && (
-              <span className="absolute top-1 right-1 rounded-md bg-stone-900/80 backdrop-blur-sm px-1.5 py-0.5 text-[9px] font-bold text-white">
-                +{extraCount + (secondItem ? 1 : 0)}
-              </span>
-            )}
-          </div>
-
-          {/* Product Details */}
-          <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-            {/* Brand line */}
-            <p className="text-[10px] md:text-[11px] uppercase tracking-wider text-stone-400 font-bold leading-none">
-              Krishna Poshak
-            </p>
-
-            {/* Product Name */}
-            <h3 className="text-[15px] md:text-base font-semibold text-stone-900 leading-snug line-clamp-2 mt-0.5">
-              {productName}
-            </h3>
-
-            {/* Variant / Size */}
-            {variant && (
-              <p className="text-[11px] md:text-xs text-stone-400 font-medium mt-0.5">
-                {variant}
-              </p>
-            )}
-
-            {/* Quantity */}
-            <p className="text-[11px] md:text-xs text-stone-400 font-medium">
-              Qty: {quantity}
-              {itemsList.length > 1 && (
-                <span className="text-stone-500"> · {itemsList.length} items</span>
-              )}
-            </p>
-
-            {/* Price */}
-            <p className="text-base md:text-[17px] font-bold text-stone-900 mt-auto">
-              {formatPrice(getOrderItemPrice(firstItem))}
-            </p>
-          </div>
+        {/* Status Heading + Product Name */}
+        <div className="flex-1 min-w-0 py-0.5">
+          <h3 className="text-[15px] md:text-base font-bold text-stone-900 leading-snug line-clamp-2">
+            {statusHeading}
+          </h3>
+          <p className="text-[13px] md:text-sm text-stone-500 font-medium leading-snug line-clamp-1 mt-0.5">
+            {productName}
+            {extraCount > 0 && ` (+${extraCount} more)`}
+          </p>
         </div>
 
-        {/* ── Card Footer: Total + View Details ── */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
-          <div>
-            <span className="text-[10px] md:text-[11px] uppercase tracking-wider text-stone-400 font-bold">
-              Total
-            </span>
-            <p className="text-base md:text-[17px] font-bold text-stone-900 leading-tight">
-              {formatPrice(order.totalAmount)}
-            </p>
-          </div>
-
-          <span className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-950 via-amber-900 to-stone-900 text-white text-xs font-bold shadow-sm hover:shadow-md active:scale-[0.97] transition-all">
-            View Details
-            <FiChevronRight className="h-3.5 w-3.5" />
-          </span>
+        {/* Right Chevron */}
+        <div className="shrink-0 pl-1">
+          <FiChevronRight className="h-5 w-5 md:h-6 md:w-6 text-stone-400 group-hover:text-stone-700 group-hover:translate-x-0.5 transition-all" />
         </div>
       </Link>
     </motion.div>
@@ -567,9 +450,9 @@ export default memo(function MobileOrders({
       <main className="flex-1 w-full px-4 md:px-6 py-4 md:py-5 pb-24 md:pb-6">
         {/* ── LOADING STATE ── */}
         {isLoading ? (
-          <div className="space-y-3 md:space-y-4">
+          <div className="divide-y divide-stone-200/70">
             {[1, 2, 3, 4].map((idx) => (
-              <SkeletonOrderCard key={idx} />
+              <SkeletonOrderRow key={idx} />
             ))}
           </div>
 
@@ -666,11 +549,11 @@ export default memo(function MobileOrders({
           </motion.div>
 
         ) : (
-          /* ── ORDER CARDS LIST ── */
+          /* ── ORDER LIST — flat divider-separated rows ── */
           <AnimatePresence mode="popLayout">
-            <div className="space-y-3 md:space-y-4">
+            <div className="divide-y divide-stone-200/70">
               {orders.map((order) => (
-                <OrderCard key={order.id} order={order} />
+                <OrderRow key={order.id} order={order} />
               ))}
             </div>
           </AnimatePresence>
