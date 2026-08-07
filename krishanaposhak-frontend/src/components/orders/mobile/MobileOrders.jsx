@@ -16,6 +16,9 @@ import {
 import { formatDate } from '@/utils/formatDate';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 
+// Reliable SVG Data URL fallback to prevent any network 404 requests or infinite loops
+const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F5F0E6'/%3E%3Cpath d='M35 45L50 30L65 45M35 55H65' stroke='%23D49E41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
+
 const statusFilterTabs = [
   { value: '', label: 'All Orders' },
   { value: 'PENDING', label: 'Pending' },
@@ -26,25 +29,32 @@ const statusFilterTabs = [
 ];
 
 /**
- * Robust image resolver to ensure product images are ALWAYS shown
+ * Multi-schema product image resolver that handles item.imageUrl, item.image, item.productImage, item.product.imageUrl etc.
  */
 const getProductImageUrl = (item) => {
-  if (!item) return '/placeholder.svg';
-  if (typeof item === 'string') return item;
-  return (
+  if (!item) return FALLBACK_IMAGE;
+  if (typeof item === 'string' && item.trim()) return item;
+
+  const url =
     item.imageUrl ||
     item.image ||
     item.productImage ||
     item.product?.imageUrl ||
     item.product?.image ||
-    (Array.isArray(item.images) ? item.images[0]?.imageUrl || item.images[0] : null) ||
-    (Array.isArray(item.product?.images) ? item.product.images[0]?.imageUrl || item.product.images[0] : null) ||
-    '/placeholder.svg'
-  );
+    item.variant?.imageUrl ||
+    item.variantImageUrl ||
+    (Array.isArray(item.images) ? item.images[0]?.imageUrl || item.images[0]?.url || item.images[0] : null) ||
+    (Array.isArray(item.product?.images) ? item.product.images[0]?.imageUrl || item.product.images[0]?.url || item.product.images[0] : null);
+
+  if (url && typeof url === 'string' && url.trim()) {
+    return url;
+  }
+
+  return FALLBACK_IMAGE;
 };
 
 /**
- * Generates clear, readable status heading matching modern e-commerce reference image
+ * Generates clear, readable status heading matching modern e-commerce apps
  * Examples: "Delivered on May 07, 2025", "Order Placed on Aug 06, 2026", "Refund Completed"
  */
 const getStatusHeading = (order) => {
@@ -92,8 +102,8 @@ function EmptyOrdersIllustration() {
 }
 
 /**
- * Premium Mobile & Tablet Orders Page (<1024px)
- * Sleek, high-density, reference-matching layout.
+ * Premium Mobile & Tablet Orders Page Component (<1024px)
+ * High-density layout matching reference image.
  * Desktop (>=1024px) remains 100% untouched.
  */
 export default memo(function MobileOrders({
@@ -211,7 +221,7 @@ export default memo(function MobileOrders({
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* 2. COMPACT FILTER TABS (32px BAR) */}
+      {/* 2. COMPACT STATUS FILTER PILLS (32px BAR) */}
       {/* ══════════════════════════════════════════════════════════════ */}
       <div className="no-scrollbar flex items-center gap-1.5 overflow-x-auto bg-white px-3 md:px-5 py-1.5 border-b border-stone-200/80 shadow-2xs whitespace-nowrap">
         {statusFilterTabs.map((tab) => {
@@ -391,9 +401,13 @@ export default memo(function MobileOrders({
                     >
                       <div className="aspect-square w-full rounded-lg overflow-hidden bg-stone-100 mb-1.5">
                         <img
-                          src={prod.imageUrl || (Array.isArray(prod.images) ? prod.images[0]?.imageUrl || prod.images[0] : '/placeholder.svg')}
-                          alt={prod.name || 'Product'}
+                          src={getProductImageUrl(prod)}
+                          alt={prod.name || prod.productName || 'Product'}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = FALLBACK_IMAGE;
+                          }}
                         />
                       </div>
                       <div>
@@ -440,7 +454,7 @@ export default memo(function MobileOrders({
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = '/placeholder.svg';
+                            e.target.src = FALLBACK_IMAGE;
                           }}
                         />
                         {extraCount > 0 && (
