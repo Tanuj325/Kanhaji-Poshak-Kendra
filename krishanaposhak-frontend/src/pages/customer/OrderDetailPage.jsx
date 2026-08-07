@@ -78,6 +78,10 @@ export default function OrderDetailPage() {
     window.print();
   };
 
+  const items = order?.items || [];
+  const canCancel = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKING'].includes(order?.orderStatus);
+  const isDelivered = order?.orderStatus === 'DELIVERED';
+
   // ══════════════════════════════════════════════════════════════
   // MOBILE & TABLET VIEW (<1024px)
   // ══════════════════════════════════════════════════════════════
@@ -174,10 +178,6 @@ export default function OrderDetailPage() {
       </div>
     );
   }
-
-  const items = order?.items || [];
-  const canCancel = ['PENDING', 'CONFIRMED', 'PROCESSING', 'PACKING'].includes(order?.orderStatus);
-  const isDelivered = order?.orderStatus === 'DELIVERED';
 
   // ══════════════════════════════════════════════════════════════
   // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
