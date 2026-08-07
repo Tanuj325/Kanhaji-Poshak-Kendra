@@ -16,7 +16,7 @@ import {
 import { formatDate } from '@/utils/formatDate';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 
-// Reliable SVG Data URL fallback to prevent any network 404 requests or infinite loops
+// Reliable SVG Data URL fallback to prevent network requests or broken image links
 const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F5F0E6'/%3E%3Cpath d='M35 45L50 30L65 45M35 55H65' stroke='%23D49E41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
 
 const statusFilterTabs = [
@@ -29,11 +29,11 @@ const statusFilterTabs = [
 ];
 
 /**
- * Multi-schema product image resolver that handles item.imageUrl, item.image, item.productImage, item.product.imageUrl etc.
+ * Multi-schema image resolver checking items, orderItems, products, variants, Cloudinary URLs, etc.
  */
 const getProductImageUrl = (item) => {
   if (!item) return FALLBACK_IMAGE;
-  if (typeof item === 'string' && item.trim()) return item;
+  if (typeof item === 'string' && item.trim() && item !== '/placeholder.svg') return item;
 
   const url =
     item.imageUrl ||
@@ -41,16 +41,42 @@ const getProductImageUrl = (item) => {
     item.productImage ||
     item.product?.imageUrl ||
     item.product?.image ||
+    item.product?.images?.[0]?.imageUrl ||
+    item.product?.images?.[0]?.url ||
+    (typeof item.product?.images?.[0] === 'string' ? item.product.images[0] : null) ||
     item.variant?.imageUrl ||
+    item.variant?.image ||
     item.variantImageUrl ||
-    (Array.isArray(item.images) ? item.images[0]?.imageUrl || item.images[0]?.url || item.images[0] : null) ||
-    (Array.isArray(item.product?.images) ? item.product.images[0]?.imageUrl || item.product.images[0]?.url || item.product.images[0] : null);
+    (Array.isArray(item.images) ? item.images[0]?.imageUrl || item.images[0]?.url || (typeof item.images[0] === 'string' ? item.images[0] : null) : null);
 
-  if (url && typeof url === 'string' && url.trim()) {
+  if (url && typeof url === 'string' && url.trim() && url !== '/placeholder.svg') {
     return url;
   }
 
   return FALLBACK_IMAGE;
+};
+
+/**
+ * Multi-schema product name resolver checking item.productName, item.name, item.product.name, etc.
+ */
+const getProductName = (item, order) => {
+  if (!item && !order) return 'Krishna Poshak Attire';
+
+  const name =
+    item?.productName ||
+    item?.name ||
+    item?.title ||
+    item?.product?.name ||
+    item?.product?.productName ||
+    item?.productTitle ||
+    order?.productName ||
+    order?.name;
+
+  if (name && typeof name === 'string' && name.trim()) {
+    return name;
+  }
+
+  return order?.orderNumber ? `Order #${order.orderNumber}` : 'Krishna Poshak Product';
 };
 
 /**
@@ -84,7 +110,7 @@ const getStatusHeading = (order) => {
 };
 
 /**
- * Luxury Empty Orders Illustration
+ * Luxury Empty Orders Artwork
  */
 function EmptyOrdersIllustration() {
   return (
@@ -103,7 +129,8 @@ function EmptyOrdersIllustration() {
 
 /**
  * Premium Mobile & Tablet Orders Page Component (<1024px)
- * High-density layout matching reference image.
+ * High-density layout matching reference image:
+ * Large Product Image + Status/Date Heading + Actual Product Name + Right Chevron.
  * Desktop (>=1024px) remains 100% untouched.
  */
 export default memo(function MobileOrders({
@@ -221,7 +248,7 @@ export default memo(function MobileOrders({
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* 2. COMPACT STATUS FILTER PILLS (32px BAR) */}
+      {/* 2. COMPACT FILTER TABS (32px BAR) */}
       {/* ══════════════════════════════════════════════════════════════ */}
       <div className="no-scrollbar flex items-center gap-1.5 overflow-x-auto bg-white px-3 md:px-5 py-1.5 border-b border-stone-200/80 shadow-2xs whitespace-nowrap">
         {statusFilterTabs.map((tab) => {
@@ -402,7 +429,7 @@ export default memo(function MobileOrders({
                       <div className="aspect-square w-full rounded-lg overflow-hidden bg-stone-100 mb-1.5">
                         <img
                           src={getProductImageUrl(prod)}
-                          alt={prod.name || prod.productName || 'Product'}
+                          alt={getProductName(prod)}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             e.target.onerror = null;
@@ -411,8 +438,7 @@ export default memo(function MobileOrders({
                         />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold uppercase tracking-wider text-stone-400">KRISHANA POSHAK</p>
-                        <h4 className="text-xs font-semibold text-stone-900 line-clamp-1 leading-snug">{prod.name || prod.productName}</h4>
+                        <h4 className="text-xs font-semibold text-stone-900 line-clamp-1 leading-snug">{getProductName(prod)}</h4>
                       </div>
                     </Link>
                   ))}
@@ -427,11 +453,13 @@ export default memo(function MobileOrders({
           <AnimatePresence mode="popLayout">
             <div className="divide-y divide-stone-200/70">
               {orders.map((order) => {
-                const itemsList = order.items || [];
+                // Multi-schema items array fallback
+                const itemsList = order?.items || order?.orderItems || order?.products || (order?.item ? [order.item] : []);
                 const firstItem = itemsList[0] || {};
                 const extraCount = itemsList.length > 1 ? itemsList.length - 1 : 0;
                 const statusHeading = getStatusHeading(order);
                 const imageUrl = getProductImageUrl(firstItem);
+                const productName = getProductName(firstItem, order);
 
                 return (
                   <motion.div
@@ -444,13 +472,13 @@ export default memo(function MobileOrders({
                   >
                     <Link
                       to={`/account/orders/${order.id}`}
-                      className="group flex items-center gap-3 w-full py-3 px-1 hover:bg-stone-50/60 transition-colors"
+                      className="group flex items-center gap-3 w-full py-3.5 px-1 hover:bg-stone-50/60 transition-colors"
                     >
                       {/* PRODUCT IMAGE (76px mobile, 84px tablet) */}
                       <div className="relative h-[76px] w-[76px] min-w-[76px] md:h-[84px] md:w-[84px] md:min-w-[84px] rounded-xl overflow-hidden bg-stone-100 border border-stone-200/60 shadow-2xs shrink-0">
                         <img
                           src={imageUrl}
-                          alt={firstItem.productName || firstItem.name || 'Product'}
+                          alt={productName}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             e.target.onerror = null;
@@ -471,9 +499,9 @@ export default memo(function MobileOrders({
                           {statusHeading}
                         </h3>
 
-                        {/* ONLY PRODUCT NAME (13-14px REGULAR/MUTED) */}
-                        <p className="text-[13px] md:text-[14px] font-normal text-stone-500 line-clamp-1 truncate font-sans">
-                          {firstItem.productName || firstItem.name || `Order #${order.orderNumber}`}
+                        {/* PRODUCT NAME ONLY (13-14px REGULAR/MUTED) */}
+                        <p className="text-[13px] md:text-[14px] font-medium text-stone-600 line-clamp-2 leading-snug font-sans">
+                          {productName}
                           {extraCount > 0 && ` (+${extraCount} more items)`}
                         </p>
                       </div>
