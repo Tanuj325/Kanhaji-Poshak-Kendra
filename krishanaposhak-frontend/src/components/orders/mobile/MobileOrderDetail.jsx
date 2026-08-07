@@ -19,6 +19,7 @@ import {
   FiPackage,
   FiNavigation,
   FiHelpCircle,
+  FiChevronRight,
   FiAlertTriangle,
 } from 'react-icons/fi';
 import { formatDate } from '@/utils/formatDate';
@@ -133,42 +134,41 @@ const statusIndexMap = {
 function MobileOrderDetailSkeleton() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-dvh w-full bg-[#FAF8F5] text-slate-800 font-sans antialiased lg:hidden pb-12">
+    <div className="fixed inset-0 z-40 bg-[#faf7f2] text-stone-900 font-sans antialiased overflow-y-auto lg:hidden pb-16">
       {/* Header */}
-      <header className="sticky top-0 z-30 flex h-[52px] w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex h-14 min-h-[56px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-4 md:px-6 backdrop-blur-md">
         <button
           type="button"
           onClick={() => navigate('/account/orders')}
-          className="h-[36px] w-[36px] rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 active:scale-95 transition-all shadow-2xs"
-          aria-label="Back"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100"
         >
-          <FiArrowLeft className="h-4 w-4 text-slate-800" />
+          <FiArrowLeft className="h-5 w-5" />
         </button>
-        <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
+        <div className="h-5 w-32 bg-stone-200 rounded animate-pulse" />
         <div className="w-9" />
       </header>
 
       {/* Main Skeleton */}
-      <main className="px-4 py-4 space-y-4 max-w-5xl mx-auto">
-        <div className="rounded-[16px] bg-white p-4 border border-slate-200/80 space-y-3 animate-pulse">
-          <div className="h-4 w-40 bg-slate-200 rounded" />
-          <div className="h-3 w-28 bg-slate-100 rounded" />
-          <div className="h-6 w-24 bg-slate-200 rounded-full" />
+      <main className="px-4 md:px-6 py-4 space-y-4 max-w-5xl mx-auto">
+        <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 space-y-3 animate-pulse">
+          <div className="h-4 w-40 bg-stone-200 rounded" />
+          <div className="h-3 w-28 bg-stone-100 rounded" />
+          <div className="h-6 w-24 bg-stone-200 rounded-full" />
         </div>
 
-        <div className="rounded-[16px] bg-white p-4 border border-slate-200/80 space-y-4 animate-pulse">
-          <div className="h-4 w-36 bg-slate-200 rounded" />
-          <div className="h-16 w-full bg-slate-100 rounded-xl" />
+        <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 space-y-4 animate-pulse">
+          <div className="h-4 w-36 bg-stone-200 rounded" />
+          <div className="h-16 w-full bg-stone-100 rounded-xl" />
         </div>
 
-        <div className="rounded-[16px] bg-white p-4 border border-slate-200/80 space-y-4 animate-pulse">
-          <div className="h-4 w-40 bg-slate-200 rounded" />
+        <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 space-y-4 animate-pulse">
+          <div className="h-4 w-40 bg-stone-200 rounded" />
           <div className="flex gap-3">
-            <div className="h-16 w-16 bg-slate-200 rounded-xl shrink-0" />
+            <div className="h-20 w-20 bg-stone-200 rounded-xl shrink-0" />
             <div className="flex-1 space-y-2 py-1">
-              <div className="h-4 w-3/4 bg-slate-200 rounded" />
-              <div className="h-3 w-1/2 bg-slate-100 rounded" />
-              <div className="h-4 w-1/4 bg-slate-200 rounded" />
+              <div className="h-4 w-3/4 bg-stone-200 rounded" />
+              <div className="h-3 w-1/2 bg-stone-100 rounded" />
+              <div className="h-4 w-1/4 bg-stone-200 rounded" />
             </div>
           </div>
         </div>
@@ -193,13 +193,13 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
 
   if (isCancelled) {
     return (
-      <div className="rounded-[14px] border border-rose-200 bg-rose-50/90 p-3.5 flex items-center gap-3 text-rose-800 shadow-2xs">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-600 text-white shadow-xs">
-          <FiXCircle className="h-4.5 w-4.5" />
+      <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4 flex items-center gap-3.5 text-rose-800 shadow-2xs">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-600 text-white shadow-xs">
+          <FiXCircle className="h-5 w-5" />
         </div>
         <div>
-          <h4 className="font-display font-bold text-xs text-rose-900">Order Cancelled</h4>
-          <p className="text-[11px] text-rose-700 mt-0.5">
+          <h4 className="font-display font-bold text-sm text-rose-900">Order Cancelled</h4>
+          <p className="text-xs text-rose-700 mt-0.5">
             {cancelledAt ? formatDate(cancelledAt, { format: 'datetime' }) : 'This order has been cancelled.'}
           </p>
         </div>
@@ -210,12 +210,12 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
   const progressPercent = Math.min(100, Math.max(0, (currentIdx / (timelineSteps.length - 1)) * 100));
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* ── TABLET HORIZONTAL STEPPER (768px - 1023px) ── */}
       <div className="hidden md:block py-2">
         <div className="relative flex items-center justify-between">
           {/* Track Line Background */}
-          <div className="absolute left-6 right-6 top-4 h-[3px] bg-slate-200 -z-0" />
+          <div className="absolute left-6 right-6 top-4 h-[3px] bg-stone-200 -z-0" />
           {/* Active Progress Line */}
           <div
             className="absolute left-6 top-4 h-[3px] bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 transition-all duration-500 -z-0"
@@ -230,29 +230,27 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
             return (
               <div key={step.status} className="relative z-10 flex flex-col items-center text-center max-w-[100px]">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs transition-all ${
-                    isCurrent
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs transition-all ${isCurrent
                       ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-4 ring-amber-500/20 shadow-md scale-110'
                       : isCompleted
-                      ? 'border-amber-700 bg-amber-700 text-white'
-                      : 'border-slate-300 bg-white text-slate-400'
-                  }`}
+                        ? 'border-amber-700 bg-amber-700 text-white'
+                        : 'border-stone-300 bg-white text-stone-400'
+                    }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
                 </div>
 
                 <p
-                  className={`text-xs mt-2 font-medium leading-tight ${
-                    isCurrent ? 'font-bold text-[#0f2440]' : isCompleted ? 'text-slate-900 font-semibold' : 'text-slate-400'
-                  }`}
+                  className={`text-xs mt-2 font-medium leading-tight ${isCurrent ? 'font-bold text-[#0f2440]' : isCompleted ? 'text-stone-900 font-semibold' : 'text-stone-400'
+                    }`}
                 >
                   {step.shortLabel}
                 </p>
                 {idx === 0 && orderDate && (
-                  <span className="text-[10px] text-slate-400 mt-0.5">{formatDate(orderDate, { format: 'short' })}</span>
+                  <span className="text-[10px] text-stone-400 mt-0.5">{formatDate(orderDate, { format: 'short' })}</span>
                 )}
                 {idx === timelineSteps.length - 1 && deliveredDate && (
-                  <span className="text-[10px] text-slate-400 mt-0.5">{formatDate(deliveredDate, { format: 'short' })}</span>
+                  <span className="text-[10px] text-stone-400 mt-0.5">{formatDate(deliveredDate, { format: 'short' })}</span>
                 )}
               </div>
             );
@@ -261,7 +259,7 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
       </div>
 
       {/* ── MOBILE VERTICAL STEP TIMELINE (<768px) ── */}
-      <div className="block md:hidden relative pl-6 space-y-3.5 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-200">
+      <div className="block md:hidden relative pl-6 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-stone-200">
         {/* Progress Line */}
         <div
           className="absolute left-[11px] top-2 w-[2px] bg-gradient-to-b from-amber-700 via-amber-600 to-emerald-600 transition-all duration-500"
@@ -274,40 +272,38 @@ const MobileOrderTimeline = memo(function MobileOrderTimeline({
           const Icon = step.icon;
 
           return (
-            <div key={step.status} className="relative flex items-start gap-3 min-w-0">
+            <div key={step.status} className="relative flex items-start gap-3">
               <span
-                className={`absolute -left-[23px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all ${
-                  isCurrent
-                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-105 shadow-2xs'
+                className={`absolute -left-[23px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] transition-all ${isCurrent
+                    ? 'border-amber-500 bg-[#0f2440] text-amber-300 ring-3 ring-amber-500/25 scale-110 shadow-xs'
                     : isCompleted
-                    ? 'border-amber-800 bg-amber-800 text-white'
-                    : 'border-slate-300 bg-white text-slate-400'
-                }`}
+                      ? 'border-amber-800 bg-amber-800 text-white'
+                      : 'border-stone-300 bg-white text-stone-400'
+                  }`}
               >
                 <Icon className="h-3 w-3" />
               </span>
 
-              <div className="min-w-0 pt-0.5 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
+              <div className="min-w-0 pt-0.5">
+                <div className="flex items-center gap-2">
                   <h5
-                    className={`text-xs font-semibold leading-tight ${
-                      isCurrent ? 'text-[#0f2440] font-bold' : isCompleted ? 'text-slate-900' : 'text-slate-400'
-                    }`}
+                    className={`text-xs font-semibold leading-tight ${isCurrent ? 'text-[#0f2440] font-bold' : isCompleted ? 'text-stone-900' : 'text-stone-400'
+                      }`}
                   >
                     {step.label}
                   </h5>
                   {isCurrent && (
-                    <span className="rounded-full bg-amber-100/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-900 border border-amber-300/60">
-                      Current
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-900">
+                      Current State
                     </span>
                   )}
                 </div>
-                <p className="text-[10px] text-slate-400 mt-0.5 font-medium">
+                <p className="text-[11px] text-stone-400 mt-0.5 font-medium">
                   {idx === 0 && orderDate
                     ? formatDate(orderDate, { format: 'datetime' })
                     : idx === timelineSteps.length - 1 && deliveredDate
-                    ? formatDate(deliveredDate, { format: 'datetime' })
-                    : ''}
+                      ? formatDate(deliveredDate, { format: 'datetime' })
+                      : ''}
                 </p>
               </div>
             </div>
@@ -356,25 +352,25 @@ export default memo(function MobileOrderDetail({
   // Error state handling
   if (isError) {
     return (
-      <div className="min-h-dvh w-full bg-[#FAF8F5] text-slate-800 font-sans antialiased lg:hidden px-4 py-8 flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white rounded-[20px] p-6 border border-rose-200 shadow-sm text-center space-y-4">
+      <div className="fixed inset-0 z-40 bg-[#faf7f2] text-stone-900 font-sans antialiased overflow-y-auto lg:hidden px-4 py-8 flex flex-col items-center justify-center">
+        <div className="w-full max-w-md bg-white rounded-3xl p-6 border border-rose-200 shadow-md text-center space-y-4">
           <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">
             <FiAlertTriangle className="h-6 w-6" />
           </div>
-          <h3 className="font-heading text-lg font-bold text-slate-900">Order Details Unavailable</h3>
-          <p className="text-xs text-slate-600">{getErrorMessage(error)}</p>
+          <h3 className="font-heading text-lg font-bold text-stone-900">Order Details Unavailable</h3>
+          <p className="text-xs text-stone-600">{getErrorMessage(error)}</p>
           <div className="flex items-center gap-3 pt-2">
             <button
               type="button"
               onClick={() => navigate('/account/orders')}
-              className="flex-1 h-11 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold active:scale-95 transition-all"
+              className="flex-1 h-11 rounded-xl border border-stone-300 text-stone-700 text-xs font-bold"
             >
               Back to Orders
             </button>
             <button
               type="button"
               onClick={refetch}
-              className="flex-1 h-11 rounded-xl bg-[#0f2440] text-white text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+              className="flex-1 h-11 rounded-xl bg-[#0f2440] text-white text-xs font-bold flex items-center justify-center gap-1.5"
             >
               <FiRefreshCw className="h-3.5 w-3.5 text-amber-300" /> Retry
             </button>
@@ -389,25 +385,25 @@ export default memo(function MobileOrderDetail({
   const totalAmountFormatted = formatPrice(order?.totalAmount || 0);
 
   return (
-    <div className="min-h-dvh w-full bg-[#FAF8F5] text-slate-800 font-sans antialiased lg:hidden pb-12">
+    <div className="fixed inset-0 z-40 bg-[#faf7f2] text-stone-900 font-sans antialiased overflow-y-auto lg:hidden pb-16">
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* 1. PREMIUM STICKY HEADER (52px) */}
+      {/* 1. PREMIUM STICKY HEADER (56px) */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-30 flex h-[52px] min-h-[52px] w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md shadow-2xs">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <header className="sticky top-0 z-30 flex h-14 min-h-[56px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-4 md:px-6 backdrop-blur-md shadow-2xs">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/account/orders')}
-            className="h-[36px] w-[36px] rounded-full border border-slate-200/80 bg-white flex items-center justify-center text-slate-700 active:scale-95 transition-all shadow-2xs shrink-0"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all"
             aria-label="Back to orders"
           >
-            <FiArrowLeft className="h-4 w-4 text-slate-800" />
+            <FiArrowLeft className="h-5 w-5" />
           </button>
-          <div className="min-w-0">
-            <h1 className="text-[14px] font-bold text-slate-900 font-display tracking-tight leading-none truncate">
+          <div>
+            <h1 className="text-base md:text-lg font-bold text-stone-900 font-display tracking-tight leading-none">
               Order Details
             </h1>
-            <p className="text-[10px] text-slate-500 font-medium mt-0.5 truncate">#{orderNum}</p>
+            <p className="text-[11px] text-stone-500 font-medium mt-0.5">#{orderNum}</p>
           </div>
         </div>
 
@@ -415,43 +411,43 @@ export default memo(function MobileOrderDetail({
         <button
           type="button"
           onClick={handlePrintInvoice}
-          className="h-[36px] w-[36px] rounded-full border border-slate-200/80 bg-white flex items-center justify-center text-slate-700 active:scale-95 transition-all shadow-2xs shrink-0"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all border border-stone-200/60"
           title="Print / Download Invoice"
         >
-          <FiPrinter className="h-4 w-4 text-slate-700" />
+          <FiPrinter className="h-4.5 w-4.5 text-stone-700" />
         </button>
       </header>
 
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* MAIN FULL-WIDTH PAGE CONTENT */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <main className="w-full px-4 py-4 max-w-5xl mx-auto space-y-4">
+      <main className="w-full px-4 md:px-6 py-4 max-w-5xl mx-auto space-y-4">
         {/* TABLET 2-COLUMN GRID WRAPPER (768px-1023px) / MOBILE 1-COLUMN */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-start">
           {/* ── LEFT COLUMN: Summary + Status + Products ── */}
           <div className="md:col-span-7 space-y-4">
             {/* ══════════════════════════════════════════════════════════ */}
             {/* 2. ORDER SUMMARY HEADER CARD */}
             {/* ══════════════════════════════════════════════════════════ */}
             <motion.div
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-3"
+              className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3"
             >
-              <div className="flex items-start justify-between gap-2.5">
-                <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-3">
+                <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-amber-800 font-sans">
                     KRISHANA POSHAK
                   </p>
-                  <h2 className="text-base font-bold text-slate-900 font-display truncate">
+                  <h2 className="text-base md:text-lg font-bold text-stone-900 font-display">
                     Order #{orderNum}
                   </h2>
-                  <p className="text-[11px] text-slate-500 mt-0.5 truncate">Placed on {orderDateFormatted}</p>
+                  <p className="text-xs text-stone-500 mt-0.5">Placed on {orderDateFormatted}</p>
                 </div>
 
-                <div className="flex flex-col items-end gap-1 shrink-0">
+                <div className="flex flex-col items-end gap-1.5">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold border ${getStatusBadgeStyle(
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold border ${getStatusBadgeStyle(
                       order?.orderStatus
                     )}`}
                   >
@@ -460,13 +456,12 @@ export default memo(function MobileOrderDetail({
 
                   {order?.paymentStatus && (
                     <span
-                      className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
-                        order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
+                      className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-md border ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                           : order.paymentStatus === 'FAILED'
-                          ? 'bg-rose-50 text-rose-700 border-rose-200'
-                          : 'bg-amber-50 text-amber-800 border-amber-200'
-                      }`}
+                            ? 'bg-rose-50 text-rose-700 border-rose-200'
+                            : 'bg-amber-50 text-amber-800 border-amber-200'
+                        }`}
                     >
                       Payment: {order.paymentStatus}
                     </span>
@@ -474,9 +469,9 @@ export default memo(function MobileOrderDetail({
                 </div>
               </div>
 
-              <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Total Amount</span>
-                <span className="text-xl font-bold text-[#0f2440] font-display">
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-stone-500">Total Order Amount</span>
+                <span className="text-xl md:text-2xl font-bold text-[#0f2440] font-display">
                   {totalAmountFormatted}
                 </span>
               </div>
@@ -485,9 +480,9 @@ export default memo(function MobileOrderDetail({
             {/* ══════════════════════════════════════════════════════════ */}
             {/* 3. ORDER STATUS / TRACKING CARD */}
             {/* ══════════════════════════════════════════════════════════ */}
-            <div className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-3">
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                <FiTruck className="h-3.5 w-3.5 text-amber-800" /> Order Tracking Status
+            <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5 border-b border-stone-100 pb-2.5">
+                <FiTruck className="h-4 w-4 text-amber-800" /> Order Tracking Status
               </h3>
               <MobileOrderTimeline
                 currentStatus={order?.orderStatus}
@@ -500,75 +495,70 @@ export default memo(function MobileOrderDetail({
             {/* ══════════════════════════════════════════════════════════ */}
             {/* 4. PRODUCT SECTION & CARDS */}
             {/* ══════════════════════════════════════════════════════════ */}
-            <div className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-3">
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 flex items-center justify-between border-b border-stone-100 pb-2.5">
                 <span className="flex items-center gap-1.5">
-                  <FiShoppingBag className="h-3.5 w-3.5 text-amber-800" /> Purchased Items
+                  <FiShoppingBag className="h-4 w-4 text-amber-800" /> Purchased Items
                 </span>
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-bold text-stone-600">
                   {items.length} {items.length === 1 ? 'Item' : 'Items'}
                 </span>
               </h3>
 
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-stone-100">
                 {items.map((item, idx) => {
                   const imageUrl = getOrderItemImage(item);
                   const productName = getOrderItemName(item, order);
                   const priceFormatted = formatPrice(item.price || item.totalPrice || 0);
 
                   return (
-                    <div key={item.id || idx} className="py-3 first:pt-1 last:pb-1 flex flex-col gap-2">
-                      <div className="flex items-start gap-3 min-w-0">
-                        {/* Product Image: 68px mobile, 76px tablet */}
-                        <div className="h-[68px] w-[68px] sm:h-[76px] sm:w-[76px] rounded-[12px] overflow-hidden bg-slate-100 border border-slate-200/70 shrink-0">
-                          <img
-                            src={imageUrl}
-                            alt={productName}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = FALLBACK_IMAGE;
-                            }}
-                          />
-                        </div>
-
-                        {/* Product Details */}
-                        <div className="flex-1 min-w-0">
-                          <Link
-                            to={`/product/${item.productId || item.id}`}
-                            className="text-[13px] sm:text-sm font-semibold text-slate-900 line-clamp-2 leading-snug hover:text-amber-900 transition-colors block"
-                          >
-                            {productName}
-                          </Link>
-
-                          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium mt-1 flex-wrap">
-                            {(item.size || item.variantName || item.variant?.size) && (
-                              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-[10px] font-semibold text-slate-700">
-                                Size: {item.size || item.variantName || item.variant?.size}
-                              </span>
-                            )}
-                            <span>Qty: {item.quantity || 1}</span>
-                          </div>
-
-                          <p className="text-sm sm:text-base font-bold text-[#0f2440] font-display mt-1">
-                            {priceFormatted}
-                          </p>
-                        </div>
+                    <div key={item.id || idx} className="py-3.5 first:pt-1 last:pb-1 flex items-start gap-3.5">
+                      {/* Product Image: 80-100px mobile, 96-112px tablet */}
+                      <div className="h-20 w-20 md:h-24 md:w-24 rounded-xl overflow-hidden bg-stone-100 border border-stone-200/70 shrink-0">
+                        <img
+                          src={imageUrl}
+                          alt={productName}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = FALLBACK_IMAGE;
+                          }}
+                        />
                       </div>
 
-                      {/* Review Action Row if Order Delivered */}
-                      {isDelivered && (
-                        <div className="pt-1 flex justify-end">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedReviewProduct(item)}
-                            className="h-[34px] px-3 rounded-[10px] border border-amber-300 bg-amber-50 text-amber-950 text-[11px] font-bold flex items-center gap-1 hover:bg-amber-100 active:scale-95 transition-all shadow-2xs"
-                          >
-                            <FiStar className="h-3 w-3 fill-amber-500 text-amber-500" />
-                            <span>Write Review</span>
-                          </button>
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          to={`/product/${item.productId || item.id}`}
+                          className="text-sm md:text-base font-semibold text-stone-900 line-clamp-2 leading-snug hover:text-amber-900 transition-colors font-sans block"
+                        >
+                          {productName}
+                        </Link>
+
+                        <div className="flex items-center gap-2 text-xs text-stone-500 font-medium mt-1">
+                          {(item.size || item.variantName || item.variant?.size) && (
+                            <span>Size: {item.size || item.variantName || item.variant?.size}</span>
+                          )}
+                          {(item.size || item.variantName || item.variant?.size) && <span>•</span>}
+                          <span>Qty: {item.quantity || 1}</span>
                         </div>
+
+                        <p className="text-base md:text-lg font-bold text-[#0f2440] font-display mt-1.5">
+                          {priceFormatted}
+                        </p>
+                      </div>
+
+                      {/* Review Action if Order Delivered */}
+                      {isDelivered && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedReviewProduct(item)}
+                          className="shrink-0 h-9 px-3 rounded-xl border border-amber-300 bg-amber-50 text-amber-950 text-xs font-bold flex items-center gap-1 hover:bg-amber-100 transition-all shadow-2xs"
+                        >
+                          <FiStar className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                          <span>Review</span>
+                        </button>
                       )}
                     </div>
                   );
@@ -582,15 +572,15 @@ export default memo(function MobileOrderDetail({
             {/* ══════════════════════════════════════════════════════════ */}
             {/* 5. PRICE DETAILS CARD */}
             {/* ══════════════════════════════════════════════════════════ */}
-            <div className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-2.5">
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                <FiFileText className="h-3.5 w-3.5 text-amber-800" /> Price Details
+            <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5 border-b border-stone-100 pb-2.5">
+                <FiFileText className="h-4 w-4 text-amber-800" /> Price Details
               </h3>
 
-              <div className="space-y-2 text-xs text-slate-600 font-medium">
+              <div className="space-y-2.5 text-xs text-stone-600 font-medium">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-bold text-slate-900">
+                  <span className="font-bold text-stone-900">
                     {formatPrice(order?.subTotal || order?.totalAmount || 0)}
                   </span>
                 </div>
@@ -604,7 +594,7 @@ export default memo(function MobileOrderDetail({
 
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span className="font-bold text-slate-900">
+                  <span className="font-bold text-stone-900">
                     {order?.shippingCharge === 0 ? (
                       <span className="text-emerald-700 font-bold">FREE DELIVERY</span>
                     ) : (
@@ -616,15 +606,15 @@ export default memo(function MobileOrderDetail({
                 {(typeof order?.tax === 'number' || typeof order?.taxAmount === 'number') && (
                   <div className="flex justify-between">
                     <span>Tax</span>
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-stone-900">
                       {formatPrice(order.tax || order.taxAmount || 0)}
                     </span>
                   </div>
                 )}
 
-                <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-slate-900 font-bold text-sm">
+                <div className="pt-2.5 border-t border-stone-100 flex justify-between items-center text-stone-900 font-bold text-sm">
                   <span>Total Amount</span>
-                  <span className="text-base sm:text-lg font-bold text-[#0f2440] font-display">
+                  <span className="text-lg font-bold text-[#0f2440] font-display">
                     {totalAmountFormatted}
                   </span>
                 </div>
@@ -635,31 +625,31 @@ export default memo(function MobileOrderDetail({
             {/* 6. SHIPPING ADDRESS CARD */}
             {/* ══════════════════════════════════════════════════════════ */}
             {order?.shippingAddress && (
-              <div className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-2">
-                <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                  <FiMapPin className="h-3.5 w-3.5 text-amber-800" /> Delivery Address
+              <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-2.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5 border-b border-stone-100 pb-2.5">
+                  <FiMapPin className="h-4 w-4 text-amber-800" /> Delivery Address
                 </h3>
 
-                <div className="text-xs text-slate-700 space-y-1 leading-relaxed break-words min-w-0">
-                  <p className="font-bold text-slate-900 text-sm">
+                <div className="text-xs text-stone-700 space-y-1 leading-relaxed">
+                  <p className="font-bold text-stone-900 text-sm">
                     {order.shippingAddress.fullName || order.customerName || 'Valued Customer'}
                   </p>
                   {order.shippingAddress.phoneNumber && (
                     <p className="font-semibold text-amber-900 flex items-center gap-1.5">
-                      <FiPhone className="h-3.5 w-3.5 text-amber-800 shrink-0" /> {order.shippingAddress.phoneNumber}
+                      <FiPhone className="h-3.5 w-3.5 text-amber-800" /> {order.shippingAddress.phoneNumber}
                     </p>
                   )}
                   {order.shippingAddress.addressLine1 && <p>{order.shippingAddress.addressLine1}</p>}
                   {order.shippingAddress.addressLine2 && (
-                    <p className="text-slate-500">{order.shippingAddress.addressLine2}</p>
+                    <p className="text-stone-500">{order.shippingAddress.addressLine2}</p>
                   )}
                   {(order.shippingAddress.city || order.shippingAddress.state) && (
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-stone-900">
                       {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.postalCode}
                     </p>
                   )}
                   {order.shippingAddress.country && (
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
                       {order.shippingAddress.country}
                     </p>
                   )}
@@ -670,78 +660,75 @@ export default memo(function MobileOrderDetail({
             {/* ══════════════════════════════════════════════════════════ */}
             {/* 7. PAYMENT & DELIVERY DETAILS CARD */}
             {/* ══════════════════════════════════════════════════════════ */}
-            <div className="rounded-[16px] bg-white p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs space-y-2.5">
-              <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                <FiCreditCard className="h-3.5 w-3.5 text-amber-800" /> Payment & Delivery Details
+            <div className="rounded-2xl bg-white p-4 md:p-5 border border-stone-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5 border-b border-stone-100 pb-2.5">
+                <FiCreditCard className="h-4 w-4 text-amber-800" /> Payment & Delivery Information
               </h3>
 
-              <div className="space-y-2 text-xs text-slate-600 min-w-0">
+              <div className="space-y-2 text-xs text-stone-600">
                 {order?.paymentMethod && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="shrink-0">Payment Method</span>
-                    <span className="font-bold text-slate-900 truncate">{order.paymentMethod}</span>
+                  <div className="flex justify-between">
+                    <span>Payment Method</span>
+                    <span className="font-bold text-stone-900">{order.paymentMethod}</span>
                   </div>
                 )}
                 {order?.paymentStatus && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="shrink-0">Payment Status</span>
+                  <div className="flex justify-between items-center">
+                    <span>Payment Status</span>
                     <span
-                      className={`font-bold px-2 py-0.5 rounded text-[10px] uppercase ${
-                        order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
-                          ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
+                      className={`font-bold px-2 py-0.5 rounded text-[11px] ${order.paymentStatus === 'PAID' || order.paymentStatus === 'COMPLETED'
+                          ? 'text-emerald-700 bg-emerald-50'
                           : order.paymentStatus === 'FAILED'
-                          ? 'text-rose-700 bg-rose-50 border border-rose-200'
-                          : 'text-amber-800 bg-amber-50 border border-amber-200'
-                      }`}
+                            ? 'text-rose-700 bg-rose-50'
+                            : 'text-amber-800 bg-amber-50'
+                        }`}
                     >
                       {order.paymentStatus}
                     </span>
                   </div>
                 )}
                 {(order?.razorpayPaymentId || order?.paymentId || order?.transactionId) && (
-                  <div className="flex justify-between items-baseline gap-2 min-w-0">
-                    <span className="shrink-0">Transaction ID</span>
-                    <span className="font-mono text-[10px] text-slate-800 break-all select-all bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200/60 max-w-[65%] text-right">
+                  <div className="flex justify-between">
+                    <span>Transaction ID</span>
+                    <span className="font-mono text-[11px] text-stone-800">
                       {order.razorpayPaymentId || order.paymentId || order.transactionId}
                     </span>
                   </div>
                 )}
                 {order?.deliveredDate && (
-                  <div className="flex justify-between items-center gap-2 pt-1 border-t border-slate-100">
-                    <span className="shrink-0">Delivered On</span>
-                    <span className="font-bold text-emerald-800 truncate">
+                  <div className="flex justify-between pt-1 border-t border-stone-100">
+                    <span>Delivered On</span>
+                    <span className="font-bold text-emerald-800">
                       {formatDate(order.deliveredDate, { format: 'datetime' })}
                     </span>
                   </div>
                 )}
                 {order?.trackingNumber && (
-                  <div className="flex justify-between items-baseline gap-2 min-w-0">
-                    <span className="shrink-0">Tracking #</span>
-                    <span className="font-mono text-[10px] text-slate-900 break-all select-all bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200/60">
-                      {order.trackingNumber}
-                    </span>
+                  <div className="flex justify-between">
+                    <span>Tracking #</span>
+                    <span className="font-semibold text-stone-900">{order.trackingNumber}</span>
                   </div>
                 )}
                 {order?.courierName && (
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="shrink-0">Courier Partner</span>
-                    <span className="font-semibold text-slate-900 truncate">{order.courierName}</span>
+                  <div className="flex justify-between">
+                    <span>Courier Partner</span>
+                    <span className="font-semibold text-stone-900">{order.courierName}</span>
                   </div>
                 )}
               </div>
             </div>
 
             {/* ══════════════════════════════════════════════════════════ */}
-            {/* 8. ACTION BUTTONS GROUP (44-46px touch targets) */}
+            {/* 8. COMPACT ACTION BUTTONS GROUP (44-48px touch targets) */}
             {/* ══════════════════════════════════════════════════════════ */}
-            <div className="space-y-2 pt-1">
+            <div className="space-y-2.5 pt-1">
               {/* Primary Action Button: Buy Again */}
               {items.length > 0 && items[0]?.variantId && !canCancel && (
                 <button
                   type="button"
                   onClick={handleBuyAgain}
                   disabled={isBuyingAgain}
-                  className="w-full h-[46px] min-h-[46px] rounded-[12px] bg-[#0f2440] hover:bg-[#1b3a5c] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs active:scale-98 transition-all disabled:opacity-50"
+                  className="w-full h-11 min-h-[44px] rounded-xl bg-[#0f2440] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:bg-[#1b3a5c] active:scale-98 transition-all disabled:opacity-50"
                 >
                   <FiRefreshCw className={`h-4 w-4 text-amber-300 ${isBuyingAgain ? 'animate-spin' : ''}`} />
                   <span>Buy Again</span>
@@ -754,7 +741,7 @@ export default memo(function MobileOrderDetail({
                 <button
                   type="button"
                   onClick={handlePrintInvoice}
-                  className="w-full h-[44px] min-h-[44px] rounded-[12px] border border-slate-200/80 bg-white text-slate-800 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-50 active:scale-98 transition-all shadow-2xs"
+                  className="w-full h-11 min-h-[44px] rounded-xl border border-stone-300 bg-white text-stone-800 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-stone-50 active:scale-98 transition-all shadow-2xs"
                 >
                   <FiPrinter className="h-4 w-4 text-amber-800" />
                   <span>Invoice</span>
@@ -763,7 +750,7 @@ export default memo(function MobileOrderDetail({
                 {/* Need Help / Support */}
                 <a
                   href={`tel:${siteConfig.phone || '+919876543210'}`}
-                  className="w-full h-[44px] min-h-[44px] rounded-[12px] border border-slate-200/80 bg-white text-slate-800 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-50 active:scale-98 transition-all shadow-2xs"
+                  className="w-full h-11 min-h-[44px] rounded-xl border border-stone-300 bg-white text-stone-800 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-stone-50 active:scale-98 transition-all shadow-2xs"
                 >
                   <FiHelpCircle className="h-4 w-4 text-amber-800" />
                   <span>Need Help</span>
@@ -776,7 +763,7 @@ export default memo(function MobileOrderDetail({
                   type="button"
                   onClick={() => setIsCancelModalOpen(true)}
                   disabled={cancelOrder?.isPending}
-                  className="w-full h-[44px] min-h-[44px] rounded-[12px] border border-rose-200 bg-rose-50 text-rose-800 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-rose-100 active:scale-98 transition-all shadow-2xs"
+                  className="w-full h-11 min-h-[44px] rounded-xl border border-rose-200 bg-rose-50/80 text-rose-800 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-rose-100 active:scale-98 transition-all shadow-2xs"
                 >
                   <FiXCircle className="h-4 w-4 text-rose-600" />
                   <span>Cancel Order</span>
