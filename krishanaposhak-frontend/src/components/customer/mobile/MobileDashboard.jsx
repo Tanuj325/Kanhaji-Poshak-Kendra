@@ -7,7 +7,6 @@ import { useWishlistContext } from '@/context/WishlistContext';
 import { useUnreadNotificationCount } from '@/hooks/useNotifications';
 import { useOrders } from '@/hooks/useOrders';
 import { useAddresses } from '@/hooks/useAddresses';
-import { useActiveCoupons } from '@/hooks/useCoupons';
 import { formatDate } from '@/utils/formatDate';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import toast from 'react-hot-toast';
@@ -50,11 +49,9 @@ export default function MobileDashboard() {
 
   const { data: ordersData } = useOrders({ page: 0, size: 5 });
   const { data: addresses } = useAddresses();
-  const { data: activeCoupons } = useActiveCoupons();
 
   const totalOrders = ordersData?.totalElements || (ordersData?.content || ordersData?.data || []).length || 0;
   const addrList = Array.isArray(addresses) ? addresses : addresses?.data || [];
-  const couponCount = Array.isArray(activeCoupons) ? activeCoupons.length : 0;
 
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Valued Devotee';
   const email = user?.email || '';
@@ -264,7 +261,7 @@ export default function MobileDashboard() {
           <div className="w-full h-px bg-amber-900/15" />
 
           {/* STATS SECTION (Directly below divider, equal width, centered) */}
-          <div className="w-full bg-white/80 backdrop-blur-md rounded-[14px] p-2.5 border border-amber-300/40 grid grid-cols-3 divide-x divide-amber-900/10 text-center">
+          <div className="w-full bg-white/80 backdrop-blur-md rounded-[14px] p-2.5 border border-amber-300/40 grid grid-cols-2 divide-x divide-amber-900/10 text-center">
             <div
               onClick={() => navigate(ROUTE_PATHS.ORDERS)}
               className="flex flex-col items-center justify-center py-1 cursor-pointer active:scale-95 transition-transform"
@@ -286,15 +283,6 @@ export default function MobileDashboard() {
               </span>
               <span className="text-[11px] font-semibold text-stone-600 mt-1 uppercase tracking-wider">
                 Wishlist
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center justify-center py-1">
-              <span className="text-[16px] font-extrabold font-mono text-amber-950 leading-none">
-                {couponCount}
-              </span>
-              <span className="text-[11px] font-semibold text-stone-600 mt-1 uppercase tracking-wider">
-                Coupons
               </span>
             </div>
           </div>
