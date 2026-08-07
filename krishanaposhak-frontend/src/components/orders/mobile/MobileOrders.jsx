@@ -5,63 +5,17 @@ import {
   FiArrowLeft,
   FiSearch,
   FiChevronRight,
-  FiPackage,
-  FiTruck,
-  FiCheckCircle,
-  FiClock,
-  FiXCircle,
-  FiRefreshCw,
-  FiFilter,
-  FiX,
   FiShoppingBag,
   FiArrowRight,
   FiSliders,
-  FiCreditCard,
+  FiX,
+  FiRefreshCw,
+  FiFilter,
+  FiXCircle,
 } from 'react-icons/fi';
 import { formatDate } from '@/utils/formatDate';
 import { formatPrice } from '@/utils/formatPrice';
 import { useFeaturedProducts } from '@/hooks/useProducts';
-
-// Status badge styling map - Luxury subtle status pills
-const getStatusBadgeStyle = (status) => {
-  switch (status?.toUpperCase()) {
-    case 'DELIVERED':
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200/80';
-    case 'PROCESSING':
-    case 'PACKING':
-    case 'PACKED':
-    case 'CONFIRMED':
-      return 'bg-amber-50 text-amber-800 border-amber-200/80';
-    case 'SHIPPED':
-    case 'OUT_FOR_DELIVERY':
-      return 'bg-sky-50 text-sky-700 border-sky-200/80';
-    case 'CANCELLED':
-      return 'bg-rose-50 text-rose-700 border-rose-200/80';
-    case 'PENDING':
-    default:
-      return 'bg-amber-50 text-amber-800 border-amber-200/80';
-  }
-};
-
-const getStatusIcon = (status) => {
-  switch (status?.toUpperCase()) {
-    case 'DELIVERED':
-      return FiCheckCircle;
-    case 'PROCESSING':
-    case 'PACKING':
-    case 'PACKED':
-    case 'CONFIRMED':
-      return FiPackage;
-    case 'SHIPPED':
-    case 'OUT_FOR_DELIVERY':
-      return FiTruck;
-    case 'CANCELLED':
-      return FiXCircle;
-    case 'PENDING':
-    default:
-      return FiClock;
-  }
-};
 
 const statusFilterTabs = [
   { value: '', label: 'All Orders' },
@@ -73,31 +27,57 @@ const statusFilterTabs = [
 ];
 
 /**
- * Luxury Empty Orders Illustration Artwork
+ * Generates clear, readable status heading matching modern e-commerce apps
+ * Example: "Delivered on 06 Aug, 2026", "Order Placed on 06 Aug, 2026", "Processing Order"
+ */
+const getStatusHeading = (order) => {
+  const status = order?.orderStatus?.toUpperCase();
+  const dateStr = order?.deliveredDate || order?.orderDate;
+  const formattedDate = dateStr ? formatDate(dateStr, { format: 'date' }) : '';
+
+  switch (status) {
+    case 'DELIVERED':
+      return formattedDate ? `Delivered on ${formattedDate}` : 'Delivered';
+    case 'SHIPPED':
+    case 'OUT_FOR_DELIVERY':
+      return formattedDate ? `Shipped on ${formattedDate}` : 'Shipped';
+    case 'PROCESSING':
+    case 'PACKING':
+    case 'PACKED':
+    case 'CONFIRMED':
+      return 'Processing Order';
+    case 'CANCELLED':
+      return 'Cancelled Order';
+    case 'RETURNED':
+      return 'Refund Completed';
+    case 'PENDING':
+    default:
+      return formattedDate ? `Order Placed on ${formattedDate}` : `Order #${order.orderNumber}`;
+  }
+};
+
+/**
+ * Luxury Empty Orders Illustration
  */
 function EmptyOrdersIllustration() {
   return (
     <div className="relative w-32 h-32 mx-auto flex items-center justify-center my-3">
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#FBF6ED] to-[#F5EAD6]" />
       <div className="absolute top-2 right-4 text-[#D49E41] text-xs animate-pulse">✨</div>
-      <div className="absolute bottom-3 left-3 text-[#D49E41] text-[10px]">✨</div>
       <svg className="relative z-10 w-24 h-24" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="30" y="50" width="60" height="50" rx="8" fill="#FAF3E6" stroke="#7A5825" strokeWidth="2.2" />
         <path d="M25 42C25 39.7909 26.7909 38 29 38H91C93.2091 38 95 39.7909 95 42V50H25V42Z" fill="#EFE2CD" stroke="#7A5825" strokeWidth="2.2" />
         <rect x="54" y="38" width="12" height="62" fill="#D49E41" fillOpacity="0.8" />
-        <path d="M60 38C52 28 42 32 48 38Z" fill="#C68D33" stroke="#7A5825" strokeWidth="1.5" />
-        <path d="M60 38C68 28 78 32 72 38Z" fill="#C68D33" stroke="#7A5825" strokeWidth="1.5" />
         <circle cx="60" cy="75" r="11" fill="#FFFFFF" stroke="#7A5825" strokeWidth="1.8" />
-        <path d="M56 73V71C56 68.7909 57.7909 67 60 67C62.2091 67 64 68.7909 64 71V73M54 73H66L67 81H53L54 73Z" stroke="#7A5825" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     </div>
   );
 }
 
 /**
- * Mobile & Tablet Rebuilt Orders Component
- * Dedicated luxury full-screen layout for <1024px viewports.
- * Desktop >= 1024px remains 100% untouched.
+ * Mobile & Tablet Horizontal Order List UI Component (<1024px)
+ * Designed strictly matching reference layout: Large image + Heading/Product/Price beside + Right Chevron.
+ * Desktop (>=1024px) remains 100% untouched.
  */
 export default memo(function MobileOrders({
   orders = [],
@@ -129,11 +109,11 @@ export default memo(function MobileOrders({
   }, [featuredData]);
 
   return (
-    <div className="w-full min-h-screen max-w-full bg-[#FAF8F5] pb-28 font-sans text-stone-900 flex flex-col">
+    <div className="w-full min-h-screen max-w-full bg-white pb-28 font-sans text-stone-900 flex flex-col">
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* 1. STICKY HEADER (54px) */}
+      {/* 1. PAGE HEADER */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 flex h-[54px] min-h-[54px] w-full items-center justify-between border-b border-[#EBE4D8] bg-white/95 px-4 md:px-6 backdrop-blur-md shadow-2xs">
+      <header className="sticky top-0 z-40 flex h-[54px] min-h-[54px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-4 md:px-6 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -143,7 +123,7 @@ export default memo(function MobileOrders({
           >
             <FiArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-[20px] font-bold text-stone-900 font-display tracking-tight leading-none">
+          <h1 className="text-[20px] md:text-[22px] font-bold text-stone-900 font-display tracking-tight leading-none">
             My Orders
           </h1>
         </div>
@@ -187,7 +167,7 @@ export default memo(function MobileOrders({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-b border-[#EBE4D8] bg-white px-4 md:px-6 py-2.5 shadow-2xs"
+            className="overflow-hidden border-b border-stone-200 bg-white px-4 md:px-6 py-2.5 shadow-2xs"
           >
             <div className="relative flex items-center">
               <FiSearch className="absolute left-3.5 h-4 w-4 text-stone-400" />
@@ -214,9 +194,9 @@ export default memo(function MobileOrders({
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* 2. HORIZONTAL STATUS FILTER PILLS BAR (42px) */}
+      {/* 2. HORIZONTAL STATUS FILTER TABS */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto bg-white px-4 md:px-6 py-2 border-b border-[#EBE4D8] shadow-2xs whitespace-nowrap">
+      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto bg-white px-4 md:px-6 py-2 border-b border-stone-200/80 shadow-2xs whitespace-nowrap">
         {statusFilterTabs.map((tab) => {
           const isActive = status === tab.value;
           return (
@@ -224,10 +204,10 @@ export default memo(function MobileOrders({
               key={tab.value || 'all'}
               type="button"
               onClick={() => updateParam('status', tab.value)}
-              className={`shrink-0 h-[36px] min-h-[36px] rounded-full px-4 text-xs transition-all flex items-center justify-center ${
+              className={`shrink-0 h-[38px] min-h-[38px] rounded-full px-4 text-xs transition-all flex items-center justify-center ${
                 isActive
-                  ? 'bg-gradient-to-r from-[#3D2317] via-[#2A1810] to-[#1A0F0A] text-[#FDF6E2] font-bold shadow-xs border border-[#8C5D27]/30'
-                  : 'bg-stone-100/90 text-stone-600 border border-transparent hover:bg-stone-200/70 font-semibold'
+                  ? 'bg-gradient-to-r from-amber-950 via-amber-900 to-stone-900 text-white font-bold shadow-xs'
+                  : 'bg-stone-100 text-stone-600 border border-transparent hover:bg-stone-200/70 font-semibold'
               }`}
             >
               {tab.label}
@@ -245,10 +225,10 @@ export default memo(function MobileOrders({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-b border-[#EBE4D8] bg-[#FDFBF7] px-4 md:px-6 py-3 text-xs"
+            className="overflow-hidden border-b border-stone-200 bg-stone-50 px-4 md:px-6 py-3 text-xs"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-amber-900/10">
-              <span className="font-bold text-amber-950 flex items-center gap-1.5 text-[13px]">
+            <div className="flex items-center justify-between pb-2 border-b border-stone-200">
+              <span className="font-bold text-stone-900 flex items-center gap-1.5 text-[13px]">
                 <FiSliders className="h-4 w-4 text-amber-800" /> Filter & Sort Orders
               </span>
               {(status || paymentStatus || searchTerm) && (
@@ -302,7 +282,7 @@ export default memo(function MobileOrders({
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* 3. ORDER RESULT SUMMARY */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <div className="w-full bg-[#F5F0E6]/70 px-4 md:px-6 py-2 border-b border-[#EBE4D8] flex items-center justify-between text-xs text-stone-600 font-medium">
+      <div className="w-full bg-stone-50/80 px-4 md:px-6 py-2 border-b border-stone-200/60 flex items-center justify-between text-xs text-stone-500 font-medium">
         <span>Showing {orders.length} of {totalOrders} {totalOrders === 1 ? 'order' : 'orders'}</span>
         {status && (
           <span className="font-bold text-amber-900">
@@ -312,72 +292,60 @@ export default memo(function MobileOrders({
       </div>
 
       {/* ══════════════════════════════════════════════════════════════ */}
-      {/* MAIN CONTENT AREA */}
+      {/* MAIN CONTENT AREA — CONTINUOUS HORIZONTAL LIST */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <main className="w-full max-w-full px-4 md:px-6 py-4 space-y-3.5 flex-1">
-        {/* LOADING SKELETON */}
+      <main className="w-full max-w-full px-4 md:px-6 flex-1">
+        {/* LOADING SKELETON ROW */}
         {isLoading ? (
-          <div className="space-y-3.5">
-            {[1, 2, 3].map((idx) => (
-              <div
-                key={idx}
-                className="w-full rounded-[18px] bg-white p-4 border border-[#EBE4D8] shadow-2xs flex flex-col gap-3 animate-pulse"
-              >
-                <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                  <div className="h-4 w-32 bg-stone-200 rounded-md" />
-                  <div className="h-5 w-20 bg-stone-200 rounded-full" />
+          <div className="divide-y divide-stone-200/80">
+            {[1, 2, 3, 4].map((idx) => (
+              <div key={idx} className="py-4 flex items-center gap-3.5 md:gap-4 animate-pulse">
+                <div className="h-[96px] w-[96px] md:h-[110px] md:w-[110px] rounded-[16px] bg-stone-200 shrink-0" />
+                <div className="flex-1 space-y-2 py-1">
+                  <div className="h-4 w-3/4 bg-stone-200 rounded-md" />
+                  <div className="h-3 w-1/3 bg-stone-200 rounded-md" />
+                  <div className="h-4 w-1/2 bg-stone-200 rounded-md" />
+                  <div className="h-4 w-1/4 bg-stone-200 rounded-md mt-1" />
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-[80px] w-[80px] md:h-[92px] md:w-[92px] rounded-[14px] bg-stone-200 shrink-0" />
-                  <div className="flex-1 space-y-2 py-0.5">
-                    <div className="h-3 w-20 bg-stone-200 rounded-md" />
-                    <div className="h-4 w-3/4 bg-stone-200 rounded-md" />
-                    <div className="h-3 w-1/3 bg-stone-200 rounded-md" />
-                    <div className="h-5 w-24 bg-stone-200 rounded-md mt-1" />
-                  </div>
-                </div>
-                <div className="pt-2.5 border-t border-stone-100 flex justify-between items-center">
-                  <div className="h-4 w-24 bg-stone-200 rounded-md" />
-                  <div className="h-[44px] w-full bg-stone-200 rounded-[14px]" />
-                </div>
+                <div className="h-6 w-6 bg-stone-200 rounded-full shrink-0" />
               </div>
             ))}
           </div>
         ) : isError ? (
           /* ERROR STATE */
-          <div className="rounded-[18px] bg-rose-50/70 p-6 text-center border border-rose-200 shadow-2xs my-4">
+          <div className="rounded-2xl bg-rose-50/70 p-6 text-center border border-rose-200 shadow-2xs my-6">
             <FiXCircle className="h-10 w-10 text-rose-600 mx-auto mb-2" />
             <h3 className="text-base font-bold text-rose-900 font-display">Failed to load orders</h3>
             <p className="text-xs text-rose-700 mt-1 mb-4">{error?.message || 'Please check your connection and try again.'}</p>
             <button
               type="button"
               onClick={refetch}
-              className="inline-flex items-center gap-2 rounded-[14px] bg-rose-900 text-white font-bold text-xs px-5 py-2.5 min-h-[44px]"
+              className="inline-flex items-center gap-2 rounded-xl bg-rose-900 text-white font-bold text-xs px-5 py-2.5 min-h-[44px]"
             >
               <FiRefreshCw className="h-4 w-4" /> Retry Loading
             </button>
           </div>
         ) : orders.length === 0 ? (
-          /* EMPTY STATE WITH RECOMMENDATIONS */
+          /* EMPTY STATE */
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="space-y-6 pt-2"
+            className="space-y-6 py-6"
           >
-            <div className="rounded-[18px] bg-white p-6 md:p-8 text-center border border-[#EBE4D8] shadow-2xs">
+            <div className="rounded-2xl bg-stone-50/60 p-6 md:p-8 text-center border border-stone-200/70">
               <EmptyOrdersIllustration />
               <h2 className="text-[20px] md:text-[22px] font-bold text-stone-900 font-display mt-2">No Orders Yet</h2>
               <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto leading-relaxed font-body">
                 {status || paymentStatus || searchTerm
                   ? 'No orders match your active filter criteria. Try clearing search filters.'
-                  : "You haven't placed any orders with Krishana Poshak yet. Explore our divine attire & jewellery collection."}
+                  : "Your orders will appear here after you make a purchase."}
               </p>
               <div className="mt-5">
                 <Link to="/shop">
                   <button
                     type="button"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-[14px] bg-gradient-to-r from-[#3D2317] via-[#2A1810] to-[#1A0F0A] text-[#FDF6E2] font-bold text-xs px-6 py-3 min-h-[44px] shadow-md hover:shadow-lg active:scale-98 transition-all"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-950 via-amber-900 to-stone-900 text-white font-bold text-xs px-6 py-3 min-h-[44px] shadow-md hover:shadow-lg active:scale-98 transition-all"
                   >
                     <FiShoppingBag className="h-4 w-4 text-amber-300" />
                     <span>Start Shopping</span>
@@ -387,7 +355,7 @@ export default memo(function MobileOrders({
               </div>
             </div>
 
-            {/* RECOMMENDED PRODUCTS SECTION */}
+            {/* RECOMMENDED PRODUCTS */}
             {recommendedProducts.length > 0 && (
               <div className="pt-2 space-y-3">
                 <div className="flex items-center justify-between">
@@ -404,7 +372,7 @@ export default memo(function MobileOrders({
                     <Link
                       key={prod.id || prod.productId}
                       to={`/product/${prod.slug || prod.id}`}
-                      className="group rounded-2xl bg-white border border-[#EBE4D8] p-2.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
+                      className="group rounded-2xl bg-white border border-stone-200/60 p-2.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
                     >
                       <div className="aspect-square w-full rounded-xl overflow-hidden bg-stone-100 mb-2">
                         <img
@@ -414,7 +382,7 @@ export default memo(function MobileOrders({
                         />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-900/70">KRISHANA POSHAK</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400">KRISHANA POSHAK</p>
                         <h4 className="text-xs font-semibold text-stone-900 line-clamp-1 leading-snug">{prod.name || prod.productName}</h4>
                         <p className="text-[16px] font-bold text-amber-950 font-display mt-1">{formatPrice(prod.price || prod.discountPrice || 0)}</p>
                       </div>
@@ -426,14 +394,16 @@ export default memo(function MobileOrders({
           </motion.div>
         ) : (
           /* ══════════════════════════════════════════════════════════════ */
-          /* 4. LUXURY REBUILT ORDER CARDS LIST */
+          /* CONTINUOUS HORIZONTAL ORDER HISTORY LIST (MATCHING REFERENCE IMAGE) */
           /* ══════════════════════════════════════════════════════════════ */
           <AnimatePresence mode="popLayout">
-            <div className="space-y-3.5">
+            <div className="divide-y divide-stone-200/80">
               {orders.map((order) => {
                 const itemsList = order.items || [];
-                const StatusIcon = getStatusIcon(order.orderStatus);
-                const badgeStyle = getStatusBadgeStyle(order.orderStatus);
+                const firstItem = itemsList[0] || {};
+                const extraCount = itemsList.length > 1 ? itemsList.length - 1 : 0;
+                const totalQty = itemsList.reduce((acc, item) => acc + (item.quantity || 1), 0) || 1;
+                const statusHeading = getStatusHeading(order);
 
                 return (
                   <motion.div
@@ -443,125 +413,60 @@ export default memo(function MobileOrders({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.2 }}
-                    className="group relative w-full rounded-[18px] bg-white p-4 md:p-5 border border-[#EBE4D8] shadow-[0_4px_20px_-2px_rgba(42,24,16,0.05)] hover:border-amber-800/30 transition-all duration-200 space-y-3.5"
                   >
-                    {/* ORDER CARD HEADER: ORDER ID, DATE, STATUS BADGE */}
-                    <div className="flex items-center justify-between pb-2.5 border-b border-stone-100 gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-[13px] md:text-[14px] font-bold text-[#2A1810] font-display truncate max-w-[170px] xs:max-w-[210px] sm:max-w-xs">
-                          Order #{order.orderNumber}
-                        </span>
-                        <span className="text-[11px] text-stone-500 font-medium shrink-0">
-                          • {order.orderDate ? formatDate(order.orderDate, { format: 'date' }) : ''}
-                        </span>
-                      </div>
-
-                      {/* STATUS BADGE PILL */}
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold border shrink-0 ${badgeStyle}`}>
-                        <StatusIcon className="h-3 w-3" />
-                        <span>{order.orderStatus || 'PENDING'}</span>
-                      </span>
-                    </div>
-
-                    {/* PRODUCTS LIST (SINGLE OR MULTIPLE ITEMS SUPPORT) */}
-                    <Link to={`/account/orders/${order.id}`} className="block group/link space-y-3">
-                      {itemsList.length > 0 ? (
-                        itemsList.map((item, itemIdx) => (
-                          <div
-                            key={item.id || itemIdx}
-                            className={`flex items-start gap-3.5 ${
-                              itemIdx > 0 ? 'pt-3 border-t border-stone-100' : ''
-                            }`}
-                          >
-                            {/* PRODUCT IMAGE: 80px mobile, 92px tablet */}
-                            <div className="relative h-[80px] w-[80px] min-w-[80px] md:h-[92px] md:w-[92px] md:min-w-[92px] rounded-[14px] overflow-hidden bg-stone-100 border border-stone-200/70 shadow-2xs shrink-0">
-                              <img
-                                src={item.imageUrl || '/placeholder.svg'}
-                                alt={item.productName || 'Product'}
-                                className="h-full w-full object-cover group-hover/link:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-
-                            {/* PRODUCT INFORMATION */}
-                            <div className="flex-1 min-w-0 space-y-1">
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-amber-900/70 font-sans leading-none">
-                                KRISHANA POSHAK
-                              </p>
-                              <h3 className="text-[14px] md:text-[15px] font-semibold text-stone-900 line-clamp-2 leading-snug font-sans group-hover/link:text-amber-900 transition-colors">
-                                {item.productName || `Product #${itemIdx + 1}`}
-                              </h3>
-                              <div className="flex items-center gap-2 text-[11px] md:text-[12px] text-stone-500 font-medium">
-                                {item.size && <span>Size: {item.size}</span>}
-                                {item.size && <span>•</span>}
-                                <span>Qty: {item.quantity || 1}</span>
-                              </div>
-                              <p className="text-[16px] md:text-[18px] font-bold text-[#2A1810] font-display pt-0.5">
-                                {formatPrice(item.price || item.unitPrice || (itemsList.length === 1 ? order.totalAmount : 0))}
-                              </p>
-                            </div>
-
-                            {/* CHEVRON ACTION INDICATOR */}
-                            <div className="self-center pl-1 shrink-0">
-                              <FiChevronRight className="h-5 w-5 text-stone-400 group-hover/link:text-amber-900 group-hover/link:translate-x-0.5 transition-all" />
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        /* FALLBACK FOR ORDER WITHOUT EXPLICIT ITEM ARRAY */
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-sm font-semibold text-stone-900">Order #{order.orderNumber}</h3>
-                            <p className="text-xs text-stone-500">Total: {formatPrice(order.totalAmount)}</p>
-                          </div>
-                          <FiChevronRight className="h-5 w-5 text-stone-400" />
+                    <Link
+                      to={`/account/orders/${order.id}`}
+                      className="group block w-full py-4 hover:bg-stone-50/60 transition-colors rounded-xl px-1"
+                    >
+                      <div className="flex items-center gap-3.5 md:gap-4 w-full">
+                        {/* LARGE SQUARE PRODUCT IMAGE (96px mobile, 110px tablet) */}
+                        <div className="relative h-[96px] w-[96px] min-w-[96px] md:h-[110px] md:w-[110px] md:min-w-[110px] rounded-[16px] overflow-hidden bg-stone-100 border border-stone-200/60 shadow-2xs shrink-0">
+                          <img
+                            src={firstItem.imageUrl || '/placeholder.svg'}
+                            alt={firstItem.productName || 'Product'}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {extraCount > 0 && (
+                            <span className="absolute bottom-1 right-1 rounded-md bg-stone-900/85 backdrop-blur-xs px-1.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                              +{extraCount} more
+                            </span>
+                          )}
                         </div>
-                      )}
+
+                        {/* CONTENT AREA (FLEX 1, MIN-W-0) */}
+                        <div className="flex-1 min-w-0 pr-1 space-y-0.5">
+                          {/* STATUS / DATE HEADING (16-18px BOLD) */}
+                          <h3 className="text-[16px] md:text-[18px] font-bold text-stone-900 font-display leading-snug truncate">
+                            {statusHeading}
+                          </h3>
+
+                          {/* BRAND / CATEGORY */}
+                          <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-amber-900/70 font-sans leading-none pt-0.5">
+                            KRISHANA POSHAK
+                          </p>
+
+                          {/* PRODUCT NAME (14-15px, LINE-CLAMP-2) */}
+                          <p className="text-[14px] md:text-[15px] font-medium text-stone-700 line-clamp-2 leading-snug font-sans">
+                            {firstItem.productName || `Order #${order.orderNumber}`}
+                            {extraCount > 0 && ` (+${extraCount} more items)`}
+                          </p>
+
+                          {/* QUANTITY & PRICE (Qty 1 • ₹350) */}
+                          <div className="flex items-center gap-2 text-xs md:text-sm text-stone-500 font-medium font-sans pt-1">
+                            <span>Qty: {totalQty}</span>
+                            <span>•</span>
+                            <span className="text-[16px] md:text-[18px] font-bold text-amber-950 font-display">
+                              {formatPrice(order.totalAmount)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* RIGHT CHEVRON ARROW (22-26px) */}
+                        <div className="shrink-0 pl-1">
+                          <FiChevronRight className="h-6 w-6 text-stone-800 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
                     </Link>
-
-                    {/* ORDER TOTAL & PAYMENT INFO DIVIDER ROW */}
-                    <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2 text-xs">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">Total Amount</span>
-                        <span className="text-[16px] md:text-[18px] font-bold text-[#2A1810] font-display">
-                          {formatPrice(order.totalAmount)}
-                        </span>
-                      </div>
-
-                      {/* PAYMENT STATUS / METHOD */}
-                      <div className="text-right">
-                        {order.paymentStatus && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-stone-500">
-                            <FiCreditCard className="h-3.5 w-3.5 text-stone-400" />
-                            <span>{order.paymentStatus === 'COMPLETED' ? 'Paid' : order.paymentStatus}</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* VIEW DETAILS ACTION BUTTON */}
-                    <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
-                      {itemsList.length > 0 && itemsList[0]?.variantId && (
-                        <button
-                          type="button"
-                          onClick={() => handleBuyAgain(order)}
-                          disabled={buyingAgainId === order.id}
-                          className="w-full sm:w-auto h-[44px] min-h-[44px] px-4 rounded-[14px] border border-stone-200 bg-white text-[13px] font-bold text-stone-700 hover:bg-stone-50 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 shrink-0"
-                        >
-                          <FiRefreshCw className={`h-4 w-4 text-amber-800 ${buyingAgainId === order.id ? 'animate-spin' : ''}`} />
-                          <span>Buy Again</span>
-                        </button>
-                      )}
-
-                      <Link to={`/account/orders/${order.id}`} className="w-full">
-                        <button
-                          type="button"
-                          className="w-full h-[44px] min-h-[44px] rounded-[14px] bg-gradient-to-r from-[#3D2317] via-[#2A1810] to-[#1A0F0A] text-[#FDF6E2] text-[13px] font-bold shadow-xs hover:brightness-110 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
-                        >
-                          <span>View Details</span>
-                          <FiArrowRight className="h-4 w-4 text-amber-300" />
-                        </button>
-                      </Link>
-                    </div>
                   </motion.div>
                 );
               })}
@@ -573,12 +478,12 @@ export default memo(function MobileOrders({
         {/* MOBILE & TABLET PAGINATION */}
         {/* ══════════════════════════════════════════════════════════════ */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-stone-200/70">
+          <div className="flex items-center justify-between py-6 border-t border-stone-200/80 mt-4">
             <button
               type="button"
               disabled={page <= 1}
               onClick={() => updateParam('page', (page - 1).toString())}
-              className="inline-flex items-center justify-center h-[42px] min-h-[42px] px-4 rounded-[12px] border border-stone-300 bg-white text-xs font-bold text-stone-700 disabled:opacity-40 shadow-2xs"
+              className="inline-flex items-center justify-center h-[42px] min-h-[42px] px-4 rounded-xl border border-stone-300 bg-white text-xs font-bold text-stone-700 disabled:opacity-40 shadow-2xs"
             >
               Previous
             </button>
@@ -589,7 +494,7 @@ export default memo(function MobileOrders({
               type="button"
               disabled={page >= totalPages}
               onClick={() => updateParam('page', (page + 1).toString())}
-              className="inline-flex items-center justify-center h-[42px] min-h-[42px] px-4 rounded-[12px] border border-stone-300 bg-white text-xs font-bold text-stone-700 disabled:opacity-40 shadow-2xs"
+              className="inline-flex items-center justify-center h-[42px] min-h-[42px] px-4 rounded-xl border border-stone-300 bg-white text-xs font-bold text-stone-700 disabled:opacity-40 shadow-2xs"
             >
               Next
             </button>
