@@ -161,7 +161,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
             >
               <FiHeart className="w-[18px] h-[18px]" aria-hidden="true" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[13px] h-[13px] px-0.5 flex items-center justify-center bg-amber-400 text-stone-950 text-[8px] font-bold rounded-full border border-[#0f2440]">
+                <span className="absolute top-1 right-1 min-w-[13px] h-[13px] px-0.5 flex items-center justify-center bg-amber-400 text-stone-950 text-[8px] font-bold rounded-full border border-[#0f2440]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
