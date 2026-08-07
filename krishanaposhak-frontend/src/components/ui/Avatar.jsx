@@ -34,7 +34,7 @@ function Avatar({
 
   return (
     <span
-      className={cn('relative inline-flex flex-shrink-0', className)}
+      className={cn('relative inline-flex flex-shrink-0 rounded-full overflow-hidden items-center justify-center', className)}
       role="img"
       aria-label={alt || name || 'Avatar'}
     >
@@ -44,7 +44,7 @@ function Avatar({
           alt={alt || name || ''}
           onError={() => setImgError(true)}
           className={cn(
-            'rounded-full object-cover',
+            'rounded-full object-cover w-full h-full',
             sizeClasses[size],
           )}
         />

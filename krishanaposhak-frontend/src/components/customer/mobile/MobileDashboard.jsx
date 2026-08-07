@@ -57,6 +57,7 @@ export default function MobileDashboard() {
   const email = user?.email || '';
   const phone = user?.phoneNumber || '';
   const memberSince = user?.createdAt ? formatDate(user.createdAt, { format: 'short' }) : 'Devotee Member';
+  const profilePic = user?.profileImageUrl || user?.avatarUrl || user?.avatar || user?.profileImage || user?.image || user?.imageUrl || null;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -216,9 +217,9 @@ export default function MobileDashboard() {
           <div className="flex items-center justify-between gap-3 w-full">
             <Avatar
               name={fullName}
-              src={user?.profileImageUrl}
+              src={profilePic}
               size="xl"
-              className="w-[60px] h-[60px] rounded-full border-2 border-amber-500/70 shadow-sm shrink-0 object-cover"
+              className="w-[60px] h-[60px] rounded-full border-2 border-amber-500/70 shadow-sm shrink-0 overflow-hidden"
             />
 
             <button
