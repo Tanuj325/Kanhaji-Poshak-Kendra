@@ -110,31 +110,28 @@ public class OrderController {
             );
         }
 
-        // Create and persist the pending order first so it has a valid database ID
+        // Build pending order object to validate cart/address/coupon/stock and calculate totals (DO NOT SAVE TO DB YET)
         Order order = orderService.createPendingOrder(userId, placeOrderRequest);
-        order = orderRepository.save(order);
 
-        // Prepare Razorpay order request
+        // Prepare Razorpay order request with notes for server-side reconciliation resilience
         CreateRazorpayOrderRequest razorpayRequest = new CreateRazorpayOrderRequest();
         razorpayRequest.setAmount(order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue()); // Convert to paise
         razorpayRequest.setCurrency("INR");
-        razorpayRequest.setReceipt(order.getOrderNumber());
+        razorpayRequest.setReceipt("RCPT_" + System.currentTimeMillis());
+
+        java.util.Map<String, String> notes = new java.util.HashMap<>();
+        notes.put("userId", String.valueOf(userId));
+        notes.put("shippingAddressId", String.valueOf(placeOrderRequest.getShippingAddressId()));
+        if (placeOrderRequest.getCouponCode() != null) {
+            notes.put("couponCode", placeOrderRequest.getCouponCode());
+        }
+        if (placeOrderRequest.getOrderNotes() != null) {
+            notes.put("orderNotes", placeOrderRequest.getOrderNotes());
+        }
+        razorpayRequest.setNotes(notes);
 
         try {
             CreateRazorpayOrderResponse response = razorpayService.createOrder(razorpayRequest);
-
-            // Create and save payment record linked to this order and razorpayOrderId
-            Payment payment = Payment.builder()
-                    .order(order)
-                    .paymentMethod(PaymentMethod.RAZORPAY)
-                    .paymentStatus(PaymentStatus.PENDING)
-                    .amount(order.getTotalAmount())
-                    .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
-                    .razorpayOrderId(response.getId())
-                    .build();
-
-            paymentRepository.save(payment);
-
             return ResponseEntity.ok(response);
         } catch (com.razorpay.RazorpayException e) {
             throw new com.tanuj.krishanaposhak.exception.RazorpayException(

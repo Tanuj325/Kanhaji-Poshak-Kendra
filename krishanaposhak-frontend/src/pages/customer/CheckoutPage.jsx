@@ -211,7 +211,14 @@ function CheckoutPage() {
         onSuccess: async (verifyPayload) => {
           setOverlayStatusText('Verifying bank transaction security signature...');
           try {
-            const verificationResult = await verifyPayment(verifyPayload);
+            const verificationPayload = {
+              ...verifyPayload,
+              shippingAddressId: selectedAddressId,
+              ...(couponCode && { couponCode }),
+              ...(orderNotes && { orderNotes }),
+            };
+
+            const verificationResult = await verifyPayment(verificationPayload);
             const verifiedPayment = verificationResult?.data || verificationResult;
             const orderId = verifiedPayment?.orderId || razorpayData.receipt;
 
@@ -242,9 +249,16 @@ function CheckoutPage() {
           paymentLockRef.current = false;
           setIsProcessingOrder(false);
           resetPaymentLock();
-          const msg = err?.message || 'Payment was cancelled or could not be processed.';
-          setFailureReason(msg);
-          setFailureModalOpen(true);
+          if (err?.isCancelled) {
+            toast('Payment was cancelled. Your cart is still saved. You can try again.', {
+              icon: 'ℹ️',
+            });
+          } else {
+            const msg = err?.message || 'Payment failed or was cancelled.';
+            setFailureReason(msg);
+            setFailureModalOpen(true);
+            toast.error(msg);
+          }
         },
       });
     } catch (err) {

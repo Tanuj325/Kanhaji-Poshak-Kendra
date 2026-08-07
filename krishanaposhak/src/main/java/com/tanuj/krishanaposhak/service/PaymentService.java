@@ -21,6 +21,9 @@ public interface PaymentService {
                                           String razorpayPaymentId,
                                           String razorpaySignature);
 
+    PaymentResponse verifyRazorpayPayment(Long userId,
+                                          com.tanuj.krishanaposhak.dto.payment.PaymentVerificationRequest verificationRequest);
+
     PaymentResponse getPaymentByOrder(Long orderId);
 
     PaymentResponse getPaymentById(Long paymentId);

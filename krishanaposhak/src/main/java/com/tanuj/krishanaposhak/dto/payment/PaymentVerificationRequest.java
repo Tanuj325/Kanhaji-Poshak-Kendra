@@ -34,4 +34,19 @@ public class PaymentVerificationRequest {
     @NotBlank(message = "Razorpay signature is required")
     @ToString.Exclude
     private String razorpaySignature;
+
+    /**
+     * Optional shipping address ID for checkout verification.
+     */
+    private Long shippingAddressId;
+
+    /**
+     * Optional coupon code used during checkout.
+     */
+    private String couponCode;
+
+    /**
+     * Optional delivery notes.
+     */
+    private String orderNotes;
 }

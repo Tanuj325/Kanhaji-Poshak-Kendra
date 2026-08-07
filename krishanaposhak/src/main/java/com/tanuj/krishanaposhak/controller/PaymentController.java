@@ -122,9 +122,7 @@ public class PaymentController {
         }
         PaymentResponse response = paymentService.verifyRazorpayPayment(
                 userId,
-                verificationRequest.getRazorpayOrderId(),
-                verificationRequest.getRazorpayPaymentId(),
-                verificationRequest.getRazorpaySignature()
+                verificationRequest
         );
         return ResponseEntity.ok(response);
     }

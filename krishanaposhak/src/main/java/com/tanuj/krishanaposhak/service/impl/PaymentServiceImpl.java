@@ -1,6 +1,7 @@
 package com.tanuj.krishanaposhak.service.impl;
 
 import com.tanuj.krishanaposhak.dto.payment.*;
+import com.tanuj.krishanaposhak.dto.order.PlaceOrderRequest;
 import com.tanuj.krishanaposhak.entity.*;
 import com.tanuj.krishanaposhak.enums.OrderStatus;
 import com.tanuj.krishanaposhak.enums.PaymentStatus;
@@ -12,11 +13,13 @@ import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.PaymentMapper;
 import com.tanuj.krishanaposhak.repository.*;
 import com.tanuj.krishanaposhak.service.EmailService;
+import com.tanuj.krishanaposhak.service.OrderService;
 import com.tanuj.krishanaposhak.service.PaymentService;
 import com.tanuj.krishanaposhak.service.RazorpayService;
 import com.razorpay.RazorpayException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private final PaymentMapper paymentMapper;
     private final RazorpayService razorpayService;
     private final CartRepository cartRepository;
@@ -153,61 +157,155 @@ public class PaymentServiceImpl implements PaymentService {
                                                  String razorpayOrderId,
                                                  String razorpayPaymentId,
                                                  String razorpaySignature) {
+        PaymentVerificationRequest request = PaymentVerificationRequest.builder()
+                .razorpayOrderId(razorpayOrderId)
+                .razorpayPaymentId(razorpayPaymentId)
+                .razorpaySignature(razorpaySignature)
+                .build();
+        return verifyRazorpayPayment(userId, request);
+    }
 
-        // Find the payment by razorpayOrderId
-        Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Payment not found for Razorpay order: " + razorpayOrderId));
-
-        if (payment.getPaymentMethod() == PaymentMethod.COD) {
-            log.warn("[COD] Attempted to verify Razorpay payment for COD payment ID {}. Rejecting.", payment.getId());
-            throw new BadRequestException("Payment verification is not applicable for Cash on Delivery orders.");
+    @Override
+    @Transactional
+    public PaymentResponse verifyRazorpayPayment(Long userId, PaymentVerificationRequest request) {
+        if (request == null || StringUtils.isBlank(request.getRazorpayOrderId())
+                || StringUtils.isBlank(request.getRazorpayPaymentId())
+                || StringUtils.isBlank(request.getRazorpaySignature())) {
+            throw new BadRequestException("Razorpay order ID, payment ID, and signature are required.");
         }
 
-        // Validate that the payment belongs to the user
-        Order order = payment.getOrder();
-        if (!order.getUser().getId().equals(userId)) {
-            throw new ForbiddenException("This payment does not belong to you");
-        }
-
-        // Verify the signature using Razorpay service
-        PaymentVerificationRequest verificationRequest = new PaymentVerificationRequest(
-                razorpayOrderId,
-                razorpayPaymentId,
-                razorpaySignature
-        );
-
+        // Verify Razorpay signature
         boolean isValid;
         try {
-            isValid = razorpayService.verifyPayment(verificationRequest);
+            isValid = razorpayService.verifyPayment(request);
         } catch (Exception e) {
-            throw new BadRequestException("Unable to verify payment: " + e.getMessage());
+            throw new BadRequestException("Unable to verify payment signature: " + e.getMessage());
         }
 
         if (!isValid) {
-            // Update payment as failed
-            payment.setPaymentStatus(PaymentStatus.FAILED);
-            payment.setRazorpayPaymentId(razorpayPaymentId);
-            payment.setRazorpaySignature(razorpaySignature);
-            paymentRepository.save(payment);
             throw new BadRequestException("Payment signature verification failed");
         }
 
-        // Save payment ID and signature
-        payment.setRazorpayPaymentId(razorpayPaymentId);
-        payment.setRazorpaySignature(razorpaySignature);
+        // Idempotency check: If order & payment record already exists for this razorpayOrderId
+        java.util.Optional<Payment> existingPaymentOpt = paymentRepository.findByRazorpayOrderId(request.getRazorpayOrderId());
+        if (existingPaymentOpt.isPresent()) {
+            Payment existingPayment = existingPaymentOpt.get();
+            Order existingOrder = existingPayment.getOrder();
+            if (existingOrder != null && !existingOrder.getUser().getId().equals(userId)) {
+                throw new ForbiddenException("This payment does not belong to you");
+            }
 
-        // Fulfill order idempotently (handles both normal flow and webhook-before-verify race condition)
-        com.tanuj.krishanaposhak.enums.FulfillmentResult result = fulfillOrder(order, payment);
+            if (existingPayment.getPaymentStatus() == PaymentStatus.PAID
+                    || (existingOrder != null && existingOrder.getOrderStatus() == OrderStatus.CONFIRMED)) {
+                log.info("[IDEMPOTENT] Razorpay payment {} for order {} was already verified and fulfilled.",
+                        request.getRazorpayPaymentId(), existingOrder != null ? existingOrder.getOrderNumber() : "N/A");
+                return paymentMapper.toResponse(existingPayment);
+            } else {
+                // Backward compatibility: fulfill existing pending order if created prior to payment
+                existingPayment.setRazorpayPaymentId(request.getRazorpayPaymentId());
+                existingPayment.setRazorpaySignature(request.getRazorpaySignature());
+                paymentRepository.save(existingPayment);
+                com.tanuj.krishanaposhak.enums.FulfillmentResult result = fulfillOrder(existingOrder, existingPayment);
+                return paymentMapper.toResponse(existingPayment);
+            }
+        }
 
-        if (result == com.tanuj.krishanaposhak.enums.FulfillmentResult.STOCK_EXHAUSTED_REFUNDED) {
-            PaymentResponse response = paymentMapper.toResponse(payment);
-            response.setPaymentStatus(payment.getPaymentStatus());
-            response.setRefunded(true);
-            response.setRefundInitiated(true);
-            response.setRefundStatus(payment.getPaymentStatus() == PaymentStatus.REFUNDED ? "PROCESSED" : "PENDING");
-            response.setMessage("Your payment was successful, however the item became unavailable. A full refund has been initiated.");
-            return response;
+        // Standard flow: Order was NOT created in DB prior to payment. Create and confirm order now.
+        Long shippingAddressId = request.getShippingAddressId();
+        String couponCode = request.getCouponCode();
+        String orderNotes = request.getOrderNotes();
+
+        if (shippingAddressId == null) {
+            throw new BadRequestException("Shipping address is required to complete order creation after payment.");
+        }
+
+        PlaceOrderRequest placeOrderRequest = new PlaceOrderRequest();
+        placeOrderRequest.setShippingAddressId(shippingAddressId);
+        placeOrderRequest.setCouponCode(couponCode);
+        placeOrderRequest.setOrderNotes(orderNotes);
+        placeOrderRequest.setPaymentMethod("RAZORPAY");
+
+        // Validate cart, stock, coupon, address and build pending order
+        Order order = orderService.createPendingOrder(userId, placeOrderRequest);
+        order.setOrderStatus(OrderStatus.CONFIRMED);
+        order.setPaymentStatus(PaymentStatus.PAID);
+
+        // Save confirmed order
+        order = orderRepository.save(order);
+
+        // Save order items with saved order reference
+        if (order.getOrderItems() != null) {
+            for (OrderItem item : order.getOrderItems()) {
+                item.setOrder(order);
+            }
+        }
+
+        // Save payment record
+        Payment payment = Payment.builder()
+                .order(order)
+                .paymentMethod(PaymentMethod.RAZORPAY)
+                .paymentStatus(PaymentStatus.PAID)
+                .amount(order.getTotalAmount())
+                .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
+                .razorpayOrderId(request.getRazorpayOrderId())
+                .razorpayPaymentId(request.getRazorpayPaymentId())
+                .razorpaySignature(request.getRazorpaySignature())
+                .paidAt(Instant.now())
+                .build();
+
+        payment = paymentRepository.save(payment);
+        order.setPayment(payment);
+
+        // Reduce stock for products in the order
+        if (order.getOrderItems() != null) {
+            for (OrderItem item : order.getOrderItems()) {
+                if (item.getProductVariant() != null) {
+                    ProductVariant variant = item.getProductVariant();
+                    variant.setStock(variant.getStock() - item.getQuantity());
+                    productVariantRepository.save(variant);
+                }
+            }
+        }
+
+        // Record coupon usage if coupon was used
+        if (order.getCouponCode() != null && !order.getCouponCode().isBlank()) {
+            final Order finalOrder = order;
+            couponRepository.findByCode(order.getCouponCode()).ifPresent(coupon -> {
+                if (!couponUsageRepository.existsByOrderId(finalOrder.getId())) {
+                    int currentCount = coupon.getUsedCount() != null ? coupon.getUsedCount() : 0;
+                    coupon.setUsedCount(currentCount + 1);
+                    couponRepository.save(coupon);
+
+                    couponUsageRepository.save(
+                            CouponUsage.builder()
+                                    .coupon(coupon)
+                                    .user(finalOrder.getUser())
+                                    .order(finalOrder)
+                                    .build()
+                    );
+                }
+            });
+        }
+
+        // Clear user's cart
+        cartRepository.findByUserId(userId)
+                .ifPresent(cart -> cartItemRepository.deleteByCartId(cart.getId()));
+
+        // Send order confirmation email asynchronously
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("order", order);
+            model.put("orderItems", order.getOrderItems());
+            model.put("customerName", order.getCustomerName());
+            model.put("orderNumber", order.getOrderNumber());
+            model.put("orderDate", order.getCreatedAt());
+            model.put("totalAmount", order.getTotalAmount());
+            emailService.sendTemplateEmail(order.getCustomerEmail(),
+                    "Order Confirmation - " + order.getOrderNumber(),
+                    "order-confirmation",
+                    model);
+        } catch (Exception e) {
+            log.error("Failed to send order confirmation email for order {}", order.getOrderNumber(), e);
         }
 
         return paymentMapper.toResponse(payment);

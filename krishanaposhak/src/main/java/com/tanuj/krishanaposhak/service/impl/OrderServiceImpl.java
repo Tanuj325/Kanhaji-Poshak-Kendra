@@ -385,7 +385,8 @@ public class OrderServiceImpl implements OrderService {
                 payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
             }
 
-            boolean isCod = (payment != null && payment.getPaymentMethod() == PaymentMethod.COD);
+            boolean isCod = (payment != null && payment.getPaymentMethod() == PaymentMethod.COD)
+                    || (payment == null && order.getPaymentStatus() != PaymentStatus.PAID);
 
             if (isCod && order.getPaymentStatus() != PaymentStatus.PAID) {
                 log.info("[COD] Order #{} marked as DELIVERED by admin. Automatically updating payment status from {} to PAID.",
@@ -393,14 +394,22 @@ public class OrderServiceImpl implements OrderService {
 
                 order.setPaymentStatus(PaymentStatus.PAID);
 
-                if (payment != null) {
+                if (payment == null) {
+                    payment = Payment.builder()
+                            .order(order)
+                            .paymentMethod(PaymentMethod.COD)
+                            .paymentStatus(PaymentStatus.PAID)
+                            .amount(order.getTotalAmount())
+                            .paidAt(java.time.Instant.now())
+                            .build();
+                } else {
                     payment.setPaymentStatus(PaymentStatus.PAID);
                     if (payment.getPaidAt() == null) {
                         payment.setPaidAt(java.time.Instant.now());
                     }
-                    paymentRepository.save(payment);
-                    order.setPayment(payment);
                 }
+                paymentRepository.save(payment);
+                order.setPayment(payment);
             }
         }
 
