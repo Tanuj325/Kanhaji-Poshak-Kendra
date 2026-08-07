@@ -464,7 +464,7 @@ export default function MobileWishlist({
           /* ─── POPULATED WISHLIST VIEW ─── */
           <>
             {/* ─── 2. SAVED COLLECTION BANNER CARD ─── */}
-            <div className="h-[76px] rounded-[16px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD]/80 px-3.5 flex items-center justify-between shadow-2xs">
+            <div className="h-[76px] rounded-[16px] bg-gradient-to-r from-[#FFFDF9] via-[#FAF5ED] to-[#F6ECE0] border border-[#EEDFCD]/80 px-1.5 flex items-center justify-between shadow-2xs">
               <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-xl bg-[#F6E7D2] text-[#9E691A] flex items-center justify-center shrink-0">
                   <FiBookmark className="h-3.5 w-3.5 fill-[#9E691A]" />
@@ -484,7 +484,7 @@ export default function MobileWishlist({
 
             {/* ─── 3. 2-COLUMN GRID WISHLIST PRODUCT CARDS (WIDTH / 2 PER CARD) ─── */}
             <AnimatePresence mode="popLayout">
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+              <div className="grid grid-cols-2 gap-0.5 sm:gap-1.5 w-full">
                 {items.map((item) => {
                   const variantId = item.variantId || item.productId;
                   const isItemMoving = movingItemId === variantId;
