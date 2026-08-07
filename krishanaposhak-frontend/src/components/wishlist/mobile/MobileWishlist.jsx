@@ -375,7 +375,7 @@ export default function MobileWishlist({
   }
 
   return (
-    <div className="min-h-dvh w-full bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
+    <div className="-mx-4 sm:-mx-6 lg:mx-0 -mt-4 sm:-mt-8 lg:mt-0 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-full min-h-screen max-w-none bg-[#F8F6F2] text-stone-800 font-sans antialiased pb-24 md:pb-16">
       {/* ─── 1. HEADER (Sticky, Height: 50px, Centered Title) ─── */}
       <header className="sticky top-0 z-40 h-[50px] bg-white/95 backdrop-blur-md border-b border-stone-200/80 px-3.5 flex items-center justify-between shadow-2xs">
         <motion.button
@@ -403,7 +403,7 @@ export default function MobileWishlist({
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="px-0.5 sm:px-1.5 py-0.5 max-w-[767px] mx-auto space-y-2.5">
+      <main className="px-3 sm:px-5 py-3 w-full max-w-none space-y-3">
         {items.length === 0 ? (
           /* ─── EMPTY WISHLIST VIEW ─── */
           <div className="py-6 space-y-5">
@@ -508,7 +508,7 @@ export default function MobileWishlist({
       {/* ─── 4. STICKY BOTTOM BAR ─── */}
       {items.length > 0 && (
         <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40 h-[58px] bg-white/98 backdrop-blur-md border-t border-stone-200/80 px-3.5 py-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] flex items-center justify-between">
-          <div className="max-w-[767px] w-full mx-auto flex items-center justify-between gap-2">
+          <div className="w-full max-w-none flex items-center justify-between gap-2">
             {/* Left: Items Count & Estimated Total */}
             <div className="flex flex-col font-sans">
               <span className="text-[11px] font-bold text-stone-900 leading-tight">
