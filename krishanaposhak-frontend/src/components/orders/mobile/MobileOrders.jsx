@@ -124,16 +124,16 @@ export default memo(function MobileOrders({
   }, [featuredData]);
 
   return (
-    <div className="w-full min-h-screen max-w-full bg-stone-50/70 pb-20 font-sans text-stone-900 flex flex-col">
+    <div className="w-full h-full min-h-screen max-w-full bg-stone-50/70 pb-20 font-sans text-stone-900 flex flex-col">
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* 1. SLEEK COMPACT HEADER (48px) */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 flex h-[48px] min-h-[48px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-3 md:px-6 backdrop-blur-md">
+      <header className="sticky top-0 z-40 flex h-[48px] min-h-[48px] w-full items-center justify-between border-b border-stone-200/80 bg-white/95 px-1 md:px-4 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => navigate('/account/profile')}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all"
+            className="flex h-7 w-7 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 active:scale-95 transition-all"
             aria-label="Go back"
           >
             <FiArrowLeft className="h-4.5 w-4.5" />
@@ -147,9 +147,8 @@ export default memo(function MobileOrders({
           <button
             type="button"
             onClick={() => setShowSearch((prev) => !prev)}
-            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
-              showSearch ? 'bg-amber-100 text-amber-900' : 'text-stone-700 hover:bg-stone-100'
-            }`}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${showSearch ? 'bg-amber-100 text-amber-900' : 'text-stone-700 hover:bg-stone-100'
+              }`}
             aria-label="Toggle search"
           >
             <FiSearch className="h-4 w-4" />
@@ -157,11 +156,10 @@ export default memo(function MobileOrders({
           <button
             type="button"
             onClick={() => setShowFiltersDrawer((prev) => !prev)}
-            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all relative ${
-              status || paymentStatus
-                ? 'bg-amber-950 text-white'
-                : 'text-stone-700 hover:bg-stone-100'
-            }`}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all relative ${status || paymentStatus
+              ? 'bg-amber-950 text-white'
+              : 'text-stone-700 hover:bg-stone-100'
+              }`}
             aria-label="Filter orders"
           >
             <FiFilter className="h-3.5 w-3.5" />
@@ -219,11 +217,10 @@ export default memo(function MobileOrders({
               key={tab.value || 'all'}
               type="button"
               onClick={() => updateParam('status', tab.value)}
-              className={`shrink-0 h-[32px] rounded-full px-3 text-[12px] transition-all flex items-center justify-center ${
-                isActive
-                  ? 'bg-amber-950 text-white font-bold border border-amber-900 shadow-2xs'
-                  : 'bg-stone-100/80 text-stone-600 border border-transparent hover:bg-stone-200/60 font-medium'
-              }`}
+              className={`shrink-0 h-[32px] rounded-full px-3 text-[12px] transition-all flex items-center justify-center ${isActive
+                ? 'bg-amber-950 text-white font-bold border border-amber-900 shadow-2xs'
+                : 'bg-stone-100/80 text-stone-600 border border-transparent hover:bg-stone-200/60 font-medium'
+                }`}
             >
               {tab.label}
             </button>
@@ -309,7 +306,7 @@ export default memo(function MobileOrders({
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* MAIN CONTENT AREA */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <main className="w-full max-w-full px-3 md:px-6 py-2.5 space-y-2.5 flex-1">
+      <main className="w-full max-w-full px-1 md:px-4 py-2.5 space-y-2.5 flex-1">
         {/* LOADING SKELETON */}
         {isLoading ? (
           <div className="space-y-2.5">
@@ -452,7 +449,7 @@ export default memo(function MobileOrders({
                       </div>
 
                       {/* STATUS BADGE PILL */}
-                      <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border shrink-0 ${badgeStyle}`}>
+                      <span className={`flex flex-col items-right gap-1 rounded-md px-1 py-0.5 text-[10px] font-bold border shrink-0 ${badgeStyle}`}>
                         <StatusIcon className="h-2.5 w-2.5" />
                         <span>{order.orderStatus || 'PENDING'}</span>
                       </span>
@@ -464,9 +461,8 @@ export default memo(function MobileOrders({
                         itemsList.map((item, itemIdx) => (
                           <div
                             key={item.id || itemIdx}
-                            className={`flex items-start gap-2.5 ${
-                              itemIdx > 0 ? 'pt-2 border-t border-stone-100/70' : ''
-                            }`}
+                            className={`flex items-start gap-2.5 ${itemIdx > 0 ? 'pt-2 border-t border-stone-100/70' : ''
+                              }`}
                           >
                             {/* PRODUCT IMAGE: 72px mobile, 80px tablet */}
                             <div className="relative h-[72px] w-[72px] min-w-[72px] md:h-[80px] md:w-[80px] md:min-w-[80px] rounded-xl overflow-hidden bg-stone-100 border border-stone-200/60 shrink-0">
