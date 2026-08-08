@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Avatar from '@/components/ui/Avatar';
-import Badge from '@/components/ui/Badge';
 import Switch from '@/components/forms/Switch';
 import toast from 'react-hot-toast';
 import { authService } from '@/services';
@@ -22,6 +21,8 @@ import {
   FiAlertCircle,
   FiSave,
   FiKey,
+  FiEdit2,
+  FiX,
 } from 'react-icons/fi';
 
 const GENDER_OPTIONS = [
@@ -31,11 +32,11 @@ const GENDER_OPTIONS = [
   { value: 'OTHER', label: 'Other' },
 ];
 
-// A single, consistent card elevation used everywhere — no mixed shadow sizes.
+// A single, consistent card elevation used everywhere
 const CARD = 'rounded-[20px] bg-white border border-amber-900/10 shadow-[0_1px_2px_rgba(41,30,10,0.04),0_6px_20px_rgba(41,30,10,0.05)]';
 
 // ----------------------------------------------------
-// Floating Label Input — quieter weight, one accent color
+// Floating Label Input
 // ----------------------------------------------------
 function FloatingInput({
   id,
@@ -64,10 +65,10 @@ function FloatingInput({
           disabled || readOnly
             ? 'bg-stone-50 border-stone-200 cursor-not-allowed'
             : error
-              ? 'border-rose-300 bg-white'
-              : isFocused
-                ? 'border-amber-700 bg-white'
-                : 'border-stone-200 hover:border-amber-700/40 bg-white',
+            ? 'border-rose-300 bg-white'
+            : isFocused
+            ? 'border-amber-700 bg-white'
+            : 'border-stone-200 hover:border-amber-700/40 bg-white',
         )}
       >
         <label
@@ -112,27 +113,29 @@ function FloatingInput({
 // ----------------------------------------------------
 // Section header — small tinted icon, no gradient box
 // ----------------------------------------------------
-function SectionHeader({ icon: Icon, title, subtitle }) {
+function SectionHeader({ icon: Icon, title, subtitle, action }) {
   return (
-    <div className="flex items-center gap-3 pb-4 mb-4 border-b border-stone-100">
-      <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-800 flex items-center justify-center shrink-0">
-        <Icon className="w-4 h-4" />
+    <div className="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-stone-100">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-800 flex items-center justify-center shrink-0">
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-heading font-semibold text-[15px] text-stone-900 truncate tracking-tight">
+            {title}
+          </h3>
+          {subtitle && (
+            <p className="text-[12px] text-stone-400 truncate mt-0.5">{subtitle}</p>
+          )}
+        </div>
       </div>
-      <div className="min-w-0">
-        <h3 className="font-heading font-semibold text-[15px] text-stone-900 truncate tracking-tight">
-          {title}
-        </h3>
-        {subtitle && (
-          <p className="text-[12px] text-stone-400 truncate mt-0.5">{subtitle}</p>
-        )}
-      </div>
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }
 
 // ----------------------------------------------------
-// Settings row — hairline-divided list item, no boxed backgrounds.
-// Keeps things compact and quiet; the control on the right does the talking.
+// Settings row — hairline-divided list item
 // ----------------------------------------------------
 function SettingsRow({ icon: Icon, iconTone = 'amber', title, subtitle, children, last = false }) {
   const tones = {
@@ -206,6 +209,7 @@ export default function MobileAccountSettings({
   const userData = profile || user;
   const fileInputRef = useRef(null);
 
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -291,6 +295,7 @@ export default function MobileAccountSettings({
       await updateProfile.mutateAsync({ userId: targetUserId, formData: payload });
       toast.success('Profile updated successfully!');
       setSelectedFile(null);
+      setIsEditing(false);
       refetch?.();
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -342,7 +347,7 @@ export default function MobileAccountSettings({
         <button
           type="button"
           onClick={onBack || (() => window.history.back())}
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-stone-50 text-stone-700 hover:bg-stone-100 transition-colors border border-stone-100 active:scale-95"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-stone-50 text-stone-700 hover:bg-stone-100 transition-colors border border-stone-100 active:scale-95"
           aria-label="Go back"
         >
           <FiChevronLeft className="w-[18px] h-[18px]" />
@@ -360,7 +365,7 @@ export default function MobileAccountSettings({
         <button
           type="button"
           onClick={() => setIsLogoutModalOpen(true)}
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors border border-rose-100 active:scale-95"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors border border-rose-100 active:scale-95"
           title="Sign Out"
         >
           <FiLogOut className="w-4 h-4" />
@@ -373,7 +378,7 @@ export default function MobileAccountSettings({
           <MobileAccountSettingsSkeleton />
         ) : (
           <>
-            {/* PROFILE HERO — the one card allowed a touch of gold */}
+            {/* PROFILE HERO — gold accent bar */}
             <div className={cn(CARD, 'p-5 sm:p-6 relative overflow-hidden')}>
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-600 via-[#D4AF37] to-amber-600" />
 
@@ -436,6 +441,37 @@ export default function MobileAccountSettings({
                 icon={FiUser}
                 title="Personal Details"
                 subtitle="Your information and contact details"
+                action={
+                  !isEditing ? (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(true)}
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 font-semibold text-[12px] transition-colors border border-amber-900/10 active:scale-95"
+                    >
+                      <FiEdit2 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          firstName: userData?.firstName || '',
+                          lastName: userData?.lastName || '',
+                          email: userData?.email || '',
+                          phoneNumber: userData?.phoneNumber || '',
+                          gender: userData?.gender || '',
+                          dateOfBirth: userData?.dateOfBirth ? String(userData.dateOfBirth).split('T')[0] : '',
+                        });
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-semibold text-[12px] transition-colors"
+                    >
+                      <FiX className="w-3.5 h-3.5" />
+                      <span>Cancel</span>
+                    </button>
+                  )
+                }
               />
 
               <form onSubmit={handleFormSubmit} className="space-y-3.5">
@@ -445,6 +481,7 @@ export default function MobileAccountSettings({
                     name="firstName"
                     label="First Name"
                     required
+                    disabled={!isEditing}
                     value={formData.firstName}
                     onChange={handleInputChange}
                   />
@@ -453,6 +490,7 @@ export default function MobileAccountSettings({
                     name="lastName"
                     label="Last Name"
                     required
+                    disabled={!isEditing}
                     value={formData.lastName}
                     onChange={handleInputChange}
                   />
@@ -475,13 +513,21 @@ export default function MobileAccountSettings({
                     label="Mobile Phone Number"
                     type="tel"
                     inputMode="numeric"
+                    disabled={!isEditing}
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                  <div className="relative w-full h-[50px] rounded-[14px] border border-stone-200 bg-white flex items-center hover:border-amber-700/40 transition-colors">
+                  <div
+                    className={cn(
+                      'relative w-full h-[50px] rounded-[14px] border transition-colors flex items-center',
+                      !isEditing
+                        ? 'bg-stone-50 border-stone-200 cursor-not-allowed'
+                        : 'bg-white border-stone-200 hover:border-amber-700/40',
+                    )}
+                  >
                     <label
                       htmlFor="sett-gender"
                       className="absolute left-3.5 top-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800 pointer-events-none z-10"
@@ -491,11 +537,12 @@ export default function MobileAccountSettings({
                     <select
                       id="sett-gender"
                       name="gender"
+                      disabled={!isEditing}
                       value={formData.gender}
                       onChange={handleInputChange}
                       className={cn(
-                        'w-full h-full bg-transparent pl-3.5 pr-9 pt-4 pb-1 text-[13px] font-semibold outline-none cursor-pointer appearance-none',
-                        formData.gender ? 'text-stone-900' : 'text-stone-400 font-medium',
+                        'w-full h-full bg-transparent pl-3.5 pr-9 pt-4 pb-1 text-[13px] font-semibold outline-none appearance-none',
+                        !isEditing ? 'text-stone-500 cursor-not-allowed' : formData.gender ? 'text-stone-900 cursor-pointer' : 'text-stone-400 font-medium cursor-pointer',
                       )}
                     >
                       {GENDER_OPTIONS.map((g) => (
@@ -512,21 +559,41 @@ export default function MobileAccountSettings({
                     name="dateOfBirth"
                     label="Date of Birth"
                     type="date"
+                    disabled={!isEditing}
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
                   />
                 </div>
 
-                <div className="pt-2 flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full sm:w-auto h-[46px] px-7 rounded-full bg-stone-900 hover:bg-amber-950 text-white font-heading font-semibold text-[13px] tracking-wide shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <FiSave className="w-4 h-4" />
-                    <span>{isSubmitting ? 'Saving…' : 'Save Changes'}</span>
-                  </button>
-                </div>
+                {isEditing && (
+                  <div className="pt-2 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          firstName: userData?.firstName || '',
+                          lastName: userData?.lastName || '',
+                          email: userData?.email || '',
+                          phoneNumber: userData?.phoneNumber || '',
+                          gender: userData?.gender || '',
+                          dateOfBirth: userData?.dateOfBirth ? String(userData.dateOfBirth).split('T')[0] : '',
+                        });
+                      }}
+                      className="px-4 h-[42px] rounded-full border border-stone-200 text-[12px] font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto h-[42px] px-6 rounded-full bg-stone-900 hover:bg-amber-950 text-white font-heading font-semibold text-[12px] tracking-wide shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <FiSave className="w-4 h-4" />
+                      <span>{isSubmitting ? 'Saving…' : 'Save Changes'}</span>
+                    </button>
+                  </div>
+                )}
               </form>
             </section>
 
@@ -592,7 +659,7 @@ export default function MobileAccountSettings({
                   subtitle="Dispatch tracking and order confirmations"
                 >
                   <Switch
-                    size="sm"
+                    size="xs"
                     checked={Boolean(emailNotifs)}
                     onChange={(e) => setEmailNotifs(e.target.checked)}
                   />
@@ -605,7 +672,7 @@ export default function MobileAccountSettings({
                   last
                 >
                   <Switch
-                    size="sm"
+                    size="xs"
                     checked={Boolean(promoNotifs)}
                     onChange={(e) => setPromoNotifs(e.target.checked)}
                   />

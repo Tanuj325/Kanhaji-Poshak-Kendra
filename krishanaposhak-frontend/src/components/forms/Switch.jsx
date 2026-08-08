@@ -2,18 +2,21 @@ import { forwardRef, useId } from 'react';
 import { cn } from '@/utils/cn';
 
 const sizeStyles = {
+  xs: 'h-4 w-7',
   sm: 'h-5 w-9',
   md: 'h-6 w-11',
   lg: 'h-7 w-14',
 };
 
 const dotSizes = {
+  xs: 'h-3 w-3',
   sm: 'h-3.5 w-3.5',
   md: 'h-5 w-5',
   lg: 'h-6 w-6',
 };
 
 const dotTranslate = {
+  xs: 'translate-x-3',
   sm: 'translate-x-4',
   md: 'translate-x-5',
   lg: 'translate-x-7',
