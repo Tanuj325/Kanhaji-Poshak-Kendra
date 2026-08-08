@@ -200,7 +200,7 @@ function FloatingInput({
 }
 
 // ----------------------------------------------------
-// Rebuilt Mobile & Tablet Address Card
+// Premium Rebuilt Mobile & Tablet Address Card
 // ----------------------------------------------------
 function RebuiltAddressCard({
   address,
@@ -239,104 +239,112 @@ function RebuiltAddressCard({
         }
       }}
       className={cn(
-        'relative w-full rounded-[20px] p-4.5 sm:p-5 transition-all duration-200 font-display overflow-hidden text-left flex flex-col justify-between gap-3.5',
+        'relative w-full rounded-[22px] p-5 sm:p-6 transition-all duration-300 font-display overflow-hidden text-left flex flex-col justify-between gap-4',
         isSelected && isSelectable
-          ? 'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20'
-          : 'border border-amber-900/10 bg-white hover:border-amber-700/30 shadow-[0_2px_12px_rgba(44,40,36,0.04)] hover:shadow-[0_4px_20px_rgba(44,40,36,0.08)]',
+          ? 'border-2 border-[#D4AF37] bg-gradient-to-b from-[#FFFDF9] to-[#FAF2E4] shadow-md ring-2 ring-[#D4AF37]/20'
+          : 'border border-amber-900/12 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] hover:border-amber-700/40 shadow-[0_4px_24px_rgba(44,40,36,0.05)] hover:shadow-[0_8px_30px_rgba(44,40,36,0.1)]',
         isSelectable && 'cursor-pointer',
       )}
     >
-      {/* Top Gold Accent Line for Default Address */}
+      {/* Top Gold Ribbon Accent for Default Address */}
       {address.defaultAddress && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-700" />
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-800" />
       )}
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0 flex-1">
-          {/* Radio Indicator for Checkout */}
-          {isSelectable && (
-            <div
-              className={cn(
-                'mt-0.5 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
-                isSelected
-                  ? 'border-[#D4AF37] bg-[#D4AF37] text-amber-950'
-                  : 'border-stone-300 bg-white',
-              )}
-            >
-              {isSelected && <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />}
-            </div>
-          )}
-
-          <div className="min-w-0 flex-1 space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-heading font-extrabold text-base text-amber-950 truncate">
-                {address.fullName}
-              </span>
-
-              {/* Home / Office Badge */}
-              {(isOffice || isHome) && (
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider',
-                    isOffice
-                      ? 'bg-blue-50 text-blue-900 border-blue-200/80'
-                      : 'bg-amber-100/70 text-amber-950 border-amber-300/60',
-                  )}
-                >
-                  {isOffice ? (
-                    <>
-                      <FiBriefcase className="h-2.5 w-2.5 text-blue-700" /> Office
-                    </>
-                  ) : (
-                    <>
-                      <FiHome className="h-2.5 w-2.5 text-amber-800" /> Home
-                    </>
-                  )}
-                </span>
-              )}
-
-              {/* Default Badge */}
-              {address.defaultAddress && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-950 bg-gradient-to-r from-amber-100 via-amber-200 to-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300/80 uppercase tracking-wider shadow-2xs">
-                  <FiStar className="h-2.5 w-2.5 fill-amber-700 text-amber-700" /> Default
-                </span>
-              )}
-            </div>
-
-            {/* Phone */}
-            {address.phoneNumber && (
-              <p className="text-xs text-stone-600 font-medium font-mono flex items-center gap-1.5 pt-0.5">
-                <FiPhone className="h-3 w-3 text-amber-800 shrink-0" />
-                <span>{address.phoneNumber}</span>
-                <button
-                  type="button"
-                  onClick={copyPhoneNumber}
-                  className="p-0.5 text-stone-400 hover:text-amber-900 transition-colors"
-                  title="Copy phone number"
-                >
-                  <FiCopy className="h-3 w-3" />
-                </button>
-              </p>
+      <div className="space-y-3.5">
+        {/* Top Header Row: Icon, Name & Badges */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            {/* Custom Checkbox for Checkout Mode */}
+            {isSelectable ? (
+              <div
+                className={cn(
+                  'mt-0.5 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
+                  isSelected
+                    ? 'border-[#D4AF37] bg-[#D4AF37] text-amber-950 shadow-2xs'
+                    : 'border-stone-300 bg-white',
+                )}
+              >
+                {isSelected && <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />}
+              </div>
+            ) : (
+              <div className="w-9 h-9 rounded-xl bg-amber-100/80 border border-amber-300/40 text-amber-900 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+                <FiMapPin className="w-4.5 h-4.5 text-amber-900" />
+              </div>
             )}
 
-            {/* Complete Address */}
-            <p className="text-xs sm:text-sm text-stone-700 leading-relaxed pt-1 font-body">
-              {address.addressLine1}
-              {address.addressLine2 ? `, ${address.addressLine2}` : ''}
-              <br />
-              <strong className="text-amber-950 font-bold">
-                {address.city}, {address.state} — {address.postalCode}
-              </strong>
-              {address.country && address.country !== 'India' && (
-                <span className="text-stone-500 font-medium"> ({address.country})</span>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-heading font-black text-base sm:text-lg text-amber-950 truncate tracking-tight">
+                  {address.fullName}
+                </span>
+
+                {/* Home / Office Badge */}
+                {(isOffice || isHome) && (
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-2xs',
+                      isOffice
+                        ? 'bg-blue-50/90 text-blue-900 border-blue-200'
+                        : 'bg-amber-100/80 text-amber-950 border-amber-300/60',
+                    )}
+                  >
+                    {isOffice ? (
+                      <>
+                        <FiBriefcase className="h-2.5 w-2.5 text-blue-700" /> Office
+                      </>
+                    ) : (
+                      <>
+                        <FiHome className="h-2.5 w-2.5 text-amber-800" /> Home
+                      </>
+                    )}
+                  </span>
+                )}
+
+                {/* Default Address Badge */}
+                {address.defaultAddress && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-black text-amber-100 bg-gradient-to-r from-amber-900 via-amber-800 to-amber-950 px-3 py-0.5 rounded-full border border-amber-400/40 uppercase tracking-wider shadow-2xs">
+                    <FiStar className="h-2.5 w-2.5 fill-amber-300 text-amber-300" /> Default
+                  </span>
+                )}
+              </div>
+
+              {/* Phone Badge */}
+              {address.phoneNumber && (
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-50/80 border border-amber-900/10 text-xs font-bold font-mono text-amber-950 shadow-2xs mt-1">
+                  <FiPhone className="h-3 w-3 text-amber-800 shrink-0" />
+                  <span>{address.phoneNumber}</span>
+                  <button
+                    type="button"
+                    onClick={copyPhoneNumber}
+                    className="p-0.5 text-stone-400 hover:text-amber-900 transition-colors"
+                    title="Copy phone number"
+                  >
+                    <FiCopy className="h-3 w-3" />
+                  </button>
+                </div>
               )}
-            </p>
+            </div>
           </div>
+        </div>
+
+        {/* Formatted Address Box */}
+        <div className="p-3.5 rounded-2xl bg-white/80 border border-amber-900/10 space-y-1 font-body text-xs sm:text-sm leading-relaxed text-stone-700 shadow-2xs">
+          <p className="font-semibold text-stone-800">{address.addressLine1}</p>
+          {address.addressLine2 && <p className="text-stone-600">{address.addressLine2}</p>}
+          <p className="font-extrabold text-amber-950 text-xs sm:text-sm font-display pt-0.5">
+            {address.city}, {address.state} — {address.postalCode}
+          </p>
+          {address.country && address.country !== 'India' && (
+            <p className="text-[10px] font-extrabold uppercase tracking-widest text-stone-400 pt-0.5">
+              {address.country}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center justify-between gap-2 pt-3 border-t border-amber-900/10 font-display">
+      {/* Action Buttons Bar */}
+      <div className="flex items-center justify-between gap-2.5 pt-3.5 border-t border-amber-900/10 font-display">
         <div className="flex items-center gap-2">
           {onEdit && (
             <button
@@ -345,7 +353,7 @@ function RebuiltAddressCard({
                 e.stopPropagation();
                 onEdit(address);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/50 hover:bg-amber-100 border border-amber-200/50 transition-colors min-h-[36px]"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-950 hover:bg-amber-100/80 bg-white border border-amber-900/15 px-3.5 py-2 rounded-xl transition-all shadow-2xs active:scale-95 min-h-[38px]"
             >
               <FiEdit2 className="h-3.5 w-3.5 text-amber-800" />
               <span>Edit</span>
@@ -359,7 +367,7 @@ function RebuiltAddressCard({
                 e.stopPropagation();
                 onDelete(address.id);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200/40 transition-colors min-h-[36px]"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-700 hover:bg-rose-100/80 bg-rose-50/80 border border-rose-200/60 px-3.5 py-2 rounded-xl transition-all shadow-2xs active:scale-95 min-h-[38px]"
             >
               <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
               <span>Delete</span>
@@ -375,9 +383,9 @@ function RebuiltAddressCard({
               e.stopPropagation();
               onSetDefault(address.id);
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-950 hover:text-amber-950 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/80 hover:bg-amber-100 border border-amber-300/60 transition-colors min-h-[36px] shadow-2xs"
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-white bg-gradient-to-r from-amber-800 via-amber-900 to-amber-950 hover:from-amber-900 hover:to-stone-950 px-4 py-2 rounded-xl transition-all shadow-xs active:scale-95 min-h-[38px] border border-amber-500/20"
           >
-            <FiCheckCircle className="h-3.5 w-3.5 text-amber-800" />
+            <FiCheckCircle className="h-3.5 w-3.5 text-amber-200" />
             <span>Set Default</span>
           </button>
         )}
@@ -385,6 +393,7 @@ function RebuiltAddressCard({
     </motion.div>
   );
 }
+
 
 // ----------------------------------------------------
 // Main Mobile/Tablet Full-Screen Address View
