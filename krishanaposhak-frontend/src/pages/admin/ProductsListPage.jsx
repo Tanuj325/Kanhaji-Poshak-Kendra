@@ -488,10 +488,8 @@ export default function ProductsListPage() {
                     })}
                   </tbody>
                 </table>
-              </div>
-
-              {/* Mobile & Tablet Ultra-Premium Product Cards (< 1024px) */}
-              <div className="block lg:hidden p-3 sm:p-4 space-y-3 bg-slate-50/60">
+              </div>              {/* Mobile & Tablet Sleek Compact Product List (< 1024px) */}
+              <div className="block lg:hidden divide-y divide-slate-100">
                 {products.map((product) => {
                   const thumb = getThumbnailImageUrl(product.images);
                   const { price, discountPrice } = getPriceDisplay(product.variants);
@@ -500,113 +498,102 @@ export default function ProductsListPage() {
                   return (
                     <div
                       key={product.id}
-                      className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-4 shadow-2xs space-y-3"
+                      className="p-3 sm:p-3.5 hover:bg-slate-50/80 transition-colors flex items-center justify-between gap-2.5"
                     >
-                      {/* Product Header Row */}
-                      <div className="flex items-start gap-3">
+                      {/* Left: Image + Title + Meta Info */}
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
                         {thumb ? (
                           <img
                             src={thumb}
                             alt={product.name}
-                            className="h-14 w-14 rounded-xl object-cover border border-slate-200 ring-1 ring-amber-500/20 shadow-2xs shrink-0"
+                            className="h-11 w-11 rounded-lg object-cover border border-slate-200 shrink-0"
                           />
                         ) : (
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400 border border-slate-200">
-                            <FiPackage className="h-6 w-6" />
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400 border border-slate-200">
+                            <FiPackage className="h-4 w-4" />
                           </div>
                         )}
-                        <div className="min-w-0 flex-1 space-y-1">
-                          <p className="font-extrabold text-slate-900 text-xs sm:text-sm line-clamp-1 leading-snug">
-                            {product.name}
-                          </p>
-                          <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
-                            <span className="inline-block bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-md border border-slate-200/60">
-                              {product.categoryName || 'Unassigned'}
-                            </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <p className="font-bold text-slate-900 text-xs truncate max-w-[150px] sm:max-w-xs">
+                              {product.name}
+                            </p>
                             {product.featured && (
-                              <span className="inline-flex items-center gap-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-extrabold text-amber-900">
-                                <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Featured
+                              <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-bold text-amber-700">
+                                <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
                               </span>
                             )}
-                            <span className="text-slate-400 font-mono">
-                              • {product.variants?.length || 0} variants
+                          </div>
+
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-500 flex-wrap">
+                            <span className="font-medium text-slate-600 truncate max-w-[90px]">
+                              {product.categoryName || 'Unassigned'}
                             </span>
+                            <span>•</span>
+                            {stock === 0 ? (
+                              <span className="text-rose-600 font-bold">Out of Stock</span>
+                            ) : stock < 10 ? (
+                              <span className="text-amber-600 font-bold">{stock} left</span>
+                            ) : (
+                              <span>Stock: {stock}</span>
+                            )}
+                            <span>•</span>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleStatus(product.id, product.active)}
+                              className={cn(
+                                'font-bold cursor-pointer hover:underline',
+                                product.active ? 'text-emerald-700' : 'text-slate-400'
+                              )}
+                            >
+                              {product.active ? 'Active' : 'Inactive'}
+                            </button>
                           </div>
                         </div>
                       </div>
-                      {/* Stock, Status & Price Bar */}
-                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 font-mono">
-                        <div className="flex items-center gap-2 min-w-0">
-                          {/* Stock Status Badge */}
-                          {stock === 0 ? (
-                            <Badge variant="danger" className="text-[9px] px-2 py-0.5">Out of Stock</Badge>
-                          ) : stock < 10 ? (
-                            <Badge variant="warning" className="text-[9px] px-2 py-0.5">{stock} left</Badge>
-                          ) : (
-                            <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
-                              Stock: {stock}
-                            </span>
-                          )}
 
-                          {/* Active Toggle Button */}
-                          <button
-                            type="button"
-                            onClick={() => handleToggleStatus(product.id, product.active)}
-                            className={cn(
-                              'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold transition-all min-h-[30px]',
-                              product.active
-                                ? 'bg-emerald-500/10 text-emerald-800 border border-emerald-500/30'
-                                : 'bg-slate-100 text-slate-600 border border-slate-200'
-                            )}
-                          >
-                            {product.active ? <FiCheckCircle className="h-3 w-3 text-emerald-600" /> : <FiXCircle className="h-3 w-3 text-slate-400" />}
-                            <span>{product.active ? 'Active' : 'Inactive'}</span>
-                          </button>
-                        </div>
-
-                        {/* Monospace Price Tag Box */}
-                        <div className="bg-amber-950/5 border border-amber-900/10 rounded-xl px-2.5 py-1 text-right shrink-0">
+                      {/* Right: Price + Action Buttons */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className="text-right font-mono">
                           {discountPrice ? (
                             <div>
-                              <span className="text-xs font-black text-amber-950">{formatPrice(discountPrice)}</span>
+                              <span className="text-xs font-bold text-amber-950">{formatPrice(discountPrice)}</span>
                               <span className="block text-[9px] text-slate-400 line-through">
                                 {formatPrice(price)}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs font-black text-amber-950">{formatPrice(price)}</span>
+                            <span className="text-xs font-bold text-slate-900">{formatPrice(price)}</span>
                           )}
                         </div>
-                      </div>
 
-                      {/* Executive Action Bar */}
-                      <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-                        <button
-                          type="button"
-                          onClick={() => navigate(buildPath.product(product.slug || product.id))}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs py-2 px-3 hover:bg-slate-200 transition-colors min-h-[38px] cursor-pointer"
-                          title="View in Store"
-                        >
-                          <FiEye className="h-3.5 w-3.5 text-slate-500" />
-                          <span>View</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => navigate(buildPath.adminProductEdit(product.id))}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-500/10 text-amber-900 border border-amber-500/20 font-bold text-xs py-2 px-3 hover:bg-amber-500/20 transition-colors min-h-[38px] cursor-pointer"
-                          title="Edit product"
-                        >
-                          <FiEdit className="h-3.5 w-3.5 text-amber-700" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteClick(product.id)}
-                          className="inline-flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-700 border border-rose-500/20 font-bold text-xs py-2 px-3 hover:bg-rose-500/20 transition-colors min-h-[38px] cursor-pointer"
-                          title="Delete product"
-                        >
-                          <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
-                        </button>
+                        {/* Actions */}
+                        <div className="flex items-center gap-0.5">
+                          <button
+                            type="button"
+                            onClick={() => navigate(buildPath.product(product.slug || product.id))}
+                            className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+                            title="View in Store"
+                          >
+                            <FiEye className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => navigate(buildPath.adminProductEdit(product.id))}
+                            className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+                            title="Edit product"
+                          >
+                            <FiEdit className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteClick(product.id)}
+                            className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+                            title="Delete product"
+                          >
+                            <FiTrash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
