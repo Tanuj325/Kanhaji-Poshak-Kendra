@@ -32,7 +32,7 @@ import {
   FiShoppingCart,
   FiUser,
   FiStar,
-  FiHeart,
+  FiShield,
   FiDollarSign,
   FiArrowRight,
   FiCalendar,
@@ -134,7 +134,7 @@ function StatCards({ overview, isLoading }) {
             className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-amber-50/20 to-stone-50/30 p-3.5 sm:p-4 lg:p-5 shadow-[0_4px_20px_rgba(44,40,36,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(217,119,6,0.12)] hover:border-amber-500/40 flex flex-col justify-between group"
           >
             <div className="absolute top-0 right-0 -mr-6 -mt-6 h-20 w-20 rounded-full bg-amber-500/10 blur-xl group-hover:bg-amber-500/20 transition-all pointer-events-none" />
-            
+
             <div className="flex items-center justify-between gap-1.5 relative z-10">
               <div className={cn('flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-xl border shadow-2xs', card.color)}>
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
