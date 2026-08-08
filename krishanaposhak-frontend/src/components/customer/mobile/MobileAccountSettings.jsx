@@ -32,7 +32,7 @@ const GENDER_OPTIONS = [
 ];
 
 // ----------------------------------------------------
-// Compact Floating Label Input Component (46px height)
+// Premium Floating Label Input Component (50px height)
 // ----------------------------------------------------
 function FloatingInput({
   id,
@@ -57,14 +57,14 @@ function FloatingInput({
     <div className="relative w-full font-display min-w-0">
       <div
         className={cn(
-          'relative w-full h-[46px] sm:h-[48px] rounded-xl border transition-all duration-200 font-display overflow-hidden flex items-center shadow-2xs',
+          'relative w-full h-[50px] sm:h-[52px] rounded-[16px] border transition-all duration-200 font-display overflow-hidden flex items-center shadow-2xs',
           disabled || readOnly
             ? 'bg-stone-50/90 border-amber-900/10 cursor-not-allowed text-stone-600'
             : error
             ? 'border-rose-400 ring-2 ring-rose-500/10 bg-white'
             : isFocused
-            ? 'border-amber-700 ring-2 ring-amber-700/20 bg-amber-50/10 bg-white'
-            : 'border-amber-900/20 hover:border-amber-700/40 bg-white',
+            ? 'border-2 border-amber-800 ring-4 ring-amber-800/10 bg-white shadow-sm'
+            : 'border-amber-900/15 hover:border-amber-700/40 bg-white',
         )}
       >
         <label
@@ -72,7 +72,7 @@ function FloatingInput({
           className={cn(
             'absolute left-3.5 transition-all duration-200 pointer-events-none origin-left font-body select-none truncate max-w-[85%]',
             isFloated
-              ? 'top-1 text-[9px] font-extrabold uppercase tracking-wider text-amber-900'
+              ? 'top-1.5 text-[10px] font-black uppercase tracking-widest text-amber-900'
               : 'top-1/2 -translate-y-1/2 text-xs font-semibold text-stone-400',
           )}
         >
@@ -92,9 +92,9 @@ function FloatingInput({
           disabled={disabled}
           required={required}
           className={cn(
-            'w-full h-full bg-transparent px-3.5 font-display text-xs sm:text-sm font-bold outline-none transition-all',
+            'w-full h-full bg-transparent px-3.5 font-display text-xs sm:text-sm font-extrabold outline-none transition-all',
             disabled || readOnly ? 'text-stone-600 cursor-not-allowed' : 'text-amber-950',
-            isFloated ? 'pt-3.5 pb-0.5' : 'py-2',
+            isFloated ? 'pt-4 pb-1' : 'py-2.5',
           )}
         />
       </div>
@@ -112,7 +112,7 @@ function FloatingInput({
 function MobileAccountSettingsSkeleton() {
   return (
     <div className="space-y-4 animate-pulse font-display">
-      <div className="rounded-[20px] p-5 bg-white border border-amber-900/10 space-y-4">
+      <div className="rounded-[24px] p-5 bg-white border border-amber-900/10 space-y-4">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-amber-900/10" />
           <div className="space-y-2 flex-1">
@@ -121,12 +121,12 @@ function MobileAccountSettingsSkeleton() {
           </div>
         </div>
       </div>
-      <div className="rounded-[20px] p-5 bg-white border border-amber-900/10 space-y-3">
+      <div className="rounded-[24px] p-5 bg-white border border-amber-900/10 space-y-3">
         <div className="h-4 w-40 bg-amber-900/10 rounded-md" />
         <div className="space-y-2.5">
-          <div className="h-11 w-full bg-amber-900/10 rounded-xl" />
-          <div className="h-11 w-full bg-amber-900/10 rounded-xl" />
-          <div className="h-11 w-full bg-amber-900/10 rounded-xl" />
+          <div className="h-12 w-full bg-amber-900/10 rounded-[16px]" />
+          <div className="h-12 w-full bg-amber-900/10 rounded-[16px]" />
+          <div className="h-12 w-full bg-amber-900/10 rounded-[16px]" />
         </div>
       </div>
     </div>
@@ -314,23 +314,23 @@ export default function MobileAccountSettings({
       {/* ---------------------------------------------------- */}
       {/* MAIN CONTENT CONTAINER */}
       {/* ---------------------------------------------------- */}
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-5 md:space-y-6 pb-20">
+      <main className="flex-1 w-full max-w-4xl mx-auto px-4 md:px-6 py-5 md:py-6 space-y-6 pb-24">
         {isLoading ? (
           <MobileAccountSettingsSkeleton />
         ) : (
           <>
             {/* PROFILE HERO SUMMARY CARD */}
-            <div className="w-full rounded-[20px] p-4.5 sm:p-5 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-2xs relative overflow-hidden font-display">
+            <div className="w-full rounded-[24px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] relative overflow-hidden font-display">
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-800" />
 
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 pt-1">
                 <div className="relative group shrink-0">
-                  <div className="p-0.5 bg-gradient-to-br from-amber-200 via-[#D4AF37] to-amber-800 rounded-full shadow-md flex items-center justify-center">
+                  <div className="p-1 bg-gradient-to-br from-amber-300 via-[#D4AF37] to-amber-800 rounded-full shadow-md flex items-center justify-center">
                     <Avatar
                       src={previewUrl}
                       name={`${userData?.firstName || ''} ${userData?.lastName || ''}`}
                       size="xl"
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white"
                     />
                   </div>
                   <button
@@ -351,28 +351,28 @@ export default function MobileAccountSettings({
                   />
                 </div>
 
-                <div className="flex-1 text-center sm:text-left space-y-1 min-w-0 w-full overflow-hidden">
-                  <div className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-amber-100 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 px-2.5 py-0.5 rounded-full border border-amber-400/30 shadow-2xs">
+                <div className="flex-1 text-center sm:text-left space-y-1.5 min-w-0 w-full overflow-hidden">
+                  <div className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-amber-100 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 px-3 py-1 rounded-full border border-amber-400/30 shadow-2xs">
                     <FiStar className="h-2.5 w-2.5 fill-amber-300 text-amber-300 shrink-0" /> Kanhaji Poshak Devotee
                   </div>
 
-                  <h2 className="font-heading font-black text-base sm:text-lg text-amber-950 truncate tracking-tight">
+                  <h2 className="font-heading font-black text-lg sm:text-xl text-amber-950 truncate tracking-tight">
                     {userData?.firstName} {userData?.lastName}
                   </h2>
 
                   {userData?.email && (
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-amber-50/80 border border-amber-900/10 text-[11px] font-bold font-mono text-amber-950 shadow-2xs max-w-full truncate">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50/90 border border-amber-900/12 text-xs font-extrabold font-mono text-amber-950 shadow-2xs max-w-full truncate">
                       <FiMail className="h-3 w-3 text-amber-800 shrink-0" />
                       <span className="truncate">{userData.email}</span>
                     </div>
                   )}
 
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-0.5">
-                    <Badge variant="success" size="sm" className="font-extrabold flex items-center gap-1 text-[9px] py-0.5 px-2">
-                      <FiCheckCircle className="h-2.5 w-2.5" /> Account Active
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                    <Badge variant="success" size="sm" className="font-extrabold flex items-center gap-1 text-[10px] py-0.5 px-2.5 shadow-2xs">
+                      <FiCheckCircle className="h-3 w-3" /> Account Active
                     </Badge>
-                    <Badge variant="warning" size="sm" className="font-extrabold text-[9px] py-0.5 px-2 border border-amber-400/40">
-                      <FiShield className="h-2.5 w-2.5 mr-1 inline" /> {userData?.role || 'CUSTOMER'}
+                    <Badge variant="warning" size="sm" className="font-extrabold text-[10px] py-0.5 px-2.5 border border-amber-400/40 shadow-2xs">
+                      <FiShield className="h-3 w-3 mr-1 inline" /> {userData?.role || 'CUSTOMER'}
                     </Badge>
                   </div>
                 </div>
@@ -382,25 +382,27 @@ export default function MobileAccountSettings({
             {/* ==================================================== */}
             {/* MODULE 1: PERSONAL DETAILS */}
             {/* ==================================================== */}
-            <section className="rounded-[20px] p-4.5 sm:p-5 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-2xs font-display space-y-4">
+            <section className="rounded-[24px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] relative overflow-hidden font-display space-y-5">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-700" />
+
               {/* Section Header */}
-              <div className="flex items-center gap-3 pb-3 border-b border-amber-900/10">
-                <div className="w-8 h-8 rounded-xl bg-amber-100/90 border border-amber-300/50 text-amber-900 flex items-center justify-center shrink-0 shadow-2xs">
-                  <FiUser className="w-4.5 h-4.5" />
+              <div className="flex items-center gap-3.5 pb-3.5 border-b border-amber-900/10">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-100 via-[#F7E7CE] to-amber-200 border border-amber-400/40 text-amber-950 flex items-center justify-center shrink-0 shadow-xs">
+                  <FiUser className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-heading font-black text-base text-amber-950 truncate leading-tight">
+                  <h3 className="font-heading font-black text-base sm:text-lg text-amber-950 truncate tracking-tight">
                     Personal Details
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500 truncate leading-tight mt-0.5">
+                  <p className="text-xs font-semibold text-stone-500 truncate mt-0.5">
                     Manage your personal information and contact details
                   </p>
                 </div>
               </div>
 
               {/* Form Layout: 1-Column on Mobile (<768px), 2-Column on Tablet (768-1023px) */}
-              <form onSubmit={handleFormSubmit} className="space-y-3.5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FloatingInput
                     id="sett-firstName"
                     name="firstName"
@@ -419,7 +421,7 @@ export default function MobileAccountSettings({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FloatingInput
                     id="sett-email"
                     name="email"
@@ -441,11 +443,11 @@ export default function MobileAccountSettings({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                  <div className="relative w-full h-[46px] sm:h-[48px] rounded-xl border border-amber-900/20 bg-white overflow-hidden flex items-center shadow-2xs font-display">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="relative w-full h-[50px] sm:h-[52px] rounded-[16px] border border-amber-900/15 bg-white overflow-hidden flex items-center shadow-2xs font-display">
                     <label
                       htmlFor="sett-gender"
-                      className="absolute left-3.5 top-1 text-[9px] font-extrabold uppercase tracking-wider text-amber-900 pointer-events-none"
+                      className="absolute left-3.5 top-1.5 text-[10px] font-black uppercase tracking-widest text-amber-900 pointer-events-none"
                     >
                       Gender
                     </label>
@@ -454,7 +456,7 @@ export default function MobileAccountSettings({
                       name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
-                      className="w-full h-full bg-transparent px-3.5 pt-3.5 pb-0.5 text-xs sm:text-sm font-bold text-amber-950 outline-none cursor-pointer"
+                      className="w-full h-full bg-transparent px-3.5 pt-4 pb-1 text-xs sm:text-sm font-extrabold text-amber-950 outline-none cursor-pointer"
                     >
                       {GENDER_OPTIONS.map((g) => (
                         <option key={g.value} value={g.value}>
@@ -478,7 +480,7 @@ export default function MobileAccountSettings({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto h-[46px] px-6 rounded-xl bg-gradient-to-r from-amber-800 via-amber-900 to-amber-950 hover:from-amber-900 hover:to-stone-950 text-white font-extrabold text-xs shadow-md border border-amber-500/20 flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-95 min-h-[44px]"
+                    className="w-full sm:w-auto h-[48px] px-8 rounded-2xl bg-gradient-to-r from-amber-900 via-stone-900 to-amber-950 hover:from-stone-950 hover:to-amber-950 text-white font-heading font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-950/15 border border-amber-400/20 active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-50 min-h-[46px]"
                   >
                     <FiSave className="w-4 h-4 text-amber-200" />
                     <span>{isSubmitting ? 'Saving Changes...' : 'Save Changes'}</span>
@@ -490,40 +492,42 @@ export default function MobileAccountSettings({
             {/* ==================================================== */}
             {/* MODULE 2: SECURITY */}
             {/* ==================================================== */}
-            <section className="rounded-[20px] p-4.5 sm:p-5 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-2xs font-display space-y-4">
+            <section className="rounded-[24px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] relative overflow-hidden font-display space-y-5">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-700" />
+
               {/* Section Header */}
-              <div className="flex items-center gap-3 pb-3 border-b border-amber-900/10">
-                <div className="w-8 h-8 rounded-xl bg-amber-100/90 border border-amber-300/50 text-amber-900 flex items-center justify-center shrink-0 shadow-2xs">
-                  <FiLock className="w-4.5 h-4.5" />
+              <div className="flex items-center gap-3.5 pb-3.5 border-b border-amber-900/10">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-100 via-[#F7E7CE] to-amber-200 border border-amber-400/40 text-amber-950 flex items-center justify-center shrink-0 shadow-xs">
+                  <FiLock className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-heading font-black text-base text-amber-950 truncate leading-tight">
+                  <h3 className="font-heading font-black text-base sm:text-lg text-amber-950 truncate tracking-tight">
                     Security
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500 truncate leading-tight mt-0.5">
+                  <p className="text-xs font-semibold text-stone-500 truncate mt-0.5">
                     Protect your account and credentials
                   </p>
                 </div>
               </div>
 
               {/* Grouped Security Controls */}
-              <div className="rounded-xl bg-white border border-amber-900/12 divide-y divide-amber-900/10 overflow-hidden shadow-2xs">
-                {/* 1. Email Verification Row */}
-                <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="space-y-3">
+                {/* 1. Email Verification Sub-Card */}
+                <div className="p-4 rounded-2xl bg-white/90 border border-amber-900/10 shadow-2xs hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 w-full overflow-hidden">
+                  <div className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
                     <div className={cn(
-                      'w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-2xs',
+                      'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-2xs',
                       userData?.emailVerified ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                     )}>
                       {userData?.emailVerified ? (
-                        <FiCheckCircle className="w-4.5 h-4.5 text-emerald-600" />
+                        <FiCheckCircle className="w-5 h-5 text-emerald-600" />
                       ) : (
-                        <FiAlertCircle className="w-4.5 h-4.5 text-amber-600" />
+                        <FiAlertCircle className="w-5 h-5 text-amber-600" />
                       )}
                     </div>
 
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-extrabold text-amber-950 leading-tight">
+                    <div className="min-w-0 flex-1 overflow-hidden">
+                      <p className="text-xs sm:text-sm font-extrabold text-amber-950 leading-tight">
                         {userData?.emailVerified ? 'Email Address Verified' : 'Email Address Unverified'}
                       </p>
                       <p className="text-[11px] font-mono text-stone-500 truncate max-w-full leading-tight mt-0.5">
@@ -533,7 +537,7 @@ export default function MobileAccountSettings({
                   </div>
 
                   {userData?.emailVerified ? (
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-extrabold uppercase border border-emerald-200 shrink-0">
+                    <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-extrabold uppercase border border-emerald-200 shrink-0 self-start sm:self-auto">
                       Verified
                     </span>
                   ) : (
@@ -541,22 +545,22 @@ export default function MobileAccountSettings({
                       type="button"
                       onClick={handleResendVerification}
                       disabled={isResendingVerification}
-                      className="h-[36px] px-3.5 rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-2xs border border-amber-500/20 transition-all shrink-0 min-h-[36px]"
+                      className="h-[38px] px-4 rounded-xl bg-gradient-to-r from-amber-800 to-amber-950 hover:from-amber-900 hover:to-stone-950 text-white font-extrabold text-xs shadow-2xs border border-amber-500/20 transition-all shrink-0 min-h-[38px] self-start sm:self-auto"
                     >
                       {isResendingVerification ? 'Sending...' : 'Verify Email'}
                     </button>
                   )}
                 </div>
 
-                {/* 2. Password Reset Row */}
-                <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3">
+                {/* 2. Password Reset Sub-Card */}
+                <div className="p-4 rounded-2xl bg-white/90 border border-amber-900/10 shadow-2xs hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 w-full">
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="w-8 h-8 rounded-xl bg-amber-100/80 text-amber-900 flex items-center justify-center shrink-0 shadow-2xs">
-                      <FiKey className="w-4.5 h-4.5 text-amber-800" />
+                    <div className="w-9 h-9 rounded-xl bg-amber-100/90 text-amber-900 border border-amber-300/40 flex items-center justify-center shrink-0 shadow-2xs">
+                      <FiKey className="w-5 h-5 text-amber-800" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-extrabold text-amber-950 leading-tight">Password Security</p>
-                      <p className="text-[11px] text-stone-500 leading-tight mt-0.5">
+                      <p className="text-xs sm:text-sm font-extrabold text-amber-950 leading-tight">Password Security</p>
+                      <p className="text-[11px] text-stone-500 leading-normal mt-0.5">
                         Send a password reset link to your registered email address
                       </p>
                     </div>
@@ -566,7 +570,7 @@ export default function MobileAccountSettings({
                     type="button"
                     onClick={handlePasswordReset}
                     disabled={isResettingPassword}
-                    className="h-[38px] px-3.5 rounded-xl bg-white hover:bg-amber-50 text-amber-950 font-extrabold text-xs border border-amber-900/20 shadow-2xs transition-all active:scale-95 shrink-0 min-h-[36px]"
+                    className="h-[38px] px-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/60 hover:bg-amber-100 text-amber-950 font-extrabold text-xs border border-amber-900/15 shadow-2xs transition-all active:scale-95 shrink-0 min-h-[38px] self-start sm:self-auto"
                   >
                     {isResettingPassword ? 'Sending...' : 'Send Reset Link'}
                   </button>
@@ -577,30 +581,32 @@ export default function MobileAccountSettings({
             {/* ==================================================== */}
             {/* MODULE 3: NOTIFICATIONS */}
             {/* ==================================================== */}
-            <section className="rounded-[20px] p-4.5 sm:p-5 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-2xs font-display space-y-4">
+            <section className="rounded-[24px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/15 shadow-[0_8px_30px_rgba(44,40,36,0.06)] relative overflow-hidden font-display space-y-5">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-700" />
+
               {/* Section Header */}
-              <div className="flex items-center gap-3 pb-3 border-b border-amber-900/10">
-                <div className="w-8 h-8 rounded-xl bg-amber-100/90 border border-amber-300/50 text-amber-900 flex items-center justify-center shrink-0 shadow-2xs">
-                  <FiBell className="w-4.5 h-4.5" />
+              <div className="flex items-center gap-3.5 pb-3.5 border-b border-amber-900/10">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-100 via-[#F7E7CE] to-amber-200 border border-amber-400/40 text-amber-950 flex items-center justify-center shrink-0 shadow-xs">
+                  <FiBell className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-heading font-black text-base text-amber-950 truncate leading-tight">
+                  <h3 className="font-heading font-black text-base sm:text-lg text-amber-950 truncate tracking-tight">
                     Notifications
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500 truncate leading-tight mt-0.5">
+                  <p className="text-xs font-semibold text-stone-500 truncate mt-0.5">
                     Choose how you want to receive updates
                   </p>
                 </div>
               </div>
 
-              {/* Grouped Notification Setting Rows (Toggle anchored RIGHT) */}
-              <div className="rounded-xl bg-white border border-amber-900/12 divide-y divide-amber-900/10 overflow-hidden shadow-2xs">
-                <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3">
+              {/* Grouped Notification Sub-Cards */}
+              <div className="space-y-3">
+                <div className="p-4 rounded-2xl bg-white/90 border border-amber-900/10 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <p className="text-xs sm:text-sm font-extrabold text-amber-950 leading-tight">
                       Order & Delivery Alerts
                     </p>
-                    <p className="text-[11px] text-stone-500 leading-tight mt-0.5">
+                    <p className="text-[11px] text-stone-500 leading-normal mt-0.5">
                       Receive dispatch tracking updates and order confirmations
                     </p>
                   </div>
@@ -611,12 +617,12 @@ export default function MobileAccountSettings({
                   />
                 </div>
 
-                <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3">
+                <div className="p-4 rounded-2xl bg-white/90 border border-amber-900/10 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <p className="text-xs sm:text-sm font-extrabold text-amber-950 leading-tight">
                       Promotional & Festive Offers
                     </p>
-                    <p className="text-[11px] text-stone-500 leading-tight mt-0.5">
+                    <p className="text-[11px] text-stone-500 leading-normal mt-0.5">
                       Early access to coupons and festival attire collections
                     </p>
                   </div>
@@ -632,38 +638,38 @@ export default function MobileAccountSettings({
             {/* ==================================================== */}
             {/* MODULE 4: SESSION CONTROL */}
             {/* ==================================================== */}
-            <section className="rounded-[20px] p-4.5 sm:p-5 bg-gradient-to-b from-white via-[#FFF9F9] to-[#FFF2F2] border border-rose-200/80 shadow-2xs font-display space-y-4">
+            <section className="rounded-[24px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FFF8F8] to-[#FFF0F0] border border-rose-200/80 shadow-[0_8px_30px_rgba(225,29,72,0.05)] font-display space-y-5">
               {/* Section Header */}
-              <div className="flex items-center gap-3 pb-3 border-b border-rose-200/60">
-                <div className="w-8 h-8 rounded-xl bg-rose-100/90 text-rose-700 border border-rose-200/60 flex items-center justify-center shrink-0 shadow-2xs">
-                  <FiShield className="w-4.5 h-4.5 text-rose-700" />
+              <div className="flex items-center gap-3.5 pb-3.5 border-b border-rose-200/60">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-100 via-rose-200 to-rose-300 border border-rose-300 text-rose-800 flex items-center justify-center shrink-0 shadow-xs">
+                  <FiShield className="w-5 h-5 text-rose-700" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-heading font-black text-base text-rose-950 truncate leading-tight">
+                  <h3 className="font-heading font-black text-base sm:text-lg text-rose-950 truncate tracking-tight">
                     Session Control
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500 truncate leading-tight mt-0.5">
+                  <p className="text-xs font-semibold text-stone-500 truncate mt-0.5">
                     Manage where your account is currently signed in
                   </p>
                 </div>
               </div>
 
-              {/* Current Session Display & Action */}
-              <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-rose-200/60 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {/* Current Session Sub-Card */}
+              <div className="p-4 rounded-2xl bg-white/90 border border-rose-200/60 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-100/80 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
-                    <FiCheckCircle className="w-4.5 h-4.5 text-emerald-600" />
+                  <div className="w-9 h-9 rounded-xl bg-emerald-100/90 text-emerald-800 flex items-center justify-center shrink-0 shadow-2xs">
+                    <FiCheckCircle className="w-5 h-5 text-emerald-600" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-xs sm:text-sm font-extrabold text-stone-900 leading-tight">
+                      <p className="text-xs sm:text-sm font-extrabold text-stone-950 leading-tight">
                         This Device (Web Browser)
                       </p>
                       <span className="inline-flex items-center gap-1 text-[9px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 uppercase tracking-wider">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Active Now
                       </span>
                     </div>
-                    <p className="text-[11px] text-stone-500 leading-tight mt-0.5">
+                    <p className="text-[11px] text-stone-500 leading-normal mt-0.5">
                       Current active customer session on this browser
                     </p>
                   </div>
@@ -672,7 +678,7 @@ export default function MobileAccountSettings({
                 <button
                   type="button"
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className="h-[42px] px-5 rounded-xl bg-gradient-to-r from-rose-600 via-rose-700 to-rose-800 hover:from-rose-700 hover:to-rose-900 text-white font-extrabold text-xs shadow-md border border-rose-400/20 flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0 self-start sm:self-auto min-h-[40px]"
+                  className="h-[44px] px-6 rounded-xl bg-gradient-to-r from-rose-600 via-rose-700 to-rose-800 hover:from-rose-700 hover:to-rose-900 text-white font-extrabold text-xs shadow-md border border-rose-400/20 flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0 self-start sm:self-auto min-h-[40px]"
                 >
                   <FiLogOut className="w-4 h-4" />
                   <span>Sign Out Session</span>
