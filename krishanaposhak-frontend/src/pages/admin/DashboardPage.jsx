@@ -121,19 +121,19 @@ function StatCards({ overview, isLoading }) {
   ], [overview]);
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 font-display">
+    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 font-display">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
           <div
             key={card.title}
-            className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md hover:border-slate-300"
+            className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs transition-all hover:shadow-md hover:border-slate-300"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {card.title}
               </span>
-              <div className={cn('flex h-9 w-9 items-center justify-center rounded-xl border', card.color)}>
+              <div className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border', card.color)}>
                 <Icon className="h-4 w-4" />
               </div>
             </div>
@@ -141,7 +141,7 @@ function StatCards({ overview, isLoading }) {
               {isLoading ? (
                 <Skeleton variant="text" className="h-8 w-24" />
               ) : (
-                <p className="font-serif text-2xl font-bold text-slate-900">{card.value}</p>
+                <p className="font-serif text-2xl font-bold text-slate-900 truncate">{card.value}</p>
               )}
               <p className="mt-1 text-[11px] font-medium text-slate-400">{card.change}</p>
             </div>
@@ -155,7 +155,7 @@ function StatCards({ overview, isLoading }) {
 const SalesTimeRange = memo(function SalesTimeRange({ range, onChange }) {
   const ranges = ['daily', 'weekly', 'monthly', 'yearly'];
   return (
-    <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-slate-100 p-1 scrollbar-hide" role="radiogroup" aria-label="Sales time range">
+    <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-slate-100 p-1 scrollbar-hide shrink-0" role="radiogroup" aria-label="Sales time range">
       {ranges.map((r) => (
         <button
           key={r}
@@ -187,7 +187,7 @@ function SalesSection() {
   const { data, isLoading, error, refetch } = queries[range];
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs font-display">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs font-display">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <h3 className="font-serif text-lg font-bold text-slate-900">Sales Overview</h3>
@@ -211,7 +211,7 @@ function TopSellingProductsSection() {
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 font-display">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 font-display">
         <h3 className="font-serif text-base font-bold text-slate-900 mb-4">Top Selling Products</h3>
         <ErrorState title="Failed to load" message={getErrorMessage(error)} onRetry={refetch} className="py-8" />
       </div>
@@ -219,7 +219,7 @@ function TopSellingProductsSection() {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs font-display">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs font-display">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="font-serif text-base font-bold text-slate-900">Top Selling Products</h3>
@@ -240,10 +240,10 @@ function TopSellingProductsSection() {
         <div className="space-y-3" role="status" aria-label="Loading top products">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex items-center gap-3">
-              <Skeleton variant="circle" className="h-9 w-9" />
-              <div className="flex-1 space-y-1">
-                <Skeleton variant="text" className="w-36" />
-                <Skeleton variant="text" className="w-24" />
+              <Skeleton variant="circle" className="h-9 w-9 shrink-0" />
+              <div className="flex-1 min-w-0 space-y-1">
+                <Skeleton variant="text" className="w-36 max-w-full" />
+                <Skeleton variant="text" className="w-24 max-w-full" />
               </div>
             </div>
           ))}
@@ -253,7 +253,7 @@ function TopSellingProductsSection() {
           {data.map((product, index) => (
             <div
               key={product.id || index}
-              className="flex items-center gap-3 rounded-xl border border-slate-100 p-2.5 hover:border-amber-400/30 hover:bg-amber-50/30 cursor-pointer transition-all"
+              className="flex items-center gap-3 rounded-xl border border-slate-100 p-2.5 hover:border-amber-400/30 hover:bg-amber-50/30 cursor-pointer transition-all min-w-0"
               onClick={() => navigate(`/admin/products/${product.id}/edit`)}
               role="button"
               tabIndex={0}
@@ -264,7 +264,7 @@ function TopSellingProductsSection() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-slate-900 truncate">{product.name}</p>
-                <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 truncate">
                   {product.unitsSold} units sold · {formatPrice(product.revenue)}
                 </p>
               </div>
@@ -284,7 +284,7 @@ function StockStatusSection() {
   const navigate = useNavigate();
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs font-display">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs font-display">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="font-serif text-base font-bold text-slate-900">Inventory Health</h3>
@@ -301,12 +301,12 @@ function StockStatusSection() {
         </Button>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Low Stock */}
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
-              <FiAlertCircle className="h-3.5 w-3.5 text-amber-600" /> Low Stock
+              <FiAlertCircle className="h-3.5 w-3.5 text-amber-600 shrink-0" /> Low Stock
             </span>
             <Badge variant="warning">{lowStock.data?.length ?? 0}</Badge>
           </div>
@@ -320,8 +320,8 @@ function StockStatusSection() {
                   className="flex items-center justify-between text-xs p-1.5 rounded-lg hover:bg-amber-500/10 cursor-pointer"
                   onClick={() => navigate(`/admin/products/${product.id}/edit`)}
                 >
-                  <span className="truncate max-w-[140px] font-medium text-slate-800">{product.name}</span>
-                  <span className="font-mono font-bold text-amber-700">{product.stock} left</span>
+                  <span className="truncate flex-1 min-w-0 pr-2 font-medium text-slate-800">{product.name}</span>
+                  <span className="font-mono font-bold text-amber-700 shrink-0">{product.stock} left</span>
                 </div>
               ))}
             </div>
@@ -334,7 +334,7 @@ function StockStatusSection() {
         <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-800 flex items-center gap-1.5">
-              <FiPackage className="h-3.5 w-3.5 text-rose-600" /> Out of Stock
+              <FiPackage className="h-3.5 w-3.5 text-rose-600 shrink-0" /> Out of Stock
             </span>
             <Badge variant="danger">{outOfStock.data?.length ?? 0}</Badge>
           </div>
@@ -348,8 +348,8 @@ function StockStatusSection() {
                   className="flex items-center justify-between text-xs p-1.5 rounded-lg hover:bg-rose-500/10 cursor-pointer"
                   onClick={() => navigate(`/admin/products/${product.id}/edit`)}
                 >
-                  <span className="truncate max-w-[140px] font-medium text-slate-800">{product.name}</span>
-                  <span className="font-mono font-bold text-rose-600">0 left</span>
+                  <span className="truncate flex-1 min-w-0 pr-2 font-medium text-slate-800">{product.name}</span>
+                  <span className="font-mono font-bold text-rose-600 shrink-0">0 left</span>
                 </div>
               ))}
             </div>
@@ -366,7 +366,7 @@ function RecentActivitySection() {
   const { data, isLoading, error, refetch } = useRecentActivity();
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs font-display">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs font-display">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="font-serif text-base font-bold text-slate-900">Recent Admin Activity</h3>
@@ -378,10 +378,10 @@ function RecentActivitySection() {
         <div className="space-y-3" role="status" aria-label="Loading recent activity">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <Skeleton variant="circle" className="h-8 w-8" />
-              <div className="flex-1 space-y-1">
-                <Skeleton variant="text" className="w-48" />
-                <Skeleton variant="text" className="w-24" />
+              <Skeleton variant="circle" className="h-8 w-8 shrink-0" />
+              <div className="flex-1 space-y-1 min-w-0">
+                <Skeleton variant="text" className="w-48 max-w-full" />
+                <Skeleton variant="text" className="w-24 max-w-full" />
               </div>
             </div>
           ))}
@@ -396,7 +396,7 @@ function RecentActivitySection() {
                 <FiInbox className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-slate-900">{activity.description}</p>
+                <p className="text-xs font-semibold text-slate-900 break-words">{activity.description}</p>
                 <p className="text-[10px] text-slate-400 font-mono mt-0.5">
                   {activity.createdAt ? formatDate(activity.createdAt, { format: 'datetime' }) : ''}
                   {activity.type && ` · ${activity.type.replace(/_/g, ' ')}`}
@@ -448,7 +448,7 @@ export default function DashboardPage() {
               type="button"
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all disabled:opacity-50"
             >
               <FiRotateCw className={cn('h-3.5 w-3.5 text-amber-600', isRefreshing && 'animate-spin')} />
               <span>Refresh</span>

@@ -67,21 +67,23 @@ function SalesChart({ data, isLoading, error, onRetry }) {
   }
 
   return (
-    <div className="h-56 w-full sm:h-72 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
+    <div className="h-56 w-full min-w-0 sm:h-72 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+        <BarChart data={chartData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
           <XAxis
             dataKey="label"
             tick={{ fontSize: 11, fill: '#78350f' }}
             tickLine={false}
             axisLine={{ stroke: '#f1f5f9' }}
+            interval="preserveStartEnd"
           />
           <YAxis
             tick={{ fontSize: 11, fill: '#78350f' }}
             tickLine={false}
             axisLine={{ stroke: '#f1f5f9' }}
             tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+            width={42}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(217, 119, 6, 0.08)' }} />
           <Bar
