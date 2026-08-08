@@ -234,31 +234,31 @@ export default function ProductsListPage() {
         <title>Products - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-6 font-display">
+      <div className="space-y-4 sm:space-y-6 font-display">
         <Breadcrumb />
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 border-b border-slate-200/60 pb-4 sm:pb-5">
           <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
+            <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight">
               Product Catalog ({totalItems})
             </h1>
-            <p className="mt-1 text-xs text-stone-600 font-body">
+            <p className="mt-0.5 sm:mt-1 text-xs text-stone-600 font-body">
               Manage inventory, pricing, variants, and catalog visibility
             </p>
           </div>
           <Link
             to={ROUTE_PATHS.ADMIN_PRODUCT_NEW}
-            className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98] sm:w-auto"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-md hover:shadow-lg transition-all sm:w-auto shrink-0"
           >
             <FiPlus className="h-4 w-4" />
-            Add New Product
+            <span>Add New Product</span>
           </Link>
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {/* Search */}
             <div className="relative">
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -267,7 +267,7 @@ export default function ProductsListPage() {
                 defaultValue={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Search name, SKU..."
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all min-h-[44px] sm:min-h-0"
               />
             </div>
 
@@ -275,7 +275,7 @@ export default function ProductsListPage() {
             <select
               value={selectedCategoryId}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none"
+              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none min-h-[44px] sm:min-h-0"
             >
               <option value="">All Categories</option>
               {categoryList.map((cat) => (
@@ -289,7 +289,7 @@ export default function ProductsListPage() {
             <select
               value={filterActive}
               onChange={(e) => handleActiveFilterChange(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none"
+              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none min-h-[44px] sm:min-h-0"
             >
               <option value="">All Statuses</option>
               <option value="true">Active Only</option>
@@ -297,8 +297,8 @@ export default function ProductsListPage() {
             </select>
 
             {/* Featured toggle & Page size */}
-            <div className="flex items-center justify-between gap-2 px-1">
-              <label className="flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-700">
+            <div className="flex items-center justify-between gap-2 px-1 rounded-xl bg-slate-50 border border-slate-200/80 p-2 sm:p-0 sm:bg-transparent sm:border-none">
+              <label className="flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-700 min-h-[36px] sm:min-h-0">
                 <input
                   type="checkbox"
                   checked={selectedFeatured}
@@ -311,7 +311,7 @@ export default function ProductsListPage() {
               <select
                 value={pageSize}
                 onChange={(e) => handlePageSizeChange(e.target.value)}
-                className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] text-slate-600"
+                className="rounded-lg border border-slate-200 bg-white sm:bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 min-h-[36px] sm:min-h-0"
               >
                 <option value="10">10 / page</option>
                 <option value="25">25 / page</option>
@@ -321,156 +321,300 @@ export default function ProductsListPage() {
           </div>
         </div>
 
-        {/* Data Table */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+        {/* Data Presentation Container */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-2xs overflow-hidden">
           {isLoading ? (
-            <div className="p-6 space-y-3" role="status" aria-label="Loading products">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="flex items-center gap-4 py-2">
-                  <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
-                  <Skeleton variant="text" className="w-48" />
-                  <Skeleton variant="text" className="w-24" />
-                  <Skeleton variant="text" className="w-20" />
-                </div>
-              ))}
+            <div>
+              {/* Desktop Skeleton (>= 1024px) */}
+              <div className="hidden lg:block p-6 space-y-3" role="status" aria-label="Loading products">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="flex items-center gap-4 py-2">
+                    <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
+                    <Skeleton variant="text" className="w-48" />
+                    <Skeleton variant="text" className="w-24" />
+                    <Skeleton variant="text" className="w-20" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile Skeleton (< 1024px) */}
+              <div className="block lg:hidden p-3.5 space-y-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="rounded-xl border border-slate-200 p-3 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <Skeleton variant="rect" className="h-12 w-12 rounded-xl shrink-0" />
+                      <div className="space-y-1.5 flex-1">
+                        <Skeleton variant="text" className="h-4 w-3/4" />
+                        <Skeleton variant="text" className="h-3 w-1/2" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : isError ? (
-            <div className="p-8 text-center">
+            <div className="p-6 sm:p-8 text-center">
               <p className="text-sm text-rose-500 font-semibold mb-3">{getErrorMessage(error, 'Error loading products')}</p>
               <Button variant="outline" size="sm" onClick={() => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_PRODUCTS] })}>
                 Retry
               </Button>
             </div>
           ) : products.length > 0 ? (
-            <div className="overflow-x-auto custom-scrollbar">
-              <table className="w-full text-left text-xs" aria-label="Product list">
-                <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
-                  <tr>
-                    <th scope="col" className="py-3.5 px-4 w-12 text-center">#</th>
-                    <th scope="col" className="py-3.5 px-4">Item Details</th>
-                    <th scope="col" className="py-3.5 px-4">Category</th>
-                    <th scope="col" className="py-3.5 px-4 text-right">Price</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Stock</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Status</th>
-                    <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {products.map((product, idx) => {
-                    const thumb = getThumbnailImageUrl(product.images);
-                    const { price, discountPrice } = getPriceDisplay(product.variants);
-                    const stock = getTotalStock(product.variants);
+            <>
+              {/* Desktop Products Table (>= 1024px) — PRESERVED 100% UNCHANGED */}
+              <div className="hidden lg:block overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left text-xs" aria-label="Product list">
+                  <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+                    <tr>
+                      <th scope="col" className="py-3.5 px-4 w-12 text-center">#</th>
+                      <th scope="col" className="py-3.5 px-4">Item Details</th>
+                      <th scope="col" className="py-3.5 px-4">Category</th>
+                      <th scope="col" className="py-3.5 px-4 text-right">Price</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Stock</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Status</th>
+                      <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {products.map((product, idx) => {
+                      const thumb = getThumbnailImageUrl(product.images);
+                      const { price, discountPrice } = getPriceDisplay(product.variants);
+                      const stock = getTotalStock(product.variants);
 
-                    return (
-                      <tr key={product.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="py-3.5 px-4 text-center font-mono text-slate-400">
-                          {page * pageSize + idx + 1}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-3 min-w-[200px]">
-                            {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={product.name}
-                                className="h-10 w-10 rounded-xl object-cover border border-slate-200 shrink-0"
-                              />
-                            ) : (
-                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
-                                <FiPackage className="h-5 w-5" />
-                              </div>
-                            )}
-                            <div className="min-w-0">
-                              <p className="font-bold text-slate-900 truncate max-w-[220px]">
-                                {product.name}
-                              </p>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                {product.featured && (
-                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-bold text-amber-700">
-                                    <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Featured
+                      return (
+                        <tr key={product.id} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-3.5 px-4 text-center font-mono text-slate-400">
+                            {page * pageSize + idx + 1}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-3 min-w-[200px]">
+                              {thumb ? (
+                                <img
+                                  src={thumb}
+                                  alt={product.name}
+                                  className="h-10 w-10 rounded-xl object-cover border border-slate-200 shrink-0"
+                                />
+                              ) : (
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                                  <FiPackage className="h-5 w-5" />
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <p className="font-bold text-slate-900 truncate max-w-[220px]">
+                                  {product.name}
+                                </p>
+                                <div className="flex items-center gap-1.5 mt-0.5">
+                                  {product.featured && (
+                                    <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-bold text-amber-700">
+                                      <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Featured
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] text-slate-400 font-mono">
+                                    {product.variants?.length || 0} variants
                                   </span>
-                                )}
-                                <span className="text-[10px] text-slate-400 font-mono">
-                                  {product.variants?.length || 0} variants
-                                </span>
+                                </div>
                               </div>
                             </div>
+                          </td>
+                          <td className="py-3.5 px-4 font-medium text-slate-600">
+                            {product.categoryName || 'Unassigned'}
+                          </td>
+                          <td className="py-3.5 px-4 text-right font-mono font-bold">
+                            {discountPrice ? (
+                              <div>
+                                <span className="text-amber-700">{formatPrice(discountPrice)}</span>
+                                <span className="block text-[10px] text-slate-400 line-through">
+                                  {formatPrice(price)}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-slate-900">{formatPrice(price)}</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono">
+                            {stock === 0 ? (
+                              <Badge variant="danger">Out of Stock</Badge>
+                            ) : stock < 10 ? (
+                              <Badge variant="warning">{stock} left</Badge>
+                            ) : (
+                              <span className="font-semibold text-slate-700">{stock}</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleStatus(product.id, product.active)}
+                              className={cn(
+                                'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
+                                product.active
+                                  ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                                  : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+                              )}
+                            >
+                              {product.active ? <FiCheckCircle className="h-3 w-3" /> : <FiXCircle className="h-3 w-3" />}
+                              <span>{product.active ? 'Active' : 'Inactive'}</span>
+                            </button>
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                type="button"
+                                onClick={() => navigate(buildPath.product(product.slug || product.id))}
+                                className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                                title="View in Store"
+                              >
+                                <FiEye className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => navigate(buildPath.adminProductEdit(product.id))}
+                                className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors"
+                                title="Edit product"
+                              >
+                                <FiEdit className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteClick(product.id)}
+                                className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
+                                title="Delete product"
+                              >
+                                <FiTrash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile & Tablet Responsive Product Cards (< 1024px) */}
+              <div className="block lg:hidden divide-y divide-slate-100">
+                {products.map((product) => {
+                  const thumb = getThumbnailImageUrl(product.images);
+                  const { price, discountPrice } = getPriceDisplay(product.variants);
+                  const stock = getTotalStock(product.variants);
+
+                  return (
+                    <div key={product.id} className="p-3.5 space-y-2.5">
+                      {/* Product Header Row */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          {thumb ? (
+                            <img
+                              src={thumb}
+                              alt={product.name}
+                              className="h-12 w-12 rounded-xl object-cover border border-slate-200 shrink-0"
+                            />
+                          ) : (
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400 border border-slate-200">
+                              <FiPackage className="h-5 w-5" />
+                            </div>
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-slate-900 text-xs truncate leading-snug">
+                              {product.name}
+                            </p>
+                            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                              <span className="text-[10px] font-bold text-slate-500">
+                                {product.categoryName || 'Unassigned'}
+                              </span>
+                              {product.featured && (
+                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-bold text-amber-700">
+                                  <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Featured
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </td>
-                        <td className="py-3.5 px-4 font-medium text-slate-600">
-                          {product.categoryName || 'Unassigned'}
-                        </td>
-                        <td className="py-3.5 px-4 text-right font-mono font-bold">
+                        </div>
+
+                        {/* Price Display */}
+                        <div className="text-right shrink-0 font-mono">
                           {discountPrice ? (
                             <div>
-                              <span className="text-amber-700">{formatPrice(discountPrice)}</span>
-                              <span className="block text-[10px] text-slate-400 line-through">
+                              <span className="text-xs font-extrabold text-amber-950">{formatPrice(discountPrice)}</span>
+                              <span className="block text-[9px] text-slate-400 line-through">
                                 {formatPrice(price)}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-slate-900">{formatPrice(price)}</span>
+                            <span className="text-xs font-extrabold text-slate-900">{formatPrice(price)}</span>
                           )}
-                        </td>
-                        <td className="py-3.5 px-4 text-center font-mono">
+                        </div>
+                      </div>
+
+                      {/* Stock & Status Bar */}
+                      <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100/60">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {/* Stock Status Badge */}
                           {stock === 0 ? (
-                            <Badge variant="danger">Out of Stock</Badge>
+                            <Badge variant="danger" className="text-[9px] px-2 py-0.5">Out of Stock</Badge>
                           ) : stock < 10 ? (
-                            <Badge variant="warning">{stock} left</Badge>
+                            <Badge variant="warning" className="text-[9px] px-2 py-0.5">{stock} left</Badge>
                           ) : (
-                            <span className="font-semibold text-slate-700">{stock}</span>
+                            <span className="text-[10px] font-bold text-slate-600">Stock: {stock}</span>
                           )}
-                        </td>
-                        <td className="py-3.5 px-4 text-center">
-                          <button
-                            type="button"
-                            onClick={() => handleToggleStatus(product.id, product.active)}
-                            className={cn(
-                              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
-                              product.active
-                                ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
-                                : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
-                            )}
-                          >
-                            {product.active ? <FiCheckCircle className="h-3 w-3" /> : <FiXCircle className="h-3 w-3" />}
-                            <span>{product.active ? 'Active' : 'Inactive'}</span>
-                          </button>
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <button
-                              type="button"
-                              onClick={() => navigate(buildPath.product(product.slug || product.id))}
-                              className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-                              title="View in Store"
-                            >
-                              <FiEye className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => navigate(buildPath.adminProductEdit(product.id))}
-                              className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors"
-                              title="Edit product"
-                            >
-                              <FiEdit className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteClick(product.id)}
-                              className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
-                              title="Delete product"
-                            >
-                              <FiTrash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            • {product.variants?.length || 0} variants
+                          </span>
+                        </div>
+
+                        {/* Active Toggle Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleToggleStatus(product.id, product.active)}
+                          className={cn(
+                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all min-h-[32px]',
+                            product.active
+                              ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-200'
+                              : 'bg-slate-100 text-slate-600 border border-slate-200'
+                          )}
+                        >
+                          {product.active ? <FiCheckCircle className="h-3 w-3 text-emerald-600" /> : <FiXCircle className="h-3 w-3 text-slate-400" />}
+                          <span>{product.active ? 'Active' : 'Inactive'}</span>
+                        </button>
+                      </div>
+
+                      {/* Action Bar */}
+                      <div className="flex items-center justify-end gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => navigate(buildPath.product(product.slug || product.id))}
+                          className="flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors min-h-[36px]"
+                          title="View in Store"
+                        >
+                          <FiEye className="h-3.5 w-3.5 text-slate-500" />
+                          <span>View</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => navigate(buildPath.adminProductEdit(product.id))}
+                          className="flex items-center gap-1 rounded-lg bg-amber-500/10 px-2.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-500/20 transition-colors min-h-[36px]"
+                          title="Edit product"
+                        >
+                          <FiEdit className="h-3.5 w-3.5 text-amber-700" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteClick(product.id)}
+                          className="flex items-center gap-1 rounded-lg bg-rose-500/10 px-2.5 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-500/20 transition-colors min-h-[36px]"
+                          title="Delete product"
+                        >
+                          <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           ) : (
-            <div className="p-12 text-center text-slate-400">
+            <div className="p-8 sm:p-12 text-center text-slate-400">
               <FiPackage className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
               <p className="text-sm font-bold text-slate-700">No products found</p>
               <p className="text-xs text-slate-400 mt-1">Try resetting search query or category filters</p>
@@ -479,8 +623,8 @@ export default function ProductsListPage() {
 
           {/* Table Footer / Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-slate-200/80 px-4 py-3 bg-slate-50/50">
-              <span className="text-xs text-slate-500">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200/80 px-4 py-3.5 bg-slate-50/50">
+              <span className="text-xs text-slate-500 text-center sm:text-left">
                 Showing {products.length} of {totalItems} items
               </span>
               <Pagination
