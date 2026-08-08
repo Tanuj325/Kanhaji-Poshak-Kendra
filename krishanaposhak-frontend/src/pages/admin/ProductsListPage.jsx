@@ -488,9 +488,11 @@ export default function ProductsListPage() {
                     })}
                   </tbody>
                 </table>
-              </div>              {/* Mobile & Tablet Ultra-Premium Product Cards Grid (< 1024px) */}
-              <div className="block lg:hidden p-3.5 sm:p-4 bg-slate-50/50">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              </div>
+
+              {/* Mobile & Tablet Ultra-Premium Product Cards Grid (< 1024px) */}
+              <div className="block lg:hidden p-1.5 sm:p-2 bg-slate-50/50">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {products.map((product) => {
                     const thumb = getThumbnailImageUrl(product.images);
                     const { price, discountPrice } = getPriceDisplay(product.variants);
