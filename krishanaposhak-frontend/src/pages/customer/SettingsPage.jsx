@@ -15,7 +15,8 @@ import { siteConfig } from '@/config/siteConfig';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import toast from 'react-hot-toast';
-import { FiUser, FiLock, FiShield, FiLogOut, FiCheckCircle, FiBell, FiCamera, FiStar } from 'react-icons/fi';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileAccountSettings from '@/components/customer/mobile/MobileAccountSettings';
 
 const breadcrumbItems = [
   { label: 'Home', href: ROUTE_PATHS.HOME },
@@ -24,6 +25,7 @@ const breadcrumbItems = [
 ];
 
 export default function SettingsPage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { user: authUser, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -35,6 +37,25 @@ export default function SettingsPage() {
   const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   const userData = profile || authUser;
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`Account Settings | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <MobileAccountSettings
+          user={authUser}
+          profile={profile}
+          isLoading={isLoading}
+          refetch={refetch}
+          updateProfile={updateProfileMutation}
+          logout={logout}
+        />
+      </>
+    );
+  }
 
   const handleLogout = useCallback(async () => {
     try {

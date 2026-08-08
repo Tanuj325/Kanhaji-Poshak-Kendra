@@ -30,6 +30,8 @@ import {
   FiStar,
   FiShield,
 } from 'react-icons/fi';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import MobileAccountSettings from '@/components/customer/mobile/MobileAccountSettings';
 
 const breadcrumbItems = [
   { label: 'Home', href: '/' },
@@ -38,9 +40,29 @@ const breadcrumbItems = [
 ];
 
 export default function ProfilePage() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { user, refetchUser, logout } = useAuth();
   const { data: profile, isLoading, error, refetch } = useProfile();
   const updateProfile = useUpdateProfile();
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`My Profile | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <MobileAccountSettings
+          user={user}
+          profile={profile}
+          isLoading={isLoading}
+          refetch={refetch}
+          updateProfile={updateProfile}
+          logout={logout}
+        />
+      </>
+    );
+  }
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
