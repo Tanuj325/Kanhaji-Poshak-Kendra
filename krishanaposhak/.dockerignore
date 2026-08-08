@@ -7,9 +7,6 @@ tmp/
 .claude/
 *.iml
 *.log
-.env
-.env.example
+.env*
 HELP.md
 README.md
-Dockerfile
-.dockerignore

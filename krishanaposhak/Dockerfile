@@ -1,22 +1,19 @@
 # ==========================================
 # Stage 1: Build the application with Maven
 # ==========================================
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first (better Docker layer caching —
-# dependencies only re-download if pom.xml changes)
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
-RUN chmod +x mvnw
+# Copy pom.xml first for Docker layer caching
+COPY pom.xml ./
 
 # Download dependencies (cached layer if pom.xml unchanged)
-RUN ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
-# Copy source code and build the jar (skip tests for faster image builds)
+# Copy source code and build the production jar
 COPY src ./src
-RUN ./mvnw clean package -DskipTests -B
+RUN mvn clean package -DskipTests -B
 
 # ==========================================
 # Stage 2: Run the application (lightweight)
@@ -32,8 +29,8 @@ USER spring:spring
 # Copy only the built jar from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Default port (overridden by SERVER_PORT env var if set, see application-dev.properties)
-EXPOSE 9090
+# Default Spring Boot production port (can be overridden by SERVER_PORT env var)
+EXPOSE 8080
 
 # JVM options can be tuned via JAVA_OPTS env var at runtime
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
