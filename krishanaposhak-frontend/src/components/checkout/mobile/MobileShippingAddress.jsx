@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import Spinner from '@/components/ui/Spinner';
 import ConfirmDialog from '@/components/overlay/ConfirmDialog';
 import toast from 'react-hot-toast';
 import {
@@ -18,6 +17,8 @@ import {
   FiX,
   FiArrowRight,
   FiAlertCircle,
+  FiCheckCircle,
+  FiCopy,
 } from 'react-icons/fi';
 
 const STATE_OPTIONS = [
@@ -73,7 +74,60 @@ const INITIAL_FORM = {
 };
 
 // ----------------------------------------------------
-// Premium Floating Label Input Component (52px height, 14px rounded)
+// Realistic Address Card Skeleton Loading State
+// ----------------------------------------------------
+function AddressCardSkeleton() {
+  return (
+    <div className="w-full rounded-[18px] p-4 sm:p-5 border border-amber-900/10 bg-white space-y-3 animate-pulse shadow-xs">
+      <div className="flex items-center justify-between">
+        <div className="h-5 w-36 bg-amber-900/10 rounded-md" />
+        <div className="h-5 w-16 bg-amber-900/10 rounded-full" />
+      </div>
+      <div className="h-4 w-28 bg-amber-900/10 rounded-md" />
+      <div className="space-y-1.5 pt-1">
+        <div className="h-3.5 w-full bg-amber-900/10 rounded-md" />
+        <div className="h-3.5 w-3/4 bg-amber-900/10 rounded-md" />
+        <div className="h-3.5 w-1/2 bg-amber-900/10 rounded-md" />
+      </div>
+      <div className="flex justify-end gap-2 pt-3 border-t border-amber-900/10">
+        <div className="h-8 w-16 bg-amber-900/10 rounded-xl" />
+        <div className="h-8 w-16 bg-amber-900/10 rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Premium Empty State Component
+// ----------------------------------------------------
+function AddressEmptyState({ onAdd }) {
+  return (
+    <div className="w-full rounded-[20px] bg-white border border-amber-900/10 p-8 sm:p-10 text-center space-y-4 shadow-xs">
+      <div className="w-16 h-16 rounded-full bg-amber-100/80 text-amber-900 flex items-center justify-center mx-auto border border-amber-200">
+        <FiMapPin className="w-8 h-8 text-amber-900" />
+      </div>
+      <div className="space-y-1 max-w-sm mx-auto">
+        <h3 className="font-heading font-extrabold text-base sm:text-lg text-amber-950">
+          No Saved Addresses
+        </h3>
+        <p className="text-xs sm:text-sm text-stone-600 font-body leading-relaxed">
+          Add your delivery address to make your checkout fast, effortless, and secure.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onAdd}
+        className="inline-flex items-center gap-2 px-6 h-[46px] rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-md transition-all active:scale-95"
+      >
+        <FiPlus className="w-4 h-4 text-amber-200" />
+        <span>Add New Address</span>
+      </button>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Premium Floating Label Input Component (50px height, 14px rounded)
 // ----------------------------------------------------
 function FloatingInput({
   id,
@@ -100,7 +154,7 @@ function FloatingInput({
     <div className="relative w-full font-display">
       <div
         className={cn(
-          'relative w-full h-[52px] rounded-[14px] border transition-all duration-200 bg-white font-display overflow-hidden flex items-center',
+          'relative w-full h-[50px] rounded-[14px] border transition-all duration-200 bg-white font-display overflow-hidden flex items-center',
           error
             ? 'border-rose-400 ring-2 ring-rose-500/10'
             : isFocused
@@ -155,44 +209,59 @@ function RebuiltAddressCard({
   onSelect,
   onEdit,
   onDelete,
+  onSetDefault,
+  mode = 'checkout',
 }) {
   if (!address) return null;
 
   const isOffice = address.addressType === 'OFFICE' || address.label === 'Office';
+  const isHome = address.addressType === 'HOME' || address.label === 'Home';
+  const isSelectable = mode === 'checkout' || Boolean(onSelect && mode !== 'management');
+
+  const copyPhoneNumber = (e) => {
+    e.stopPropagation();
+    if (address.phoneNumber) {
+      navigator.clipboard.writeText(address.phoneNumber);
+      toast.success('Phone number copied to clipboard!');
+    }
+  };
 
   return (
     <motion.div
       whileTap={{ scale: 0.98 }}
-      onClick={() => onSelect?.(address.id)}
-      role="radio"
-      aria-checked={isSelected}
-      tabIndex={0}
+      onClick={() => isSelectable && onSelect?.(address.id)}
+      role={isSelectable ? 'radio' : undefined}
+      aria-checked={isSelectable ? isSelected : undefined}
+      tabIndex={isSelectable ? 0 : undefined}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (isSelectable && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
           onSelect?.(address.id);
         }
       }}
       className={cn(
-        'relative w-full rounded-[18px] p-4 transition-all duration-200 cursor-pointer font-display overflow-hidden text-left flex flex-col justify-between gap-3',
-        isSelected
+        'relative w-full rounded-[18px] p-4 sm:p-5 transition-all duration-200 font-display overflow-hidden text-left flex flex-col justify-between gap-3',
+        isSelected && isSelectable
           ? 'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20'
           : 'border border-amber-900/10 bg-white hover:border-amber-700/30 shadow-xs hover:shadow-sm',
+        isSelectable && 'cursor-pointer',
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0 flex-1">
-          {/* Custom Radio Circle */}
-          <div
-            className={cn(
-              'mt-0.5 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
-              isSelected
-                ? 'border-[#D4AF37] bg-[#D4AF37] text-amber-950'
-                : 'border-stone-300 bg-white',
-            )}
-          >
-            {isSelected && <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />}
-          </div>
+          {/* Custom Radio Circle for Checkout Mode */}
+          {isSelectable && (
+            <div
+              className={cn(
+                'mt-0.5 h-5 w-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
+                isSelected
+                  ? 'border-[#D4AF37] bg-[#D4AF37] text-amber-950'
+                  : 'border-stone-300 bg-white',
+              )}
+            >
+              {isSelected && <FiCheck className="h-3 w-3 stroke-[3] text-amber-950" />}
+            </div>
+          )}
 
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -201,24 +270,26 @@ function RebuiltAddressCard({
               </span>
 
               {/* Home / Office Badge */}
-              <span
-                className={cn(
-                  'inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider',
-                  isOffice
-                    ? 'bg-blue-50 text-blue-900 border-blue-200/80'
-                    : 'bg-amber-100/80 text-amber-950 border-amber-300/60',
-                )}
-              >
-                {isOffice ? (
-                  <>
-                    <FiBriefcase className="h-2.5 w-2.5 text-blue-700" /> Office
-                  </>
-                ) : (
-                  <>
-                    <FiHome className="h-2.5 w-2.5 text-amber-800" /> Home
-                  </>
-                )}
-              </span>
+              {(isOffice || isHome) && (
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider',
+                    isOffice
+                      ? 'bg-blue-50 text-blue-900 border-blue-200/80'
+                      : 'bg-amber-100/80 text-amber-950 border-amber-300/60',
+                  )}
+                >
+                  {isOffice ? (
+                    <>
+                      <FiBriefcase className="h-2.5 w-2.5 text-blue-700" /> Office
+                    </>
+                  ) : (
+                    <>
+                      <FiHome className="h-2.5 w-2.5 text-amber-800" /> Home
+                    </>
+                  )}
+                </span>
+              )}
 
               {/* Default Badge */}
               {address.defaultAddress && (
@@ -233,6 +304,14 @@ function RebuiltAddressCard({
               <p className="text-xs text-stone-600 font-medium font-mono flex items-center gap-1.5 pt-0.5">
                 <FiPhone className="h-3 w-3 text-amber-800 shrink-0" />
                 <span>{address.phoneNumber}</span>
+                <button
+                  type="button"
+                  onClick={copyPhoneNumber}
+                  className="p-0.5 text-stone-400 hover:text-amber-900 transition-colors"
+                  title="Copy phone number"
+                >
+                  <FiCopy className="h-3 w-3" />
+                </button>
               </p>
             )}
 
@@ -252,33 +331,50 @@ function RebuiltAddressCard({
         </div>
       </div>
 
-      {/* Action Buttons: Edit & Delete */}
-      <div className="flex items-center justify-end gap-2 pt-2 border-t border-amber-900/10">
-        {onEdit && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(address);
-            }}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/50 hover:bg-amber-100 transition-colors min-h-[36px]"
-          >
-            <FiEdit2 className="h-3.5 w-3.5 text-amber-800" />
-            <span>Edit</span>
-          </button>
-        )}
+      {/* Action Buttons: Set Default, Edit & Delete */}
+      <div className="flex items-center justify-between gap-2 pt-3 border-t border-amber-900/10 font-display">
+        <div className="flex items-center gap-2">
+          {onEdit && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(address);
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/50 hover:bg-amber-100 transition-colors min-h-[36px]"
+            >
+              <FiEdit2 className="h-3.5 w-3.5 text-amber-800" />
+              <span>Edit</span>
+            </button>
+          )}
 
-        {onDelete && (
+          {onDelete && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(address.id);
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 transition-colors min-h-[36px]"
+            >
+              <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
+              <span>Delete</span>
+            </button>
+          )}
+        </div>
+
+        {/* Set Default Action */}
+        {onSetDefault && !address.defaultAddress && (
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(address.id);
+              onSetDefault(address.id);
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 transition-colors min-h-[36px]"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/70 hover:bg-amber-100 border border-amber-300/50 transition-colors min-h-[36px]"
           >
-            <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
-            <span>Delete</span>
+            <FiCheckCircle className="h-3.5 w-3.5 text-amber-800" />
+            <span>Set Default</span>
           </button>
         )}
       </div>
@@ -287,7 +383,7 @@ function RebuiltAddressCard({
 }
 
 // ----------------------------------------------------
-// Main Mobile Shipping Address Page Component
+// Main Mobile/Tablet Shipping & Management Address Component
 // ----------------------------------------------------
 export default function MobileShippingAddress({
   addresses = [],
@@ -311,7 +407,7 @@ export default function MobileShippingAddress({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
 
-  // Field refs for Next keyboard navigation
+  // Field refs for Enter key form navigation
   const inputRefs = useRef([]);
 
   const addrList = useMemo(() => (Array.isArray(addresses) ? addresses : []), [addresses]);
@@ -341,7 +437,7 @@ export default function MobileShippingAddress({
     setIsModalOpen(true);
   };
 
-  // Auto focus first input when modal opens
+  // Focus first input when modal opens
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
@@ -419,7 +515,7 @@ export default function MobileShippingAddress({
     }
   };
 
-  // Keyboard navigation handler: Next field on Enter key, Done on final field
+  // Keyboard navigation handler
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -443,14 +539,14 @@ export default function MobileShippingAddress({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] font-display flex flex-col justify-between">
+    <div className="w-full min-h-screen bg-[#FAF7F2] font-display flex flex-col justify-between">
       {/* ---------------------------------------------------- */}
-      {/* STICKY HEADER (54px height) */}
+      {/* STICKY HEADER (56-64px height) */}
       {/* ---------------------------------------------------- */}
-      <header className="sticky top-0 z-40 w-full h-[54px] bg-white/95 backdrop-blur-md border-b border-amber-900/10 px-4 flex items-center justify-between shadow-2xs">
+      <header className="sticky top-0 z-40 w-full h-[58px] bg-white/95 backdrop-blur-md border-b border-amber-900/10 px-4 md:px-6 flex items-center justify-between shadow-2xs">
         <button
           type="button"
-          onClick={onBack}
+          onClick={onBack || (() => window.history.back())}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-50 text-amber-950 hover:bg-amber-100 transition-colors border border-amber-900/10 active:scale-95 min-h-[36px] min-w-[36px]"
           aria-label="Go back"
         >
@@ -458,24 +554,36 @@ export default function MobileShippingAddress({
         </button>
 
         <div className="text-center min-w-0 px-2">
-          <h1 className="font-heading text-base font-extrabold text-amber-950 truncate leading-tight">
-            Shipping Address
+          <h1 className="font-heading text-base sm:text-lg font-extrabold text-amber-950 truncate leading-tight">
+            {mode === 'management' ? 'Saved Addresses' : 'Shipping Address'}
           </h1>
           <p className="text-[11px] font-bold text-amber-800 tracking-tight">
-            Step 1 of Checkout
+            {mode === 'management' ? 'Manage Delivery Locations' : 'Step 1 of Checkout'}
           </p>
         </div>
 
-        <div className="w-9" />
+        {mode === 'management' ? (
+          <button
+            type="button"
+            onClick={handleOpenCreate}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-900 text-white font-extrabold text-xs shadow-xs hover:bg-amber-950 transition-colors active:scale-95 min-h-[36px]"
+          >
+            <FiPlus className="w-4 h-4 text-amber-200" />
+            <span className="hidden sm:inline">Add New</span>
+          </button>
+        ) : (
+          <div className="w-9" />
+        )}
       </header>
 
       {/* ---------------------------------------------------- */}
-      {/* MAIN CONTENT (16px outer padding, 12px card spacing) */}
+      {/* MAIN CONTENT AREA */}
       {/* ---------------------------------------------------- */}
-      <main className="flex-1 px-4 py-4 space-y-3 pb-28">
+      <main className={cn('flex-1 px-4 py-4 md:px-6 md:py-6 space-y-4', mode === 'checkout' ? 'pb-28' : 'pb-12')}>
         {isLoading ? (
-          <div className="py-16 text-center rounded-[18px] bg-white border border-amber-900/10 p-6 shadow-xs">
-            <Spinner label="Loading delivery addresses..." />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AddressCardSkeleton />
+            <AddressCardSkeleton />
           </div>
         ) : isError ? (
           <div className="text-center py-10 rounded-[18px] bg-white border border-rose-200 p-6 shadow-xs space-y-3 font-body">
@@ -488,37 +596,41 @@ export default function MobileShippingAddress({
               Retry Loading Addresses
             </button>
           </div>
+        ) : addrList.length === 0 ? (
+          <AddressEmptyState onAdd={handleOpenCreate} />
         ) : (
           <>
-            {/* Address List Cards */}
-            {addrList.length > 0 && (
-              <div className="space-y-3" role="radiogroup" aria-label="Select shipping address">
-                {addrList.map((addr) => (
-                  <RebuiltAddressCard
-                    key={addr.id}
-                    address={addr}
-                    isSelected={selectedId === addr.id}
-                    onSelect={onSelect}
-                    onEdit={handleOpenEdit}
-                    onDelete={(id) => setDeleteTargetId(id)}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Address Cards Grid: 1-column on Mobile (<768px), 2-column on Tablet (768-1023px) */}
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4"
+              role={mode === 'checkout' ? 'radiogroup' : undefined}
+              aria-label="Delivery addresses"
+            >
+              {addrList.map((addr) => (
+                <RebuiltAddressCard
+                  key={addr.id}
+                  address={addr}
+                  isSelected={selectedId === addr.id}
+                  onSelect={onSelect}
+                  onEdit={handleOpenEdit}
+                  onDelete={(id) => setDeleteTargetId(id)}
+                  onSetDefault={onSetDefault}
+                  mode={mode}
+                />
+              ))}
+            </div>
 
-            {/* ---------------------------------------------------- */}
-            {/* ADD NEW ADDRESS CARD (Dashed Border, Plus Icon, Rounded 18px, Height 72px) */}
-            {/* ---------------------------------------------------- */}
+            {/* ADD NEW ADDRESS BUTTON CARD */}
             <button
               type="button"
               onClick={handleOpenCreate}
-              className="w-full h-[72px] rounded-[18px] border-2 border-dashed border-amber-900/25 hover:border-amber-700/60 bg-amber-50/20 hover:bg-amber-50/50 transition-all flex items-center justify-center gap-3 px-4 shadow-xs active:scale-[0.99] font-display"
+              className="w-full h-[64px] sm:h-[72px] rounded-[18px] border-2 border-dashed border-amber-900/25 hover:border-amber-700/60 bg-amber-50/20 hover:bg-amber-50/50 transition-all flex items-center justify-center gap-3 px-4 shadow-xs active:scale-[0.99] font-display mt-2"
             >
               <div className="w-9 h-9 rounded-full bg-amber-900/10 text-amber-900 flex items-center justify-center">
                 <FiPlus className="w-5 h-5 text-amber-900" />
               </div>
               <span className="font-heading font-bold text-amber-950 text-sm">
-                Add New Shipping Address
+                Add New Address
               </span>
             </button>
           </>
@@ -526,42 +638,44 @@ export default function MobileShippingAddress({
       </main>
 
       {/* ---------------------------------------------------- */}
-      {/* STICKY BOTTOM BAR (72px height, 52px button, Temple Gold Gradient) */}
+      {/* STICKY BOTTOM BAR (ONLY FOR CHECKOUT MODE) */}
       {/* ---------------------------------------------------- */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-[72px] bg-white/95 backdrop-blur-md border-t border-amber-900/10 px-4 flex items-center justify-center shadow-lg font-display">
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          type="button"
-          disabled={!selectedId || isLoading || addrList.length === 0}
-          onClick={onContinue}
-          className="w-full max-w-lg h-[52px] rounded-[16px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-950 hover:from-amber-800 hover:to-stone-950 text-white font-extrabold text-sm sm:text-base shadow-md flex items-center justify-center gap-2 border border-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        >
-          <span>Deliver to This Address</span>
-          <FiArrowRight className="w-5 h-5 text-amber-200" />
-        </motion.button>
-      </footer>
+      {mode === 'checkout' && (
+        <footer className="fixed bottom-0 left-0 right-0 z-40 h-[72px] bg-white/95 backdrop-blur-md border-t border-amber-900/10 px-4 md:px-6 flex items-center justify-center shadow-lg font-display">
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            type="button"
+            disabled={!selectedId || isLoading || addrList.length === 0}
+            onClick={onContinue}
+            className="w-full max-w-lg h-[52px] rounded-[16px] bg-gradient-to-r from-amber-700 via-amber-800 to-amber-950 hover:from-amber-800 hover:to-stone-950 text-white font-extrabold text-sm sm:text-base shadow-md flex items-center justify-center gap-2 border border-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            <span>Deliver to This Address</span>
+            <FiArrowRight className="w-5 h-5 text-amber-200" />
+          </motion.button>
+        </footer>
+      )}
 
       {/* ---------------------------------------------------- */}
       {/* ADDRESS FORM MODAL / BOTTOM SHEET */}
       {/* ---------------------------------------------------- */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-stone-950/60 backdrop-blur-xs p-0 sm:p-4">
+          <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-stone-950/60 backdrop-blur-xs p-0 md:p-4">
             <motion.div
               initial={{ y: '100%', opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-              className="w-full max-w-lg bg-white rounded-t-[24px] sm:rounded-[24px] shadow-2xl overflow-hidden font-display flex flex-col max-h-[90vh]"
+              className="w-full max-w-xl bg-white rounded-t-[24px] md:rounded-[24px] shadow-2xl overflow-hidden font-display flex flex-col max-h-[92vh]"
             >
               {/* Form Modal Header */}
               <div className="px-5 py-4 border-b border-amber-900/10 flex items-center justify-between bg-amber-50/30">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center">
                     <FiMapPin className="w-4 h-4" />
                   </div>
                   <h2 className="font-heading font-extrabold text-base text-amber-950">
-                    {editingAddress ? 'Edit Shipping Address' : 'Add New Shipping Address'}
+                    {editingAddress ? 'Edit Delivery Address' : 'Add New Delivery Address'}
                   </h2>
                 </div>
 
@@ -576,7 +690,7 @@ export default function MobileShippingAddress({
 
               {/* Form Body with 14px Input Spacing */}
               <form onSubmit={handleFormSubmit} className="p-5 space-y-[14px] overflow-y-auto flex-1 font-display">
-                {/* Address Type Selector (Home / Office) */}
+                {/* Address Type Selector */}
                 <div className="flex items-center gap-3 pb-1">
                   <span className="text-xs font-bold text-amber-950">Address Type:</span>
                   <div className="flex items-center gap-2">
@@ -668,8 +782,8 @@ export default function MobileShippingAddress({
                   enterKeyHint="next"
                 />
 
-                {/* City & State Row */}
-                <div className="grid grid-cols-2 gap-[14px]">
+                {/* City & State Row (2-column on tablet and mobile >400px) */}
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[14px]">
                   <FloatingInput
                     id="mobile-addr-city"
                     name="city"
@@ -684,7 +798,7 @@ export default function MobileShippingAddress({
                     enterKeyHint="next"
                   />
 
-                  <div className="relative w-full h-[52px] rounded-[14px] border border-amber-900/20 bg-white overflow-hidden flex items-center font-display">
+                  <div className="relative w-full h-[50px] rounded-[14px] border border-amber-900/20 bg-white overflow-hidden flex items-center font-display">
                     <label
                       htmlFor="mobile-addr-state"
                       className="absolute left-3.5 top-1.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-900 pointer-events-none"
@@ -707,8 +821,8 @@ export default function MobileShippingAddress({
                   </div>
                 </div>
 
-                {/* PIN Code & Country Row */}
-                <div className="grid grid-cols-2 gap-[14px]">
+                {/* PIN Code & Country Row (2-column on tablet and mobile >400px) */}
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[14px]">
                   <FloatingInput
                     id="mobile-addr-postalCode"
                     name="postalCode"
@@ -757,19 +871,19 @@ export default function MobileShippingAddress({
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 h-[44px] rounded-xl border border-amber-900/20 text-xs font-bold text-stone-600 hover:bg-stone-50"
+                    className="px-4 h-[44px] rounded-xl border border-amber-900/20 text-xs font-bold text-stone-600 hover:bg-stone-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 h-[44px] rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-md disabled:opacity-50 flex items-center gap-2"
+                    className="px-6 h-[44px] rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-md disabled:opacity-50 flex items-center gap-2 transition-all active:scale-95"
                   >
                     {isSubmitting ? (
                       <span>Saving...</span>
                     ) : (
-                      <span>{editingAddress ? 'Update Address' : 'Save & Use Address'}</span>
+                      <span>{editingAddress ? 'Update Address' : 'Save Address'}</span>
                     )}
                   </button>
                 </div>
@@ -792,3 +906,4 @@ export default function MobileShippingAddress({
     </div>
   );
 }
+
