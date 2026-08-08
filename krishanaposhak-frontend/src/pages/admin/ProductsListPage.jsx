@@ -488,116 +488,165 @@ export default function ProductsListPage() {
                     })}
                   </tbody>
                 </table>
-              </div>              {/* Mobile & Tablet Sleek Compact Product List (< 1024px) */}
-              <div className="block lg:hidden divide-y divide-slate-100">
-                {products.map((product) => {
-                  const thumb = getThumbnailImageUrl(product.images);
-                  const { price, discountPrice } = getPriceDisplay(product.variants);
-                  const stock = getTotalStock(product.variants);
+              </div>              {/* Mobile & Tablet Ultra-Premium Product Cards Grid (< 1024px) */}
+              <div className="block lg:hidden p-3.5 sm:p-4 bg-slate-50/50">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                  {products.map((product) => {
+                    const thumb = getThumbnailImageUrl(product.images);
+                    const { price, discountPrice } = getPriceDisplay(product.variants);
+                    const stock = getTotalStock(product.variants);
+                    const productSku = product.sku || product.variants?.find(v => v.sku)?.sku || product.variants?.[0]?.sku || null;
+                    const createdDateStr = product.createdAt ? formatDate(product.createdAt) : null;
 
-                  return (
-                    <div
-                      key={product.id}
-                      className="p-3 sm:p-3.5 hover:bg-slate-50/80 transition-colors flex items-center justify-between gap-2.5"
-                    >
-                      {/* Left: Image + Title + Meta Info */}
-                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                        {thumb ? (
-                          <img
-                            src={thumb}
-                            alt={product.name}
-                            className="h-11 w-11 rounded-lg object-cover border border-slate-200 shrink-0"
-                          />
-                        ) : (
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400 border border-slate-200">
-                            <FiPackage className="h-4 w-4" />
-                          </div>
-                        )}
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <p className="font-bold text-slate-900 text-xs truncate max-w-[150px] sm:max-w-xs">
-                              {product.name}
-                            </p>
-                            {product.featured && (
-                              <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.2 text-[9px] font-bold text-amber-700">
-                                <FiStar className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-500 flex-wrap">
-                            <span className="font-medium text-slate-600 truncate max-w-[90px]">
-                              {product.categoryName || 'Unassigned'}
-                            </span>
-                            <span>•</span>
-                            {stock === 0 ? (
-                              <span className="text-rose-600 font-bold">Out of Stock</span>
-                            ) : stock < 10 ? (
-                              <span className="text-amber-600 font-bold">{stock} left</span>
+                    return (
+                      <div
+                        key={product.id}
+                        className="rounded-2xl border border-slate-200/90 bg-white shadow-2xs overflow-hidden flex flex-col justify-between"
+                      >
+                        <div>
+                          {/* Top Prominent Product Image Container */}
+                          <div className="relative w-full h-44 sm:h-48 bg-slate-100 overflow-hidden">
+                            {thumb ? (
+                              <img
+                                src={thumb}
+                                alt={product.name}
+                                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                              />
                             ) : (
-                              <span>Stock: {stock}</span>
+                              <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100">
+                                <FiPackage className="h-10 w-10 opacity-40" />
+                              </div>
                             )}
-                            <span>•</span>
+
+                            {/* TOP-LEFT: Status Badge Pill Overlay */}
+                            <div className="absolute top-2.5 left-2.5 z-10">
+                              <button
+                                type="button"
+                                onClick={() => handleToggleStatus(product.id, product.active)}
+                                className={cn(
+                                  'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md shadow-xs transition-all cursor-pointer',
+                                  product.active
+                                    ? 'bg-emerald-600/90 text-white border border-emerald-400/40'
+                                    : 'bg-slate-900/80 text-slate-200 border border-slate-700/40'
+                                )}
+                              >
+                                {product.active ? <FiCheckCircle className="h-3 w-3 text-emerald-200" /> : <FiXCircle className="h-3 w-3 text-slate-400" />}
+                                <span>{product.active ? 'Active' : 'Inactive'}</span>
+                              </button>
+                            </div>
+
+                            {/* TOP-RIGHT: Featured Star Toggle Button Overlay */}
+                            <div className="absolute top-2.5 right-2.5 z-10">
+                              <button
+                                type="button"
+                                onClick={() => handleFeaturedChange(!product.featured)}
+                                className={cn(
+                                  'flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all cursor-pointer',
+                                  product.featured
+                                    ? 'bg-amber-500 text-slate-950 shadow-amber-500/30'
+                                    : 'bg-white/80 text-slate-400 hover:text-amber-500 border border-white/40'
+                                )}
+                                title={product.featured ? 'Featured Product' : 'Mark as Featured'}
+                              >
+                                <FiStar className={cn('h-4 w-4', product.featured && 'fill-slate-950')} />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Card Content Body */}
+                          <div className="p-4 space-y-3">
+                            {/* Title & Category */}
+                            <div>
+                              <h3 className="font-extrabold text-slate-900 text-sm leading-snug line-clamp-2">
+                                {product.name}
+                              </h3>
+                              {product.categoryName && (
+                                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                  Category: <span className="text-slate-700 font-semibold">{product.categoryName}</span>
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Price & Stock Status Row */}
+                            <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100">
+                              {/* Price */}
+                              <div className="font-mono">
+                                {discountPrice ? (
+                                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                                    <span className="text-base font-black text-amber-950">{formatPrice(discountPrice)}</span>
+                                    <span className="text-xs text-slate-400 line-through">{formatPrice(price)}</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-base font-black text-slate-900">{formatPrice(price)}</span>
+                                )}
+                              </div>
+
+                              {/* Stock Badge */}
+                              <div>
+                                {stock === 0 ? (
+                                  <Badge variant="danger" className="text-[10px] px-2.5 py-0.5">Out of Stock</Badge>
+                                ) : stock < 10 ? (
+                                  <Badge variant="warning" className="text-[10px] px-2.5 py-0.5">{stock} left</Badge>
+                                ) : (
+                                  <Badge variant="success" className="text-[10px] px-2.5 py-0.5">In Stock</Badge>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Compact Metadata Grid */}
+                            <div className="grid grid-cols-3 gap-2 text-xs pt-1">
+                              <div className="bg-slate-50 rounded-xl p-2 border border-slate-100">
+                                <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Stock</span>
+                                <span className="font-mono font-bold text-slate-800 text-xs truncate block">{stock}</span>
+                              </div>
+                              <div className="bg-slate-50 rounded-xl p-2 border border-slate-100">
+                                <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">SKU</span>
+                                <span className="font-mono font-bold text-slate-800 text-xs truncate block">{productSku || 'N/A'}</span>
+                              </div>
+                              <div className="bg-slate-50 rounded-xl p-2 border border-slate-100">
+                                <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Created</span>
+                                <span className="font-mono font-bold text-slate-800 text-xs truncate block">{createdDateStr || '—'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons Bar */}
+                        <div className="p-4 pt-0">
+                          <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3">
                             <button
                               type="button"
-                              onClick={() => handleToggleStatus(product.id, product.active)}
-                              className={cn(
-                                'font-bold cursor-pointer hover:underline',
-                                product.active ? 'text-emerald-700' : 'text-slate-400'
-                              )}
+                              onClick={() => navigate(buildPath.product(product.slug || product.id))}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs py-2.5 px-2 hover:bg-slate-200 transition-colors min-h-[40px] border border-slate-200/60 cursor-pointer"
+                              title="View in Store"
                             >
-                              {product.active ? 'Active' : 'Inactive'}
+                              <FiEye className="h-3.5 w-3.5 text-slate-500" />
+                              <span>View</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => navigate(buildPath.adminProductEdit(product.id))}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs py-2.5 px-2 hover:bg-amber-100 transition-colors min-h-[40px] border border-amber-200/80 cursor-pointer"
+                              title="Edit product"
+                            >
+                              <FiEdit className="h-3.5 w-3.5 text-amber-700" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteClick(product.id)}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs py-2.5 px-2 hover:bg-rose-100 transition-colors min-h-[40px] border border-rose-200/80 cursor-pointer"
+                              title="Delete product"
+                            >
+                              <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
+                              <span>Delete</span>
                             </button>
                           </div>
                         </div>
                       </div>
-
-                      {/* Right: Price + Action Buttons */}
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className="text-right font-mono">
-                          {discountPrice ? (
-                            <div>
-                              <span className="text-xs font-bold text-amber-950">{formatPrice(discountPrice)}</span>
-                              <span className="block text-[9px] text-slate-400 line-through">
-                                {formatPrice(price)}
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-xs font-bold text-slate-900">{formatPrice(price)}</span>
-                          )}
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-0.5">
-                          <button
-                            type="button"
-                            onClick={() => navigate(buildPath.product(product.slug || product.id))}
-                            className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
-                            title="View in Store"
-                          >
-                            <FiEye className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => navigate(buildPath.adminProductEdit(product.id))}
-                            className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
-                            title="Edit product"
-                          >
-                            <FiEdit className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteClick(product.id)}
-                            className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
-                            title="Delete product"
-                          >
-                            <FiTrash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </>
           ) : (
