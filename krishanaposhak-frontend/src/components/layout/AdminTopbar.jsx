@@ -109,53 +109,53 @@ export default function AdminTopbar({ title, onMenuToggle }) {
     : unreadNotifications?.content || unreadNotifications?.data || [];
 
   return (
-    <header className="flex h-14 sm:h-16 w-full items-center justify-between bg-gradient-to-r from-amber-950 via-stone-950 to-amber-950 px-3 sm:px-4 lg:px-6 border-b border-amber-500/20 font-display backdrop-blur-xl text-white shadow-lg">
+    <div className="flex h-full w-full items-center justify-between px-3 sm:px-4 lg:px-6 font-display text-slate-800">
       {/* Left section: Menu Toggle & Title */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 lg:flex-initial pr-2">
         <button
           type="button"
           onClick={onMenuToggle}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400/30 lg:hidden shrink-0"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100/90 border border-slate-200/80 text-slate-700 hover:bg-slate-200/90 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden shrink-0"
           aria-label="Toggle admin navigation menu"
         >
-          <FiMenu className="h-5 w-5" />
+          <FiMenu className="h-4 w-4" />
         </button>
 
         <div className="flex items-center gap-2 min-w-0 flex-1 lg:flex-initial truncate">
-          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-amber-400/15 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest text-amber-300 border border-amber-400/25 font-heading shrink-0">
-            <FiShield className="h-3 w-3 text-amber-400" /> Krishana Admin
+          <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-700 border border-amber-500/20 font-heading shrink-0">
+            <FiShield className="h-3 w-3 text-amber-600" /> Admin
           </span>
-          <h1 className="font-heading text-sm sm:text-base lg:text-lg font-extrabold text-white tracking-tight truncate min-w-0 flex-1">
+          <h1 className="font-serif text-sm sm:text-base font-bold text-slate-900 truncate min-w-0 flex-1">
             {pageTitle}
           </h1>
-          <span className="hidden md:inline-flex items-center gap-1.5 shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-mono font-bold text-emerald-400 shadow-2xs">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Live Backend
+          <span className="hidden md:inline-flex items-center gap-1 shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-700 shadow-2xs">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Live
           </span>
         </div>
       </div>
 
       {/* Right section: Search, Notifications, Profile */}
-      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Mobile Search Icon Button */}
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="flex sm:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-300 hover:bg-amber-400/20 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400/30"
+          className="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
           aria-label="Open admin search"
         >
-          <FiSearch className="h-4 w-4" />
+          <FiSearch className="h-3.5 w-3.5" />
         </button>
 
         {/* Tablet & Desktop Search Pill */}
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="hidden sm:flex items-center gap-2.5 rounded-full border border-amber-500/20 bg-amber-950/40 px-3.5 py-1.5 text-xs text-stone-300 hover:border-amber-400/40 hover:bg-amber-950/70 transition-all shadow-2xs"
+          className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 transition-all shadow-2xs"
         >
-          <FiSearch className="h-3.5 w-3.5 text-amber-400" />
-          <span className="text-stone-300 font-medium">Search catalog...</span>
-          <kbd className="rounded border border-amber-500/30 bg-amber-900/40 px-1.5 py-0.5 text-[10px] font-mono text-amber-300 shadow-2xs">
+          <FiSearch className="h-3.5 w-3.5 text-slate-400" />
+          <span className="text-slate-500 text-[11px] font-medium">Search catalog...</span>
+          <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-mono text-slate-400 shadow-2xs">
             ⌘K
           </kbd>
         </button>
@@ -168,13 +168,13 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setNotificationsOpen((v) => !v);
               setProfileOpen(false);
             }}
-            className="relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-amber-500/20 bg-amber-950/30 text-amber-300 hover:bg-amber-400/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400/30"
+            className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/90 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
             aria-label={`Admin Notifications (${countDisplay} unread)`}
             aria-expanded={notificationsOpen}
           >
-            <FiBell className="h-4 w-4" />
+            <FiBell className="h-3.5 w-3.5" />
             {countDisplay > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-mono font-bold text-white shadow-[0_0_10px_rgba(244,63,94,0.5)]">
+              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-mono font-bold text-white shadow-2xs">
                 {countDisplay > 99 ? '99+' : countDisplay}
               </span>
             )}
@@ -187,10 +187,10 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-3xl bg-amber-950/95 p-3 shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-amber-500/30 text-white backdrop-blur-2xl"
+                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white/98 p-2.5 shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-slate-200/90 backdrop-blur-xl"
               >
-                <div className="flex items-center justify-between px-3.5 py-2 border-b border-amber-500/20">
-                  <span className="font-bold text-xs uppercase tracking-wider text-amber-300 font-heading">
+                <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-100">
+                  <span className="font-bold text-xs uppercase tracking-wider text-slate-800 font-heading">
                     Notifications ({countDisplay})
                   </span>
                   {countDisplay > 0 && (
@@ -198,14 +198,14 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                       type="button"
                       onClick={() => markAllReadMutation.mutate()}
                       disabled={markAllReadMutation.isPending}
-                      className="text-xs text-amber-400 hover:underline font-semibold flex items-center gap-1"
+                      className="text-xs text-amber-700 hover:underline font-semibold flex items-center gap-1"
                     >
                       <FiCheck className="h-3 w-3" /> Mark all read
                     </button>
                   )}
                 </div>
 
-                <div className="max-h-72 overflow-y-auto divide-y divide-amber-500/10 my-1 custom-scrollbar">
+                <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 my-1 custom-scrollbar">
                   {isLoadingNotifs ? (
                     <div className="p-4 text-center">
                       <Spinner size="sm" label="Loading notifications..." />
@@ -219,30 +219,30 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                             markReadMutation.mutate({ id: notif.id, data: { isRead: true, read: true } });
                           }
                         }}
-                        className="p-3 hover:bg-amber-900/40 cursor-pointer transition-colors rounded-2xl m-1"
+                        className="p-2.5 hover:bg-slate-50 cursor-pointer transition-colors rounded-xl m-0.5"
                       >
-                        <p className="text-xs text-stone-100 font-semibold">{notif.title || notif.message}</p>
+                        <p className="text-xs text-slate-900 font-semibold">{notif.title || notif.message}</p>
                         {notif.description && (
-                          <p className="text-[11px] text-stone-400 mt-0.5 line-clamp-2">{notif.description}</p>
+                          <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{notif.description}</p>
                         )}
-                        <span className="text-[9px] text-amber-400/80 mt-1 block font-mono">
+                        <span className="text-[9px] text-slate-400 mt-1 block font-mono">
                           {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}
                         </span>
                       </div>
                     ))
                   ) : (
-                    <div className="p-6 text-center text-stone-400">
-                      <FiInbox className="h-6 w-6 mx-auto mb-1.5 opacity-40 text-amber-400" />
+                    <div className="p-6 text-center text-slate-400">
+                      <FiInbox className="h-5 w-5 mx-auto mb-1.5 opacity-40 text-amber-500" />
                       <p className="text-xs">No unread notifications</p>
                     </div>
                   )}
                 </div>
 
-                <div className="border-t border-amber-500/20 pt-1 text-center">
+                <div className="border-t border-slate-100 pt-1 text-center">
                   <Link
                     to={ROUTE_PATHS.NOTIFICATIONS}
                     onClick={() => setNotificationsOpen(false)}
-                    className="block rounded-xl px-4 py-2 text-xs text-amber-300 hover:bg-amber-900/40 font-bold transition-colors"
+                    className="block rounded-xl px-3 py-1.5 text-xs text-amber-700 hover:bg-slate-50 font-bold transition-colors"
                   >
                     View All Notifications →
                   </Link>
@@ -260,7 +260,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setProfileOpen((v) => !v);
               setNotificationsOpen(false);
             }}
-            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-amber-500/20 bg-amber-950/30 p-1.5 sm:p-2 min-h-[44px] min-w-[44px] hover:bg-amber-400/20 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all"
+            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200/80 bg-white p-1 sm:px-2 sm:py-1 hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all shadow-2xs"
             aria-label="Admin profile menu"
             aria-expanded={profileOpen}
           >
@@ -269,15 +269,15 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 name={`${user.firstName} ${user.lastName}`}
                 src={user.profileImageUrl || user.avatarUrl}
                 size="sm"
-                className="border border-amber-400/40 shadow-2xs"
+                className="h-7 w-7 border border-amber-500/20"
               />
             ) : (
-              <FiUser className="h-4 w-4 text-amber-300" />
+              <FiUser className="h-3.5 w-3.5 text-slate-700" />
             )}
-            <span className="hidden text-xs font-bold text-amber-200 md:block max-w-[100px] truncate font-heading">
+            <span className="hidden text-xs font-bold text-slate-800 md:block max-w-[90px] truncate">
               {user ? `${user.firstName}` : 'Admin'}
             </span>
-            <FiChevronDown className="h-3.5 w-3.5 text-amber-400 hidden sm:block" />
+            <FiChevronDown className="h-3 w-3 text-slate-400 hidden sm:block" />
           </button>
 
           <AnimatePresence>
@@ -287,48 +287,48 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-60 max-w-[calc(100vw-24px)] origin-top-right rounded-3xl bg-amber-950/95 p-2.5 shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-amber-500/30 text-white backdrop-blur-2xl"
+                className="absolute right-0 z-50 mt-2 w-56 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white/98 p-2 shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-slate-200/90 backdrop-blur-xl"
               >
-                <div className="px-3.5 py-2.5 border-b border-amber-500/20 mb-1 bg-stone-900/60 rounded-2xl">
+                <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50/80 rounded-xl">
                   <div className="flex items-center gap-1.5">
-                    <FiShield className="h-3.5 w-3.5 text-amber-400" />
-                    <p className="text-xs font-bold text-white truncate font-heading">
+                    <FiShield className="h-3.5 w-3.5 text-amber-600" />
+                    <p className="text-xs font-bold text-slate-900 truncate">
                       {user?.firstName} {user?.lastName}
                     </p>
                   </div>
-                  <p className="text-[10px] text-amber-300/80 font-mono truncate mt-0.5">
+                  <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5">
                     {user?.email}
                   </p>
                 </div>
 
                 <Link
                   to={ROUTE_PATHS.PROFILE}
-                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-semibold text-stone-200 hover:bg-amber-900/40 hover:text-amber-300 transition-colors"
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
-                  <FiUser className="h-4 w-4 text-amber-400" /> My Profile
+                  <FiUser className="h-3.5 w-3.5 text-amber-600" /> My Profile
                 </Link>
                 <Link
                   to={ROUTE_PATHS.ADMIN_SETTINGS}
-                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-semibold text-stone-200 hover:bg-amber-900/40 hover:text-amber-300 transition-colors"
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
-                  <FiSettings className="h-4 w-4 text-amber-400" /> Admin Settings
+                  <FiSettings className="h-3.5 w-3.5 text-amber-600" /> Admin Settings
                 </Link>
                 <Link
                   to={ROUTE_PATHS.HOME}
-                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-semibold text-stone-200 hover:bg-amber-900/40 hover:text-amber-300 transition-colors"
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >
-                  <FiHome className="h-4 w-4 text-amber-400" /> Storefront
+                  <FiHome className="h-3.5 w-3.5 text-amber-600" /> Storefront
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleLogoutClick}
-                  className="flex w-full items-center gap-2.5 rounded-2xl px-3 py-2 text-xs font-bold text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition-colors mt-1 border-t border-amber-500/20 pt-2"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors mt-1 border-t border-slate-100 pt-1.5"
                 >
-                  <FiLogOut className="h-4 w-4 text-rose-400" /> Logout
+                  <FiLogOut className="h-3.5 w-3.5 text-rose-600" /> Logout
                 </button>
               </motion.div>
             )}
@@ -339,41 +339,41 @@ export default function AdminTopbar({ title, onMenuToggle }) {
       {/* Global Quick Search Modal */}
       <AnimatePresence>
         {searchModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-950/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-900/60 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg rounded-3xl bg-amber-950/95 p-5 shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-amber-500/30 text-white backdrop-blur-2xl"
+              className="w-full max-w-lg rounded-2xl bg-white/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200/90 backdrop-blur-xl"
             >
-              <div className="flex items-center justify-between pb-3 border-b border-amber-500/20">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-amber-300 font-heading flex items-center gap-1.5">
-                  <FiShield className="h-3.5 w-3.5" /> Admin Search
+              <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <FiShield className="h-3.5 w-3.5 text-amber-600" /> Admin Search
                 </span>
                 <button
                   type="button"
                   onClick={() => setSearchModalOpen(false)}
-                  className="p-1 rounded-xl text-stone-400 hover:text-white hover:bg-amber-900/50 transition-colors"
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <FiX className="h-4 w-4" />
                 </button>
               </div>
 
-              <form onSubmit={handleSearchSubmit} className="mt-4 relative">
-                <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 h-4 w-4" />
+              <form onSubmit={handleSearchSubmit} className="mt-3 relative">
+                <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
                 <input
                   ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products, orders, customers..."
-                  className="w-full rounded-2xl border border-amber-500/30 bg-stone-900/80 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-400 focus:border-amber-400 focus:bg-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all font-body"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                 />
               </form>
 
-              <div className="mt-3 text-[11px] text-stone-400 flex items-center justify-between px-1">
+              <div className="mt-3 text-[11px] text-slate-400 flex items-center justify-between px-1">
                 <span>Press ENTER to view matching products</span>
-                <kbd className="rounded-md border border-amber-500/30 bg-amber-900/40 px-2 py-0.5 font-mono text-[10px] text-amber-300">
+                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px]">
                   ESC to close
                 </kbd>
               </div>
@@ -381,6 +381,6 @@ export default function AdminTopbar({ title, onMenuToggle }) {
           </div>
         )}
       </AnimatePresence>
-    </header>
+    </div>
   );
 }
