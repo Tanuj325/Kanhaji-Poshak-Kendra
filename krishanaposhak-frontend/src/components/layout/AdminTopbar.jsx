@@ -187,7 +187,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white/98 p-2.5 shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-slate-200/90 backdrop-blur-xl"
+                className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-slate-200 text-slate-900 backdrop-blur-xl font-display"
               >
                 <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-100">
                   <span className="font-bold text-xs uppercase tracking-wider text-slate-800 font-heading">
@@ -287,9 +287,9 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-56 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white/98 p-2 shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-slate-200/90 backdrop-blur-xl"
+                className="absolute right-0 z-50 mt-2 w-56 max-w-[calc(100vw-24px)] origin-top-right rounded-2xl bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-slate-200 text-slate-900 backdrop-blur-xl font-display"
               >
-                <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50/80 rounded-xl">
+                <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50 rounded-xl">
                   <div className="flex items-center gap-1.5">
                     <FiShield className="h-3.5 w-3.5 text-amber-600" />
                     <p className="text-xs font-bold text-slate-900 truncate">
@@ -339,27 +339,28 @@ export default function AdminTopbar({ title, onMenuToggle }) {
       {/* Global Quick Search Modal */}
       <AnimatePresence>
         {searchModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-950/75 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg rounded-2xl bg-white/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200/90 backdrop-blur-xl"
+              className="w-full max-w-lg rounded-2xl bg-white p-5 shadow-[0_25px_70px_rgba(0,0,0,0.25)] border border-slate-200 text-slate-900 font-display relative z-10"
             >
-              <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-heading">
                   <FiShield className="h-3.5 w-3.5 text-amber-600" /> Admin Search
                 </span>
                 <button
                   type="button"
                   onClick={() => setSearchModalOpen(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                  aria-label="Close search modal"
                 >
                   <FiX className="h-4 w-4" />
                 </button>
               </div>
 
-              <form onSubmit={handleSearchSubmit} className="mt-3 relative">
+              <form onSubmit={handleSearchSubmit} className="mt-4 relative">
                 <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
                 <input
                   ref={searchInputRef}
@@ -367,13 +368,13 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products, orders, customers..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  className="w-full rounded-xl border border-slate-300 bg-slate-50/80 pl-10 pr-10 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-amber-500/15 transition-all"
                 />
               </form>
 
-              <div className="mt-3 text-[11px] text-slate-400 flex items-center justify-between px-1">
+              <div className="mt-3.5 text-[11px] text-slate-400 flex items-center justify-between px-1">
                 <span>Press ENTER to view matching products</span>
-                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px]">
+                <kbd className="rounded border border-slate-200 bg-slate-100/80 px-2 py-0.5 font-mono text-[10px] text-slate-500">
                   ESC to close
                 </kbd>
               </div>
