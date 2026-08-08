@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import Switch from '@/components/forms/Switch';
-import ConfirmDialog from '@/components/overlay/ConfirmDialog';
 import toast from 'react-hot-toast';
 import { authService } from '@/services';
 import { getErrorMessage } from '@/utils/apiErrorParser';
@@ -24,6 +23,8 @@ import {
   FiAlertCircle,
   FiCheck,
   FiSave,
+  FiEdit2,
+  FiX,
 } from 'react-icons/fi';
 
 const GENDER_OPTIONS = [
@@ -59,9 +60,9 @@ function FloatingInput({
     <div className="relative w-full font-display min-w-0">
       <div
         className={cn(
-          'relative w-full h-[50px] rounded-[14px] border transition-all duration-200 font-display overflow-hidden flex items-center',
+          'relative w-full h-[48px] sm:h-[50px] rounded-[14px] border transition-all duration-200 font-display overflow-hidden flex items-center',
           disabled || readOnly
-            ? 'bg-stone-100/80 border-amber-900/10 cursor-not-allowed'
+            ? 'bg-stone-50/80 border-amber-900/10 cursor-not-allowed text-stone-600'
             : error
             ? 'border-rose-400 ring-2 ring-rose-500/10 bg-white'
             : isFocused
@@ -95,7 +96,7 @@ function FloatingInput({
           required={required}
           className={cn(
             'w-full h-full bg-transparent px-3.5 font-display text-xs sm:text-sm font-bold outline-none transition-all',
-            disabled || readOnly ? 'text-stone-500 cursor-not-allowed' : 'text-amber-950',
+            disabled || readOnly ? 'text-stone-600 cursor-not-allowed' : 'text-amber-950',
             isFloated ? 'pt-4 pb-1' : 'py-2.5',
           )}
         />
@@ -150,6 +151,7 @@ export default function MobileAccountSettings({
   const userData = profile || user;
   const fileInputRef = useRef(null);
 
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -203,7 +205,6 @@ export default function MobileAccountSettings({
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
 
-    // Upload avatar immediately if user wishes
     const payload = new FormData();
     payload.append('file', file);
     try {
@@ -236,6 +237,7 @@ export default function MobileAccountSettings({
       await updateProfile.mutateAsync({ userId: targetUserId, formData: payload });
       toast.success('Profile updated successfully!');
       setSelectedFile(null);
+      setIsEditing(false);
       refetch?.();
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -323,7 +325,7 @@ export default function MobileAccountSettings({
         ) : (
           <>
             {/* 1. Profile Summary Card */}
-            <div className="w-full rounded-[22px] p-5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] relative overflow-hidden font-display">
+            <div className="w-full rounded-[22px] p-4.5 sm:p-6 bg-gradient-to-b from-white via-[#FCFBF8] to-[#FAF6F0] border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] relative overflow-hidden font-display">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                 <div className="relative group shrink-0">
                   <Avatar
@@ -350,16 +352,16 @@ export default function MobileAccountSettings({
                   />
                 </div>
 
-                <div className="flex-1 text-center sm:text-left space-y-1 min-w-0">
+                <div className="flex-1 text-center sm:text-left space-y-1 min-w-0 w-full overflow-hidden">
                   <div className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-900 bg-amber-100/80 px-2.5 py-0.5 rounded-full border border-amber-300/60 shadow-2xs">
-                    <FiStar className="h-2.5 w-2.5 fill-amber-700 text-amber-700" /> Krishana Poshak Devotee
+                    <FiStar className="h-2.5 w-2.5 fill-amber-700 text-amber-700 shrink-0" /> Krishana Poshak Member
                   </div>
-                  <h2 className="font-heading font-black text-lg sm:text-xl text-amber-950 truncate tracking-tight">
+                  <h2 className="font-heading font-black text-base sm:text-xl text-amber-950 truncate tracking-tight">
                     {userData?.firstName} {userData?.lastName}
                   </h2>
-                  <p className="text-xs font-semibold text-stone-600 truncate">{userData?.email}</p>
+                  <p className="text-xs font-semibold text-stone-600 truncate max-w-full font-mono">{userData?.email}</p>
 
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1.5">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                     <Badge variant="success" size="sm" className="font-extrabold flex items-center gap-1 text-[10px]">
                       <FiCheckCircle className="h-3 w-3" /> Account Active
                     </Badge>
@@ -373,17 +375,51 @@ export default function MobileAccountSettings({
 
             {/* 2. Personal Information Form Card */}
             <form onSubmit={handleFormSubmit} className="w-full">
-              <div className="rounded-[22px] p-5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display">
-                <div className="flex items-center gap-2 pb-3 border-b border-amber-900/10">
-                  <div className="w-8 h-8 rounded-xl bg-amber-100/80 text-amber-900 flex items-center justify-center shrink-0">
-                    <FiUser className="w-4 h-4" />
+              <div className="rounded-[22px] p-4.5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display">
+                <div className="flex items-center justify-between gap-2 pb-3 border-b border-amber-900/10">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-amber-100/80 text-amber-900 flex items-center justify-center shrink-0">
+                      <FiUser className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-heading font-black text-sm sm:text-base text-amber-950 truncate">
+                        Personal Details
+                      </h3>
+                      <p className="text-[11px] font-semibold text-stone-500 truncate">
+                        {isEditing ? 'Editing your name and contact details' : 'Your account name and contact details'}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-heading font-black text-base text-amber-950">
-                      Personal Details
-                    </h3>
-                    <p className="text-[11px] font-semibold text-stone-500">Update your name and contact details</p>
-                  </div>
+
+                  {!isEditing ? (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 text-amber-950 font-extrabold text-xs border border-amber-900/15 transition-all active:scale-95 shrink-0 min-h-[34px]"
+                    >
+                      <FiEdit2 className="w-3.5 h-3.5 text-amber-800" />
+                      <span>Edit</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          firstName: userData.firstName || '',
+                          lastName: userData.lastName || '',
+                          email: userData.email || '',
+                          phoneNumber: userData.phoneNumber || '',
+                          gender: userData.gender || '',
+                          dateOfBirth: userData.dateOfBirth ? String(userData.dateOfBirth).split('T')[0] : '',
+                        });
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition-colors shrink-0"
+                    >
+                      <FiX className="w-3.5 h-3.5" />
+                      <span>Cancel</span>
+                    </button>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[14px]">
@@ -392,6 +428,7 @@ export default function MobileAccountSettings({
                     name="firstName"
                     label="First Name"
                     required
+                    disabled={!isEditing}
                     value={formData.firstName}
                     onChange={handleInputChange}
                   />
@@ -400,6 +437,7 @@ export default function MobileAccountSettings({
                     name="lastName"
                     label="Last Name"
                     required
+                    disabled={!isEditing}
                     value={formData.lastName}
                     onChange={handleInputChange}
                   />
@@ -422,13 +460,21 @@ export default function MobileAccountSettings({
                     label="Mobile Phone Number"
                     type="tel"
                     inputMode="numeric"
+                    disabled={!isEditing}
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[14px]">
-                  <div className="relative w-full h-[50px] rounded-[14px] border border-amber-900/20 bg-white overflow-hidden flex items-center font-display">
+                  <div
+                    className={cn(
+                      'relative w-full h-[48px] sm:h-[50px] rounded-[14px] border transition-all duration-200 font-display overflow-hidden flex items-center',
+                      !isEditing
+                        ? 'bg-stone-50/80 border-amber-900/10 cursor-not-allowed text-stone-600'
+                        : 'bg-white border-amber-900/20 hover:border-amber-700/40',
+                    )}
+                  >
                     <label
                       htmlFor="sett-gender"
                       className="absolute left-3.5 top-1.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-900 pointer-events-none"
@@ -438,9 +484,13 @@ export default function MobileAccountSettings({
                     <select
                       id="sett-gender"
                       name="gender"
+                      disabled={!isEditing}
                       value={formData.gender}
                       onChange={handleInputChange}
-                      className="w-full h-full bg-transparent px-3.5 pt-4 pb-1 text-xs sm:text-sm font-bold text-amber-950 outline-none cursor-pointer"
+                      className={cn(
+                        'w-full h-full bg-transparent px-3.5 pt-4 pb-1 text-xs sm:text-sm font-bold outline-none',
+                        !isEditing ? 'text-stone-600 cursor-not-allowed' : 'text-amber-950 cursor-pointer',
+                      )}
                     >
                       {GENDER_OPTIONS.map((g) => (
                         <option key={g.value} value={g.value}>
@@ -455,51 +505,71 @@ export default function MobileAccountSettings({
                     name="dateOfBirth"
                     label="Date of Birth"
                     type="date"
+                    disabled={!isEditing}
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
                   />
                 </div>
 
-                <div className="pt-2 flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full sm:w-auto px-6 h-[46px] rounded-xl bg-gradient-to-r from-amber-800 to-amber-950 hover:from-amber-900 hover:to-stone-950 text-white font-extrabold text-xs shadow-md disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
-                  >
-                    <FiSave className="w-4 h-4 text-amber-200" />
-                    <span>{isSubmitting ? 'Saving...' : 'Save Profile Changes'}</span>
-                  </button>
-                </div>
+                {isEditing && (
+                  <div className="pt-3 border-t border-amber-900/10 flex items-center justify-end gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          firstName: userData.firstName || '',
+                          lastName: userData.lastName || '',
+                          email: userData.email || '',
+                          phoneNumber: userData.phoneNumber || '',
+                          gender: userData.gender || '',
+                          dateOfBirth: userData.dateOfBirth ? String(userData.dateOfBirth).split('T')[0] : '',
+                        });
+                      }}
+                      className="px-4 h-[42px] rounded-xl border border-amber-900/20 text-xs font-bold text-stone-600 hover:bg-stone-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-6 h-[42px] rounded-xl bg-gradient-to-r from-amber-800 to-amber-950 hover:from-amber-900 hover:to-stone-950 text-white font-extrabold text-xs shadow-md disabled:opacity-50 flex items-center gap-2 transition-all active:scale-95"
+                    >
+                      <FiSave className="w-4 h-4 text-amber-200" />
+                      <span>{isSubmitting ? 'Saving...' : 'Save Changes'}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </form>
 
             {/* 3. Security & Credentials Card */}
-            <div className="rounded-[22px] p-5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display">
-              <div className="flex items-center gap-2 pb-3 border-b border-amber-900/10">
+            <div className="rounded-[22px] p-4.5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display min-w-0 w-full overflow-hidden">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-amber-900/10">
                 <div className="w-8 h-8 rounded-xl bg-amber-100/80 text-amber-900 flex items-center justify-center shrink-0">
                   <FiLock className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="font-heading font-black text-base text-amber-950">
+                <div className="min-w-0">
+                  <h3 className="font-heading font-black text-sm sm:text-base text-amber-950 truncate">
                     Security & Credentials
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500">Manage account verification and password reset</p>
+                  <p className="text-[11px] font-semibold text-stone-500 truncate">Manage verification and password reset</p>
                 </div>
               </div>
 
-              {/* Email Verification Status */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-amber-50/50 border border-amber-900/10">
-                <div className="flex items-center gap-2.5">
+              {/* Email Verification Status Box */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-amber-50/50 border border-amber-900/10 min-w-0 w-full overflow-hidden">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
                   {userData?.emailVerified ? (
                     <FiCheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
                   ) : (
                     <FiAlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
                   )}
-                  <div>
-                    <p className="text-xs font-bold text-amber-950">
+                  <div className="min-w-0 flex-1 overflow-hidden">
+                    <p className="text-xs font-bold text-amber-950 truncate">
                       {userData?.emailVerified ? 'Email Address Verified' : 'Email Address Unverified'}
                     </p>
-                    <p className="text-[11px] text-stone-600">{userData?.email}</p>
+                    <p className="text-[11px] font-mono text-stone-600 truncate max-w-full">{userData?.email}</p>
                   </div>
                 </div>
 
@@ -508,7 +578,7 @@ export default function MobileAccountSettings({
                     type="button"
                     onClick={handleResendVerification}
                     disabled={isResendingVerification}
-                    className="px-3.5 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-2xs transition-all min-h-[36px] self-start sm:self-auto"
+                    className="px-3.5 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-2xs transition-all min-h-[34px] self-start sm:self-auto shrink-0"
                   >
                     {isResendingVerification ? 'Sending...' : 'Verify Email'}
                   </button>
@@ -516,10 +586,10 @@ export default function MobileAccountSettings({
               </div>
 
               {/* Password Reset Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-amber-950">Send Password Reset Link</p>
-                  <p className="text-[11px] text-stone-500 mt-0.5">
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-normal">
                     Receive a secure verification link via email to change your password
                   </p>
                 </div>
@@ -527,7 +597,7 @@ export default function MobileAccountSettings({
                   type="button"
                   onClick={handlePasswordReset}
                   disabled={isResettingPassword}
-                  className="px-4 py-2 rounded-xl bg-white hover:bg-amber-50 text-amber-950 font-extrabold text-xs border border-amber-900/20 shadow-2xs transition-all active:scale-95 shrink-0 min-h-[38px]"
+                  className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-amber-50 text-amber-950 font-extrabold text-xs border border-amber-900/20 shadow-2xs transition-all active:scale-95 shrink-0 min-h-[36px] self-start sm:self-auto"
                 >
                   {isResettingPassword ? 'Sending Link...' : 'Send Reset Link'}
                 </button>
@@ -535,57 +605,65 @@ export default function MobileAccountSettings({
             </div>
 
             {/* 4. Notification Preferences Card */}
-            <div className="rounded-[22px] p-5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display">
-              <div className="flex items-center gap-2 pb-3 border-b border-amber-900/10">
+            <div className="rounded-[22px] p-4.5 sm:p-6 bg-white border border-amber-900/12 shadow-[0_4px_24px_rgba(44,40,36,0.05)] space-y-4 font-display">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-amber-900/10">
                 <div className="w-8 h-8 rounded-xl bg-amber-100/80 text-amber-900 flex items-center justify-center shrink-0">
                   <FiBell className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="font-heading font-black text-base text-amber-950">
+                <div className="min-w-0">
+                  <h3 className="font-heading font-black text-sm sm:text-base text-amber-950 truncate">
                     Notification Preferences
                   </h3>
-                  <p className="text-[11px] font-semibold text-stone-500">Configure order alerts and promotional offers</p>
+                  <p className="text-[11px] font-semibold text-stone-500 truncate">Configure order alerts and festival updates</p>
                 </div>
               </div>
 
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between gap-3">
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-amber-950">Order & Delivery Alerts</p>
-                    <p className="text-[11px] text-stone-500 mt-0.5">Receive dispatch tracking updates and order confirmations</p>
+                    <p className="text-[11px] text-stone-500 mt-0.5 leading-normal">Receive dispatch tracking updates and order confirmations</p>
                   </div>
-                  <Switch checked={emailNotifs} onChange={setEmailNotifs} />
+                  <Switch
+                    size="sm"
+                    checked={Boolean(emailNotifs)}
+                    onChange={(e) => setEmailNotifs(e.target.checked)}
+                  />
                 </div>
 
                 <div className="flex items-center justify-between gap-3 pt-3 border-t border-amber-900/10">
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-amber-950">Festive Offers & Exclusive Launches</p>
-                    <p className="text-[11px] text-stone-500 mt-0.5">Early access to coupons and festival attire collections</p>
+                    <p className="text-[11px] text-stone-500 mt-0.5 leading-normal">Early access to coupons and festival attire collections</p>
                   </div>
-                  <Switch checked={promoNotifs} onChange={setPromoNotifs} />
+                  <Switch
+                    size="sm"
+                    checked={Boolean(promoNotifs)}
+                    onChange={(e) => setPromoNotifs(e.target.checked)}
+                  />
                 </div>
               </div>
             </div>
 
             {/* 5. Active Session Control / Sign Out */}
-            <div className="rounded-[22px] p-5 sm:p-6 bg-rose-50/60 border border-rose-200/80 shadow-2xs space-y-3 font-display">
+            <div className="rounded-[22px] p-4.5 sm:p-6 bg-rose-50/60 border border-rose-200/80 shadow-2xs space-y-3 font-display">
               <div className="flex items-center gap-2 text-rose-800">
-                <FiShield className="w-4.5 h-4.5 text-rose-700" />
-                <h3 className="font-heading font-extrabold text-base text-rose-950">
+                <FiShield className="w-4 h-4 text-rose-700 shrink-0" />
+                <h3 className="font-heading font-extrabold text-sm sm:text-base text-rose-950">
                   Active Session Control
                 </h3>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
+                <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-stone-800">Sign Out Account</p>
-                  <p className="text-[11px] text-stone-500 mt-0.5">
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-normal">
                     Safely terminate your active customer login session on this browser
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className="px-5 h-[42px] rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0"
+                  className="px-4 h-[38px] rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0 self-start sm:self-auto"
                 >
                   <FiLogOut className="w-4 h-4" />
                   <span>Sign Out Session</span>
@@ -596,16 +674,49 @@ export default function MobileAccountSettings({
         )}
       </main>
 
-      {/* Sign Out Confirmation Dialog */}
-      <ConfirmDialog
-        isOpen={isLogoutModalOpen}
-        onClose={() => setIsLogoutModalOpen(false)}
-        onConfirm={handleLogoutConfirm}
-        title="Sign Out Confirmation"
-        message="Are you sure you want to sign out of your account?"
-        confirmText="Sign Out"
-        variant="danger"
-      />
+      {/* ---------------------------------------------------- */}
+      {/* SIGN OUT CONFIRMATION MODAL (z-[80] ABOVE OVERLAY) */}
+      {/* ---------------------------------------------------- */}
+      <AnimatePresence>
+        {isLogoutModalOpen && (
+          <div className="fixed inset-0 z-[80] flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4 font-display">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm bg-white rounded-[24px] shadow-2xl p-6 space-y-4 border border-amber-900/10"
+            >
+              <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center mx-auto">
+                <FiLogOut className="w-6 h-6" />
+              </div>
+              <div className="text-center space-y-1">
+                <h3 className="font-heading font-extrabold text-base text-amber-950">
+                  Sign Out Confirmation
+                </h3>
+                <p className="text-xs text-stone-600 font-body leading-relaxed">
+                  Are you sure you want to sign out of your account on this device?
+                </p>
+              </div>
+              <div className="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsLogoutModalOpen(false)}
+                  className="flex-1 h-[42px] rounded-xl border border-stone-200 text-xs font-bold text-stone-600 hover:bg-stone-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogoutConfirm}
+                  className="flex-1 h-[42px] rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md transition-all active:scale-95"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
