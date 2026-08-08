@@ -14,7 +14,7 @@ export default function AdminLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex w-full min-h-screen bg-[linear-gradient(180deg,#faf7f2_0%,#f4efe7_100%)] font-display text-slate-800 antialiased selection:bg-temple-gold/25 selection:text-dark-charcoal">
+    <div className="flex min-h-screen bg-[linear-gradient(180deg,#faf7f2_0%,#f4efe7_100%)] font-display text-slate-800 antialiased selection:bg-temple-gold/25 selection:text-dark-charcoal">
       <header className="fixed left-0 right-0 top-0 z-40 flex h-14 sm:h-16 items-center border-b border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-2xs">
         <AdminTopbar onMenuToggle={() => setIsMobileDrawerOpen((v) => !v)} />
       </header>
