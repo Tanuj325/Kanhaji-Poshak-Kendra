@@ -15,7 +15,7 @@ export default function AdminLayout() {
 
   return (
     <div className="flex min-h-screen bg-[linear-gradient(180deg,#faf7f2_0%,#f4efe7_100%)] font-display text-slate-800 antialiased selection:bg-temple-gold/25 selection:text-dark-charcoal">
-      <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center border-b border-white/70 bg-white/85 backdrop-blur-xl shadow-[0_10px_28px_rgba(44,40,36,0.08)]">
+      <header className="fixed left-0 right-0 top-0 z-30 flex h-14 sm:h-16 items-center border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <AdminTopbar onMenuToggle={() => setIsMobileDrawerOpen((v) => !v)} />
       </header>
 
@@ -26,7 +26,7 @@ export default function AdminLayout() {
 
       <aside
         className={cn(
-          'fixed bottom-0 left-0 top-16 z-20 hidden lg:flex flex-col border-r border-white/70 bg-white/85 transition-all duration-300 ease-in-out shadow-[0_10px_28px_rgba(44,40,36,0.08)] backdrop-blur-xl',
+          'fixed bottom-0 left-0 top-14 sm:top-16 z-20 hidden lg:flex flex-col border-r border-slate-200/80 bg-white/90 transition-all duration-300 ease-in-out shadow-2xs backdrop-blur-xl',
           isSidebarCollapsed ? 'w-16' : 'w-64',
         )}
       >
@@ -68,7 +68,7 @@ export default function AdminLayout() {
 
       <div
         className={cn(
-          'flex min-h-screen flex-1 flex-col pt-16 transition-all duration-300 ease-in-out w-full min-w-0',
+          'flex min-h-screen flex-1 flex-col pt-14 sm:pt-16 transition-all duration-300 ease-in-out w-full min-w-0',
           isSidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64',
         )}
       >

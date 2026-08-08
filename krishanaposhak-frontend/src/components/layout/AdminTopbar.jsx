@@ -115,17 +115,17 @@ export default function AdminTopbar({ title, onMenuToggle }) {
         <button
           type="button"
           onClick={onMenuToggle}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100/90 border border-slate-200/80 text-slate-700 hover:bg-slate-200/90 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden shrink-0"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none lg:hidden shrink-0"
           aria-label="Toggle admin navigation menu"
         >
-          <FiMenu className="h-4 w-4" />
+          <FiMenu className="h-3.5 w-3.5" />
         </button>
 
         <div className="flex items-center gap-2 min-w-0 flex-1 lg:flex-initial truncate">
           <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-700 border border-amber-500/20 font-heading shrink-0">
-            <FiShield className="h-3 w-3 text-amber-600" /> Admin
+            <FiShield className="h-2.5 w-2.5 text-amber-600" /> Admin
           </span>
-          <h1 className="font-serif text-sm sm:text-base font-bold text-slate-900 truncate min-w-0 flex-1">
+          <h1 className="font-heading text-xs sm:text-sm font-bold text-slate-900 tracking-tight truncate min-w-0 flex-1">
             {pageTitle}
           </h1>
           <span className="hidden md:inline-flex items-center gap-1 shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-700 shadow-2xs">
@@ -141,7 +141,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+          className="flex sm:hidden h-8 w-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none"
           aria-label="Open admin search"
         >
           <FiSearch className="h-3.5 w-3.5" />
@@ -151,9 +151,9 @@ export default function AdminTopbar({ title, onMenuToggle }) {
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1.5 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 transition-all shadow-2xs"
+          className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-100/70 px-3 py-1 text-xs text-slate-400 hover:border-slate-300 hover:bg-slate-100 transition-all shadow-2xs"
         >
-          <FiSearch className="h-3.5 w-3.5 text-slate-400" />
+          <FiSearch className="h-3 w-3 text-slate-400" />
           <span className="text-slate-500 text-[11px] font-medium">Search catalog...</span>
           <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-mono text-slate-400 shadow-2xs">
             ⌘K
@@ -168,13 +168,13 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setNotificationsOpen((v) => !v);
               setProfileOpen(false);
             }}
-            className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/90 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+            className="relative flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none"
             aria-label={`Admin Notifications (${countDisplay} unread)`}
             aria-expanded={notificationsOpen}
           >
             <FiBell className="h-3.5 w-3.5" />
             {countDisplay > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-mono font-bold text-white shadow-2xs">
+              <span className="absolute -top-0.5 -right-0.5 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-rose-500 px-1 text-[8px] font-mono font-bold text-white shadow-2xs">
                 {countDisplay > 99 ? '99+' : countDisplay}
               </span>
             )}
@@ -260,7 +260,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setProfileOpen((v) => !v);
               setNotificationsOpen(false);
             }}
-            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200/80 bg-white p-1 sm:px-2 sm:py-1 hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all shadow-2xs"
+            className="flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50 p-1 pr-2.5 hover:bg-slate-100 hover:border-slate-300 focus:outline-none transition-all shadow-2xs"
             aria-label="Admin profile menu"
             aria-expanded={profileOpen}
           >
@@ -268,13 +268,13 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               <Avatar
                 name={`${user.firstName} ${user.lastName}`}
                 src={user.profileImageUrl || user.avatarUrl}
-                size="sm"
-                className="h-7 w-7 border border-amber-500/20"
+                size="xs"
+                className="h-6 w-6 rounded-full border border-amber-500/30"
               />
             ) : (
               <FiUser className="h-3.5 w-3.5 text-slate-700" />
             )}
-            <span className="hidden text-xs font-bold text-slate-800 md:block max-w-[90px] truncate">
+            <span className="hidden text-[11px] font-bold text-slate-800 md:block max-w-[80px] truncate">
               {user ? `${user.firstName}` : 'Admin'}
             </span>
             <FiChevronDown className="h-3 w-3 text-slate-400 hidden sm:block" />
