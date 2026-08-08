@@ -49,37 +49,37 @@ import {
 const QuickActions = memo(function QuickActions() {
   const navigate = useNavigate();
   return (
-    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5 font-display w-full md:w-auto">
+    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2 font-display w-full sm:w-auto">
       <button
         type="button"
         onClick={() => navigate('/admin/products/new')}
-        className="inline-flex min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 px-3.5 py-2 text-xs font-black text-amber-950 shadow-lg hover:from-amber-300 hover:to-amber-400 transition-all active:scale-[0.98] border border-amber-300/50"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-slate-950 shadow-xs hover:from-amber-400 hover:to-amber-500 hover:shadow-md transition-all active:scale-[0.98] border border-amber-400/40"
       >
-        <FiPlus className="h-4 w-4 stroke-[3]" />
+        <FiPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         <span>Add Product</span>
       </button>
       <button
         type="button"
         onClick={() => navigate('/admin/orders')}
-        className="inline-flex min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-white/20 transition-all active:scale-[0.98]"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
-        <FiShoppingCart className="h-4 w-4 text-amber-400" />
+        <FiShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>View Orders</span>
       </button>
       <button
         type="button"
         onClick={() => navigate('/admin/coupons/new')}
-        className="inline-flex min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-white/20 transition-all active:scale-[0.98]"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
-        <FiTag className="h-4 w-4 text-amber-400" />
+        <FiTag className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>Create Coupon</span>
       </button>
       <button
         type="button"
         onClick={() => navigate('/admin/analytics/sales')}
-        className="inline-flex min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-white/20 transition-all active:scale-[0.98]"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
-        <FiBarChart2 className="h-4 w-4 text-amber-400" />
+        <FiBarChart2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>Full Analytics</span>
       </button>
     </div>
@@ -94,7 +94,6 @@ function StatCards({ overview, isLoading }) {
       icon: FiUser,
       change: '+12% this month',
       color: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
-      badgeBg: 'bg-amber-50 text-amber-700 border-amber-200/60',
     },
     {
       title: 'Active Customers',
@@ -102,7 +101,6 @@ function StatCards({ overview, isLoading }) {
       icon: FiCheckCircle,
       change: 'Active users',
       color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-      badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
     },
     {
       title: 'New Devotees Today',
@@ -110,7 +108,6 @@ function StatCards({ overview, isLoading }) {
       icon: FiCalendar,
       change: 'Registered today',
       color: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-      badgeBg: 'bg-blue-50 text-blue-700 border-blue-200/60',
     },
     {
       title: 'Avg Order Value',
@@ -120,36 +117,32 @@ function StatCards({ overview, isLoading }) {
       icon: FiDollarSign,
       change: 'Per devotee spend',
       color: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-      badgeBg: 'bg-purple-50 text-purple-700 border-purple-200/60',
     },
   ], [overview]);
 
   return (
-    <div className="grid gap-3.5 sm:gap-4 grid-cols-2 lg:grid-cols-4 font-display">
+    <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4 font-display">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
           <div
             key={card.title}
-            className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-amber-50/20 to-stone-50/30 p-3.5 sm:p-4 lg:p-5 shadow-[0_4px_20px_rgba(44,40,36,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(217,119,6,0.12)] hover:border-amber-500/40 flex flex-col justify-between group"
+            className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-xs p-3.5 sm:p-4 lg:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] transition-all hover:shadow-md hover:border-amber-400/40 flex flex-col justify-between"
           >
-            <div className="absolute top-0 right-0 -mr-6 -mt-6 h-20 w-20 rounded-full bg-amber-500/10 blur-xl group-hover:bg-amber-500/20 transition-all pointer-events-none" />
-
-            <div className="flex items-center justify-between gap-1.5 relative z-10">
-              <div className={cn('flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-xl border shadow-2xs', card.color)}>
+            <div className="flex items-center justify-between gap-1">
+              <div className={cn('flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl border shadow-2xs', card.color)}>
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </div>
-              <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold border truncate', card.badgeBg)}>
+              <span className="inline-flex items-center rounded-md bg-slate-100/90 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold text-slate-500 border border-slate-200/60 truncate">
                 {card.change}
               </span>
             </div>
-
-            <div className="mt-3 relative z-10">
-              <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 font-display truncate">{card.title}</p>
+            <div className="mt-2.5 sm:mt-3">
+              <p className="text-[11px] sm:text-xs font-bold text-slate-500 truncate">{card.title}</p>
               {isLoading ? (
-                <Skeleton variant="text" className="h-6 sm:h-8 w-20 sm:w-24 mt-1" />
+                <Skeleton variant="text" className="h-6 sm:h-8 w-20 sm:w-24 mt-0.5" />
               ) : (
-                <p className="font-serif text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight mt-0.5 truncate">{card.value}</p>
+                <p className="font-serif text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight mt-0.5 truncate">{card.value}</p>
               )}
             </div>
           </div>
@@ -443,37 +436,30 @@ export default function DashboardPage() {
       <div className="space-y-3.5 sm:space-y-5 lg:space-y-6 font-display">
         <Breadcrumb />
 
-        {/* Luxury Executive Hero Welcome Banner */}
-        <div className="relative rounded-3xl bg-gradient-to-r from-amber-950 via-stone-950 to-amber-900 p-5 sm:p-7 text-white shadow-xl overflow-hidden border border-amber-500/20">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-amber-300 backdrop-blur-md border border-amber-400/30 font-heading">
-                  <FiShield className="h-3 w-3" /> Enterprise Admin Console
-                </span>
-              </div>
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-                Dashboard Overview
-              </h1>
-              <p className="text-xs sm:text-sm text-stone-300 mt-1 font-body max-w-lg">
-                Real-time enterprise metrics, catalog operations & sales performance analytics
-              </p>
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 border-b border-slate-200/80 pb-3.5 sm:pb-4 lg:pb-5">
+          <div>
+            <div className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest text-amber-700 border border-amber-500/20 mb-1 font-heading">
+              <FiTrendingUp className="h-3 w-3" /> Live Analytics
             </div>
-
-            <div className="flex flex-wrap items-center gap-2.5">
-              <QuickActions />
-              <button
-                type="button"
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-amber-400/20 backdrop-blur-md border border-amber-400/30 px-3.5 py-2 text-xs font-bold text-amber-300 shadow-xs hover:bg-amber-400/30 transition-all disabled:opacity-50 active:scale-[0.98] w-full sm:w-auto"
-              >
-                <FiRotateCw className={cn('h-4 w-4 text-amber-300', isRefreshing && 'animate-spin')} />
-                <span>Refresh</span>
-              </button>
-            </div>
+            <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">
+              Dashboard Overview
+            </h1>
+            <p className="mt-0.5 text-[11px] sm:text-xs text-stone-600 font-body">
+              Real-time enterprise metrics & catalog operations
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
+            <QuickActions />
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-50/60 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-amber-800 shadow-2xs hover:bg-amber-100/60 transition-all disabled:opacity-50 w-full sm:w-auto active:scale-[0.98]"
+            >
+              <FiRotateCw className={cn('h-3.5 w-3.5 text-amber-600', isRefreshing && 'animate-spin')} />
+              <span>Refresh</span>
+            </button>
           </div>
         </div>
 
