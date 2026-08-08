@@ -53,7 +53,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/products/new')}
-        className="inline-flex min-h-[38px] sm:min-h-[44px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-amber-500 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-950 shadow-xs hover:bg-amber-400 transition-all active:scale-[0.98]"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-slate-950 shadow-xs hover:from-amber-400 hover:to-amber-500 hover:shadow-md transition-all active:scale-[0.98] border border-amber-400/40"
       >
         <FiPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         <span>Add Product</span>
@@ -61,7 +61,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/orders')}
-        className="inline-flex min-h-[38px] sm:min-h-[44px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
         <FiShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>View Orders</span>
@@ -69,7 +69,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/coupons/new')}
-        className="inline-flex min-h-[38px] sm:min-h-[44px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
         <FiTag className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>Create Coupon</span>
@@ -77,7 +77,7 @@ const QuickActions = memo(function QuickActions() {
       <button
         type="button"
         onClick={() => navigate('/admin/analytics/sales')}
-        className="inline-flex min-h-[38px] sm:min-h-[44px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+        className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center sm:justify-start gap-1.5 rounded-xl border border-slate-200/90 bg-white/90 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all active:scale-[0.98]"
       >
         <FiBarChart2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
         <span>Full Analytics</span>
@@ -121,29 +121,29 @@ function StatCards({ overview, isLoading }) {
   ], [overview]);
 
   return (
-    <div className="grid gap-2.5 sm:gap-4 grid-cols-2 lg:grid-cols-4 font-display">
+    <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4 font-display">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
           <div
             key={card.title}
-            className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-3 sm:p-4 lg:p-5 shadow-xs transition-all hover:shadow-md hover:border-slate-300"
+            className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-xs p-3.5 sm:p-4 lg:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] transition-all hover:shadow-md hover:border-amber-400/40 flex flex-col justify-between"
           >
             <div className="flex items-center justify-between gap-1">
-              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">
-                {card.title}
-              </span>
-              <div className={cn('flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl border', card.color)}>
+              <div className={cn('flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl border shadow-2xs', card.color)}>
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </div>
+              <span className="inline-flex items-center rounded-md bg-slate-100/90 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold text-slate-500 border border-slate-200/60 truncate">
+                {card.change}
+              </span>
             </div>
-            <div className="mt-1.5 sm:mt-3">
+            <div className="mt-2.5 sm:mt-3">
+              <p className="text-[11px] sm:text-xs font-bold text-slate-500 truncate">{card.title}</p>
               {isLoading ? (
-                <Skeleton variant="text" className="h-6 sm:h-8 w-20 sm:w-24" />
+                <Skeleton variant="text" className="h-6 sm:h-8 w-20 sm:w-24 mt-0.5" />
               ) : (
-                <p className="font-serif text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 truncate">{card.value}</p>
+                <p className="font-serif text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 tracking-tight mt-0.5 truncate">{card.value}</p>
               )}
-              <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-[11px] font-medium text-slate-400 truncate">{card.change}</p>
             </div>
           </div>
         );
@@ -284,10 +284,10 @@ function StockStatusSection() {
   const navigate = useNavigate();
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 lg:p-6 shadow-xs font-display">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 lg:p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-display">
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
-          <h3 className="font-serif text-sm sm:text-base font-bold text-slate-900">Inventory Health</h3>
+          <h3 className="font-serif text-sm sm:text-base lg:text-lg font-bold text-slate-900">Inventory Health</h3>
           <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Low and out of stock warnings</p>
         </div>
         <Button
@@ -301,60 +301,64 @@ function StockStatusSection() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
         {/* Low Stock */}
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-2.5 sm:p-4">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1 sm:gap-1.5">
-              <FiAlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-600 shrink-0" /> Low Stock
+        <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-50/40 to-amber-500/5 p-3 sm:p-4 shadow-2xs">
+          <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+            <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+              <FiAlertCircle className="h-3.5 w-3.5 text-amber-600 shrink-0" /> Low Stock
             </span>
-            <Badge variant="warning" className="text-[10px] sm:text-xs px-1.5 py-0.5">{lowStock.data?.length ?? 0}</Badge>
+            <span className="inline-flex items-center rounded-full bg-amber-500/20 px-2 py-0.5 text-[11px] font-extrabold text-amber-800 border border-amber-500/30 font-mono shadow-2xs">
+              {lowStock.data?.length ?? 0}
+            </span>
           </div>
           {lowStock.isLoading ? (
             <Skeleton variant="text" className="h-10 sm:h-12 w-full" />
           ) : lowStock.data && lowStock.data.length > 0 ? (
-            <div className="space-y-1 sm:space-y-1.5 max-h-36 sm:max-h-40 overflow-y-auto custom-scrollbar">
+            <div className="space-y-1.5 max-h-36 sm:max-h-40 overflow-y-auto custom-scrollbar">
               {lowStock.data.slice(0, 4).map((product, i) => (
                 <div
                   key={product.id || i}
-                  className="flex items-center justify-between text-[10px] sm:text-xs p-1 sm:p-1.5 rounded-lg hover:bg-amber-500/10 cursor-pointer"
+                  className="flex items-center justify-between text-xs p-2 rounded-xl bg-white/80 border border-slate-200/60 shadow-2xs hover:bg-white hover:border-amber-400/40 cursor-pointer transition-all"
                   onClick={() => navigate(`/admin/products/${product.id}/edit`)}
                 >
-                  <span className="truncate flex-1 min-w-0 pr-1.5 font-medium text-slate-800">{product.name}</span>
-                  <span className="font-mono font-bold text-amber-700 shrink-0">{product.stock} left</span>
+                  <span className="truncate flex-1 min-w-0 pr-2 font-semibold text-slate-800 text-[11px] sm:text-xs">{product.name}</span>
+                  <span className="font-mono font-bold text-[10px] sm:text-[11px] text-amber-700 bg-amber-100/80 px-2 py-0.5 rounded-md border border-amber-200/80 shrink-0">{product.stock} left</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-[10px] sm:text-[11px] text-slate-500">All products well stocked</p>
+            <p className="text-[11px] text-slate-500 py-2">All products well stocked</p>
           )}
         </div>
 
         {/* Out of Stock */}
-        <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-2.5 sm:p-4">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-rose-800 flex items-center gap-1 sm:gap-1.5">
-              <FiPackage className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-rose-600 shrink-0" /> Out of Stock
+        <div className="rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-500/10 via-rose-50/40 to-rose-500/5 p-3 sm:p-4 shadow-2xs">
+          <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+            <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-rose-900 flex items-center gap-1.5">
+              <FiPackage className="h-3.5 w-3.5 text-rose-600 shrink-0" /> Out of Stock
             </span>
-            <Badge variant="danger" className="text-[10px] sm:text-xs px-1.5 py-0.5">{outOfStock.data?.length ?? 0}</Badge>
+            <span className="inline-flex items-center rounded-full bg-rose-500/20 px-2 py-0.5 text-[11px] font-extrabold text-rose-800 border border-rose-500/30 font-mono shadow-2xs">
+              {outOfStock.data?.length ?? 0}
+            </span>
           </div>
           {outOfStock.isLoading ? (
             <Skeleton variant="text" className="h-10 sm:h-12 w-full" />
           ) : outOfStock.data && outOfStock.data.length > 0 ? (
-            <div className="space-y-1 sm:space-y-1.5 max-h-36 sm:max-h-40 overflow-y-auto custom-scrollbar">
+            <div className="space-y-1.5 max-h-36 sm:max-h-40 overflow-y-auto custom-scrollbar">
               {outOfStock.data.slice(0, 4).map((product, i) => (
                 <div
                   key={product.id || i}
-                  className="flex items-center justify-between text-[10px] sm:text-xs p-1 sm:p-1.5 rounded-lg hover:bg-rose-500/10 cursor-pointer"
+                  className="flex items-center justify-between text-xs p-2 rounded-xl bg-white/80 border border-slate-200/60 shadow-2xs hover:bg-white hover:border-rose-400/40 cursor-pointer transition-all"
                   onClick={() => navigate(`/admin/products/${product.id}/edit`)}
                 >
-                  <span className="truncate flex-1 min-w-0 pr-1.5 font-medium text-slate-800">{product.name}</span>
-                  <span className="font-mono font-bold text-rose-600 shrink-0">0 left</span>
+                  <span className="truncate flex-1 min-w-0 pr-2 font-semibold text-slate-800 text-[11px] sm:text-xs">{product.name}</span>
+                  <span className="font-mono font-bold text-[10px] sm:text-[11px] text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded-md border border-rose-200/80 shrink-0">0 left</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-[10px] sm:text-[11px] text-slate-500">No out of stock items</p>
+            <p className="text-[11px] text-slate-500 py-2">No out of stock items</p>
           )}
         </div>
       </div>
@@ -433,22 +437,25 @@ export default function DashboardPage() {
         <Breadcrumb />
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 border-b border-slate-200/60 pb-3 sm:pb-4 lg:pb-5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 border-b border-slate-200/80 pb-3.5 sm:pb-4 lg:pb-5">
           <div>
-            <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight">
+            <div className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest text-amber-700 border border-amber-500/20 mb-1 font-heading">
+              <FiTrendingUp className="h-3 w-3" /> Live Analytics
+            </div>
+            <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">
               Dashboard Overview
             </h1>
             <p className="mt-0.5 text-[11px] sm:text-xs text-stone-600 font-body">
               Real-time enterprise metrics & catalog operations
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
             <QuickActions />
             <button
               type="button"
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="inline-flex min-h-[38px] sm:min-h-[44px] items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all disabled:opacity-50 w-full sm:w-auto"
+              className="inline-flex min-h-[38px] sm:min-h-[42px] items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-50/60 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-amber-800 shadow-2xs hover:bg-amber-100/60 transition-all disabled:opacity-50 w-full sm:w-auto active:scale-[0.98]"
             >
               <FiRotateCw className={cn('h-3.5 w-3.5 text-amber-600', isRefreshing && 'animate-spin')} />
               <span>Refresh</span>
