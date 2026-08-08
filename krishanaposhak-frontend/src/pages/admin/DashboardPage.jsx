@@ -125,7 +125,7 @@ function StatCards({ overview, isLoading }) {
   ], [overview]);
 
   return (
-    <div className="grid gap-3.5 sm:gap-4 grid-cols-2 lg:grid-cols-4 font-display">
+    <div className="grid gap-1.5 sm:gap-2 grid-cols-2 lg:grid-cols-4 font-display">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
