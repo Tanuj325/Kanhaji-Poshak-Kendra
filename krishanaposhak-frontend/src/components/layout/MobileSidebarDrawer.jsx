@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SidebarContent from './SidebarContent';
+import AdminSidebar from './AdminSidebar';
 import { useAuth } from '@/context/AuthContext';
-import { FiX, FiLogOut, FiGrid } from 'react-icons/fi';
+import { FiX, FiLogOut, FiShield } from 'react-icons/fi';
 
-export default function MobileSidebarDrawer({ isOpen = true, onClose }) {
+export default function MobileSidebarDrawer({ isOpen = false, onClose }) {
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -29,50 +29,60 @@ export default function MobileSidebarDrawer({ isOpen = true, onClose }) {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex font-display lg:hidden">
+          {/* Subtle translucent dark backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
             onClick={onClose}
           />
 
+          {/* Off-canvas Left Drawer */}
           <motion.aside
-            initial={{ x: '100%' }}
+            initial={{ x: '-100%' }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="relative ml-auto h-full w-[min(20rem,calc(100vw-1rem))] bg-white/96 border-l border-white/70 shadow-[0_20px_50px_rgba(44,40,36,0.16)] flex flex-col z-10 overflow-hidden backdrop-blur-xl"
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 240 }}
+            className="relative mr-auto h-full w-[min(18rem,calc(100vw-2.5rem))] sm:w-80 bg-white border-r border-slate-200 shadow-2xl flex flex-col z-10 overflow-hidden font-display"
           >
-            <div className="flex h-16 items-center border-b border-muted-sand/20 px-5 justify-between bg-warm-cream/30">
-              <span className="font-display text-sm font-semibold uppercase tracking-wider text-temple-gold flex items-center gap-2">
-                <FiGrid className="h-4 w-4" /> Admin Navigation
-              </span>
+            {/* Drawer Header */}
+            <div className="flex h-14 sm:h-16 items-center justify-between border-b border-slate-100 px-4 bg-slate-50/80 shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600">
+                  <FiShield className="h-4 w-4" />
+                </div>
+                <span className="font-serif text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800">
+                  Admin Console
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full hover:bg-muted-sand/20 text-natural-wood hover:text-dark-charcoal transition-colors"
-                aria-label="Close admin drawer"
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 transition-colors"
+                aria-label="Close admin navigation drawer"
               >
-                <FiX className="h-5 w-5" />
+                <FiX className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar">
-              <SidebarContent onCloseMobile={onClose} />
+            {/* Navigation Body */}
+            <div className="flex-1 overflow-y-auto p-3.5 space-y-1 custom-scrollbar">
+              <AdminSidebar onNavigate={onClose} />
             </div>
 
-            <div className="p-4 border-t border-muted-sand/20 bg-warm-cream/20">
+            {/* Drawer Footer / Logout */}
+            <div className="p-3 border-t border-slate-100 bg-slate-50/80 shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   onClose();
                   logout();
                 }}
-                className="w-full flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-error hover:bg-error/10 transition-colors min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors min-h-[44px] border border-rose-200/60"
               >
-                <FiLogOut className="h-4 w-4 text-error" />
+                <FiLogOut className="h-4 w-4 text-rose-600" />
                 <span>Logout Admin</span>
               </button>
             </div>
