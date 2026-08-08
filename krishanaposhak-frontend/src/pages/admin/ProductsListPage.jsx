@@ -237,7 +237,7 @@ export default function ProductsListPage() {
         <title>Products - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-4 sm:space-y-6 font-display">
+      <div className="w-full space-y-4 sm:space-y-6 font-display">
         <Breadcrumb />
 
         {/* Page Header */}
