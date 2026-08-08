@@ -284,7 +284,7 @@ export default function OrderDetailAdminPage() {
                       <p className="text-xs font-extrabold text-amber-950">
                         {formatPrice(item.totalPrice || ((item.price || item.unitPrice || 0) * (item.quantity || 1)))}
                       </p>
-                      <p className="text-[10px] text-slate-400">{formatPrice(item.price || item.unitPrice)} ea</p>
+                      <p className="text-[10px] text-slate-400">{formatPrice(item.price || item.unitPrice)} each</p>
                     </div>
                   </div>
                 ))}
