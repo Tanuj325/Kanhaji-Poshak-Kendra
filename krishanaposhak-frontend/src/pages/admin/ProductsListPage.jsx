@@ -534,7 +534,6 @@ export default function ProductsListPage() {
                           </div>
                         </div>
                       </div>
-
                       {/* Stock, Status & Price Bar */}
                       <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 font-mono">
                         <div className="flex items-center gap-2 min-w-0">
