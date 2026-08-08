@@ -109,29 +109,40 @@ export default function AdminTopbar({ title, onMenuToggle }) {
     : unreadNotifications?.content || unreadNotifications?.data || [];
 
   return (
-    <header className="flex h-16 w-full items-center justify-between bg-white/85 px-4 sm:px-6 border-b border-white/70 font-display backdrop-blur-xl">
-      <div className="flex items-center gap-3 min-w-0">
+    <header className="flex h-16 w-full items-center justify-between bg-white/85 px-3 sm:px-4 lg:px-6 border-b border-white/70 font-display backdrop-blur-xl">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 lg:flex-initial pr-2">
         <button
           type="button"
           onClick={onMenuToggle}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 lg:hidden shrink-0"
           aria-label="Toggle admin navigation menu"
         >
           <FiMenu className="h-5 w-5" />
         </button>
 
-        <div className="flex items-center gap-2 min-w-0">
-          <h1 className="font-display text-base sm:text-lg font-semibold text-slate-900 truncate">
+        <div className="flex items-center gap-2 min-w-0 flex-1 lg:flex-initial truncate">
+          <h1 className="font-display text-sm sm:text-base lg:text-lg font-semibold text-slate-900 truncate min-w-0 flex-1">
             {pageTitle}
           </h1>
-          <span className="hidden sm:inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+          <span className="hidden sm:inline-flex items-center gap-1 shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Live Backend
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Mobile Search Icon Button */}
+        <button
+          type="button"
+          onClick={() => setSearchModalOpen(true)}
+          className="flex sm:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+          aria-label="Open admin search"
+        >
+          <FiSearch className="h-4 w-4" />
+        </button>
+
+        {/* Tablet & Desktop Search Pill */}
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
@@ -151,7 +162,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setNotificationsOpen((v) => !v);
               setProfileOpen(false);
             }}
-            className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+            className="relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-200/80 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/30"
             aria-label={`Admin Notifications (${countDisplay} unread)`}
             aria-expanded={notificationsOpen}
           >
@@ -243,7 +254,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
               setProfileOpen((v) => !v);
               setNotificationsOpen(false);
             }}
-            className="flex items-center gap-2 rounded-xl border border-slate-200/80 p-2 min-h-[44px] min-w-[44px] hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
+            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200/80 p-1.5 sm:p-2 min-h-[44px] min-w-[44px] hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
             aria-label="Admin profile menu"
             aria-expanded={profileOpen}
           >
@@ -256,10 +267,10 @@ export default function AdminTopbar({ title, onMenuToggle }) {
             ) : (
               <FiUser className="h-4 w-4 text-slate-700" />
             )}
-            <span className="hidden text-xs font-bold text-slate-800 sm:block max-w-[100px] truncate">
+            <span className="hidden text-xs font-bold text-slate-800 md:block max-w-[100px] truncate">
               {user ? `${user.firstName}` : 'Admin'}
             </span>
-            <FiChevronDown className="h-3.5 w-3.5 text-slate-400" />
+            <FiChevronDown className="h-3.5 w-3.5 text-slate-400 hidden sm:block" />
           </button>
 
           <AnimatePresence>
@@ -269,7 +280,7 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-[24px] bg-white/95 p-2 shadow-[0_20px_50px_rgba(44,40,36,0.14)] border border-white/70 backdrop-blur-xl"
+                className="absolute right-0 z-50 mt-2 w-56 max-w-[calc(100vw-24px)] origin-top-right rounded-[24px] bg-white/95 p-2 shadow-[0_20px_50px_rgba(44,40,36,0.14)] border border-white/70 backdrop-blur-xl"
               >
                 <div className="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50 rounded-2xl">
                   <div className="flex items-center gap-1.5">
