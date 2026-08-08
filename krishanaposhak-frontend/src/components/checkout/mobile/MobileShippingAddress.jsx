@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import ConfirmDialog from '@/components/overlay/ConfirmDialog';
@@ -16,7 +16,6 @@ import {
   FiCheck,
   FiX,
   FiArrowRight,
-  FiAlertCircle,
   FiCheckCircle,
   FiCopy,
 } from 'react-icons/fi';
@@ -74,11 +73,11 @@ const INITIAL_FORM = {
 };
 
 // ----------------------------------------------------
-// Realistic Address Card Skeleton Loading State
+// Premium Address Card Skeleton
 // ----------------------------------------------------
 function AddressCardSkeleton() {
   return (
-    <div className="w-full rounded-[18px] p-4 sm:p-5 border border-amber-900/10 bg-white space-y-3 animate-pulse shadow-xs">
+    <div className="w-full rounded-[20px] p-5 border border-amber-900/10 bg-white space-y-3 animate-pulse shadow-2xs">
       <div className="flex items-center justify-between">
         <div className="h-5 w-36 bg-amber-900/10 rounded-md" />
         <div className="h-5 w-16 bg-amber-900/10 rounded-full" />
@@ -102,8 +101,8 @@ function AddressCardSkeleton() {
 // ----------------------------------------------------
 function AddressEmptyState({ onAdd }) {
   return (
-    <div className="w-full rounded-[20px] bg-white border border-amber-900/10 p-8 sm:p-10 text-center space-y-4 shadow-xs">
-      <div className="w-16 h-16 rounded-full bg-amber-100/80 text-amber-900 flex items-center justify-center mx-auto border border-amber-200">
+    <div className="w-full rounded-[24px] bg-white border border-amber-900/10 p-8 sm:p-10 text-center space-y-4 shadow-sm my-4">
+      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-amber-50 text-amber-900 flex items-center justify-center mx-auto border border-amber-200/80 shadow-xs">
         <FiMapPin className="w-8 h-8 text-amber-900" />
       </div>
       <div className="space-y-1 max-w-sm mx-auto">
@@ -111,13 +110,13 @@ function AddressEmptyState({ onAdd }) {
           No Saved Addresses
         </h3>
         <p className="text-xs sm:text-sm text-stone-600 font-body leading-relaxed">
-          Add your delivery address to make your checkout fast, effortless, and secure.
+          Add your delivery address to enjoy seamless, 1-click express checkout.
         </p>
       </div>
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex items-center gap-2 px-6 h-[46px] rounded-xl bg-amber-900 hover:bg-amber-950 text-white font-extrabold text-xs shadow-md transition-all active:scale-95"
+        className="inline-flex items-center gap-2 px-6 h-[46px] rounded-xl bg-gradient-to-r from-amber-800 to-amber-950 hover:from-amber-900 hover:to-stone-950 text-white font-extrabold text-xs shadow-md transition-all active:scale-95"
       >
         <FiPlus className="w-4 h-4 text-amber-200" />
         <span>Add New Address</span>
@@ -127,7 +126,7 @@ function AddressEmptyState({ onAdd }) {
 }
 
 // ----------------------------------------------------
-// Premium Floating Label Input Component (50px height, 14px rounded)
+// Premium Floating Label Input Component (50px height)
 // ----------------------------------------------------
 function FloatingInput({
   id,
@@ -201,7 +200,7 @@ function FloatingInput({
 }
 
 // ----------------------------------------------------
-// Rebuilt Mobile Address Card (100% width, 18px rounded, 16px padding, Temple Gold)
+// Rebuilt Mobile & Tablet Address Card
 // ----------------------------------------------------
 function RebuiltAddressCard({
   address,
@@ -222,7 +221,7 @@ function RebuiltAddressCard({
     e.stopPropagation();
     if (address.phoneNumber) {
       navigator.clipboard.writeText(address.phoneNumber);
-      toast.success('Phone number copied to clipboard!');
+      toast.success('Phone number copied!');
     }
   };
 
@@ -240,16 +239,21 @@ function RebuiltAddressCard({
         }
       }}
       className={cn(
-        'relative w-full rounded-[18px] p-4 sm:p-5 transition-all duration-200 font-display overflow-hidden text-left flex flex-col justify-between gap-3',
+        'relative w-full rounded-[20px] p-4.5 sm:p-5 transition-all duration-200 font-display overflow-hidden text-left flex flex-col justify-between gap-3.5',
         isSelected && isSelectable
           ? 'border-2 border-[#D4AF37] bg-[#FAF4E8] shadow-md ring-2 ring-[#D4AF37]/20'
-          : 'border border-amber-900/10 bg-white hover:border-amber-700/30 shadow-xs hover:shadow-sm',
+          : 'border border-amber-900/10 bg-white hover:border-amber-700/30 shadow-[0_2px_12px_rgba(44,40,36,0.04)] hover:shadow-[0_4px_20px_rgba(44,40,36,0.08)]',
         isSelectable && 'cursor-pointer',
       )}
     >
+      {/* Top Gold Accent Line for Default Address */}
+      {address.defaultAddress && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-700 via-[#D4AF37] to-amber-700" />
+      )}
+
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0 flex-1">
-          {/* Custom Radio Circle for Checkout Mode */}
+          {/* Radio Indicator for Checkout */}
           {isSelectable && (
             <div
               className={cn(
@@ -265,7 +269,7 @@ function RebuiltAddressCard({
 
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-heading font-extrabold text-sm sm:text-base text-amber-950 truncate">
+              <span className="font-heading font-extrabold text-base text-amber-950 truncate">
                 {address.fullName}
               </span>
 
@@ -273,10 +277,10 @@ function RebuiltAddressCard({
               {(isOffice || isHome) && (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase tracking-wider',
+                    'inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider',
                     isOffice
                       ? 'bg-blue-50 text-blue-900 border-blue-200/80'
-                      : 'bg-amber-100/80 text-amber-950 border-amber-300/60',
+                      : 'bg-amber-100/70 text-amber-950 border-amber-300/60',
                   )}
                 >
                   {isOffice ? (
@@ -293,8 +297,8 @@ function RebuiltAddressCard({
 
               {/* Default Badge */}
               {address.defaultAddress && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-950 bg-gradient-to-r from-amber-200 via-amber-300 to-amber-200 px-2 py-0.5 rounded-full border border-amber-400/60 uppercase tracking-wider shadow-2xs">
-                  <FiStar className="h-2.5 w-2.5 fill-amber-800 text-amber-800" /> Default
+                <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-950 bg-gradient-to-r from-amber-100 via-amber-200 to-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300/80 uppercase tracking-wider shadow-2xs">
+                  <FiStar className="h-2.5 w-2.5 fill-amber-700 text-amber-700" /> Default
                 </span>
               )}
             </div>
@@ -316,7 +320,7 @@ function RebuiltAddressCard({
             )}
 
             {/* Complete Address */}
-            <p className="text-xs text-stone-700 leading-relaxed pt-1 font-body">
+            <p className="text-xs sm:text-sm text-stone-700 leading-relaxed pt-1 font-body">
               {address.addressLine1}
               {address.addressLine2 ? `, ${address.addressLine2}` : ''}
               <br />
@@ -331,7 +335,7 @@ function RebuiltAddressCard({
         </div>
       </div>
 
-      {/* Action Buttons: Set Default, Edit & Delete */}
+      {/* Action Buttons */}
       <div className="flex items-center justify-between gap-2 pt-3 border-t border-amber-900/10 font-display">
         <div className="flex items-center gap-2">
           {onEdit && (
@@ -341,7 +345,7 @@ function RebuiltAddressCard({
                 e.stopPropagation();
                 onEdit(address);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/50 hover:bg-amber-100 transition-colors min-h-[36px]"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/50 hover:bg-amber-100 border border-amber-200/50 transition-colors min-h-[36px]"
             >
               <FiEdit2 className="h-3.5 w-3.5 text-amber-800" />
               <span>Edit</span>
@@ -355,7 +359,7 @@ function RebuiltAddressCard({
                 e.stopPropagation();
                 onDelete(address.id);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 transition-colors min-h-[36px]"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200/40 transition-colors min-h-[36px]"
             >
               <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
               <span>Delete</span>
@@ -371,7 +375,7 @@ function RebuiltAddressCard({
               e.stopPropagation();
               onSetDefault(address.id);
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-xl bg-amber-100/70 hover:bg-amber-100 border border-amber-300/50 transition-colors min-h-[36px]"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-950 hover:text-amber-950 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/80 hover:bg-amber-100 border border-amber-300/60 transition-colors min-h-[36px] shadow-2xs"
           >
             <FiCheckCircle className="h-3.5 w-3.5 text-amber-800" />
             <span>Set Default</span>
@@ -383,7 +387,7 @@ function RebuiltAddressCard({
 }
 
 // ----------------------------------------------------
-// Main Mobile/Tablet Shipping & Management Address Component
+// Main Mobile/Tablet Full-Screen Address View
 // ----------------------------------------------------
 export default function MobileShippingAddress({
   addresses = [],
@@ -407,7 +411,6 @@ export default function MobileShippingAddress({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
 
-  // Field refs for Enter key form navigation
   const inputRefs = useRef([]);
 
   const addrList = useMemo(() => (Array.isArray(addresses) ? addresses : []), [addresses]);
@@ -437,7 +440,6 @@ export default function MobileShippingAddress({
     setIsModalOpen(true);
   };
 
-  // Focus first input when modal opens
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
@@ -515,7 +517,6 @@ export default function MobileShippingAddress({
     }
   };
 
-  // Keyboard navigation handler
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -539,15 +540,15 @@ export default function MobileShippingAddress({
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#FAF7F2] font-display flex flex-col justify-between">
+    <div className="fixed inset-0 z-[45] bg-[#FAF7F2] font-display flex flex-col justify-between overflow-y-auto lg:hidden">
       {/* ---------------------------------------------------- */}
-      {/* STICKY HEADER (56-64px height) */}
+      {/* STICKY TOP HEADER (58px height) */}
       {/* ---------------------------------------------------- */}
-      <header className="sticky top-0 z-40 w-full h-[58px] bg-white/95 backdrop-blur-md border-b border-amber-900/10 px-4 md:px-6 flex items-center justify-between shadow-2xs">
+      <header className="sticky top-0 z-30 w-full h-[58px] min-h-[58px] bg-white/95 backdrop-blur-md border-b border-amber-900/10 px-4 md:px-6 flex items-center justify-between shadow-2xs">
         <button
           type="button"
           onClick={onBack || (() => window.history.back())}
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-50 text-amber-950 hover:bg-amber-100 transition-colors border border-amber-900/10 active:scale-95 min-h-[36px] min-w-[36px]"
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-50/80 text-amber-950 hover:bg-amber-100 transition-colors border border-amber-900/10 active:scale-95 min-h-[36px] min-w-[36px]"
           aria-label="Go back"
         >
           <FiChevronLeft className="w-5 h-5 text-amber-900" />
@@ -566,7 +567,7 @@ export default function MobileShippingAddress({
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-900 text-white font-extrabold text-xs shadow-xs hover:bg-amber-950 transition-colors active:scale-95 min-h-[36px]"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-800 to-amber-950 text-white font-extrabold text-xs shadow-xs hover:shadow-sm transition-all active:scale-95 min-h-[36px]"
           >
             <FiPlus className="w-4 h-4 text-amber-200" />
             <span className="hidden sm:inline">Add New</span>
@@ -577,16 +578,16 @@ export default function MobileShippingAddress({
       </header>
 
       {/* ---------------------------------------------------- */}
-      {/* MAIN CONTENT AREA */}
+      {/* MAIN CONTENT CONTAINER */}
       {/* ---------------------------------------------------- */}
-      <main className={cn('flex-1 px-4 py-4 md:px-6 md:py-6 space-y-4', mode === 'checkout' ? 'pb-28' : 'pb-12')}>
+      <main className={cn('flex-1 w-full max-w-5xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-4', mode === 'checkout' ? 'pb-28' : 'pb-12')}>
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <AddressCardSkeleton />
             <AddressCardSkeleton />
           </div>
         ) : isError ? (
-          <div className="text-center py-10 rounded-[18px] bg-white border border-rose-200 p-6 shadow-xs space-y-3 font-body">
+          <div className="text-center py-10 rounded-[20px] bg-white border border-rose-200 p-6 shadow-2xs space-y-3 font-body my-4">
             <p className="text-sm font-bold text-rose-700">Failed to load shipping addresses</p>
             <button
               type="button"
@@ -602,7 +603,7 @@ export default function MobileShippingAddress({
           <>
             {/* Address Cards Grid: 1-column on Mobile (<768px), 2-column on Tablet (768-1023px) */}
             <div
-              className="grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4.5"
               role={mode === 'checkout' ? 'radiogroup' : undefined}
               aria-label="Delivery addresses"
             >
@@ -620,16 +621,16 @@ export default function MobileShippingAddress({
               ))}
             </div>
 
-            {/* ADD NEW ADDRESS BUTTON CARD */}
+            {/* ADD NEW ADDRESS CARD CTA */}
             <button
               type="button"
               onClick={handleOpenCreate}
-              className="w-full h-[64px] sm:h-[72px] rounded-[18px] border-2 border-dashed border-amber-900/25 hover:border-amber-700/60 bg-amber-50/20 hover:bg-amber-50/50 transition-all flex items-center justify-center gap-3 px-4 shadow-xs active:scale-[0.99] font-display mt-2"
+              className="w-full h-[68px] sm:h-[76px] rounded-[20px] border-2 border-dashed border-amber-900/25 hover:border-amber-700/60 bg-gradient-to-r from-amber-50/30 via-white to-amber-50/30 hover:bg-amber-50/60 transition-all flex items-center justify-center gap-3 px-4 shadow-2xs active:scale-[0.99] font-display mt-2"
             >
-              <div className="w-9 h-9 rounded-full bg-amber-900/10 text-amber-900 flex items-center justify-center">
-                <FiPlus className="w-5 h-5 text-amber-900" />
+              <div className="w-10 h-10 rounded-full bg-amber-900 text-white flex items-center justify-center shadow-2xs">
+                <FiPlus className="w-5 h-5 text-amber-100" />
               </div>
-              <span className="font-heading font-bold text-amber-950 text-sm">
+              <span className="font-heading font-extrabold text-amber-950 text-sm sm:text-base">
                 Add New Address
               </span>
             </button>
@@ -638,10 +639,10 @@ export default function MobileShippingAddress({
       </main>
 
       {/* ---------------------------------------------------- */}
-      {/* STICKY BOTTOM BAR (ONLY FOR CHECKOUT MODE) */}
+      {/* STICKY BOTTOM BAR (CHECKOUT MODE ONLY) */}
       {/* ---------------------------------------------------- */}
       {mode === 'checkout' && (
-        <footer className="fixed bottom-0 left-0 right-0 z-40 h-[72px] bg-white/95 backdrop-blur-md border-t border-amber-900/10 px-4 md:px-6 flex items-center justify-center shadow-lg font-display">
+        <footer className="fixed bottom-0 left-0 right-0 z-30 h-[72px] bg-white/95 backdrop-blur-md border-t border-amber-900/10 px-4 md:px-6 flex items-center justify-center shadow-lg font-display">
           <motion.button
             whileTap={{ scale: 0.98 }}
             type="button"
@@ -666,7 +667,7 @@ export default function MobileShippingAddress({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-              className="w-full max-w-xl bg-white rounded-t-[24px] md:rounded-[24px] shadow-2xl overflow-hidden font-display flex flex-col max-h-[92vh]"
+              className="w-full max-w-lg md:max-w-xl bg-white rounded-t-[28px] md:rounded-[28px] shadow-2xl overflow-hidden font-display flex flex-col max-h-[92vh]"
             >
               {/* Form Modal Header */}
               <div className="px-5 py-4 border-b border-amber-900/10 flex items-center justify-between bg-amber-50/30">
@@ -698,7 +699,7 @@ export default function MobileShippingAddress({
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, addressType: 'HOME' }))}
                       className={cn(
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all min-h-[36px]',
+                        'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-extrabold border transition-all min-h-[36px]',
                         formData.addressType === 'HOME'
                           ? 'bg-amber-900 text-white border-amber-900 shadow-xs'
                           : 'bg-white text-stone-600 border-amber-900/20 hover:bg-amber-50/50',
@@ -710,7 +711,7 @@ export default function MobileShippingAddress({
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, addressType: 'OFFICE' }))}
                       className={cn(
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all min-h-[36px]',
+                        'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-extrabold border transition-all min-h-[36px]',
                         formData.addressType === 'OFFICE'
                           ? 'bg-amber-900 text-white border-amber-900 shadow-xs'
                           : 'bg-white text-stone-600 border-amber-900/20 hover:bg-amber-50/50',
