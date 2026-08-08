@@ -9,6 +9,7 @@ import { authService } from '@/services';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import {
   FiChevronLeft,
+  FiChevronDown,
   FiUser,
   FiMail,
   FiPhone,
@@ -125,6 +126,40 @@ function SectionHeader({ icon: Icon, title, subtitle }) {
           <p className="text-[12px] text-stone-400 truncate mt-0.5">{subtitle}</p>
         )}
       </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Settings row — hairline-divided list item, no boxed backgrounds.
+// Keeps things compact and quiet; the control on the right does the talking.
+// ----------------------------------------------------
+function SettingsRow({ icon: Icon, iconTone = 'amber', title, subtitle, children, last = false }) {
+  const tones = {
+    amber: 'text-amber-700',
+    emerald: 'text-emerald-700',
+  };
+  return (
+    <div
+      className={cn(
+        'flex items-center justify-between gap-3 py-3',
+        !last && 'border-b border-stone-100',
+      )}
+    >
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        {Icon && <Icon className={cn('w-[15px] h-[15px] shrink-0', tones[iconTone])} />}
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold text-stone-900 leading-tight truncate">
+            {title}
+          </p>
+          {subtitle && (
+            <p className="text-[11px] text-stone-400 leading-normal mt-0.5 truncate">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="shrink-0">{children}</div>
     </div>
   );
 }
@@ -449,7 +484,7 @@ export default function MobileAccountSettings({
                   <div className="relative w-full h-[50px] rounded-[14px] border border-stone-200 bg-white flex items-center hover:border-amber-700/40 transition-colors">
                     <label
                       htmlFor="sett-gender"
-                      className="absolute left-3.5 top-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800 pointer-events-none"
+                      className="absolute left-3.5 top-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800 pointer-events-none z-10"
                     >
                       Gender
                     </label>
@@ -458,14 +493,18 @@ export default function MobileAccountSettings({
                       name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
-                      className="w-full h-full bg-transparent px-3.5 pt-4 pb-1 text-[13px] font-semibold text-stone-900 outline-none cursor-pointer"
+                      className={cn(
+                        'w-full h-full bg-transparent pl-3.5 pr-9 pt-4 pb-1 text-[13px] font-semibold outline-none cursor-pointer appearance-none',
+                        formData.gender ? 'text-stone-900' : 'text-stone-400 font-medium',
+                      )}
                     >
                       {GENDER_OPTIONS.map((g) => (
-                        <option key={g.value} value={g.value}>
+                        <option key={g.value} value={g.value} disabled={g.value === ''} className="text-stone-900 font-medium">
                           {g.label}
                         </option>
                       ))}
                     </select>
+                    <FiChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
                   </div>
 
                   <FloatingInput
@@ -499,67 +538,42 @@ export default function MobileAccountSettings({
                 subtitle="Protect your account and credentials"
               />
 
-              <div className="space-y-2.5">
-                <div className="p-3.5 rounded-[14px] bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 w-full">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center shrink-0',
-                      userData?.emailVerified ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
-                    )}>
-                      {userData?.emailVerified ? (
-                        <FiCheckCircle className="w-4 h-4" />
-                      ) : (
-                        <FiAlertCircle className="w-4 h-4" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold text-stone-900 leading-tight">
-                        {userData?.emailVerified ? 'Email Verified' : 'Email Unverified'}
-                      </p>
-                      <p className="text-[11px] text-stone-400 truncate mt-0.5">
-                        {userData?.email}
-                      </p>
-                    </div>
-                  </div>
-
+              <div>
+                <SettingsRow
+                  icon={userData?.emailVerified ? FiCheckCircle : FiAlertCircle}
+                  iconTone={userData?.emailVerified ? 'emerald' : 'amber'}
+                  title={userData?.emailVerified ? 'Email Verified' : 'Email Unverified'}
+                  subtitle={userData?.email}
+                >
                   {userData?.emailVerified ? (
-                    <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-100 shrink-0 self-start sm:self-auto">
-                      Verified
-                    </span>
+                    <span className="text-[11px] font-semibold text-emerald-700">Verified</span>
                   ) : (
                     <button
                       type="button"
                       onClick={handleResendVerification}
                       disabled={isResendingVerification}
-                      className="h-[34px] px-4 rounded-full bg-stone-900 hover:bg-amber-950 text-white font-semibold text-[12px] transition-all shrink-0 self-start sm:self-auto"
+                      className="text-[12px] font-semibold text-amber-800 hover:text-amber-950 transition-colors disabled:opacity-50"
                     >
-                      {isResendingVerification ? 'Sending…' : 'Verify Email'}
+                      {isResendingVerification ? 'Sending…' : 'Verify email'}
                     </button>
                   )}
-                </div>
+                </SettingsRow>
 
-                <div className="p-3.5 rounded-[14px] bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0 w-full">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-                      <FiKey className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold text-stone-900 leading-tight">Password</p>
-                      <p className="text-[11px] text-stone-400 leading-normal mt-0.5">
-                        Send a reset link to your registered email
-                      </p>
-                    </div>
-                  </div>
-
+                <SettingsRow
+                  icon={FiKey}
+                  title="Password"
+                  subtitle="Send a reset link to your email"
+                  last
+                >
                   <button
                     type="button"
                     onClick={handlePasswordReset}
                     disabled={isResettingPassword}
-                    className="h-[34px] px-4 rounded-full bg-white hover:bg-stone-100 text-stone-700 font-semibold text-[12px] border border-stone-200 transition-all active:scale-95 shrink-0 self-start sm:self-auto"
+                    className="text-[12px] font-semibold text-amber-800 hover:text-amber-950 transition-colors disabled:opacity-50"
                   >
-                    {isResettingPassword ? 'Sending…' : 'Reset Password'}
+                    {isResettingPassword ? 'Sending…' : 'Reset password'}
                   </button>
-                </div>
+                </SettingsRow>
               </div>
             </section>
 
@@ -571,65 +585,56 @@ export default function MobileAccountSettings({
                 subtitle="Choose how you want to receive updates"
               />
 
-              <div className="space-y-2.5">
-                <div className="p-3.5 rounded-[14px] bg-stone-50/70 flex items-center justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold text-stone-900 leading-tight">
-                      Order & Delivery Alerts
-                    </p>
-                    <p className="text-[11px] text-stone-400 leading-normal mt-0.5">
-                      Dispatch tracking and order confirmations
-                    </p>
-                  </div>
+              <div>
+                <SettingsRow
+                  icon={FiBell}
+                  title="Order & Delivery Alerts"
+                  subtitle="Dispatch tracking and order confirmations"
+                >
                   <Switch
                     size="sm"
                     checked={Boolean(emailNotifs)}
                     onChange={(e) => setEmailNotifs(e.target.checked)}
                   />
-                </div>
+                </SettingsRow>
 
-                <div className="p-3.5 rounded-[14px] bg-stone-50/70 flex items-center justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold text-stone-900 leading-tight">
-                      Promotional & Festive Offers
-                    </p>
-                    <p className="text-[11px] text-stone-400 leading-normal mt-0.5">
-                      Early access to coupons and new collections
-                    </p>
-                  </div>
+                <SettingsRow
+                  icon={FiBell}
+                  title="Promotional & Festive Offers"
+                  subtitle="Early access to coupons and new collections"
+                  last
+                >
                   <Switch
                     size="sm"
                     checked={Boolean(promoNotifs)}
                     onChange={(e) => setPromoNotifs(e.target.checked)}
                   />
-                </div>
+                </SettingsRow>
               </div>
             </section>
 
             {/* SESSION CONTROL */}
-            <section className="rounded-[20px] p-5 sm:p-6 bg-white border border-rose-100 shadow-[0_1px_2px_rgba(190,18,60,0.03),0_6px_20px_rgba(190,18,60,0.04)]">
+            <section className={cn(CARD, 'p-5 sm:p-6')}>
               <SectionHeader
                 icon={FiShield}
                 title="Session Control"
                 subtitle="Manage where your account is signed in"
               />
 
-              <div className="p-3.5 rounded-[14px] bg-rose-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                    <FiCheckCircle className="w-4 h-4" />
+                  <div className="relative shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                      <FiCheckCircle className="w-4 h-4" />
+                    </div>
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-[13px] font-semibold text-stone-900 leading-tight">
-                        This Device
-                      </p>
-                      <span className="inline-flex items-center gap-1 text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Active now
-                      </span>
-                    </div>
+                    <p className="text-[13px] font-semibold text-stone-900 leading-tight">
+                      This Device
+                    </p>
                     <p className="text-[11px] text-stone-400 leading-normal mt-0.5">
-                      Current session on this browser
+                      Active now · this browser
                     </p>
                   </div>
                 </div>
@@ -637,10 +642,9 @@ export default function MobileAccountSettings({
                 <button
                   type="button"
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className="h-[38px] px-5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-[12px] flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0 self-start sm:self-auto"
+                  className="text-[12px] font-semibold text-rose-600 hover:text-rose-700 transition-colors shrink-0"
                 >
-                  <FiLogOut className="w-3.5 h-3.5" />
-                  <span>Sign Out</span>
+                  Sign out
                 </button>
               </div>
             </section>
