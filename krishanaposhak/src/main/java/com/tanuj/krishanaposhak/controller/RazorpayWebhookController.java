@@ -1,5 +1,6 @@
 package com.tanuj.krishanaposhak.controller;
 
+import com.tanuj.krishanaposhak.exception.WebhookProcessingException;
 import com.tanuj.krishanaposhak.service.PaymentService;
 import com.tanuj.krishanaposhak.service.RazorpayService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -113,6 +114,14 @@ public class RazorpayWebhookController {
             paymentService.processWebhookEvent(eventId, eventType, payload);
             log.info("Razorpay webhook event processed successfully. EventId: {}. Status: 200 OK", eventId);
             return ResponseEntity.ok().build();
+        } catch (WebhookProcessingException e) {
+            if (!e.isTransientError()) {
+                log.warn("Non-transient error processing Razorpay webhook event. Returning HTTP 200 OK to stop retries. Reason: {}", e.getMessage());
+                return ResponseEntity.ok().build();
+            } else {
+                log.error("Transient error processing Razorpay webhook event. Returning HTTP 500 Internal Server Error for retry.", e);
+                return ResponseEntity.internalServerError().build();
+            }
         } catch (Exception e) {
             log.error("Internal error while processing Razorpay webhook event. Status: 500 Internal Server Error", e);
             return ResponseEntity.internalServerError().build();

@@ -10,6 +10,7 @@ import com.tanuj.krishanaposhak.enums.PaymentMethod;
 import com.tanuj.krishanaposhak.exception.BadRequestException;
 import com.tanuj.krishanaposhak.exception.ForbiddenException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
+import com.tanuj.krishanaposhak.exception.WebhookProcessingException;
 import com.tanuj.krishanaposhak.mapper.PaymentMapper;
 import com.tanuj.krishanaposhak.repository.*;
 import com.tanuj.krishanaposhak.service.EmailService;
@@ -50,6 +51,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final com.tanuj.krishanaposhak.service.RefundService refundService;
     private final CouponRepository couponRepository;
     private final CouponUsageRepository couponUsageRepository;
+    private final com.tanuj.krishanaposhak.service.RazorpayWebhookEventService razorpayWebhookEventService;
 
     @Override
     public RazorpayOrderResponse createRazorpayOrder(Long orderId) {
@@ -242,20 +244,75 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Validate cart, stock, coupon, address and build pending order
         Order order = orderService.createPendingOrder(userId, placeOrderRequest);
+
+        // Pre-check stock availability with pessimistic locks
+        boolean stockInsufficient = false;
+        String insufficientProductName = "";
+
+        if (order.getOrderItems() != null) {
+            for (OrderItem item : order.getOrderItems()) {
+                if (item.getProductVariant() != null) {
+                    ProductVariant variant = productVariantRepository.findByIdWithLock(item.getProductVariant().getId())
+                            .orElse(item.getProductVariant());
+                    if (variant.getStock() < item.getQuantity()) {
+                        stockInsufficient = true;
+                        insufficientProductName = variant.getProduct() != null ? variant.getProduct().getName() : "Variant ID " + variant.getId();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (stockInsufficient) {
+            log.warn("[STOCK_EXHAUSTION_AFTER_PAYMENT] Stock exhausted for Order #{} during payment completion. Initiating automatic refund.", order.getOrderNumber());
+
+            order.setOrderStatus(OrderStatus.FAILED_INSUFFICIENT_STOCK);
+            order.setPaymentStatus(PaymentStatus.REFUND_PENDING);
+            order = orderRepository.save(order);
+
+            Payment payment = Payment.builder()
+                    .order(order)
+                    .paymentMethod(PaymentMethod.RAZORPAY)
+                    .paymentStatus(PaymentStatus.REFUND_PENDING)
+                    .amount(order.getTotalAmount())
+                    .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
+                    .razorpayOrderId(razorpayOrderId)
+                    .razorpayPaymentId(razorpayPaymentId)
+                    .razorpaySignature(razorpaySignature)
+                    .build();
+
+            try {
+                payment = paymentRepository.save(payment);
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId).orElse(payment);
+            }
+            order.setPayment(payment);
+
+            // Initiate automatic refund via Razorpay API
+            try {
+                refundService.processAutomaticRefund(order, "Automatic refund: stock unavailable for " + insufficientProductName + " after payment capture");
+                payment.setPaymentStatus(PaymentStatus.REFUNDED);
+                paymentRepository.save(payment);
+                order.setPaymentStatus(PaymentStatus.REFUNDED);
+                orderRepository.save(order);
+            } catch (Exception e) {
+                log.error("Automatic refund trigger error for Order {}: {}", order.getOrderNumber(), e.getMessage());
+            }
+
+            return payment;
+        }
+
+        // Normal Fulfillment Flow (Stock available)
         order.setOrderStatus(OrderStatus.CONFIRMED);
         order.setPaymentStatus(PaymentStatus.PAID);
-
-        // Save confirmed order
         order = orderRepository.save(order);
 
-        // Save order items with saved order reference
         if (order.getOrderItems() != null) {
             for (OrderItem item : order.getOrderItems()) {
                 item.setOrder(order);
             }
         }
 
-        // Build payment record
         Payment payment = Payment.builder()
                 .order(order)
                 .paymentMethod(PaymentMethod.RAZORPAY)
@@ -271,7 +328,6 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             payment = paymentRepository.save(payment);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            // Concurrency protection: If a parallel thread/request saved payment with UK razorpay_order_id first
             log.warn("[CONCURRENCY_PROTECTION] Duplicate razorpay_order_id caught: {}", razorpayOrderId);
             return paymentRepository.findByRazorpayOrderId(razorpayOrderId)
                     .orElseThrow(() -> e);
@@ -279,16 +335,12 @@ public class PaymentServiceImpl implements PaymentService {
 
         order.setPayment(payment);
 
-        // Atomic stock reduction using pessimistic locks on ProductVariant
+        // Reduce stock for products in the order
         if (order.getOrderItems() != null) {
             for (OrderItem item : order.getOrderItems()) {
                 if (item.getProductVariant() != null) {
                     ProductVariant variant = productVariantRepository.findByIdWithLock(item.getProductVariant().getId())
                             .orElse(item.getProductVariant());
-                    if (variant.getStock() < item.getQuantity()) {
-                        log.error("[STOCK_VALIDATION_FAILED] Insufficient stock for variant {} during payment completion", variant.getId());
-                        throw new BadRequestException("Insufficient stock for product " + (variant.getProduct() != null ? variant.getProduct().getName() : ""));
-                    }
                     variant.setStock(variant.getStock() - item.getQuantity());
                     productVariantRepository.save(variant);
                 }
@@ -511,8 +563,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public void processWebhookEvent(String eventId, String eventType, String payload) {
         // Idempotency Check: Check if this webhook event has already been successfully processed
-        RazorpayWebhookEvent existingEvent = webhookEventRepository.findByEventId(eventId);
-        if (existingEvent != null && existingEvent.getProcessedAt() != null) {
+        if (razorpayWebhookEventService.isAlreadyProcessed(eventId)) {
             log.info("Duplicate processed Razorpay webhook event received: {}", eventId);
             return;
         }
@@ -538,22 +589,23 @@ public class PaymentServiceImpl implements PaymentService {
                     break;
             }
 
-            // Save/update the webhook event ONLY after handler executes successfully
-            if (existingEvent == null) {
-                existingEvent = RazorpayWebhookEvent.builder()
-                        .eventId(eventId)
-                        .eventType(eventType)
-                        .build();
-            }
-            existingEvent.setProcessedAt(Instant.now());
-            webhookEventRepository.save(existingEvent);
-
+            // Save the webhook event in an isolated REQUIRES_NEW transaction
+            razorpayWebhookEventService.recordEventProcessed(eventId, eventType);
             log.info("Successfully processed Razorpay webhook event: {} of type {}", eventId, eventType);
 
+        } catch (WebhookProcessingException e) {
+            if (!e.isTransientError()) {
+                razorpayWebhookEventService.recordEventProcessed(eventId, eventType);
+            }
+            throw e;
+        } catch (IllegalArgumentException | com.tanuj.krishanaposhak.exception.BadRequestException e) {
+            log.error("Permanent validation error processing Razorpay webhook event: {} of type {}", eventId, eventType, e);
+            razorpayWebhookEventService.recordEventProcessed(eventId, eventType);
+            throw new WebhookProcessingException("Permanent validation error: " + e.getMessage(), e, false);
         } catch (Exception e) {
             log.error("Failed to process Razorpay webhook event: {} of type {}", eventId, eventType, e);
-            // Re-throw exception so Controller returns HTTP 500 to Razorpay for automatic retries
-            throw new RuntimeException("Failed to process Razorpay webhook event: " + eventId, e);
+            // Re-throw transient exception so Controller returns HTTP 500 to Razorpay for automatic retries
+            throw new WebhookProcessingException("Failed to process Razorpay webhook event: " + eventId, e, true);
         }
     }
 
@@ -599,7 +651,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         if (razorpayPaymentId == null || razorpayOrderId == null) {
-            throw new IllegalArgumentException("Missing required fields (payment_id/order_id) in payment.captured event");
+            throw new WebhookProcessingException("Missing required fields (payment_id/order_id) in payment.captured event", false);
         }
 
         final String targetOrderId = razorpayOrderId;
@@ -615,7 +667,7 @@ public class PaymentServiceImpl implements PaymentService {
                     if (capturedAmount != expectedAmountInPaise) {
                         log.error("[AMOUNT_MISMATCH] Webhook amount mismatch for Order {}: expected {} paise, received {} paise",
                                 order.getOrderNumber(), expectedAmountInPaise, capturedAmount);
-                        throw new IllegalArgumentException("Captured amount mismatch for Razorpay order: " + razorpayOrderId);
+                        throw new WebhookProcessingException("Captured amount mismatch for Razorpay order: " + razorpayOrderId, false);
                     }
                 }
                 payment.setRazorpayPaymentId(razorpayPaymentId);
@@ -649,7 +701,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (notes == null || !notes.has("userId") || !notes.has("shippingAddressId")) {
             log.error("[PAYMENT_RECONCILIATION_FAILED] Razorpay order {} is missing required notes metadata (userId/shippingAddressId)", targetOrderId);
-            throw new IllegalArgumentException("Missing required notes metadata in Razorpay order " + targetOrderId);
+            throw new WebhookProcessingException("Missing required notes metadata in Razorpay order " + targetOrderId, false);
         }
 
         String userIdStr = notes.optString("userId", null);
@@ -659,7 +711,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (StringUtils.isBlank(userIdStr) || StringUtils.isBlank(addressIdStr)) {
             log.error("[PAYMENT_RECONCILIATION_FAILED] Blank userId or shippingAddressId in notes for {}", targetOrderId);
-            throw new IllegalArgumentException("Blank userId/shippingAddressId in notes for " + targetOrderId);
+            throw new WebhookProcessingException("Blank userId/shippingAddressId in notes for " + targetOrderId, false);
         }
 
         Long userId = Long.valueOf(userIdStr.trim());
@@ -680,7 +732,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (capturedAmount != expectedAmountInPaise) {
                 log.error("[AMOUNT_MISMATCH] Phone-Off Recovery amount mismatch for Razorpay Order {}: expected {} paise, received {} paise",
                         targetOrderId, expectedAmountInPaise, capturedAmount);
-                throw new IllegalArgumentException("Amount mismatch during phone-off recovery for Razorpay order: " + targetOrderId);
+                throw new WebhookProcessingException("Amount mismatch during phone-off recovery for Razorpay order: " + targetOrderId, false);
             }
         }
 
@@ -690,8 +742,28 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void handlePaymentFailed(JSONObject json) {
-        String razorpayPaymentId = json.optString("razorpay_payment_id", null);
-        String razorpayOrderId = json.optString("razorpay_order_id", null);
+        String razorpayPaymentId = null;
+        String razorpayOrderId = null;
+
+        if (json.has("payload") && json.optJSONObject("payload") != null) {
+            JSONObject payloadObj = json.getJSONObject("payload");
+            if (payloadObj.has("payment") && payloadObj.optJSONObject("payment") != null) {
+                JSONObject paymentObj = payloadObj.getJSONObject("payment");
+                if (paymentObj.has("entity") && paymentObj.optJSONObject("entity") != null) {
+                    JSONObject entity = paymentObj.getJSONObject("entity");
+                    razorpayPaymentId = entity.optString("id", null);
+                    razorpayOrderId = entity.optString("order_id", null);
+                }
+            }
+        }
+
+        // Fallback for flat JSON formats
+        if (razorpayPaymentId == null) {
+            razorpayPaymentId = json.optString("razorpay_payment_id", json.optString("id", null));
+        }
+        if (razorpayOrderId == null) {
+            razorpayOrderId = json.optString("razorpay_order_id", json.optString("order_id", null));
+        }
 
         if (razorpayPaymentId == null || razorpayOrderId == null) {
             log.warn("Missing payment_id or order_id in payment.failed event. Ignoring.");
@@ -710,14 +782,42 @@ public class PaymentServiceImpl implements PaymentService {
                 order.setPaymentStatus(PaymentStatus.FAILED);
                 orderRepository.save(order);
             }
+            log.info("[WEBHOOK_PAYMENT_FAILED] Processed payment.failed for Razorpay Order ID: {}, Payment ID: {}", razorpayOrderId, razorpayPaymentId);
         } else {
             log.info("Payment failure reported for Razorpay order {} which was not created in local DB (as expected for unconfirmed payment).", razorpayOrderId);
         }
     }
 
     private void handleOrderPaid(JSONObject json) {
-        String razorpayPaymentId = json.optString("razorpay_payment_id", null);
-        String razorpayOrderId = json.optString("razorpay_order_id", null);
+        String razorpayPaymentId = null;
+        String razorpayOrderId = null;
+
+        if (json.has("payload") && json.optJSONObject("payload") != null) {
+            JSONObject payloadObj = json.getJSONObject("payload");
+            if (payloadObj.has("payment") && payloadObj.optJSONObject("payment") != null) {
+                JSONObject paymentObj = payloadObj.getJSONObject("payment");
+                if (paymentObj.has("entity") && paymentObj.optJSONObject("entity") != null) {
+                    JSONObject entity = paymentObj.getJSONObject("entity");
+                    razorpayPaymentId = entity.optString("id", null);
+                    razorpayOrderId = entity.optString("order_id", null);
+                }
+            }
+            if (razorpayOrderId == null && payloadObj.has("order") && payloadObj.optJSONObject("order") != null) {
+                JSONObject orderObj = payloadObj.getJSONObject("order");
+                if (orderObj.has("entity") && orderObj.optJSONObject("entity") != null) {
+                    JSONObject entity = orderObj.getJSONObject("entity");
+                    razorpayOrderId = entity.optString("id", null);
+                }
+            }
+        }
+
+        // Fallback for flat JSON formats
+        if (razorpayPaymentId == null) {
+            razorpayPaymentId = json.optString("razorpay_payment_id", null);
+        }
+        if (razorpayOrderId == null) {
+            razorpayOrderId = json.optString("razorpay_order_id", null);
+        }
 
         if (razorpayOrderId != null) {
             java.util.Optional<Payment> paymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
@@ -732,15 +832,44 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void handleRefundProcessed(JSONObject json) {
-        String razorpayPaymentId = json.optString("razorpay_payment_id", null);
-        String razorpayRefundId = json.optString("id", null);
+        String razorpayPaymentId = null;
+        String razorpayRefundId = null;
+
+        if (json.has("payload") && json.optJSONObject("payload") != null) {
+            JSONObject payloadObj = json.getJSONObject("payload");
+            if (payloadObj.has("refund") && payloadObj.optJSONObject("refund") != null) {
+                JSONObject refundObj = payloadObj.getJSONObject("refund");
+                if (refundObj.has("entity") && refundObj.optJSONObject("entity") != null) {
+                    JSONObject entity = refundObj.getJSONObject("entity");
+                    razorpayRefundId = entity.optString("id", null);
+                    razorpayPaymentId = entity.optString("payment_id", null);
+                }
+            }
+            if (razorpayPaymentId == null && payloadObj.has("payment") && payloadObj.optJSONObject("payment") != null) {
+                JSONObject paymentObj = payloadObj.getJSONObject("payment");
+                if (paymentObj.has("entity") && paymentObj.optJSONObject("entity") != null) {
+                    JSONObject entity = paymentObj.getJSONObject("entity");
+                    razorpayPaymentId = entity.optString("id", null);
+                }
+            }
+        }
+
+        // Fallback for flat JSON formats
+        if (razorpayPaymentId == null) {
+            razorpayPaymentId = json.optString("razorpay_payment_id", null);
+        }
+        if (razorpayRefundId == null) {
+            razorpayRefundId = json.optString("id", null);
+        }
 
         if (razorpayPaymentId == null) {
             log.warn("Missing razorpay_payment_id in refund.processed event");
             return;
         }
 
-        paymentRepository.findByRazorpayPaymentId(razorpayPaymentId).ifPresent(payment -> {
+        final String finalRefundId = razorpayRefundId;
+        final String finalPaymentId = razorpayPaymentId;
+        paymentRepository.findByRazorpayPaymentId(finalPaymentId).ifPresent(payment -> {
             payment.setPaymentStatus(PaymentStatus.REFUNDED);
             paymentRepository.save(payment);
 
@@ -750,14 +879,14 @@ public class PaymentServiceImpl implements PaymentService {
                 orderRepository.save(order);
             }
 
-            if (razorpayRefundId != null) {
-                Refund refund = refundRepository.findByRazorpayRefundId(razorpayRefundId);
+            if (finalRefundId != null) {
+                Refund refund = refundRepository.findByRazorpayRefundId(finalRefundId);
                 if (refund != null) {
                     refund.setStatus(RefundStatus.PROCESSED);
                     refundRepository.save(refund);
                 }
             }
-            log.info("Successfully processed refund.processed webhook event for Payment ID: {}", razorpayPaymentId);
+            log.info("Successfully processed refund.processed webhook event for Payment ID: {}", finalPaymentId);
         });
     }
 
