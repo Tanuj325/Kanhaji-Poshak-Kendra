@@ -371,21 +371,21 @@ export default function OrdersListPage() {
             </div>
 
             {/* Mobile & Tablet Responsive Cards Layout (< 1024px) */}
-            <div className="block lg:hidden space-y-3.5">
+            <div className="block lg:hidden space-y-3">
               {orders.map((row) => (
                 <div
                   key={row.id}
                   onClick={() => navigate(buildPath.adminOrderDetail(row.id))}
-                  className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-4 shadow-2xs hover:shadow-md hover:border-amber-500/40 transition-all cursor-pointer space-y-3.5"
+                  className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-4 shadow-2xs hover:shadow-md hover:border-amber-500/40 transition-all cursor-pointer space-y-3"
                 >
-                  {/* Top Row: Order Icon, Number, Datetime, Status Badge */}
-                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                  {/* Top Bar: Order # & Status Badges */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 shrink-0">
                         <FiShoppingBag className="h-3.5 w-3.5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-mono text-xs font-bold text-slate-900 truncate">
+                        <p className="font-mono text-xs font-bold text-amber-900 truncate">
                           #{row.orderNumber}
                         </p>
                         <p className="text-[10px] text-slate-400 font-mono">
@@ -394,73 +394,77 @@ export default function OrdersListPage() {
                       </div>
                     </div>
 
-                    <span
-                      className={cn(
-                        'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border shrink-0',
-                        STATUS_BADGES[row.orderStatus] || 'bg-slate-100 text-slate-600 border-slate-200'
-                      )}
-                    >
-                      {(row.orderStatus || 'PENDING').replace(/_/g, ' ')}
-                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+                      <span
+                        className={cn(
+                          'inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider',
+                          PAYMENT_BADGES[row.paymentStatus] || 'bg-slate-100 text-slate-600'
+                        )}
+                      >
+                        {row.paymentStatus || 'PENDING'}
+                      </span>
+                      <span
+                        className={cn(
+                          'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border',
+                          STATUS_BADGES[row.orderStatus] || 'bg-slate-100 text-slate-600 border-slate-200'
+                        )}
+                      >
+                        {(row.orderStatus || 'PENDING').replace(/_/g, ' ')}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Customer Details & Order Total Grid Block */}
-                  <div className="grid grid-cols-2 gap-3 bg-slate-50/70 rounded-xl p-3 border border-slate-100">
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Customer</p>
-                      <p className="text-xs font-bold text-slate-900 truncate mt-0.5">
+                  {/* Middle Content: Customer Info & Total Amount Fluid Stack */}
+                  <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100 space-y-2">
+                    {/* Customer Line */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Customer:</span>
+                      <span className="text-xs font-bold text-slate-900 truncate text-right">
                         {row.userFirstName || row.shippingAddress?.fullName || 'Customer'} {row.userLastName || ''}
-                      </p>
-                      <p className="text-[10px] text-slate-500 font-mono truncate">
-                        {row.userEmail || row.shippingAddress?.email || '—'}
-                      </p>
+                      </span>
                     </div>
 
-                    <div className="text-right min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Amount</p>
-                      <p className="text-sm font-mono font-extrabold text-amber-900 mt-0.5">
+                    {/* Email Line */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Email:</span>
+                      <span className="text-[11px] text-slate-600 font-mono truncate text-right">
+                        {row.userEmail || row.shippingAddress?.email || '—'}
+                      </span>
+                    </div>
+
+                    {/* Total Amount Line */}
+                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/50">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Total Amount:</span>
+                      <span className="text-sm font-mono font-extrabold text-amber-900 text-right">
                         {formatPrice(row.totalAmount)}
-                      </p>
-                      <div className="mt-1 flex items-center justify-end gap-1">
-                        <span className="text-[9px] text-slate-400 font-medium">Pay:</span>
-                        <span
-                          className={cn(
-                            'inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider',
-                            PAYMENT_BADGES[row.paymentStatus] || 'bg-slate-100 text-slate-600'
-                          )}
-                        >
-                          {row.paymentStatus || 'PENDING'}
-                        </span>
-                      </div>
+                      </span>
                     </div>
                   </div>
 
-                  {/* Bottom Action Bar: Full-Width Status Select & Details Button */}
+                  {/* Action Controls: Responsive Stack on Narrow Viewports */}
                   <div
-                    className="flex items-center gap-2 pt-0.5"
+                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-0.5"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="flex-1 min-w-0">
-                      <select
-                        value={row.orderStatus || ''}
-                        onChange={(e) => handleStatusUpdate(row.id, e.target.value)}
-                        className="w-full text-xs font-bold py-2 px-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:border-amber-500 focus:outline-none min-h-[40px] shadow-2xs"
-                      >
-                        {ORDER_STATUSES.map((s) => (
-                          <option key={s} value={s}>
-                            Status: {s.replace(/_/g, ' ')}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <select
+                      value={row.orderStatus || ''}
+                      onChange={(e) => handleStatusUpdate(row.id, e.target.value)}
+                      className="w-full sm:flex-1 text-xs font-bold py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:border-amber-500 focus:outline-none min-h-[42px] shadow-2xs cursor-pointer"
+                    >
+                      {ORDER_STATUSES.map((s) => (
+                        <option key={s} value={s}>
+                          Status: {s.replace(/_/g, ' ')}
+                        </option>
+                      ))}
+                    </select>
 
                     <button
                       type="button"
                       onClick={() => navigate(buildPath.adminOrderDetail(row.id))}
-                      className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 text-white px-3.5 py-2 text-xs font-bold hover:bg-slate-800 transition-all min-h-[40px] shrink-0 shadow-2xs"
+                      className="w-full sm:w-auto flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 text-white px-4 py-2.5 text-xs font-bold hover:bg-slate-800 transition-all min-h-[42px] shrink-0 shadow-2xs"
                     >
                       <FiEye className="h-3.5 w-3.5 text-amber-400" />
-                      <span>Details</span>
+                      <span>View Order Details</span>
                     </button>
                   </div>
                 </div>
