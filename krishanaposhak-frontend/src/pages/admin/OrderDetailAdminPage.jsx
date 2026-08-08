@@ -77,10 +77,10 @@ export default function OrderDetailAdminPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 font-display">
+      <div className="space-y-4 sm:space-y-6 font-display">
         <Breadcrumb />
         <Skeleton variant="text" className="h-8 w-64" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Skeleton variant="rect" className="h-48 rounded-2xl" />
           <Skeleton variant="rect" className="h-48 rounded-2xl" />
         </div>
@@ -90,7 +90,7 @@ export default function OrderDetailAdminPage() {
 
   if (isError || !order) {
     return (
-      <div className="space-y-6 font-display">
+      <div className="space-y-4 sm:space-y-6 font-display">
         <Breadcrumb />
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-6 sm:p-8 text-center">
           <p className="text-sm font-semibold text-rose-600 mb-4">
@@ -129,91 +129,74 @@ export default function OrderDetailAdminPage() {
         <title>Order {order.orderNumber} - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-4 sm:space-y-6 font-display print:hidden">
+      <div className="space-y-3.5 sm:space-y-5 font-display print:hidden">
         <Breadcrumb />
 
-        {/* Executive Page Header */}
-        <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-r from-amber-950/5 via-white to-amber-900/5 p-4 sm:p-5 shadow-xs space-y-3 sm:space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <button
-                type="button"
-                onClick={() => navigate('/admin/orders')}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-900 hover:text-white transition-all shadow-2xs shrink-0 cursor-pointer"
-                aria-label="Back to orders list"
-              >
-                <FiArrowLeft className="h-4 w-4" />
-              </button>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 flex-wrap min-w-0">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 font-mono text-sm font-black tracking-tight shrink-0">
-                    <FiShoppingBag className="h-3.5 w-3.5 text-amber-700" />
-                    <span>#{order.orderNumber}</span>
-                  </div>
-                  <span className={cn('inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border shrink-0 shadow-2xs', STATUS_BADGES[order.orderStatus])}>
-                    {(order.orderStatus || 'PENDING').replace(/_/g, ' ')}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-slate-500 font-body flex items-center gap-1">
-                  <FiClock className="h-3 w-3 text-amber-700 shrink-0" />
-                  <span>Placed on {formatDate(order.orderDate || order.createdAt, { format: 'datetime' })}</span>
-                </p>
+        {/* Compact Header Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-3 border-b border-slate-200/80">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <button
+              type="button"
+              onClick={() => navigate('/admin/orders')}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-900 hover:text-white transition-all shadow-2xs shrink-0 cursor-pointer"
+              aria-label="Back to orders list"
+            >
+              <FiArrowLeft className="h-3.5 w-3.5" />
+            </button>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap min-w-0">
+                <span className="font-mono text-base sm:text-xl font-extrabold text-amber-950 truncate">
+                  #{order.orderNumber}
+                </span>
+                <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border shrink-0', STATUS_BADGES[order.orderStatus])}>
+                  {(order.orderStatus || 'PENDING').replace(/_/g, ' ')}
+                </span>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => setShowInvoiceModal(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 text-white px-4 py-2.5 text-xs font-bold shadow-md hover:bg-slate-800 transition-all min-h-[44px] sm:min-h-0 cursor-pointer"
-              >
-                <FiPrinter className="h-3.5 w-3.5 text-amber-400" />
-                <span>Preview & Print Invoice</span>
-              </button>
+              <p className="text-[11px] text-slate-500 font-body">
+                Placed on {formatDate(order.orderDate || order.createdAt, { format: 'datetime' })}
+              </p>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowInvoiceModal(true)}
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 text-white px-3 py-2 text-xs font-bold shadow-2xs hover:bg-slate-800 transition-all shrink-0 cursor-pointer min-h-[38px] sm:min-h-0"
+          >
+            <FiPrinter className="h-3.5 w-3.5 text-amber-400" />
+            <span>Invoice</span>
+          </button>
         </div>
 
-        {/* Fulfillment Controller Card */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-800 border border-amber-500/20 shrink-0">
-                <FiPackage className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Fulfillment Status Controller</p>
-                <p className="text-[11px] text-slate-500">Update devotee order progression in real-time</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 min-w-0">
-              <select
-                value={order.orderStatus || 'PENDING'}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                disabled={updateStatusMutation.isPending}
-                className="w-full sm:w-auto rounded-xl border border-amber-300/80 bg-amber-50/50 px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none cursor-pointer min-h-[44px] shadow-2xs"
-              >
-                {ORDER_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    Status: {s.replace(/_/g, ' ')}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* Compact Fulfillment Status Controller Bar */}
+        <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <FiPackage className="h-4 w-4 text-amber-700 shrink-0" />
+            <span className="text-xs font-bold text-slate-800 truncate">Status Controller:</span>
           </div>
+
+          <select
+            value={order.orderStatus || 'PENDING'}
+            onChange={(e) => handleStatusChange(e.target.value)}
+            disabled={updateStatusMutation.isPending}
+            className="text-xs font-bold py-1.5 px-2.5 rounded-lg border border-amber-300/80 bg-amber-50/50 text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none cursor-pointer shadow-2xs shrink-0"
+          >
+            {ORDER_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s.replace(/_/g, ' ')}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Main Grid Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {/* Column 1 & 2: Order Items & Pricing */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            <div className="rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-6 shadow-xs space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                  <FiShoppingBag className="h-4 w-4 text-amber-700" /> Itemized Products ({items.length})
-                </h3>
-              </div>
+          <div className="lg:col-span-2 space-y-3.5 sm:space-y-6">
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-2xs space-y-3">
+              <h3 className="font-serif text-sm sm:text-base font-bold text-slate-900 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <FiShoppingBag className="h-3.5 w-3.5 text-amber-700" /> Itemized Products ({items.length})
+              </h3>
 
               {/* Desktop Items Table (>= 1024px) — PRESERVED 100% UNCHANGED */}
               <div className="hidden lg:block overflow-x-auto custom-scrollbar">
@@ -272,103 +255,91 @@ export default function OrderDetailAdminPage() {
                 </table>
               </div>
 
-              {/* Mobile & Tablet Ultra-Premium Item Cards (< 1024px) */}
-              <div className="block lg:hidden space-y-3">
+              {/* Mobile & Tablet Compact Single-Layer Divided Items List (< 1024px) */}
+              <div className="block lg:hidden divide-y divide-slate-100">
                 {items.map((item, idx) => (
-                  <div
-                    key={item.id || idx}
-                    className="rounded-xl border border-slate-200/90 bg-white p-3 sm:p-3.5 shadow-2xs space-y-2.5"
-                  >
-                    <div className="flex items-start gap-3">
+                  <div key={item.id || idx} className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
                       {item.imageUrl ? (
                         <img
                           src={item.imageUrl}
                           alt={item.productName || 'Product'}
-                          className="h-14 w-14 object-cover rounded-xl border border-slate-200 ring-1 ring-amber-500/20 shrink-0"
+                          className="h-11 w-11 object-cover rounded-lg border border-slate-200 shrink-0"
                         />
                       ) : (
-                        <div className="h-14 w-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 shrink-0 border border-slate-200">
-                          <FiShoppingBag className="h-5 w-5" />
+                        <div className="h-11 w-11 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 shrink-0 border border-slate-200">
+                          <FiShoppingBag className="h-4 w-4" />
                         </div>
                       )}
-                      <div className="min-w-0 flex-1 space-y-1">
-                        <p className="font-bold text-slate-900 text-xs leading-snug">{item.productName || item.name || 'Product Item'}</p>
-                        <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
-                          <span className="bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-md font-extrabold">
-                            Size: {item.size || item.variantSize || 'Standard'}
-                          </span>
-                          {item.sku && <span className="text-slate-400 font-mono truncate">SKU: {item.sku}</span>}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-slate-900 text-xs truncate">{item.productName || item.name || 'Product Item'}</p>
+                        <div className="flex items-center gap-1.5 flex-wrap text-[10px] mt-0.5">
+                          <span className="text-amber-900 font-bold">Size: {item.size || item.variantSize || 'Standard'}</span>
+                          <span className="text-slate-400">• Qty: {item.quantity}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 font-mono text-xs">
-                      <div className="flex items-center gap-1 text-slate-500">
-                        <span>{formatPrice(item.price || item.unitPrice)}</span>
-                        <span className="text-slate-400">×</span>
-                        <span className="font-bold text-slate-800">{item.quantity}</span>
-                      </div>
-                      <span className="font-extrabold text-amber-950 text-sm">
+                    <div className="text-right font-mono shrink-0">
+                      <p className="text-xs font-extrabold text-amber-950">
                         {formatPrice(item.totalPrice || ((item.price || item.unitPrice || 0) * (item.quantity || 1)))}
-                      </span>
+                      </p>
+                      <p className="text-[10px] text-slate-400">{formatPrice(item.price || item.unitPrice)} ea</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Order Financial Summary Box */}
-              <div className="rounded-xl border border-amber-900/10 bg-gradient-to-br from-amber-950/5 via-slate-900/5 to-amber-900/5 p-3.5 sm:p-4 space-y-2 text-xs">
+              <div className="border-t border-slate-100 pt-3 space-y-1.5 text-xs">
                 <div className="flex justify-between text-slate-600">
                   <span>Subtotal</span>
                   <span className="font-mono">{formatPrice(order.subTotal)}</span>
                 </div>
                 {order.discount > 0 && (
                   <div className="flex justify-between text-emerald-700 font-bold">
-                    <span>Discount Applied {order.couponCode ? `(${order.couponCode})` : ''}</span>
+                    <span>Discount {order.couponCode ? `(${order.couponCode})` : ''}</span>
                     <span className="font-mono">-{formatPrice(order.discount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-slate-600">
                   <span>Shipping Fee</span>
-                  <span className="font-mono">{order.shippingCharge > 0 ? formatPrice(order.shippingCharge) : <span className="text-emerald-700 font-bold">✓ FREE DELIVERY</span>}</span>
+                  <span className="font-mono">{order.shippingCharge > 0 ? formatPrice(order.shippingCharge) : <span className="text-emerald-700 font-bold">✓ FREE</span>}</span>
                 </div>
-                <div className="flex justify-between border-t border-slate-300/60 pt-2.5 font-serif font-bold text-slate-900 text-sm sm:text-base">
-                  <span>Total Amount Paid</span>
-                  <span className="font-mono text-amber-950 text-base sm:text-lg font-black">{formatPrice(order.totalAmount)}</span>
+                <div className="flex justify-between border-t border-slate-200 pt-2 font-serif font-bold text-slate-900 text-xs sm:text-sm">
+                  <span>Total Paid</span>
+                  <span className="font-mono text-amber-950 font-black text-sm sm:text-base">{formatPrice(order.totalAmount)}</span>
                 </div>
               </div>
             </div>
 
             {/* Order Notes */}
             {order.notes && (
-              <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-2">
-                <h3 className="font-serif text-sm font-bold text-slate-900">Customer Notes</h3>
-                <p className="text-xs text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed font-body">{order.notes}</p>
+              <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-2xs space-y-1.5">
+                <h3 className="font-serif text-xs font-bold text-slate-900">Customer Notes</h3>
+                <p className="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-200 leading-relaxed font-body">{order.notes}</p>
               </div>
             )}
           </div>
 
-          {/* Column 3: Devotee Customer, Shipping & Payment Cards */}
-          <div className="space-y-4 sm:space-y-6">
+          {/* Column 3: Single-Layer Customer, Shipping & Payment Cards */}
+          <div className="space-y-3.5 sm:space-y-6">
             {/* Devotee Info Card */}
-            <div className="rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs space-y-3">
-              <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 shrink-0">
-                  <FiUser className="h-3.5 w-3.5" />
-                </div>
-                <span>Devotee Customer</span>
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-2xs space-y-2.5">
+              <h3 className="font-serif text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <FiUser className="h-3.5 w-3.5 text-amber-700" /> Devotee Customer
               </h3>
-              <div className="text-xs space-y-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100">
-                <p className="font-bold text-slate-900 text-sm truncate">{customerName}</p>
-                <div className="flex items-center gap-2 text-slate-600 font-mono min-w-0">
-                  <FiMail className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <div className="text-xs space-y-1.5">
+                <p className="font-bold text-slate-900 truncate">{customerName}</p>
+                <div className="flex items-center gap-1.5 text-slate-600 font-mono text-[11px] min-w-0">
+                  <FiMail className="h-3 w-3 text-slate-400 shrink-0" />
                   <span className="truncate min-w-0">{customerEmail}</span>
                 </div>
                 {customerPhone && (
-                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/60 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <FiPhone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                      <span className="font-mono text-slate-700 truncate">{customerPhone}</span>
+                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 min-w-0">
+                    <div className="flex items-center gap-1.5 text-slate-700 font-mono text-[11px] min-w-0">
+                      <FiPhone className="h-3 w-3 text-slate-400 shrink-0" />
+                      <span className="truncate">{customerPhone}</span>
                     </div>
                     <a
                       href={`https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
@@ -376,10 +347,10 @@ export default function OrderDetailAdminPage() {
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-2xs font-bold text-[10px] shrink-0"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-bold text-[10px] shrink-0"
                       title="Chat on WhatsApp"
                     >
-                      <FaWhatsapp className="h-3.5 w-3.5" />
+                      <FaWhatsapp className="h-3 w-3" />
                       <span>WhatsApp</span>
                     </a>
                   </div>
@@ -388,50 +359,44 @@ export default function OrderDetailAdminPage() {
             </div>
 
             {/* Shipping Address Card */}
-            <div className="rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs space-y-3">
-              <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 shrink-0">
-                  <FiMapPin className="h-3.5 w-3.5" />
-                </div>
-                <span>Shipping Destination</span>
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-2xs space-y-2.5">
+              <h3 className="font-serif text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <FiMapPin className="h-3.5 w-3.5 text-amber-700" /> Shipping Destination
               </h3>
               {address ? (
-                <div className="text-xs text-slate-700 space-y-1 font-body leading-relaxed bg-slate-50/80 rounded-xl p-3 border border-slate-100 break-words">
+                <div className="text-xs text-slate-700 space-y-0.5 font-body leading-relaxed break-words">
                   <p className="font-bold text-slate-900">{address.fullName || customerName}</p>
                   {address.addressLine1 && <p>{address.addressLine1}</p>}
                   {address.addressLine2 && <p>{address.addressLine2}</p>}
-                  <p className="font-semibold text-slate-800">
+                  <p className="text-slate-800">
                     {[address.city, address.state].filter(Boolean).join(', ')}
                     {address.postalCode ? ` - ${address.postalCode}` : ''}
                   </p>
                   <p className="font-bold text-amber-900 text-[11px]">{address.country || 'India'}</p>
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 bg-slate-50 p-3 rounded-xl">No shipping address recorded</p>
+                <p className="text-xs text-slate-400">No shipping address recorded</p>
               )}
             </div>
 
             {/* Payment Details Card */}
-            <div className="rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs space-y-3">
-              <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 shrink-0">
-                  <FiTruck className="h-3.5 w-3.5" />
-                </div>
-                <span>Payment Summary</span>
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-2xs space-y-2.5">
+              <h3 className="font-serif text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <FiTruck className="h-3.5 w-3.5 text-amber-700" /> Payment Details
               </h3>
-              <div className="text-xs space-y-2 bg-slate-50/80 rounded-xl p-3 border border-slate-100">
+              <div className="text-xs space-y-1.5">
                 <div className="flex justify-between items-center gap-2">
-                  <span className="text-slate-500 shrink-0">Payment Method</span>
+                  <span className="text-slate-500 shrink-0">Method</span>
                   <span className="font-bold text-slate-900 uppercase truncate text-right">{order.paymentMethod || 'Online Payment'}</span>
                 </div>
                 <div className="flex justify-between items-center gap-2">
                   <span className="text-slate-500 shrink-0">Status</span>
-                  <span className="font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300 text-[10px] uppercase shrink-0">
+                  <span className="font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded text-[10px] uppercase shrink-0">
                     {order.paymentStatus || 'PAID'}
                   </span>
                 </div>
                 {order.paymentId && (
-                  <div className="flex justify-between items-center gap-2 pt-1 border-t border-slate-200/60">
+                  <div className="flex justify-between items-center gap-2 pt-1 border-t border-slate-100">
                     <span className="text-slate-500 shrink-0">Txn ID</span>
                     <span className="font-mono text-[11px] text-slate-800 truncate max-w-[140px] sm:max-w-[180px] break-all text-right">{order.paymentId}</span>
                   </div>
