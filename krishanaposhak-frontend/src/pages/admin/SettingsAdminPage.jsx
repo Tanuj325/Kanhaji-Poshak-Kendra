@@ -21,7 +21,6 @@ import {
   FiCheckCircle,
   FiShield,
   FiZap,
-  FiArrowRight,
 } from 'react-icons/fi';
 
 const SHORTCUTS = [
@@ -109,10 +108,10 @@ export default function SettingsAdminPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3 min-w-0">
-            {/* Theme Toggle */}
-            <div className="flex flex-cols items-center justify-between gap-2.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 min-w-0">
-              <div className="min-w-0">
-                <p className="text-[11px] font-semibold text-slate-900 truncate">Appearance Mode</p>
+            {/* Theme Toggle - Row 1 Text & Row 2 Button */}
+            <div className="flex flex-col items-start justify-between gap-2.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 min-w-0">
+              <div className="min-w-0 w-full">
+                <p className="text-xs font-semibold text-slate-900 truncate">Appearance Mode</p>
                 <p className="text-[10px] text-slate-500 mt-0.5 truncate">Toggle light and dark color themes</p>
               </div>
               <Button
@@ -120,17 +119,20 @@ export default function SettingsAdminPage() {
                 size="sm"
                 onClick={toggleTheme}
                 leftIcon={isDarkTheme ? <FiMoon className="h-3.5 w-3.5 text-slate-500" /> : <FiSun className="h-3.5 w-3.5 text-amber-600" />}
-                className="py-1 px-2.5 text-[11px] min-h-[32px] sm:min-h-0 shrink-0 cursor-pointer"
+                className="w-full sm:w-auto py-1 px-3 text-xs min-h-[34px] cursor-pointer"
               >
                 {isDarkTheme ? 'Dark Mode' : 'Light Mode'}
               </Button>
             </div>
 
             {/* Dashboard Refresh Rate */}
-            <div className="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 space-y-1 min-w-0">
-              <label htmlFor="refresh-rate-select" className="block text-[11px] font-semibold text-slate-900 truncate">
-                Dashboard Auto-Refresh Interval
-              </label>
+            <div className="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 space-y-1 min-w-0 flex flex-col justify-between">
+              <div>
+                <label htmlFor="refresh-rate-select" className="block text-xs font-semibold text-slate-900 truncate">
+                  Dashboard Auto-Refresh Interval
+                </label>
+                <p className="text-[10px] text-slate-500 mt-0.5 truncate">Automatic telemetry refresh timing</p>
+              </div>
               <select
                 id="refresh-rate-select"
                 value={refreshInterval}
