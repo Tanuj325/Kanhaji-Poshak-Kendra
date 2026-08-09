@@ -43,6 +43,7 @@ export default function CategoriesListPage() {
 
   const paginationData = data?.data || data || {};
   const categories = paginationData.content ?? [];
+  console.log(categories)
   const totalPages = paginationData.totalPages ?? 1;
   const totalElements = paginationData.totalElements ?? 0;
 
