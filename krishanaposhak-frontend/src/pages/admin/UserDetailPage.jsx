@@ -44,7 +44,7 @@ export default function UserDetailPage() {
         navigate('/admin/users');
       },
       onError: (err) => {
-        toast.error(getErrorMessage(err, 'Failed to delete user'));
+        setShowDeleteConfirm(false);
       },
     });
   }, [userId, deleteUser, navigate]);

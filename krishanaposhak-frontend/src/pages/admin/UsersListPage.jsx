@@ -64,6 +64,7 @@ export default function UsersListPage() {
     if (deleteTarget) {
       deleteUser.mutate(deleteTarget.id, {
         onSuccess: () => setDeleteTarget(null),
+        onError: () => setDeleteTarget(null),
       });
     }
   };

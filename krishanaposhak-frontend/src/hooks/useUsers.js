@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '@/services';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getErrorMessage } from '@/utils/apiErrorParser';
 import toast from 'react-hot-toast';
 
 export function useAllUsers() {
@@ -29,7 +30,7 @@ export function useToggleUserStatus() {
       toast.success('User status updated');
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || 'Failed to update user status');
+      toast.error(getErrorMessage(err, 'Failed to update user status'));
     },
   });
 }
@@ -43,7 +44,7 @@ export function useDeleteUser() {
       toast.success('User deleted');
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || 'Failed to delete user');
+      toast.error(getErrorMessage(err, 'Failed to delete user'));
     },
   });
 }

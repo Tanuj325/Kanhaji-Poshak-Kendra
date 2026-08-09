@@ -109,4 +109,20 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<CouponUsage> couponUsages = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Notification> notifications = new ArrayList<>();
+
 }

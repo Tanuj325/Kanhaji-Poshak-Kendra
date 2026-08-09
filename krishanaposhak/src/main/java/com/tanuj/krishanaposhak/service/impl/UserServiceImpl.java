@@ -119,7 +119,14 @@ public class UserServiceImpl implements UserService {
         // Delete associated tokens
         emailVerificationTokenRepository.deleteByUser(user);
         passwordResetTokenRepository.deleteByUser(user);
-        userRepository.delete(user);
+
+        try {
+            userRepository.delete(user);
+            userRepository.flush();
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            log.warn("Cannot delete user ID {} due to existing referenced records/orders: {}", userId, e.getMessage());
+            throw new IllegalStateException("Cannot delete user with existing order or transaction history. Please disable the account instead.");
+        }
     }
 
     /**
