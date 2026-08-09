@@ -2,6 +2,7 @@ package com.tanuj.krishanaposhak.mapper;
 
 import com.tanuj.krishanaposhak.dto.order.OrderItemResponse;
 import com.tanuj.krishanaposhak.entity.OrderItem;
+import com.tanuj.krishanaposhak.util.UrlUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,7 +14,7 @@ public interface OrderItemMapper {
     @Mapping(target = "variantId", source = "productVariant.id")
     @Mapping(target = "productName", source = "productName")
     @Mapping(target = "sku", source = "sku")
-    @Mapping(target = "imageUrl", source = "productImage")
+    @Mapping(target = "imageUrl", expression = "java(com.tanuj.krishanaposhak.util.UrlUtils.ensureHttps(orderItem.getProductImage()))")
     @Mapping(target = "size", source = "size")
     @Mapping(target = "price",
             expression = "java(orderItem.getPrice() == null ? null : orderItem.getPrice().doubleValue())")

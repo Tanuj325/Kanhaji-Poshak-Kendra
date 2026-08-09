@@ -7,6 +7,7 @@ import com.tanuj.krishanaposhak.dto.product.ProductResponse;
 import com.tanuj.krishanaposhak.entity.Product;
 import com.tanuj.krishanaposhak.entity.ProductImage;
 import com.tanuj.krishanaposhak.entity.ProductVariant;
+import com.tanuj.krishanaposhak.util.UrlUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -98,10 +99,11 @@ public interface ProductMapper {
         if (images == null || images.isEmpty()) {
             return null;
         }
-        return images.stream()
+        String url = images.stream()
                 .filter(img -> Boolean.TRUE.equals(img.getThumbnail()))
                 .findFirst()
                 .map(ProductImage::getImageUrl)
                 .orElse(images.getFirst().getImageUrl());
+        return UrlUtils.ensureHttps(url);
     }
 }

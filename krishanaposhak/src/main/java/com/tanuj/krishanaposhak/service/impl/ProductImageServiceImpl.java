@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+import com.tanuj.krishanaposhak.util.UrlUtils;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -48,7 +50,7 @@ public class ProductImageServiceImpl implements ProductImageService {
         }
 
         Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/products");
-        String imageUrl = (String) uploadResult.get("url");
+        String imageUrl = UrlUtils.ensureHttps(uploadResult.containsKey("secure_url") ? (String) uploadResult.get("secure_url") : (String) uploadResult.get("url"));
         String publicId = (String) uploadResult.get("public_id");
 
         ProductImage image = new ProductImage();
@@ -76,7 +78,7 @@ public class ProductImageServiceImpl implements ProductImageService {
         if (file != null && !file.isEmpty()) {
             // Upload new file and delete old one
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/products");
-            String newImageUrl = (String) uploadResult.get("url");
+            String newImageUrl = UrlUtils.ensureHttps(uploadResult.containsKey("secure_url") ? (String) uploadResult.get("secure_url") : (String) uploadResult.get("url"));
             String newPublicId = (String) uploadResult.get("public_id");
 
             // Delete old image from Cloudinary

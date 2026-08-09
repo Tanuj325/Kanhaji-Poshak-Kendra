@@ -3,6 +3,7 @@ package com.tanuj.krishanaposhak.mapper;
 import com.tanuj.krishanaposhak.dto.product.ProductImageRequest;
 import com.tanuj.krishanaposhak.dto.product.ProductImageResponse;
 import com.tanuj.krishanaposhak.entity.ProductImage;
+import com.tanuj.krishanaposhak.util.UrlUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -23,6 +24,7 @@ public interface ProductImageMapper {
     @Mapping(target = "product", ignore = true)
     void updateEntityFromRequest(ProductImageRequest request, @MappingTarget ProductImage image);
 
+    @Mapping(target = "imageUrl", expression = "java(com.tanuj.krishanaposhak.util.UrlUtils.ensureHttps(image.getImageUrl()))")
     ProductImageResponse toResponse(ProductImage image);
 
     List<ProductImageResponse> toResponseList(List<ProductImage> images);

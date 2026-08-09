@@ -24,6 +24,8 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.Map;
 
+import com.tanuj.krishanaposhak.util.UrlUtils;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -115,7 +117,7 @@ public class BannerServiceImpl implements BannerService {
 
         // Upload to Cloudinary
         Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/banners");
-        String imageUrl = (String) uploadResult.get("url");
+        String imageUrl = UrlUtils.ensureHttps(uploadResult.containsKey("secure_url") ? (String) uploadResult.get("secure_url") : (String) uploadResult.get("url"));
         String publicId = (String) uploadResult.get("public_id");
 
         Banner banner = bannerMapper.toEntity(request);
@@ -140,7 +142,7 @@ public class BannerServiceImpl implements BannerService {
 
             // Upload new image
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/banners");
-            String imageUrl = (String) uploadResult.get("url");
+            String imageUrl = UrlUtils.ensureHttps(uploadResult.containsKey("secure_url") ? (String) uploadResult.get("secure_url") : (String) uploadResult.get("url"));
             String publicId = (String) uploadResult.get("public_id");
 
             banner.setImageUrl(imageUrl);

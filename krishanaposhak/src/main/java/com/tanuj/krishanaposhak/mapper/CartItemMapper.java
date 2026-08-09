@@ -3,6 +3,7 @@ package com.tanuj.krishanaposhak.mapper;
 import com.tanuj.krishanaposhak.dto.cart.CartItemResponse;
 import com.tanuj.krishanaposhak.entity.CartItem;
 import com.tanuj.krishanaposhak.entity.ProductImage;
+import com.tanuj.krishanaposhak.util.UrlUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -38,7 +39,7 @@ public interface CartItemMapper {
         }
 
         List<ProductImage> images = cartItem.getProductVariant().getProduct().getImages();
-        return images.stream()
+        String rawUrl = images.stream()
                 .filter(img -> img != null && Boolean.TRUE.equals(img.getActive()) && Boolean.TRUE.equals(img.getThumbnail()))
                 .findFirst()
                 .map(ProductImage::getImageUrl)
@@ -47,6 +48,7 @@ public interface CartItemMapper {
                         .findFirst()
                         .map(ProductImage::getImageUrl)
                         .orElseGet(() -> images.getFirst().getImageUrl()));
+        return UrlUtils.ensureHttps(rawUrl);
     }
 
     @Named("totalPrice")

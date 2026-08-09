@@ -20,6 +20,19 @@ export function getCloudinaryFolder(type) {
 }
 
 /**
+ * Ensures that any Cloudinary URL uses HTTPS to avoid Mixed Content warnings.
+ * @param {string} url
+ * @returns {string}
+ */
+export function ensureHttpsUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  if (url.startsWith('http://res.cloudinary.com')) {
+    return url.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+  }
+  return url;
+}
+
+/**
  * Get product thumbnail URL.
  * Prioritizes the image marked as thumbnail, falls back to first image.
  * @param {Array<{thumbnail: boolean, imageUrl: string}>} images
@@ -28,7 +41,8 @@ export function getCloudinaryFolder(type) {
 export function getProductThumbnail(images) {
   if (!images?.length) return null;
   const thumbnail = images.find((img) => img.thumbnail);
-  return thumbnail?.imageUrl || images[0]?.imageUrl || null;
+  const rawUrl = thumbnail?.imageUrl || images[0]?.imageUrl || null;
+  return ensureHttpsUrl(rawUrl);
 }
 
 /**
@@ -40,7 +54,7 @@ export function getProductImages(images) {
   if (!images?.length) return [];
   return [...images]
     .sort((a, b) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99))
-    .map((img) => img.imageUrl)
+    .map((img) => ensureHttpsUrl(img.imageUrl))
     .filter(Boolean);
 }
 
@@ -73,12 +87,13 @@ export const PLACEHOLDER_IMAGE = '/placeholder.png';
  * @returns {string}
  */
 export function getOptimizedImageUrl(url, width = 400, height = 500) {
-  if (!url || !url.includes('cloudinary')) return url || PLACEHOLDER_IMAGE;
+  const safeUrl = ensureHttpsUrl(url);
+  if (!safeUrl || !safeUrl.includes('cloudinary')) return safeUrl || PLACEHOLDER_IMAGE;
   const upload = '/upload/';
-  const uploadIdx = url.indexOf(upload);
-  if (uploadIdx === -1) return url;
-  const baseUrl = url.substring(0, uploadIdx + upload.length);
-  const path = url.substring(uploadIdx + upload.length);
+  const uploadIdx = safeUrl.indexOf(upload);
+  if (uploadIdx === -1) return safeUrl;
+  const baseUrl = safeUrl.substring(0, uploadIdx + upload.length);
+  const path = safeUrl.substring(uploadIdx + upload.length);
   return `${baseUrl}w_${width},h_${height},c_fill,f_auto,q_auto:eco/${path}`;
 }
 
@@ -89,13 +104,14 @@ export function getOptimizedImageUrl(url, width = 400, height = 500) {
  * @returns {string|null}
  */
 export function getAvatarUrl(url, size = 80) {
-  if (!url) return null;
-  if (!url.includes('cloudinary')) return url;
+  const safeUrl = ensureHttpsUrl(url);
+  if (!safeUrl) return null;
+  if (!safeUrl.includes('cloudinary')) return safeUrl;
   const upload = '/upload/';
-  const uploadIdx = url.indexOf(upload);
-  if (uploadIdx === -1) return url;
-  const baseUrl = url.substring(0, uploadIdx + upload.length);
-  const path = url.substring(uploadIdx + upload.length);
+  const uploadIdx = safeUrl.indexOf(upload);
+  if (uploadIdx === -1) return safeUrl;
+  const baseUrl = safeUrl.substring(0, uploadIdx + upload.length);
+  const path = safeUrl.substring(uploadIdx + upload.length);
   return `${baseUrl}w_${size},h_${size},c_fill,f_auto,q_auto:eco/${path}`;
 }
 
@@ -107,12 +123,13 @@ export function getAvatarUrl(url, size = 80) {
  * @returns {string|null} - srcSet string or null
  */
 export function getResponsiveSrcSet(url, widths = [320, 480, 640, 800, 1024, 1280]) {
-  if (!url || !url.includes('cloudinary')) return null;
+  const safeUrl = ensureHttpsUrl(url);
+  if (!safeUrl || !safeUrl.includes('cloudinary')) return null;
   const upload = '/upload/';
-  const uploadIdx = url.indexOf(upload);
+  const uploadIdx = safeUrl.indexOf(upload);
   if (uploadIdx === -1) return null;
-  const baseUrl = url.substring(0, uploadIdx + upload.length);
-  const path = url.substring(uploadIdx + upload.length);
+  const baseUrl = safeUrl.substring(0, uploadIdx + upload.length);
+  const path = safeUrl.substring(uploadIdx + upload.length);
   
   return widths
     .map((w) => `${baseUrl}w_${w},c_fill,f_auto,q_auto:eco/${path} ${w}w`)
@@ -125,12 +142,13 @@ export function getResponsiveSrcSet(url, widths = [320, 480, 640, 800, 1024, 128
  * @returns {string} - A low-quality image placeholder URL or empty string
  */
 export function getBlurPlaceholder(url) {
-  if (!url || !url.includes('cloudinary')) return '';
+  const safeUrl = ensureHttpsUrl(url);
+  if (!safeUrl || !safeUrl.includes('cloudinary')) return '';
   const upload = '/upload/';
-  const uploadIdx = url.indexOf(upload);
+  const uploadIdx = safeUrl.indexOf(upload);
   if (uploadIdx === -1) return '';
-  const baseUrl = url.substring(0, uploadIdx + upload.length);
-  const path = url.substring(uploadIdx + upload.length);
+  const baseUrl = safeUrl.substring(0, uploadIdx + upload.length);
+  const path = safeUrl.substring(uploadIdx + upload.length);
   return `${baseUrl}w_20,c_fill,f_auto,q_auto:low/${path}`;
 }
 

@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.tanuj.krishanaposhak.util.UrlUtils;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -75,8 +77,8 @@ public class UserServiceImpl implements UserService {
 
                 // Upload new image
                 Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/profiles");
-                String imageUrl = (String) uploadResult.get("url");
-                String publicId = (String) uploadResult.get("publicId");
+                String imageUrl = UrlUtils.ensureHttps(uploadResult.containsKey("secure_url") ? (String) uploadResult.get("secure_url") : (String) uploadResult.get("url"));
+                String publicId = uploadResult.containsKey("public_id") ? (String) uploadResult.get("public_id") : (String) uploadResult.get("publicId");
 
                 user.setProfileImageUrl(imageUrl);
                 user.setProfileImagePublicId(publicId);

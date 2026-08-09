@@ -57,7 +57,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                     "folder", folder,
                     "use_filename", false,
                     "unique_filename", true,
-                    "overwrite", false
+                    "overwrite", false,
+                    "secure", true
             );
 
             Map<String, Object> result =
