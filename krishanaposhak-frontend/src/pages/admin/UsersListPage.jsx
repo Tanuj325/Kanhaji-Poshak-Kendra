@@ -193,7 +193,7 @@ export default function UsersListPage() {
                   <div
                     key={user.id}
                     onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                    className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-white to-amber-50/20 px-2 shadow-xs hover:shadow-md hover:border-amber-400/70 transition-all duration-200 space-y-3.5 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
+                    className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-white to-amber-50/20 px-1 shadow-xs hover:shadow-md hover:border-amber-400/70 transition-all duration-200 space-y-3.5 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
                   >
                     {/* Top Accent Line on Hover */}
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity" />
