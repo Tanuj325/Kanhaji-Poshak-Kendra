@@ -348,7 +348,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
 
             {/* ─── 3. FOOTER SECTION ─── */}
             {isAuthenticated && (
-              <div className="p-3 border-t border-amber-900/10 bg-amber-50/40">
+              <div className="p-3 pb-20 sm:pb-4 border-t border-amber-900/10 bg-amber-50/40">
                 <button
                   type="button"
                   onClick={handleLogout}
