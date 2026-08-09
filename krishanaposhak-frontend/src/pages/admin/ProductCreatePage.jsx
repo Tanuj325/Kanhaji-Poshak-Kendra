@@ -96,7 +96,7 @@ export default function ProductCreatePage() {
       featured: false,
       newArrival: false,
       active: true,
-      variants: [{ size: 'Standard', price: '', discountPrice: '', stock: '10', sku: '' }],
+      variants: [{ size: '', price: '', discountPrice: '', stock: '', sku: '' }],
       images: [],
     },
   });
@@ -192,7 +192,7 @@ export default function ProductCreatePage() {
   return (
     <>
       <Helmet>
-        <title>Create Product - Admin - Krishana Poshak</title>
+        <title>Create Product - Admin - Kanhaji Poshak</title>
       </Helmet>
 
       <div className="w-full max-w-5xl mx-auto space-y-5 sm:space-y-6 font-display">
