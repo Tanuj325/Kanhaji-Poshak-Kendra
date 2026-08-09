@@ -201,82 +201,89 @@ export default function CategoriesListPage() {
                 {categories.map((cat, idx) => (
                   <div
                     key={cat.id}
-                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs hover:shadow-sm hover:border-amber-300/60 transition-all space-y-3.5 flex flex-col justify-between"
+                    className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm hover:shadow-md hover:border-amber-400/50 transition-all duration-200 space-y-3.5 flex flex-col justify-between"
                   >
-                    {/* Top Row: Thumbnail, Name, Slug & Status */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3 min-w-0">
+                    {/* Top Row: Thumbnail, Name, Slug & Status Badge */}
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="flex items-center gap-3 min-w-0">
                         <img
-                          src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 60, 60) : PLACEHOLDER_IMAGE}
+                          src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 80, 80) : PLACEHOLDER_IMAGE}
                           alt={cat.name}
-                          className="h-12 w-12 rounded-xl object-cover border border-slate-200/80 shrink-0 shadow-2xs"
+                          className="h-12 w-12 rounded-xl object-cover border border-slate-200/90 shrink-0 shadow-xs"
                         />
                         <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] font-bold text-slate-400 shrink-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono text-[10px] font-bold text-amber-950/70 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/60 shrink-0">
                               #{page * size + idx + 1}
                             </span>
-                            <h3 className="font-bold text-slate-900 text-sm truncate">
+                            <h3 className="font-heading text-sm font-bold text-slate-900 truncate">
                               {cat.name}
                             </h3>
                           </div>
-                          <p className="font-mono text-[11px] text-slate-500 truncate mt-0.5">
-                            {cat.slug}
+                          <p className="font-mono text-[11px] text-slate-400 truncate mt-0.5">
+                            /{cat.slug}
                           </p>
                         </div>
                       </div>
+
                       <button
                         type="button"
                         onClick={() => handleToggleStatus(cat.id)}
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold transition-all shrink-0 active:scale-95',
+                          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-all shrink-0 active:scale-95 shadow-2xs cursor-pointer',
                           cat.active
-                            ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
-                            : 'bg-slate-200/80 text-slate-600 hover:bg-slate-300'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80'
                         )}
+                        title="Click to toggle status"
                       >
+                        <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', cat.active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400')} />
                         {cat.active ? 'Active' : 'Inactive'}
                       </button>
                     </div>
 
-                    {/* Middle Info: Description & Parent Category */}
-                    <div className="space-y-2 text-xs">
-                      {cat.description && (
-                        <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed">
-                          {cat.description}
-                        </p>
-                      )}
+                    {/* Description Paragraph */}
+                    {cat.description && (
+                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed bg-slate-50/80 p-2.5 rounded-xl border border-slate-100/80 font-body">
+                        {cat.description}
+                      </p>
+                    )}
 
-                      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    {/* Taxonomy & Order Bar */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Taxonomy:</span>
                         {cat.parentCategoryName ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-800 border border-amber-200/60">
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50/80 px-2 py-0.5 text-[11px] font-bold text-amber-900 border border-amber-200/60 truncate max-w-[130px]">
                             <FiLayers className="h-3 w-3 text-amber-600 shrink-0" />
-                            <span className="truncate max-w-[140px]">{cat.parentCategoryName}</span>
+                            <span className="truncate">{cat.parentCategoryName}</span>
                           </span>
                         ) : (
-                          <span className="text-[11px] text-slate-400 font-medium">Root Category</span>
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 border border-slate-200/60">
+                            Root Level
+                          </span>
                         )}
-
-                        <span className="font-mono text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                          Order: {cat.displayOrder ?? 0}
-                        </span>
                       </div>
+
+                      <span className="font-mono text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200/60">
+                        Order #{cat.displayOrder ?? 0}
+                      </span>
                     </div>
 
-                    {/* Bottom Row: Actions */}
+                    {/* Bottom Actions Row */}
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
                       <Link
                         to={`/admin/categories/${cat.id}/edit`}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-300/80 bg-amber-50/80 hover:bg-amber-100/80 px-3 py-2 text-xs font-bold text-amber-800 transition-colors shadow-2xs active:scale-[0.98]"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-300/80 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-2 text-xs font-bold text-amber-950 transition-all shadow-2xs active:scale-[0.98]"
                       >
-                        <FiEdit2 className="h-3.5 w-3.5" /> Edit
+                        <FiEdit2 className="h-3.5 w-3.5 text-amber-700" /> Edit
                       </Link>
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(cat)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/80 hover:bg-rose-100/80 px-3 py-2 text-xs font-bold text-rose-700 transition-colors shadow-2xs active:scale-[0.98]"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/90 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-all shadow-2xs active:scale-[0.98]"
                       >
-                        <FiTrash2 className="h-3.5 w-3.5" /> Delete
+                        <FiTrash2 className="h-3.5 w-3.5 text-rose-600" /> Delete
                       </button>
                     </div>
                   </div>
