@@ -282,137 +282,150 @@ export default function LegalPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Generate clean pure-text printable document PDF for Mobile Storage & Desktop
+  // Iframe-based PDF print generator to fix blank page issue on mobile & desktop
   const printPolicy = () => {
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      window.innerWidth < 768;
+    const documentHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>${siteConfig.name} - Privacy Policy & Terms and Conditions</title>
+          <style>
+            @page {
+              size: A4;
+              margin: 15mm;
+            }
+            * {
+              box-sizing: border-box;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            body {
+              font-family: 'Times New Roman', Times, Georgia, serif;
+              color: #111827;
+              line-height: 1.5;
+              margin: 0;
+              padding: 20px;
+              font-size: 12pt;
+              background: #ffffff !important;
+            }
+            .header-title { font-size: 18pt; text-align: center; margin-bottom: 4px; text-transform: uppercase; font-weight: bold; color: #000; }
+            .meta { text-align: center; font-size: 10pt; color: #4b5563; margin-bottom: 20px; border-bottom: 2px solid #111827; padding-bottom: 10px; }
+            h2 { font-size: 13pt; border-bottom: 1px solid #111827; padding-bottom: 4px; margin-top: 20px; margin-bottom: 8px; text-transform: uppercase; color: #000; font-weight: bold; page-break-after: avoid; }
+            h3 { font-size: 11pt; margin-top: 12px; margin-bottom: 4px; color: #1f2937; font-weight: bold; page-break-after: avoid; }
+            p { margin: 6px 0 8px 0; text-align: justify; color: #111827; }
+            ul { margin: 6px 0 8px 0; padding-left: 20px; }
+            li { margin-bottom: 4px; color: #111827; }
+            table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; page-break-inside: avoid; }
+            th, td { border: 1px solid #9ca3af; padding: 6px 8px; text-align: left; }
+            th { background-color: #f3f4f6; font-weight: bold; color: #000; }
+            .footer { margin-top: 30px; border-top: 1px solid #d1d5db; padding-top: 10px; text-align: center; font-size: 9pt; color: #6b7280; }
+          </style>
+        </head>
+        <body>
+          <div class="header-title">${siteConfig.name}</div>
+          <div class="meta">
+            <strong>OFFICIAL LEGAL DOCUMENTATION</strong> &bull; Privacy Policy & Terms and Conditions<br/>
+            Last Updated: 09 August 2026 &bull; Website: ${siteConfig.url} &bull; Email: ${siteConfig.email}
+          </div>
 
-    if (isMobile) {
-      // On mobile, trigger system print/save-as-PDF sheet directly into mobile storage
-      window.print();
-      return;
-    }
+          <h2>1. Privacy Policy & Data Safeguards</h2>
+          <p>At <strong>${siteConfig.name}</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.</p>
+          <h3>Information We Collect</h3>
+          <p>Personal details provided during registration or checkout, including full name, delivery address, phone number, email, and deity dress size preferences.</p>
+          <h3>Cookies & Session Tracking</h3>
+          <p>Essential session cookies retain your shopping cart items, login credentials, and search filters. We do not employ third-party ad brokers or cross-site tracking pixels.</p>
+          <h3>Payment & Gateway Security</h3>
+          <p>Transactions are processed via PCI-DSS certified gateways (Razorpay / UPI / Cards). Financial credentials are never stored on our local servers.</p>
+          <h3>Devotee Data Rights & Account Deletion</h3>
+          <p>You retain full control over your personal records. You may request a complete export of your stored personal data or submit a permanent account deletion request by emailing ${siteConfig.email}.</p>
 
-    try {
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        window.print();
-        return;
-      }
+          <h2>2. Terms & Conditions of Sale</h2>
+          <h3>A. Acceptance of Agreement</h3>
+          <p>By visiting ${siteConfig.name}, creating an account, or placing an order for handcrafted deity dresses, you agree to comply with these terms and all applicable statutory regulations of India.</p>
+          <h3>B. Handcrafted Product Authenticity</h3>
+          <p>All garments and mukut sets are individually handcrafted by traditional artisans in Meerut. Subtle variations in embroidery, thread tone, or stone placement reflect genuine handmade art and do not constitute defects.</p>
+          <h3>C. Pricing, GST & Invoicing</h3>
+          <p>Prices are listed in Indian Rupees (INR ₹) inclusive of GST. Tax invoices are automatically generated and dispatched alongside every shipment.</p>
+          <h3>D. Intellectual Property Copyright</h3>
+          <p>All photography, dress patterns, logos, and web assets belong to Kanhaji Poshak Kendra. Commercial reproduction or unauthorized distribution is prohibited.</p>
+          <h3>E. Applicable Law & Jurisdiction</h3>
+          <p>These terms are governed by the laws of India. Legal proceedings shall fall under the exclusive jurisdiction of the competent courts in Meerut, Uttar Pradesh, India.</p>
 
-      const documentHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>${siteConfig.name} - Privacy Policy & Terms and Conditions</title>
-            <style>
-              body {
-                font-family: 'Times New Roman', Times, Georgia, serif;
-                color: #111827;
-                line-height: 1.6;
-                margin: 30px;
-                font-size: 13px;
-                background: #fff;
-              }
-              h1 { font-size: 22px; text-align: center; margin-bottom: 4px; text-transform: uppercase; color: #000; font-weight: bold; }
-              .meta { text-align: center; font-size: 11px; color: #4b5563; margin-bottom: 25px; border-bottom: 1.5px solid #e5e7eb; padding-bottom: 12px; }
-              h2 { font-size: 15px; border-bottom: 1.5px solid #111827; padding-bottom: 4px; margin-top: 24px; text-transform: uppercase; color: #000; font-weight: bold; page-break-after: avoid; }
-              h3 { font-size: 13px; margin-top: 14px; margin-bottom: 4px; color: #1f2937; font-weight: bold; }
-              p { margin: 6px 0 10px 0; text-align: justify; }
-              ul { margin: 6px 0 10px 0; padding-left: 20px; }
-              li { margin-bottom: 4px; }
-              table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
-              th, td { border: 1px solid #d1d5db; padding: 6px 10px; text-align: left; }
-              th { background-color: #f3f4f6; font-weight: bold; }
-              .footer { margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 12px; text-align: center; font-size: 10px; color: #6b7280; }
-            </style>
-          </head>
-          <body>
-            <h1>${siteConfig.name}</h1>
-            <div class="meta">
-              <strong>OFFICIAL LEGAL DOCUMENTATION</strong> &bull; Privacy Policy & Terms and Conditions<br/>
-              Last Updated: 09 August 2026 &bull; Website: ${siteConfig.url} &bull; Email: ${siteConfig.email}
-            </div>
-
-            <h2>1. Privacy Policy & Data Safeguards</h2>
-            <p>At <strong>${siteConfig.name}</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.</p>
-            <h3>Information We Collect</h3>
-            <p>Personal details provided during registration or checkout, including full name, delivery address, phone number, email, and deity dress size preferences.</p>
-            <h3>Cookies & Session Tracking</h3>
-            <p>Essential session cookies retain your shopping cart items, login credentials, and search filters. We do not employ third-party ad brokers or cross-site tracking pixels.</p>
-            <h3>Payment & Gateway Security</h3>
-            <p>Transactions are processed via PCI-DSS certified gateways (Razorpay / UPI / Cards). Financial credentials are never stored on our local servers.</p>
-            <h3>Devotee Data Rights & Account Deletion</h3>
-            <p>You retain full control over your personal records. You may request a complete export of your stored personal data or submit a permanent account deletion request by emailing ${siteConfig.email}.</p>
-
-            <h2>2. Terms & Conditions of Sale</h2>
-            <h3>A. Acceptance of Agreement</h3>
-            <p>By visiting ${siteConfig.name}, creating an account, or placing an order for handcrafted deity dresses, you agree to comply with these terms and all applicable statutory regulations of India.</p>
-            <h3>B. Handcrafted Product Authenticity</h3>
-            <p>All garments and mukut sets are individually handcrafted by traditional artisans in Meerut. Subtle variations in embroidery, thread tone, or stone placement reflect genuine handmade art and do not constitute defects.</p>
-            <h3>C. Pricing, GST & Invoicing</h3>
-            <p>Prices are listed in Indian Rupees (INR ₹) inclusive of GST. Tax invoices are automatically generated and dispatched alongside every shipment.</p>
-            <h3>D. Intellectual Property Copyright</h3>
-            <p>All photography, dress patterns, logos, and web assets belong to Kanhaji Poshak Kendra. Commercial reproduction or unauthorized distribution is prohibited.</p>
-            <h3>E. Applicable Law & Jurisdiction</h3>
-            <p>These terms are governed by the laws of India. Legal proceedings shall fall under the exclusive jurisdiction of the competent courts in Meerut, Uttar Pradesh, India.</p>
-
-            <h2>3. Shipping & Delivery Policy</h2>
-            <p>Order preparation times: Standard readymade poshak orders dispatch within 24 to 48 business hours. Pan-India Free Delivery applies on orders ₹8,000 and above.</p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Destination Zone</th>
-                  <th>Regions Covered</th>
-                  <th>Estimated Delivery Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${shippingZoneRates
+          <h2>3. Shipping & Delivery Policy</h2>
+          <p>Order preparation times: Standard readymade poshak orders dispatch within 24 to 48 business hours. Pan-India Free Delivery applies on orders ₹8,000 and above.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Destination Zone</th>
+                <th>Regions Covered</th>
+                <th>Estimated Delivery Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${shippingZoneRates
                   .map(
                     (z) => `
-                  <tr>
-                    <td><strong>${z.zone}</strong></td>
-                    <td>${z.regions}</td>
-                    <td>${z.deliveryTime}</td>
-                  </tr>
-                `
+                <tr>
+                  <td><strong>${z.zone}</strong></td>
+                  <td>${z.regions}</td>
+                  <td>${z.deliveryTime}</td>
+                </tr>
+              `
                   )
                   .join('')}
-              </tbody>
-            </table>
+            </tbody>
+          </table>
 
-            <h2>4. Return, Refund & Cancellation Policy</h2>
-            <p>We provide a 7-day hassle-free size exchange & return policy from the date of package delivery. Items must be unwashed, unused, and in original packaging.</p>
-            <p>Orders can be cancelled with a 100% full refund before courier dispatch. Refunds are processed within 5-7 business days upon studio QC inspection.</p>
+          <h2>4. Return, Refund & Cancellation Policy</h2>
+          <p>We provide a 7-day hassle-free size exchange & return policy from the date of package delivery. Items must be unwashed, unused, and in original packaging.</p>
+          <p>Orders can be cancelled with a 100% full refund before courier dispatch. Refunds are processed within 5-7 business days upon studio QC inspection.</p>
 
-            <h2>5. Contact Information & Support Hours</h2>
-            <p>Support Email: ${siteConfig.email}</p>
-            <p>Helpline Phone: ${siteConfig.phone}</p>
-            <p>Operational Support Hours: Monday – Saturday: 9:00 AM – 7:00 PM IST</p>
-            <p>Studio Address: ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state}, ${siteConfig.address.country}</p>
+          <h2>5. Contact Information & Support Hours</h2>
+          <p>Support Email: ${siteConfig.email}</p>
+          <p>Helpline Phone: ${siteConfig.phone}</p>
+          <p>Operational Support Hours: Monday – Saturday: 9:00 AM – 7:00 PM IST</p>
+          <p>Studio Address: ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state}, ${siteConfig.address.country}</p>
 
-            <div class="footer">
-              &copy; ${new Date().getFullYear()} ${siteConfig.name}. All Rights Reserved. Official Legal Record.
-            </div>
+          <div class="footer">
+            &copy; ${new Date().getFullYear()} ${siteConfig.name}. All Rights Reserved. Official Legal Record.
+          </div>
+        </body>
+      </html>
+    `;
 
-            <script>
-              window.onload = function() {
-                window.print();
-                setTimeout(function() { window.close(); }, 500);
-              };
-            </script>
-          </body>
-        </html>
-      `;
-
-      printWindow.document.open();
-      printWindow.document.write(documentHtml);
-      printWindow.document.close();
-    } catch {
-      window.print();
+    // Remove existing iframe if present
+    const existingIframe = document.getElementById('print-legal-iframe');
+    if (existingIframe) {
+      existingIframe.remove();
     }
+
+    // Create an invisible iframe to print clean HTML on both Mobile and Desktop
+    const iframe = document.createElement('iframe');
+    iframe.id = 'print-legal-iframe';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    iframe.style.visibility = 'hidden';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(documentHtml);
+    doc.close();
+
+    setTimeout(() => {
+      try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } catch {
+        window.print();
+      }
+    }, 250);
   };
 
   // Quick Pincode Estimator
@@ -491,29 +504,18 @@ export default function LegalPage() {
         jsonLd={legalSchemas}
       />
 
-      <style>{`
-        @media print {
-          .print\\:hidden { display: none !important; }
-          body { background: white !important; color: black !important; font-size: 11px !important; }
-          main { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-          section { page-break-inside: avoid; border: 1px solid #e2e8f0 !important; background: white !important; box-shadow: none !important; margin-bottom: 16px !important; padding: 16px !important; }
-          h1, h2, h3, h4, strong { color: black !important; }
-          p, span, li, td, th { color: #1e293b !important; }
-        }
-      `}</style>
-
-      <div className="min-h-screen bg-slate-50/60 text-slate-800 font-display selection:bg-amber-400 selection:text-black print:bg-white print:text-black">
+      <div className="min-h-screen bg-slate-50/60 text-slate-800 font-display selection:bg-amber-400 selection:text-black">
         {/* Premium Header */}
-        <header className="relative border-b border-slate-200/80 bg-white pt-5 sm:pt-6 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 shadow-2xs print:border-b print:pb-4">
+        <header className="relative border-b border-slate-200/80 bg-white pt-5 sm:pt-6 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 shadow-2xs">
           <div className="mx-auto max-w-4xl">
-            <Breadcrumb items={breadcrumbItems} className="mb-3 sm:mb-4 print:hidden" />
+            <Breadcrumb items={breadcrumbItems} className="mb-3 sm:mb-4" />
 
             <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-semibold text-amber-900 print:hidden"
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-semibold text-amber-900"
               >
                 <FiLock className="h-3 w-3 text-amber-700 shrink-0" />
                 <span className="truncate">{pageMeta.badge}</span>
@@ -523,7 +525,7 @@ export default function LegalPage() {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 }}
-                className="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-amber-950 tracking-tight leading-snug print:text-xl print:text-black"
+                className="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-amber-950 tracking-tight leading-snug"
               >
                 {pageMeta.title}
               </motion.h1>
@@ -532,7 +534,7 @@ export default function LegalPage() {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="text-xs sm:text-sm text-slate-600 leading-relaxed font-body max-w-xl mx-auto print:text-xs print:text-slate-800"
+                className="text-xs sm:text-sm text-slate-600 leading-relaxed font-body max-w-xl mx-auto"
               >
                 {pageMeta.subtitle} Official policy portal of{' '}
                 <strong className="text-slate-900 font-semibold">{siteConfig.name}</strong>.
@@ -543,11 +545,11 @@ export default function LegalPage() {
                   <FiCalendar className="text-amber-700 h-3 w-3" /> Last Updated:{' '}
                   <strong className="text-slate-900">09 August 2026</strong>
                 </span>
-                <span className="hidden sm:inline print:hidden">&bull;</span>
+                <span className="hidden sm:inline">&bull;</span>
                 <button
                   type="button"
                   onClick={printPolicy}
-                  className="inline-flex items-center gap-1.5 text-amber-900 hover:text-amber-950 transition-colors font-semibold rounded-lg px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 cursor-pointer shadow-2xs print:hidden"
+                  className="inline-flex items-center gap-1.5 text-amber-900 hover:text-amber-950 transition-colors font-semibold rounded-lg px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 cursor-pointer shadow-2xs"
                 >
                   <FiPrinter className="h-3.5 w-3.5" /> Print / Save Document
                 </button>
@@ -559,7 +561,7 @@ export default function LegalPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 max-w-3xl mx-auto print:hidden"
+              className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 max-w-3xl mx-auto"
             >
               <div className="flex flex-col items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-1.5 min-w-0">
                 <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
@@ -605,7 +607,7 @@ export default function LegalPage() {
         </header>
 
         {/* Search & Navigation Toolbar */}
-        <div className="sticky top-[60px] sm:top-[68px] z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md py-2 px-4 sm:px-6 lg:px-8 shadow-2xs print:hidden">
+        <div className="sticky top-[60px] sm:top-[68px] z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md py-2 px-4 sm:px-6 lg:px-8 shadow-2xs">
           <div className="mx-auto max-w-4xl flex flex-col md:flex-row items-center justify-between gap-2">
             {/* Search input */}
             <div className="relative w-full md:w-64">
@@ -655,15 +657,15 @@ export default function LegalPage() {
         </div>
 
         {/* Reading Content Area */}
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 print:p-0 print:max-w-none">
-          <main className="space-y-6 sm:space-y-8 print:space-y-6">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <main className="space-y-6 sm:space-y-8">
 
             {/* SECTION 1: PRIVACY POLICY */}
             <section
               id="privacy"
               role="region"
               aria-label="Privacy Policy"
-              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -671,10 +673,10 @@ export default function LegalPage() {
                     <FiShield className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate">
                       1. Privacy Policy &amp; Data Safeguards
                     </h2>
-                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
+                    <p className="text-[11px] text-slate-500 font-body truncate">
                       Standards governing information collection, session tracking, and user data rights.
                     </p>
                   </div>
@@ -682,7 +684,7 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('privacy')}
-                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer"
                   title="Copy section link"
                 >
                   {copiedId === 'privacy' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
@@ -690,7 +692,7 @@ export default function LegalPage() {
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0">
                 <p>
                   At <strong className="text-slate-900 font-semibold">{siteConfig.name}</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.
                 </p>
@@ -757,7 +759,7 @@ export default function LegalPage() {
               id="terms"
               role="region"
               aria-label="Terms and Conditions"
-              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -765,10 +767,10 @@ export default function LegalPage() {
                     <FiFileText className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate">
                       2. Terms &amp; Conditions of Sale
                     </h2>
-                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
+                    <p className="text-[11px] text-slate-500 font-body truncate">
                       General terms governing website usage, orders, pricing, and jurisdiction.
                     </p>
                   </div>
@@ -776,7 +778,7 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('terms')}
-                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer"
                   title="Copy section link"
                 >
                   {copiedId === 'terms' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
@@ -784,7 +786,7 @@ export default function LegalPage() {
                 </button>
               </div>
 
-              <div className="space-y-2.5 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+              <div className="space-y-2.5 text-xs text-slate-700 leading-relaxed font-body min-w-0">
                 <div className="grid grid-cols-1 gap-2.5 min-w-0">
                   <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
                     <div className="font-bold text-slate-900 text-[11px]">A. Acceptance of Agreement</div>
@@ -829,7 +831,7 @@ export default function LegalPage() {
               id="shipping"
               role="region"
               aria-label="Shipping Policy"
-              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -837,10 +839,10 @@ export default function LegalPage() {
                     <FiTruck className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate">
                       3. Shipping &amp; Delivery Policy
                     </h2>
-                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
+                    <p className="text-[11px] text-slate-500 font-body truncate">
                       Order preparation times, shipping charges, tracking, and transit schedules.
                     </p>
                   </div>
@@ -848,7 +850,7 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('shipping')}
-                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer"
                   title="Copy section link"
                 >
                   {copiedId === 'shipping' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
@@ -856,7 +858,7 @@ export default function LegalPage() {
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-0">
                   <div className="rounded-lg border border-emerald-300/80 bg-emerald-50/70 p-3 text-center space-y-0.5 min-w-0">
                     <div className="text-emerald-800 font-bold text-[10px] uppercase truncate">Pan-India Free Shipping</div>
@@ -876,7 +878,7 @@ export default function LegalPage() {
                 </div>
 
                 {/* Pincode Estimator Tool */}
-                <div className="rounded-lg border border-amber-500/20 bg-amber-50/40 p-3 space-y-2 min-w-0 print:hidden">
+                <div className="rounded-lg border border-amber-500/20 bg-amber-50/40 p-3 space-y-2 min-w-0">
                   <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-950 truncate">
                     <FiTruck className="h-3.5 w-3.5 text-amber-700 shrink-0" />
                     <span className="truncate">Check Delivery Estimate for Your Pincode</span>
@@ -914,7 +916,7 @@ export default function LegalPage() {
                 </div>
 
                 {/* Delivery Matrix Table */}
-                <div className="overflow-x-auto custom-scrollbar rounded-lg border border-slate-200/80 bg-white min-w-0 print:border-slate-300">
+                <div className="overflow-x-auto custom-scrollbar rounded-lg border border-slate-200/80 bg-white min-w-0">
                   <table className="w-full text-left text-xs text-slate-800 min-w-[450px]">
                     <thead className="bg-slate-100/80 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
                       <tr>
@@ -953,7 +955,7 @@ export default function LegalPage() {
               id="returns"
               role="region"
               aria-label="Return Refund and Cancellation Policy"
-              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -961,10 +963,10 @@ export default function LegalPage() {
                     <FiRefreshCw className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate">
                       4. Return, Refund &amp; Cancellation Policy
                     </h2>
-                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
+                    <p className="text-[11px] text-slate-500 font-body truncate">
                       7-day return window, cancellation rules, exchange steps, and refund processing.
                     </p>
                   </div>
@@ -972,7 +974,7 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('returns')}
-                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer"
                   title="Copy section link"
                 >
                   {copiedId === 'returns' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
@@ -980,9 +982,9 @@ export default function LegalPage() {
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0">
                 {/* Process Timeline Card */}
-                <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-2.5 min-w-0 print:bg-white print:border-slate-300">
+                <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-2.5 min-w-0">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-amber-950 truncate">
                     Step-by-Step Return Workflow
                   </div>
@@ -1044,7 +1046,7 @@ export default function LegalPage() {
               id="contact"
               role="region"
               aria-label="Contact Information"
-              className="scroll-mt-36 rounded-xl border border-amber-500/30 bg-amber-50/30 p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:bg-white print:p-4"
+              className="scroll-mt-36 rounded-xl border border-amber-500/30 bg-amber-50/30 p-4 sm:p-6 shadow-2xs space-y-4 min-w-0"
             >
               <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -1052,10 +1054,10 @@ export default function LegalPage() {
                     <FiMail className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate">
                       5. Contact Information &amp; Support Hours
                     </h2>
-                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
+                    <p className="text-[11px] text-slate-500 font-body truncate">
                       Reach out directly to our dedicated customer support desk.
                     </p>
                   </div>
@@ -1063,7 +1065,7 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('contact')}
-                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer"
                   title="Copy section link"
                 >
                   {copiedId === 'contact' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
@@ -1071,8 +1073,8 @@ export default function LegalPage() {
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-0 print:grid-cols-3">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-0">
                   <a
                     href={`mailto:${siteConfig.email}`}
                     className="flex flex-col items-center justify-center text-center rounded-lg border border-slate-200/80 bg-white p-3 hover:border-amber-500/50 transition-all space-y-1 group min-w-0 shadow-2xs"
@@ -1133,13 +1135,13 @@ export default function LegalPage() {
             </section>
 
             {/* FAQs Accordion */}
-            <section className="rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4">
+            <section className="rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0">
               <div className="border-b border-slate-100 pb-3 min-w-0">
-                <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 flex items-center gap-2 truncate print:text-black">
+                <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 flex items-center gap-2 truncate">
                   <FiHelpCircle className="h-4 w-4 text-amber-700 shrink-0" />
                   Frequently Asked Legal &amp; Policy Questions
                 </h2>
-                <p className="text-[11px] text-slate-500 font-body mt-0.5 truncate print:text-slate-700">
+                <p className="text-[11px] text-slate-500 font-body mt-0.5 truncate">
                   Quick answers to common questions about your rights, orders, and data.
                 </p>
               </div>
@@ -1150,17 +1152,17 @@ export default function LegalPage() {
                   return (
                     <div
                       key={idx}
-                      className="rounded-lg border border-slate-200/80 bg-slate-50/70 overflow-hidden transition-colors min-w-0 print:bg-white print:border-slate-200"
+                      className="rounded-lg border border-slate-200/80 bg-slate-50/70 overflow-hidden transition-colors min-w-0"
                     >
                       <button
                         type="button"
                         onClick={() => setOpenFaq(isOpen ? null : idx)}
                         aria-expanded={isOpen}
-                        className="w-full flex items-center justify-between p-3 text-left text-xs font-semibold text-slate-900 hover:text-amber-900 transition-colors focus:outline-none cursor-pointer min-w-0 print:p-2"
+                        className="w-full flex items-center justify-between p-3 text-left text-xs font-semibold text-slate-900 hover:text-amber-900 transition-colors focus:outline-none cursor-pointer min-w-0"
                       >
-                        <span className="pr-2 truncate print:whitespace-normal print:font-bold">{faq.q}</span>
+                        <span className="pr-2 truncate">{faq.q}</span>
                         <FiChevronDown
-                          className={`h-4 w-4 shrink-0 text-amber-700 transition-transform duration-200 print:hidden ${isOpen ? 'rotate-180' : ''
+                          className={`h-4 w-4 shrink-0 text-amber-700 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
                             }`}
                         />
                       </button>
@@ -1171,7 +1173,7 @@ export default function LegalPage() {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="px-3 pb-3 text-[11px] text-slate-600 leading-relaxed border-t border-slate-200/70 font-body print:p-2 print:text-black"
+                            className="px-3 pb-3 text-[11px] text-slate-600 leading-relaxed border-t border-slate-200/70 font-body"
                           >
                             {faq.a}
                           </motion.div>
@@ -1184,7 +1186,7 @@ export default function LegalPage() {
             </section>
 
             {/* Bottom CTA Card */}
-            <div className="rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-50 to-amber-100/50 p-4 text-center space-y-2 min-w-0 print:hidden">
+            <div className="rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-50 to-amber-100/50 p-4 text-center space-y-2 min-w-0">
               <h3 className="text-sm sm:text-base font-serif font-bold text-amber-950 truncate">
                 Have Any Custom Policy Questions?
               </h3>
@@ -1215,7 +1217,7 @@ export default function LegalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={scrollToTop}
-              className="fixed bottom-5 right-5 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 hover:bg-amber-600 focus:outline-none transition-all cursor-pointer print:hidden"
+              className="fixed bottom-5 right-5 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 hover:bg-amber-600 focus:outline-none transition-all cursor-pointer"
               aria-label="Scroll back to top"
             >
               <FiArrowUp className="h-4 w-4" />
