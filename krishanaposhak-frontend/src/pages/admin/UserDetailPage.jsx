@@ -239,7 +239,7 @@ export default function UserDetailPage() {
                       <span className="font-mono text-slate-800 font-semibold text-[11px]">{user.phoneNumber}</span>
                       <a
                         href={`https://wa.me/${user.phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                          `Namaste ${user.firstName}, regarding your Krishana Poshak account:`
+                          `Radhey Radhey ${user.firstName}, regarding your Krishana Poshak account:`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -343,7 +343,7 @@ export default function UserDetailPage() {
                     <span className="font-mono text-slate-800 font-semibold">{user.phoneNumber}</span>
                     <a
                       href={`https://wa.me/${user.phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                        `Namaste ${user.firstName}, regarding your Krishana Poshak account:`
+                        `Radhey Radhey ${user.firstName}, regarding your Krishana Poshak account:`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"

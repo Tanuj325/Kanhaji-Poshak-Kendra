@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   useContactMessages,
   useUnresolvedMessages,
@@ -80,7 +80,7 @@ function MessageDetailModal({ isOpen, onClose, message, onReply, onResolve, onDe
                 <span className="font-mono font-bold text-slate-900">{message.phoneNumber}</span>
                 <a
                   href={`https://wa.me/${message.phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                    `Namaste ${message.name}, regarding your inquiry on Krishana Poshak (${message.subject}):`
+                    `Radhey Radhey ${message.name}, regarding your inquiry on Krishana Poshak (${message.subject}):`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -155,8 +155,18 @@ export default function ContactMessagesPage() {
   const deleteMutation = useDeleteContactMessage();
   const replyMutation = useReplyToMessage();
 
-  const messages = filter === 'unresolved' ? unresolvedMessages : allMessages;
+  const rawMessages = filter === 'unresolved' ? unresolvedMessages : allMessages;
   const isLoading = filter === 'unresolved' ? unresolvedLoading : allLoading;
+
+  // Sort messages: newest first (by createdAt date or id descending)
+  const messages = useMemo(() => {
+    if (!rawMessages || !Array.isArray(rawMessages)) return [];
+    return [...rawMessages].sort((a, b) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id || 0);
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id || 0);
+      return timeB - timeA;
+    });
+  }, [rawMessages]);
 
   const handleViewDetail = useCallback((message) => {
     setSelectedMessage(message);
@@ -272,7 +282,7 @@ export default function ContactMessagesPage() {
           </div>
         ) : messages && messages.length > 0 ? (
           <div>
-            {/* Desktop Table View (>= 1024px) — PRESERVED 100% */}
+            {/* Desktop Table View (>= 1024px) */}
             <div className="hidden lg:block rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
               <div className="overflow-x-auto custom-scrollbar">
                 <table className="w-full text-left text-xs" aria-label="Messages list">
@@ -306,7 +316,7 @@ export default function ContactMessagesPage() {
                               <span className="font-mono text-slate-700">{msg.phoneNumber}</span>
                               <a
                                 href={`https://wa.me/${msg.phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                                  `Namaste ${msg.name}, regarding your inquiry on Krishana Poshak (${msg.subject}):`
+                                  `Radhey Radhey ${msg.name}, regarding your inquiry on Krishana Poshak (${msg.subject}):`
                                 )}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -335,18 +345,40 @@ export default function ContactMessagesPage() {
                         <td className="py-3.5 px-4 text-slate-500 font-mono">
                           {formatDate(msg.createdAt, { format: 'datetime' })}
                         </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewDetail(msg);
-                            }}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs"
-                          >
-                            <span>Open</span>
-                            <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
-                          </button>
+                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {!msg.resolved && (
+                              <button
+                                type="button"
+                                onClick={() => handleResolve(msg.id)}
+                                disabled={resolveMutation.isPending}
+                                className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors shadow-2xs cursor-pointer"
+                                title="Mark as Resolved"
+                              >
+                                <FiCheckCircle className="h-3.5 w-3.5" />
+                                <span>Resolve</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(msg.id)}
+                              disabled={deleteMutation.isPending}
+                              className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors shadow-2xs cursor-pointer"
+                              title="Delete Inquiry"
+                            >
+                              <FiTrash2 className="h-3.5 w-3.5" />
+                              <span>Delete</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleViewDetail(msg)}
+                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs cursor-pointer"
+                              title="View Details"
+                            >
+                              <span>Open</span>
+                              <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -399,7 +431,7 @@ export default function ContactMessagesPage() {
                       </span>
                       <a
                         href={`https://wa.me/${msg.phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                          `Namaste ${msg.name}, regarding your inquiry on Krishana Poshak (${msg.subject}):`
+                          `Radhey Radhey ${msg.name}, regarding your inquiry on Krishana Poshak (${msg.subject}):`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -411,22 +443,44 @@ export default function ContactMessagesPage() {
                     </div>
                   )}
 
-                  {/* Bottom Row: Date + Action */}
-                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 min-w-0">
+                  {/* Bottom Row: Date + Action Buttons */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 min-w-0" onClick={(e) => e.stopPropagation()}>
                     <span className="text-[10px] text-slate-400 font-mono truncate">
                       {formatDate(msg.createdAt, { format: 'datetime' })}
                     </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewDetail(msg);
-                      }}
-                      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs cursor-pointer shrink-0 min-h-[32px]"
-                    >
-                      <span>Open</span>
-                      <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
-                    </button>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {!msg.resolved && (
+                        <button
+                          type="button"
+                          onClick={() => handleResolve(msg.id)}
+                          disabled={resolveMutation.isPending}
+                          className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors min-h-[32px] cursor-pointer"
+                          title="Mark as Resolved"
+                        >
+                          <FiCheckCircle className="h-3.5 w-3.5" />
+                          <span>Resolve</span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(msg.id)}
+                        disabled={deleteMutation.isPending}
+                        className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors min-h-[32px] cursor-pointer"
+                        title="Delete Inquiry"
+                      >
+                        <FiTrash2 className="h-3.5 w-3.5" />
+                        <span>Delete</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleViewDetail(msg)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all min-h-[32px] cursor-pointer"
+                        title="View Details"
+                      >
+                        <span>Open</span>
+                        <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

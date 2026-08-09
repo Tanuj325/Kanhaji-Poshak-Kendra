@@ -343,7 +343,7 @@ export default function OrderDetailAdminPage() {
                     </div>
                     <a
                       href={`https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                        `Namaste ${customerName}, updating you regarding Krishna Poshak Order #${order.orderNumber}:`
+                        `Radhey Radhey ${customerName}, updating you regarding Krishna Poshak Order #${order.orderNumber}:`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
