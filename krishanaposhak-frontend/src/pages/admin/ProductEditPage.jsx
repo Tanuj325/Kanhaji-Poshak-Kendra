@@ -243,22 +243,14 @@ export default function ProductEditPage() {
 
       const imagePromises = data.images.map((image) => {
         if (image.id) {
-          const payload = {
-            altText: image.altText ?? '',
-            displayOrder: Number(image.displayOrder ?? 1),
-            thumbnail: image.thumbnail ?? false,
-          };
+          if (!image.file) return Promise.resolve();
 
-          if (image.file) {
-            const formData = new FormData();
-            formData.append('file', image.file);
-            formData.append('altText', payload.altText);
-            formData.append('displayOrder', String(payload.displayOrder));
-            formData.append('thumbnail', String(payload.thumbnail));
-            return productImageService.update(productId, image.id, formData);
-          } else {
-            return productImageService.update(productId, image.id, payload);
-          }
+          const formData = new FormData();
+          formData.append('file', image.file);
+          formData.append('altText', image.altText ?? '');
+          formData.append('displayOrder', String(image.displayOrder ?? 1));
+          formData.append('thumbnail', String(image.thumbnail ?? false));
+          return productImageService.update(productId, image.id, formData);
         } else {
           if (!image.file) return Promise.resolve();
 
@@ -404,19 +396,19 @@ export default function ProductEditPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0 max-w-full">
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="categoryId" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Category <span className="text-rose-500">*</span>
                 </label>
                 <Select
                   id="categoryId"
                   {...register('categoryId')}
-                  className="text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
+                  className="w-full min-w-0 max-w-full text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
                 >
                   <option value="">Select a Category</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
+                    <option key={cat.id} value={cat.id} className="truncate">
                       {cat.name}
                     </option>
                   ))}
@@ -424,7 +416,7 @@ export default function ProductEditPage() {
                 {errors.categoryId && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.categoryId.message}</p>}
               </div>
 
-              <div>
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="material" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Material
                 </label>
@@ -432,11 +424,11 @@ export default function ProductEditPage() {
                   id="material"
                   type="text"
                   {...register('material')}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
               </div>
 
-              <div>
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="careInstructions" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Care Guidelines
                 </label>
@@ -444,7 +436,7 @@ export default function ProductEditPage() {
                   id="careInstructions"
                   type="text"
                   {...register('careInstructions')}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
               </div>
             </div>

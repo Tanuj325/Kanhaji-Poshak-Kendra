@@ -32,7 +32,7 @@ const Select = forwardRef(function Select(
   const isControlled = value !== undefined;
 
   return (
-    <div className={cn('w-full font-display', className)}>
+    <div className={cn('w-full min-w-0 max-w-full font-display', className)}>
       {label && (
         <label
           htmlFor={inputId}
@@ -42,7 +42,7 @@ const Select = forwardRef(function Select(
           {isRequired && <span className="ml-0.5 text-rose-600" aria-hidden="true">*</span>}
         </label>
       )}
-      <div className="relative">
+      <div className="relative w-full min-w-0 max-w-full">
         <select
           ref={ref}
           id={inputId}
@@ -54,7 +54,7 @@ const Select = forwardRef(function Select(
           aria-invalid={!!error}
           aria-describedby={errorId}
           className={cn(
-            'w-full appearance-none rounded-2xl border bg-amber-50/40 text-amber-950 transition-all duration-200 focus:outline-none focus:ring-2 cursor-pointer shadow-2xs font-bold',
+            'w-full min-w-0 max-w-full truncate appearance-none rounded-2xl border bg-amber-50/40 text-amber-950 transition-all duration-200 focus:outline-none focus:ring-2 cursor-pointer shadow-2xs font-bold',
             'border-amber-900/15 focus:border-amber-800 focus:ring-amber-700/20 focus:bg-white',
             error && 'border-rose-600 focus:border-rose-600 focus:ring-rose-500/20',
             isDisabled && 'cursor-not-allowed bg-stone-100 opacity-60',
