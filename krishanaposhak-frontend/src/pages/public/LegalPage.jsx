@@ -362,57 +362,63 @@ export default function LegalPage() {
         jsonLd={legalSchemas}
       />
 
-      <div className="min-h-screen bg-[#060E1A] text-slate-200 font-display selection:bg-amber-400 selection:text-black">
-        {/* Ambient Background Glow */}
-        <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[450px] w-full max-w-7xl -translate-x-1/2 overflow-hidden blur-3xl opacity-25">
-          <div className="h-full w-full bg-gradient-to-b from-amber-500/20 via-blue-600/10 to-transparent" />
-        </div>
+      <style>{`
+        @media print {
+          .print\\:hidden { display: none !important; }
+          body { background: white !important; color: black !important; }
+          main { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+          section { page-break-inside: avoid; border: 1px solid #e2e8f0 !important; background: white !important; box-shadow: none !important; margin-bottom: 16px !important; padding: 16px !important; }
+          h1, h2, h3, h4, strong { color: black !important; }
+          p, span, li, td, th { color: #1e293b !important; }
+        }
+      `}</style>
 
+      <div className="min-h-screen bg-slate-50/60 text-slate-800 font-display selection:bg-amber-400 selection:text-black print:bg-white print:text-black">
         {/* Premium Header */}
-        <header className="relative border-b border-white/10 bg-gradient-to-b from-[#081427] via-[#071120] to-[#060E1A] pt-6 sm:pt-8 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Breadcrumb items={breadcrumbItems} className="mb-4 sm:mb-6" />
+        <header className="relative border-b border-slate-200/80 bg-white pt-5 sm:pt-6 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 shadow-2xs print:border-b print:pb-4">
+          <div className="mx-auto max-w-4xl">
+            <Breadcrumb items={breadcrumbItems} className="mb-3 sm:mb-4 print:hidden" />
 
-            <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
+            <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
               <motion.div
-                initial={{ opacity: 0, y: -8 }}
+                initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 sm:px-4 py-1 text-[11px] sm:text-xs font-semibold text-amber-300 backdrop-blur-md"
+                transition={{ duration: 0.3 }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-semibold text-amber-900 print:hidden"
               >
-                <FiLock className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                <FiLock className="h-3 w-3 text-amber-700 shrink-0" />
                 <span className="truncate">{pageMeta.badge}</span>
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-2xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-white tracking-wide leading-tight"
+                transition={{ duration: 0.4, delay: 0.05 }}
+                className="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-amber-950 tracking-tight leading-snug print:text-xl print:text-black"
               >
                 {pageMeta.title}
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-xs sm:text-sm lg:text-base text-slate-300/90 leading-relaxed font-light max-w-2xl mx-auto"
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="text-xs sm:text-sm text-slate-600 leading-relaxed font-body max-w-xl mx-auto print:text-xs print:text-slate-800"
               >
-                {pageMeta.subtitle} Welcome to the official policy portal of{' '}
-                <strong className="text-white font-semibold">{siteConfig.name}</strong>.
+                {pageMeta.subtitle} Official policy portal of{' '}
+                <strong className="text-slate-900 font-semibold">{siteConfig.name}</strong>.
               </motion.p>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-1 text-[11px] sm:text-xs text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <FiCalendar className="text-amber-400 h-3.5 w-3.5" /> Last Updated:{' '}
-                  <strong className="text-white">July 29, 2026</strong>
+              <div className="flex flex-wrap items-center justify-center gap-2.5 pt-0.5 text-[11px] text-slate-500">
+                <span className="flex items-center gap-1">
+                  <FiCalendar className="text-amber-700 h-3 w-3" /> Last Updated:{' '}
+                  <strong className="text-slate-900">July 29, 2026</strong>
                 </span>
-                <span className="hidden sm:inline">&bull;</span>
+                <span className="hidden sm:inline print:hidden">&bull;</span>
                 <button
                   type="button"
                   onClick={printPolicy}
-                  className="inline-flex items-center gap-1.5 text-amber-300 hover:text-amber-200 transition-colors font-medium rounded-md px-2.5 py-1 bg-amber-400/10 border border-amber-400/20 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-amber-900 hover:text-amber-950 transition-colors font-semibold rounded-lg px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 cursor-pointer shadow-2xs print:hidden"
                 >
                   <FiPrinter className="h-3.5 w-3.5" /> Print / Save Document
                 </button>
@@ -421,48 +427,48 @@ export default function LegalPage() {
 
             {/* Quick Stat Highlights */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-8 sm:mt-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 max-w-4xl mx-auto"
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 max-w-3xl mx-auto print:hidden"
             >
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 backdrop-blur-md hover:border-amber-400/30 transition-all min-w-0">
-                <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                  <FiShield className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiShield className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-[11px] text-slate-400 truncate">256-Bit SSL</div>
-                  <div className="text-xs font-bold text-white truncate">Encrypted Data</div>
+                  <div className="text-[10px] text-slate-500 truncate">256-Bit SSL</div>
+                  <div className="text-[11px] font-bold text-slate-900 truncate">Encrypted Data</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 backdrop-blur-md hover:border-amber-400/30 transition-all min-w-0">
-                <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                  <FiTruck className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiTruck className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-[11px] text-slate-400 truncate">Pan-India Delivery</div>
-                  <div className="text-xs font-bold text-white truncate">Free Over ₹8,000</div>
+                  <div className="text-[10px] text-slate-500 truncate">Pan-India Delivery</div>
+                  <div className="text-[11px] font-bold text-slate-900 truncate">Free Over ₹8,000</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 backdrop-blur-md hover:border-amber-400/30 transition-all min-w-0">
-                <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                  <FiRefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiRefreshCw className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-[11px] text-slate-400 truncate">Hassle-Free</div>
-                  <div className="text-xs font-bold text-white truncate">7-Day Returns</div>
+                  <div className="text-[10px] text-slate-500 truncate">Hassle-Free</div>
+                  <div className="text-[11px] font-bold text-slate-900 truncate">7-Day Returns</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 backdrop-blur-md hover:border-amber-400/30 transition-all min-w-0">
-                <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                  <FiCreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiCreditCard className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-[11px] text-slate-400 truncate">PCI-DSS Gateway</div>
-                  <div className="text-xs font-bold text-white truncate">Secure Payments</div>
+                  <div className="text-[10px] text-slate-500 truncate">PCI-DSS Gateway</div>
+                  <div className="text-[11px] font-bold text-slate-900 truncate">Secure Payments</div>
                 </div>
               </div>
             </motion.div>
@@ -470,11 +476,11 @@ export default function LegalPage() {
         </header>
 
         {/* Search & Navigation Toolbar */}
-        <div className="sticky top-[60px] sm:top-[68px] z-30 border-b border-white/10 bg-[#0B1728]/95 backdrop-blur-xl py-2.5 px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl flex flex-col md:flex-row items-center justify-between gap-2.5">
+        <div className="sticky top-[60px] sm:top-[68px] z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md py-2 px-4 sm:px-6 lg:px-8 shadow-2xs print:hidden">
+          <div className="mx-auto max-w-4xl flex flex-col md:flex-row items-center justify-between gap-2">
             {/* Search input */}
-            <div className="relative w-full md:w-72">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+            <div className="relative w-full md:w-64">
+              <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
                 id="legal-search-input"
                 type="text"
@@ -482,13 +488,13 @@ export default function LegalPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search legal policies"
                 placeholder="Search clauses (privacy, terms, refund)..."
-                className="w-full rounded-lg border border-white/15 bg-black/50 pl-8 pr-7 py-1.5 text-xs text-white placeholder-slate-400 focus:border-amber-400 focus:outline-none"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-7 py-1 text-xs text-slate-800 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-700"
                 >
                   Clear
                 </button>
@@ -496,7 +502,7 @@ export default function LegalPage() {
             </div>
 
             {/* Horizontal Nav Tabs */}
-            <div className="flex w-full md:w-auto items-center gap-1.5 overflow-x-auto custom-scrollbar py-0.5 min-w-0">
+            <div className="flex w-full md:w-auto items-center gap-1 overflow-x-auto custom-scrollbar py-0.5 min-w-0">
               {filteredSections.map((sec) => {
                 const Icon = sec.icon;
                 const isActive = activeSection === sec.id;
@@ -505,9 +511,9 @@ export default function LegalPage() {
                     key={sec.id}
                     type="button"
                     onClick={() => scrollToSection(sec.id)}
-                    className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold transition-all shrink-0 cursor-pointer ${isActive
-                        ? 'bg-amber-400 text-black shadow-xs font-bold'
-                        : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                    className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all shrink-0 cursor-pointer ${isActive
+                        ? 'bg-amber-500 text-slate-950 shadow-2xs font-bold'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
                       }`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -520,26 +526,26 @@ export default function LegalPage() {
         </div>
 
         {/* Reading Content Area */}
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <main className="space-y-8 sm:space-y-10">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 print:p-0 print:max-w-none">
+          <main className="space-y-6 sm:space-y-8 print:space-y-6">
 
             {/* SECTION 1: PRIVACY POLICY */}
             <section
               id="privacy"
               role="region"
               aria-label="Privacy Policy"
-              className="scroll-mt-36 rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-xl space-y-5 hover:border-white/20 transition-all min-w-0"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3.5 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                    <FiShield className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700">
+                    <FiShield className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
                       1. Privacy Policy &amp; Data Safeguards
                     </h2>
-                    <p className="text-[11px] text-slate-400 font-light truncate">
+                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
                       Standards governing information collection, session tracking, and user data rights.
                     </p>
                   </div>
@@ -547,71 +553,71 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('privacy')}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-300 shrink-0 cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
                   title="Copy section link"
                 >
-                  {copiedId === 'privacy' ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                  {copiedId === 'privacy' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
                   <span className="hidden sm:inline">Share</span>
                 </button>
               </div>
 
-              <div className="space-y-5 text-xs sm:text-sm text-slate-300 leading-relaxed font-light min-w-0">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
                 <p>
-                  At <strong className="text-white font-semibold">Kanhaji Poshak Kendra</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.
+                  At <strong className="text-slate-900 font-semibold">{siteConfig.name}</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 min-w-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 min-w-0">
                   {/* Information Collection */}
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-1.5 text-amber-300 font-semibold text-xs truncate">
-                      <FiUserCheck className="text-amber-400 shrink-0" /> Information We Collect
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
+                      <FiUserCheck className="text-amber-700 shrink-0" /> Information We Collect
                     </div>
-                    <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
                       Personal details provided during registration or checkout, including full name, delivery address, phone number, email, and deity dress size preferences.
                     </p>
                   </div>
 
                   {/* Cookies */}
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-1.5 text-amber-300 font-semibold text-xs truncate">
-                      <FiLock className="text-amber-400 shrink-0" /> Cookies &amp; Session Tracking
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
+                      <FiLock className="text-amber-700 shrink-0" /> Cookies &amp; Session Tracking
                     </div>
-                    <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
                       Essential session cookies retain your shopping cart items, login credentials, and search filters. We do not employ third-party ad brokers or cross-site tracking pixels.
                     </p>
                   </div>
 
                   {/* Payment Info */}
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-1.5 text-amber-300 font-semibold text-xs truncate">
-                      <FiCreditCard className="text-amber-400 shrink-0" /> Payment &amp; Gateway Security
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
+                      <FiCreditCard className="text-amber-700 shrink-0" /> Payment &amp; Gateway Security
                     </div>
-                    <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
                       Transactions are processed via PCI-DSS certified gateways (Razorpay / UPI / Cards). Financial credentials are never stored on our local servers.
                     </p>
                   </div>
 
                   {/* Third Party Services */}
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-1.5 text-amber-300 font-semibold text-xs truncate">
-                      <FiGlobe className="text-amber-400 shrink-0" /> Third-Party Logistics Partners
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] truncate">
+                      <FiGlobe className="text-amber-700 shrink-0" /> Third-Party Logistics Partners
                     </div>
-                    <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
                       Shipping details are transmitted securely to courier partners (BlueDart, Delhivery, DTDC) strictly for delivery fulfillment and SMS tracking updates.
                     </p>
                   </div>
                 </div>
 
                 {/* Data Rights & Account Deletion */}
-                <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 p-3.5 space-y-1.5 min-w-0">
-                  <div className="flex items-center justify-between text-xs font-semibold text-amber-300 gap-2 min-w-0">
+                <div className="rounded-lg border border-amber-500/30 bg-amber-50/60 p-3 space-y-1 min-w-0">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-amber-950 gap-2 min-w-0">
                     <span className="flex items-center gap-1.5 truncate">
-                      <FiTrash2 className="text-amber-400 shrink-0" /> Devotee Rights &amp; Account Deletion
+                      <FiTrash2 className="text-amber-700 shrink-0" /> Devotee Rights &amp; Account Deletion
                     </span>
-                    <span className="text-[10px] text-amber-400 font-mono shrink-0">30-Day SLA</span>
+                    <span className="text-[10px] text-amber-800 font-mono shrink-0">30-Day SLA</span>
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
-                    You retain full control over your personal records. You may request a complete export of your stored personal data or submit a permanent account deletion request by emailing <a href={`mailto:${siteConfig.email}`} className="text-amber-400 hover:underline font-medium break-all">{siteConfig.email}</a>.
+                  <p className="text-[11px] text-slate-700 leading-relaxed">
+                    You retain full control over your personal records. You may request a complete export of your stored personal data or submit a permanent account deletion request by emailing <a href={`mailto:${siteConfig.email}`} className="text-amber-800 hover:underline font-semibold break-all">{siteConfig.email}</a>.
                   </p>
                 </div>
               </div>
@@ -622,18 +628,18 @@ export default function LegalPage() {
               id="terms"
               role="region"
               aria-label="Terms and Conditions"
-              className="scroll-mt-36 rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-xl space-y-5 hover:border-white/20 transition-all min-w-0"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3.5 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                    <FiFileText className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700">
+                    <FiFileText className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
                       2. Terms &amp; Conditions of Sale
                     </h2>
-                    <p className="text-[11px] text-slate-400 font-light truncate">
+                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
                       General terms governing website usage, orders, pricing, and jurisdiction.
                     </p>
                   </div>
@@ -641,48 +647,48 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('terms')}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-300 shrink-0 cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
                   title="Copy section link"
                 >
-                  {copiedId === 'terms' ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                  {copiedId === 'terms' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
                   <span className="hidden sm:inline">Share</span>
                 </button>
               </div>
 
-              <div className="space-y-3.5 text-xs sm:text-sm text-slate-300 leading-relaxed font-light min-w-0">
-                <div className="grid grid-cols-1 gap-3 min-w-0">
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1 min-w-0">
-                    <div className="font-semibold text-white text-xs">A. Acceptance of Agreement</div>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
-                      By visiting <span className="text-white font-medium">{siteConfig.name}</span>, creating an account, or placing an order for handcrafted deity dresses, you agree to comply with these terms and all applicable statutory regulations of India.
+              <div className="space-y-2.5 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+                <div className="grid grid-cols-1 gap-2.5 min-w-0">
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
+                    <div className="font-bold text-slate-900 text-[11px]">A. Acceptance of Agreement</div>
+                    <p className="text-[11px] text-slate-600">
+                      By visiting <span className="text-slate-900 font-medium">{siteConfig.name}</span>, creating an account, or placing an order for handcrafted deity dresses, you agree to comply with these terms and all applicable statutory regulations of India.
                     </p>
                   </div>
 
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1 min-w-0">
-                    <div className="font-semibold text-white text-xs">B. Handcrafted Product Authenticity</div>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
+                    <div className="font-bold text-slate-900 text-[11px]">B. Handcrafted Product Authenticity</div>
+                    <p className="text-[11px] text-slate-600">
                       All garments and mukut sets are individually handcrafted by traditional artisans in Meerut. Subtle variations in embroidery, thread tone, or stone placement reflect genuine handmade art and do not constitute defects.
                     </p>
                   </div>
 
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1 min-w-0">
-                    <div className="font-semibold text-white text-xs">C. Pricing, GST &amp; Invoicing</div>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
-                      Prices are listed in <strong className="text-white">Indian Rupees (INR ₹)</strong> inclusive of GST. Tax invoices are automatically generated and dispatched alongside every shipment.
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
+                    <div className="font-bold text-slate-900 text-[11px]">C. Pricing, GST &amp; Invoicing</div>
+                    <p className="text-[11px] text-slate-600">
+                      Prices are listed in <strong className="text-slate-900">Indian Rupees (INR ₹)</strong> inclusive of GST. Tax invoices are automatically generated and dispatched alongside every shipment.
                     </p>
                   </div>
 
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1 min-w-0">
-                    <div className="font-semibold text-white text-xs">D. Intellectual Property Copyright</div>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
+                    <div className="font-bold text-slate-900 text-[11px]">D. Intellectual Property Copyright</div>
+                    <p className="text-[11px] text-slate-600">
                       All photography, dress patterns, logos, and web assets belong to Kanhaji Poshak Kendra. Commercial reproduction or unauthorized distribution is prohibited.
                     </p>
                   </div>
 
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1 min-w-0">
-                    <div className="font-semibold text-white text-xs">E. Applicable Law &amp; Jurisdiction</div>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
-                      These terms are governed by the laws of India. Legal proceedings shall fall under the exclusive jurisdiction of the competent courts in <strong className="text-white">Meerut, Uttar Pradesh, India</strong>.
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-0.5 min-w-0">
+                    <div className="font-bold text-slate-900 text-[11px]">E. Applicable Law &amp; Jurisdiction</div>
+                    <p className="text-[11px] text-slate-600">
+                      These terms are governed by the laws of India. Legal proceedings shall fall under the exclusive jurisdiction of the competent courts in <strong className="text-slate-900">Meerut, Uttar Pradesh, India</strong>.
                     </p>
                   </div>
                 </div>
@@ -694,18 +700,18 @@ export default function LegalPage() {
               id="shipping"
               role="region"
               aria-label="Shipping Policy"
-              className="scroll-mt-36 rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-xl space-y-5 hover:border-white/20 transition-all min-w-0"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3.5 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                    <FiTruck className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700">
+                    <FiTruck className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
                       3. Shipping &amp; Delivery Policy
                     </h2>
-                    <p className="text-[11px] text-slate-400 font-light truncate">
+                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
                       Order preparation times, shipping charges, tracking, and transit schedules.
                     </p>
                   </div>
@@ -713,37 +719,37 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('shipping')}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-300 shrink-0 cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
                   title="Copy section link"
                 >
-                  {copiedId === 'shipping' ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                  {copiedId === 'shipping' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
                   <span className="hidden sm:inline">Share</span>
                 </button>
               </div>
 
-              <div className="space-y-5 text-xs sm:text-sm text-slate-300 leading-relaxed font-light min-w-0">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 min-w-0">
-                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-center space-y-1 min-w-0">
-                    <div className="text-emerald-400 font-bold text-[10px] sm:text-xs uppercase truncate">Pan-India Free Shipping</div>
-                    <div className="text-lg sm:text-xl font-bold text-white font-serif">FREE</div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-300 truncate">Orders ₹8,000 &amp; above</p>
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-0">
+                  <div className="rounded-lg border border-emerald-300/80 bg-emerald-50/70 p-3 text-center space-y-0.5 min-w-0">
+                    <div className="text-emerald-800 font-bold text-[10px] uppercase truncate">Pan-India Free Shipping</div>
+                    <div className="text-base font-bold text-emerald-950 font-serif">FREE</div>
+                    <p className="text-[10px] text-stone-600 truncate">Orders ₹8,000 &amp; above</p>
                   </div>
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 text-center space-y-1 min-w-0">
-                    <div className="text-slate-400 font-bold text-[10px] sm:text-xs uppercase truncate">Standard Shipping</div>
-                    <div className="text-lg sm:text-xl font-bold text-white font-serif">₹120 - ₹400</div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-300 truncate">Based on Order Total</p>
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-center space-y-0.5 min-w-0">
+                    <div className="text-slate-500 font-bold text-[10px] uppercase truncate">Standard Shipping</div>
+                    <div className="text-base font-bold text-slate-900 font-serif">₹120 - ₹400</div>
+                    <p className="text-[10px] text-slate-500 truncate">Based on Order Total</p>
                   </div>
-                  <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-3.5 text-center space-y-1 min-w-0">
-                    <div className="text-amber-300 font-bold text-[10px] sm:text-xs uppercase truncate">Dispatch Window</div>
-                    <div className="text-lg sm:text-xl font-bold text-white font-serif">24 - 48 Hrs</div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-300 truncate">Readymade items</p>
+                  <div className="rounded-lg border border-amber-300/80 bg-amber-50/70 p-3 text-center space-y-0.5 min-w-0">
+                    <div className="text-amber-900 font-bold text-[10px] uppercase truncate">Dispatch Window</div>
+                    <div className="text-base font-bold text-amber-950 font-serif">24 - 48 Hrs</div>
+                    <p className="text-[10px] text-amber-800/80 truncate">Readymade items</p>
                   </div>
                 </div>
 
                 {/* Pincode Estimator Tool */}
-                <div className="rounded-xl border border-amber-400/20 bg-gradient-to-r from-amber-500/10 via-white/[0.02] to-transparent p-3.5 space-y-2.5 min-w-0">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300 truncate">
-                    <FiTruck className="h-4 w-4 text-amber-400 shrink-0" />
+                <div className="rounded-lg border border-amber-500/20 bg-amber-50/40 p-3 space-y-2 min-w-0 print:hidden">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-950 truncate">
+                    <FiTruck className="h-3.5 w-3.5 text-amber-700 shrink-0" />
                     <span className="truncate">Check Delivery Estimate for Your Pincode</span>
                   </div>
                   <form onSubmit={checkPincodeEstimator} className="flex flex-col sm:flex-row gap-2 min-w-0">
@@ -753,61 +759,61 @@ export default function LegalPage() {
                       value={pincode}
                       onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
                       placeholder="Enter 6-digit Pincode (e.g. 110001)"
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none min-w-0"
+                      className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:border-amber-500 focus:outline-none min-w-0"
                     />
                     <Button
                       type="submit"
                       size="sm"
-                      className="bg-amber-400 font-bold text-black hover:bg-amber-300 shrink-0 cursor-pointer min-h-[34px]"
+                      className="bg-amber-500 font-bold text-slate-950 hover:bg-amber-600 shrink-0 cursor-pointer min-h-[34px]"
                     >
                       Calculate
                     </Button>
                   </form>
 
                   {pincodeResult && (
-                    <div className="rounded-lg border border-white/10 bg-black/50 p-2.5 text-xs min-w-0">
+                    <div className="rounded-lg border border-slate-200 bg-white p-2 text-xs min-w-0">
                       {pincodeResult.success ? (
-                        <div className="flex items-center justify-between text-amber-300 font-semibold text-[11px] sm:text-xs min-w-0">
+                        <div className="flex items-center justify-between text-slate-900 font-bold text-[11px] min-w-0">
                           <span className="truncate">Pincode {pincodeResult.pincode} &bull; {pincodeResult.zone}</span>
-                          <span className="text-emerald-400 font-bold shrink-0">{pincodeResult.estimate}</span>
+                          <span className="text-emerald-700 font-bold shrink-0">{pincodeResult.estimate}</span>
                         </div>
                       ) : (
-                        <span className="text-rose-400 text-[11px]">{pincodeResult.message}</span>
+                        <span className="text-rose-600 text-[11px]">{pincodeResult.message}</span>
                       )}
                     </div>
                   )}
                 </div>
 
-                {/* Delivery Timeline Matrix Table (Single Delivery Standard Column) */}
-                <div className="overflow-x-auto custom-scrollbar rounded-xl border border-white/10 bg-black/40 min-w-0">
-                  <table className="w-full text-left text-xs text-slate-300 min-w-[450px]">
-                    <thead className="bg-white/5 text-amber-300 font-semibold uppercase tracking-wider text-[10px]">
+                {/* Delivery Matrix Table */}
+                <div className="overflow-x-auto custom-scrollbar rounded-lg border border-slate-200/80 bg-white min-w-0 print:border-slate-300">
+                  <table className="w-full text-left text-xs text-slate-800 min-w-[450px]">
+                    <thead className="bg-slate-100/80 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
                       <tr>
                         <th className="p-2.5">Destination Zone</th>
                         <th className="p-2.5">Regions Covered</th>
                         <th className="p-2.5">Estimated Delivery Time</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-[11px]">
+                    <tbody className="divide-y divide-slate-200/80 text-[11px]">
                       {shippingZoneRates.map((z, idx) => (
-                        <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="p-2.5 font-bold text-white whitespace-nowrap">{z.zone}</td>
-                          <td className="p-2.5 text-slate-400">{z.regions}</td>
-                          <td className="p-2.5 text-emerald-400 font-medium whitespace-nowrap">{z.deliveryTime}</td>
+                        <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                          <td className="p-2.5 font-bold text-slate-900 whitespace-nowrap">{z.zone}</td>
+                          <td className="p-2.5 text-slate-600">{z.regions}</td>
+                          <td className="p-2.5 text-emerald-700 font-bold whitespace-nowrap">{z.deliveryTime}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                <ul className="space-y-1.5 pt-1 text-xs min-w-0">
+                <ul className="space-y-1.5 pt-1 text-[11px] min-w-0">
                   <li className="flex items-start gap-2">
-                    <FiCheckCircle className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-white">Live AWB Tracking:</strong> Automated SMS and WhatsApp tracking links are dispatched immediately upon courier handover.</span>
+                    <FiCheckCircle className="h-3.5 w-3.5 text-amber-700 shrink-0 mt-0.5" />
+                    <span><strong className="text-slate-900">Live AWB Tracking:</strong> Automated SMS and WhatsApp tracking links are dispatched immediately upon courier handover.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <FiCheckCircle className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-white">Damaged Box Protocol:</strong> Report transit damage within 48 hours with unboxing video proof for an immediate free replacement.</span>
+                    <FiCheckCircle className="h-3.5 w-3.5 text-amber-700 shrink-0 mt-0.5" />
+                    <span><strong className="text-slate-900">Damaged Box Protocol:</strong> Report transit damage within 48 hours with unboxing video proof for an immediate free replacement.</span>
                   </li>
                 </ul>
               </div>
@@ -818,18 +824,18 @@ export default function LegalPage() {
               id="returns"
               role="region"
               aria-label="Return Refund and Cancellation Policy"
-              className="scroll-mt-36 rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-xl space-y-5 hover:border-white/20 transition-all min-w-0"
+              className="scroll-mt-36 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3.5 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                    <FiRefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700">
+                    <FiRefreshCw className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
                       4. Return, Refund &amp; Cancellation Policy
                     </h2>
-                    <p className="text-[11px] text-slate-400 font-light truncate">
+                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
                       7-day return window, cancellation rules, exchange steps, and refund processing.
                     </p>
                   </div>
@@ -837,44 +843,44 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('returns')}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-300 shrink-0 cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
                   title="Copy section link"
                 >
-                  {copiedId === 'returns' ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                  {copiedId === 'returns' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
                   <span className="hidden sm:inline">Share</span>
                 </button>
               </div>
 
-              <div className="space-y-5 text-xs sm:text-sm text-slate-300 leading-relaxed font-light min-w-0">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
                 {/* Process Timeline Card */}
-                <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-3 min-w-0">
-                  <div className="text-xs font-bold uppercase tracking-wider text-amber-400 truncate">
+                <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-2.5 min-w-0 print:bg-white print:border-slate-300">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-amber-950 truncate">
                     Step-by-Step Return Workflow
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 min-w-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 min-w-0">
                     {returnTimelineSteps.map((step) => {
                       const StepIcon = step.icon;
                       return (
-                        <div key={step.step} className="rounded-lg border border-white/10 bg-white/[0.02] p-2.5 space-y-1 min-w-0">
+                        <div key={step.step} className="rounded-lg border border-slate-200/80 bg-white p-2.5 space-y-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono font-bold text-amber-400">{step.step}</span>
-                            <StepIcon className="h-3.5 w-3.5 text-amber-300 shrink-0" />
+                            <span className="text-[10px] font-mono font-bold text-amber-700">{step.step}</span>
+                            <StepIcon className="h-3.5 w-3.5 text-amber-600 shrink-0" />
                           </div>
-                          <div className="font-bold text-white text-xs truncate">{step.title}</div>
-                          <p className="text-[10px] text-slate-400 leading-tight">{step.desc}</p>
+                          <div className="font-bold text-slate-900 text-xs truncate">{step.title}</div>
+                          <p className="text-[10px] text-slate-500 leading-tight">{step.desc}</p>
                         </div>
                       );
                     })}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 min-w-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 min-w-0">
                   {/* Eligibility */}
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1.5 min-w-0">
-                    <div className="font-semibold text-white text-xs flex items-center gap-1.5 truncate">
-                      <FiCheckCircle className="text-emerald-400 shrink-0" /> Return &amp; Exchange Eligibility
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="font-bold text-slate-900 text-xs flex items-center gap-1.5 truncate">
+                      <FiCheckCircle className="text-emerald-600 shrink-0" /> Return &amp; Exchange Eligibility
                     </div>
-                    <ul className="space-y-1 text-[11px] sm:text-xs text-slate-400 list-disc list-inside">
+                    <ul className="space-y-1 text-[11px] text-slate-600 list-disc list-inside">
                       <li>Initiated within 7 days of package delivery.</li>
                       <li>Items must be unused, unwashed, and in original packaging.</li>
                       <li>Size exchange available free of cost for deity dresses.</li>
@@ -882,11 +888,11 @@ export default function LegalPage() {
                   </div>
 
                   {/* Non-Returnable */}
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3.5 space-y-1.5 min-w-0">
-                    <div className="font-semibold text-white text-xs flex items-center gap-1.5 truncate">
-                      <FiXCircle className="text-rose-400 shrink-0" /> Non-Returnable Items
+                  <div className="rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 space-y-1 min-w-0">
+                    <div className="font-bold text-slate-900 text-xs flex items-center gap-1.5 truncate">
+                      <FiXCircle className="text-rose-600 shrink-0" /> Non-Returnable Items
                     </div>
-                    <ul className="space-y-1 text-[11px] sm:text-xs text-slate-400 list-disc list-inside">
+                    <ul className="space-y-1 text-[11px] text-slate-600 list-disc list-inside">
                       <li>Custom-tailored deity dresses made to specific measurements.</li>
                       <li>Opened sacred attar, perfume, or dhoop items.</li>
                       <li>Items showing signs of wear or altar use.</li>
@@ -895,9 +901,9 @@ export default function LegalPage() {
                 </div>
 
                 {/* Cancellation */}
-                <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 p-3.5 text-xs text-amber-200/90 space-y-1 min-w-0">
-                  <strong className="text-amber-300 font-semibold block">Order Cancellation Rules:</strong>
-                  <p className="text-[11px] sm:text-xs">
+                <div className="rounded-lg border border-amber-500/30 bg-amber-50/60 p-3 text-xs text-slate-800 space-y-0.5 min-w-0">
+                  <strong className="text-amber-950 font-bold block text-[11px]">Order Cancellation Rules:</strong>
+                  <p className="text-[11px] text-slate-700">
                     Orders can be cancelled with a 100% full refund before courier dispatch. If cancelled post-dispatch, standard return courier fees will apply upon delivery return.
                   </p>
                 </div>
@@ -909,18 +915,18 @@ export default function LegalPage() {
               id="contact"
               role="region"
               aria-label="Contact Information"
-              className="scroll-mt-36 rounded-2xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-white/[0.02] to-transparent p-5 sm:p-7 backdrop-blur-xl space-y-5 min-w-0"
+              className="scroll-mt-36 rounded-xl border border-amber-500/30 bg-amber-50/30 p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:bg-white print:p-4"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3.5 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
-                    <FiMail className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700">
+                    <FiMail className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+                    <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 truncate print:text-black">
                       5. Contact Information &amp; Support Hours
                     </h2>
-                    <p className="text-[11px] text-slate-400 font-light truncate">
+                    <p className="text-[11px] text-slate-500 font-body truncate print:text-slate-700">
                       Reach out directly to our dedicated customer support desk.
                     </p>
                   </div>
@@ -928,39 +934,39 @@ export default function LegalPage() {
                 <button
                   type="button"
                   onClick={() => copySectionLink('contact')}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-300 shrink-0 cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-800 shrink-0 cursor-pointer print:hidden"
                   title="Copy section link"
                 >
-                  {copiedId === 'contact' ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                  {copiedId === 'contact' ? <FiCheck className="text-emerald-600" /> : <FiCopy />}
                   <span className="hidden sm:inline">Share</span>
                 </button>
               </div>
 
-              <div className="space-y-5 text-xs sm:text-sm text-slate-300 leading-relaxed font-light min-w-0">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 min-w-0">
+              <div className="space-y-4 text-xs text-slate-700 leading-relaxed font-body min-w-0 print:text-black">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 min-w-0 print:grid-cols-3">
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="flex flex-col items-center justify-center text-center rounded-xl border border-white/10 bg-black/40 p-3.5 hover:border-amber-400/50 transition-all space-y-1.5 group min-w-0"
+                    className="flex flex-col items-center justify-center text-center rounded-lg border border-slate-200/80 bg-white p-3 hover:border-amber-500/50 transition-all space-y-1 group min-w-0 shadow-2xs"
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 group-hover:scale-105 transition-transform shrink-0">
                       <FiMail className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 w-full">
-                      <div className="font-bold text-white text-xs truncate">Support Email</div>
-                      <div className="text-slate-400 text-[10px] sm:text-[11px] truncate">{siteConfig.email}</div>
+                      <div className="font-bold text-slate-900 text-xs truncate">Support Email</div>
+                      <div className="text-slate-500 text-[10px] truncate">{siteConfig.email}</div>
                     </div>
                   </a>
 
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="flex flex-col items-center justify-center text-center rounded-xl border border-white/10 bg-black/40 p-3.5 hover:border-amber-400/50 transition-all space-y-1.5 group min-w-0"
+                    className="flex flex-col items-center justify-center text-center rounded-lg border border-slate-200/80 bg-white p-3 hover:border-amber-500/50 transition-all space-y-1 group min-w-0 shadow-2xs"
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 group-hover:scale-105 transition-transform shrink-0">
                       <FiPhone className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 w-full">
-                      <div className="font-bold text-white text-xs truncate">Helpline Phone</div>
-                      <div className="text-slate-400 text-[10px] sm:text-[11px] truncate">{siteConfig.phone}</div>
+                      <div className="font-bold text-slate-900 text-xs truncate">Helpline Phone</div>
+                      <div className="text-slate-500 text-[10px] truncate">{siteConfig.phone}</div>
                     </div>
                   </a>
 
@@ -968,64 +974,64 @@ export default function LegalPage() {
                     href={siteConfig.social.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col items-center justify-center text-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 hover:border-emerald-400/60 transition-all space-y-1.5 group min-w-0"
+                    className="flex flex-col items-center justify-center text-center rounded-lg border border-emerald-300/80 bg-emerald-50/70 p-3 hover:border-emerald-400 transition-all space-y-1 group min-w-0 shadow-2xs"
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 group-hover:scale-105 transition-transform shrink-0">
                       <FaWhatsapp className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 w-full">
-                      <div className="font-bold text-emerald-300 text-xs truncate">WhatsApp Helpdesk</div>
-                      <div className="text-slate-300 text-[10px] sm:text-[11px] truncate">Instant Assistance</div>
+                      <div className="font-bold text-emerald-950 text-xs truncate">WhatsApp Helpdesk</div>
+                      <div className="text-stone-600 text-[10px] truncate">Instant Assistance</div>
                     </div>
                   </a>
                 </div>
 
-                <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-2 text-center sm:text-left sm:flex sm:items-center sm:justify-between min-w-0">
+                <div className="rounded-lg border border-slate-200/80 bg-white p-3 space-y-1.5 text-center sm:text-left sm:flex sm:items-center sm:justify-between min-w-0 shadow-2xs">
                   <div className="min-w-0">
-                    <div className="font-bold text-white text-xs flex items-center justify-center sm:justify-start gap-1.5 truncate">
-                      <FiClock className="text-amber-400 shrink-0" /> Operational Support Hours
+                    <div className="font-bold text-slate-900 text-xs flex items-center justify-center sm:justify-start gap-1.5 truncate">
+                      <FiClock className="text-amber-700 shrink-0" /> Operational Support Hours
                     </div>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Monday – Saturday: 9:00 AM – 7:00 PM IST (Closed Sundays &amp; National Holidays)</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">Monday – Saturday: 9:00 AM – 7:00 PM IST (Closed Sundays &amp; National Holidays)</p>
                   </div>
                   <div className="mt-2 sm:mt-0 text-center sm:text-right shrink-0">
-                    <div className="font-bold text-white text-xs flex items-center justify-center sm:justify-end gap-1.5 truncate">
-                      <FiMapPin className="text-amber-400 shrink-0" /> Store &amp; Studio Address
+                    <div className="font-bold text-slate-900 text-xs flex items-center justify-center sm:justify-end gap-1.5 truncate">
+                      <FiMapPin className="text-amber-700 shrink-0" /> Store &amp; Studio Address
                     </div>
-                    <p className="text-[11px] text-slate-400 mt-0.5">{siteConfig.address.street}, {siteConfig.address.city}, {siteConfig.address.state}</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">{siteConfig.address.street}, {siteConfig.address.city}, {siteConfig.address.state}</p>
                   </div>
                 </div>
               </div>
             </section>
 
             {/* FAQs Accordion */}
-            <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7 backdrop-blur-xl space-y-5 min-w-0">
-              <div className="border-b border-white/10 pb-3.5 min-w-0">
-                <h2 className="text-base sm:text-lg font-serif font-bold text-white flex items-center gap-2 truncate">
-                  <FiHelpCircle className="h-4 w-4 text-amber-400 shrink-0" />
+            <section className="rounded-xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 min-w-0 print:border-slate-300 print:shadow-none print:p-4">
+              <div className="border-b border-slate-100 pb-3 min-w-0">
+                <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 flex items-center gap-2 truncate print:text-black">
+                  <FiHelpCircle className="h-4 w-4 text-amber-700 shrink-0" />
                   Frequently Asked Legal &amp; Policy Questions
                 </h2>
-                <p className="text-[11px] text-slate-400 font-light mt-0.5 truncate">
+                <p className="text-[11px] text-slate-500 font-body mt-0.5 truncate print:text-slate-700">
                   Quick answers to common questions about your rights, orders, and data.
                 </p>
               </div>
 
-              <div className="space-y-2.5 min-w-0">
+              <div className="space-y-2 min-w-0">
                 {legalFaqs.map((faq, idx) => {
                   const isOpen = openFaq === idx;
                   return (
                     <div
                       key={idx}
-                      className="rounded-xl border border-white/10 bg-black/30 overflow-hidden transition-colors min-w-0"
+                      className="rounded-lg border border-slate-200/80 bg-slate-50/70 overflow-hidden transition-colors min-w-0 print:bg-white print:border-slate-200"
                     >
                       <button
                         type="button"
                         onClick={() => setOpenFaq(isOpen ? null : idx)}
                         aria-expanded={isOpen}
-                        className="w-full flex items-center justify-between p-3.5 text-left text-xs font-semibold text-white hover:text-amber-300 transition-colors focus:outline-none cursor-pointer min-w-0"
+                        className="w-full flex items-center justify-between p-3 text-left text-xs font-semibold text-slate-900 hover:text-amber-900 transition-colors focus:outline-none cursor-pointer min-w-0 print:p-2"
                       >
-                        <span className="pr-3 truncate">{faq.q}</span>
+                        <span className="pr-2 truncate print:whitespace-normal print:font-bold">{faq.q}</span>
                         <FiChevronDown
-                          className={`h-4 w-4 shrink-0 text-amber-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                          className={`h-4 w-4 shrink-0 text-amber-700 transition-transform duration-200 print:hidden ${isOpen ? 'rotate-180' : ''
                             }`}
                         />
                       </button>
@@ -1036,7 +1042,7 @@ export default function LegalPage() {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="px-3.5 pb-3.5 text-[11px] sm:text-xs text-slate-300 leading-relaxed border-t border-white/5 font-light"
+                            className="px-3 pb-3 text-[11px] text-slate-600 leading-relaxed border-t border-slate-200/70 font-body print:p-2 print:text-black"
                           >
                             {faq.a}
                           </motion.div>
@@ -1049,21 +1055,21 @@ export default function LegalPage() {
             </section>
 
             {/* Bottom CTA Card */}
-            <div className="rounded-2xl border border-amber-400/30 bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent p-5 text-center space-y-2.5 min-w-0">
-              <h3 className="text-base sm:text-lg font-serif font-bold text-white truncate">
+            <div className="rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-50 to-amber-100/50 p-4 text-center space-y-2 min-w-0 print:hidden">
+              <h3 className="text-sm sm:text-base font-serif font-bold text-amber-950 truncate">
                 Have Any Custom Policy Questions?
               </h3>
-              <p className="text-xs text-slate-300 max-w-xl mx-auto font-light leading-relaxed">
+              <p className="text-xs text-slate-700 max-w-lg mx-auto font-body leading-relaxed">
                 Our devotee helpdesk is always ready to assist you with order inquiries, custom sizing support, or return assistance.
               </p>
-              <div className="pt-1.5 flex flex-wrap items-center justify-center gap-2.5">
+              <div className="pt-1 flex flex-wrap items-center justify-center gap-2">
                 <Link to={ROUTE_PATHS.CONTACT}>
-                  <Button size="sm" className="bg-amber-400 text-black font-bold hover:bg-amber-300 cursor-pointer min-h-[36px]">
+                  <Button size="sm" className="bg-amber-500 text-slate-950 font-bold hover:bg-amber-600 cursor-pointer min-h-[34px]">
                     Contact Support <FiChevronRight className="ml-1" />
                   </Button>
                 </Link>
                 <Link to={ROUTE_PATHS.SHOP}>
-                  <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 cursor-pointer min-h-[36px]">
+                  <Button size="sm" variant="outline" className="border-amber-900/20 text-amber-950 hover:bg-amber-100 cursor-pointer min-h-[34px]">
                     Explore Shop Catalog
                   </Button>
                 </Link>
@@ -1080,7 +1086,7 @@ export default function LegalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={scrollToTop}
-              className="fixed bottom-5 right-5 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-amber-400 text-black font-bold shadow-lg shadow-amber-400/20 hover:bg-amber-300 focus:outline-none transition-all cursor-pointer"
+              className="fixed bottom-5 right-5 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20 hover:bg-amber-600 focus:outline-none transition-all cursor-pointer print:hidden"
               aria-label="Scroll back to top"
             >
               <FiArrowUp className="h-4 w-4" />
