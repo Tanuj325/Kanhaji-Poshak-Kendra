@@ -110,7 +110,7 @@ export default function SettingsAdminPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3 min-w-0">
             {/* Theme Toggle */}
-            <div className="flex flex-row items-center justify-between gap-2.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 min-w-0">
+            <div className="flex flex-cols items-center justify-between gap-2.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 min-w-0">
               <div className="min-w-0">
                 <p className="text-[11px] font-semibold text-slate-900 truncate">Appearance Mode</p>
                 <p className="text-[10px] text-slate-500 mt-0.5 truncate">Toggle light and dark color themes</p>
@@ -209,9 +209,6 @@ export default function SettingsAdminPage() {
                         {item.subtitle}
                       </p>
                     </div>
-                  </div>
-                  <div className="flex items-center text-amber-700 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all shrink-0">
-                    <FiArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </Link>
               );
