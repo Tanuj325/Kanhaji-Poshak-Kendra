@@ -5,6 +5,7 @@ import Spinner from '@/components/ui/Spinner';
 import EmptyState from '@/components/ui/EmptyState';
 import { paymentService } from '@/services';
 import { formatPrice } from '@/utils/formatPrice';
+import { cn } from '@/utils/cn';
 import {
   FiRefreshCw,
   FiSearch,
