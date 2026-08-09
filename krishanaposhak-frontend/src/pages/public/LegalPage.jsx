@@ -282,8 +282,119 @@ export default function LegalPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  // Generate clean pure-text printable document PDF window
   const printPolicy = () => {
-    window.print();
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      window.print();
+      return;
+    }
+
+    const documentHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${siteConfig.name} - Privacy Policy & Terms and Conditions</title>
+          <style>
+            body {
+              font-family: 'Times New Roman', Times, Georgia, serif;
+              color: #111827;
+              line-height: 1.6;
+              margin: 40px;
+              font-size: 13px;
+              background: #fff;
+            }
+            h1 { font-size: 22px; text-align: center; margin-bottom: 4px; text-transform: uppercase; color: #000; font-weight: bold; }
+            .meta { text-align: center; font-size: 11px; color: #4b5563; margin-bottom: 25px; border-bottom: 1.5px solid #e5e7eb; padding-bottom: 12px; }
+            h2 { font-size: 15px; border-bottom: 1.5px solid #111827; padding-bottom: 4px; margin-top: 24px; text-transform: uppercase; color: #000; font-weight: bold; page-break-after: avoid; }
+            h3 { font-size: 13px; margin-top: 14px; margin-bottom: 4px; color: #1f2937; font-weight: bold; }
+            p { margin: 6px 0 10px 0; text-align: justify; }
+            ul { margin: 6px 0 10px 0; padding-left: 20px; }
+            li { margin-bottom: 4px; }
+            table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
+            th, td { border: 1px solid #d1d5db; padding: 6px 10px; text-align: left; }
+            th { background-color: #f3f4f6; font-weight: bold; }
+            .footer { margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 12px; text-align: center; font-size: 10px; color: #6b7280; }
+          </style>
+        </head>
+        <body>
+          <h1>${siteConfig.name}</h1>
+          <div class="meta">
+            <strong>OFFICIAL LEGAL DOCUMENTATION</strong> &bull; Privacy Policy & Terms and Conditions<br/>
+            Last Updated: 09 August 2026 &bull; Website: ${siteConfig.url} &bull; Email: ${siteConfig.email}
+          </div>
+
+          <h2>1. Privacy Policy & Data Safeguards</h2>
+          <p>At <strong>${siteConfig.name}</strong>, we respect the sacred trust of every devotee. This policy explains how we gather, utilize, and protect your personal information across all touchpoints.</p>
+          <h3>Information We Collect</h3>
+          <p>Personal details provided during registration or checkout, including full name, delivery address, phone number, email, and deity dress size preferences.</p>
+          <h3>Cookies & Session Tracking</h3>
+          <p>Essential session cookies retain your shopping cart items, login credentials, and search filters. We do not employ third-party ad brokers or cross-site tracking pixels.</p>
+          <h3>Payment & Gateway Security</h3>
+          <p>Transactions are processed via PCI-DSS certified gateways (Razorpay / UPI / Cards). Financial credentials are never stored on our local servers.</p>
+          <h3>Devotee Data Rights & Account Deletion</h3>
+          <p>You retain full control over your personal records. You may request a complete export of your stored personal data or submit a permanent account deletion request by emailing ${siteConfig.email}.</p>
+
+          <h2>2. Terms & Conditions of Sale</h2>
+          <h3>A. Acceptance of Agreement</h3>
+          <p>By visiting ${siteConfig.name}, creating an account, or placing an order for handcrafted deity dresses, you agree to comply with these terms and all applicable statutory regulations of India.</p>
+          <h3>B. Handcrafted Product Authenticity</h3>
+          <p>All garments and mukut sets are individually handcrafted by traditional artisans in Meerut. Subtle variations in embroidery, thread tone, or stone placement reflect genuine handmade art and do not constitute defects.</p>
+          <h3>C. Pricing, GST & Invoicing</h3>
+          <p>Prices are listed in Indian Rupees (INR ₹) inclusive of GST. Tax invoices are automatically generated and dispatched alongside every shipment.</p>
+          <h3>D. Intellectual Property Copyright</h3>
+          <p>All photography, dress patterns, logos, and web assets belong to Kanhaji Poshak Kendra. Commercial reproduction or unauthorized distribution is prohibited.</p>
+          <h3>E. Applicable Law & Jurisdiction</h3>
+          <p>These terms are governed by the laws of India. Legal proceedings shall fall under the exclusive jurisdiction of the competent courts in Meerut, Uttar Pradesh, India.</p>
+
+          <h2>3. Shipping & Delivery Policy</h2>
+          <p>Order preparation times: Standard readymade poshak orders dispatch within 24 to 48 business hours. Pan-India Free Delivery applies on orders ₹8,000 and above.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Destination Zone</th>
+                <th>Regions Covered</th>
+                <th>Estimated Delivery Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${shippingZoneRates.map(z => `
+                <tr>
+                  <td><strong>${z.zone}</strong></td>
+                  <td>${z.regions}</td>
+                  <td>${z.deliveryTime}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <h2>4. Return, Refund & Cancellation Policy</h2>
+          <p>We provide a 7-day hassle-free size exchange & return policy from the date of package delivery. Items must be unwashed, unused, and in original packaging.</p>
+          <p>Orders can be cancelled with a 100% full refund before courier dispatch. Refunds are processed within 5-7 business days upon studio QC inspection.</p>
+
+          <h2>5. Contact Information & Support Hours</h2>
+          <p>Support Email: ${siteConfig.email}</p>
+          <p>Helpline Phone: ${siteConfig.phone}</p>
+          <p>Operational Support Hours: Monday – Saturday: 9:00 AM – 7:00 PM IST</p>
+          <p>Studio Address: ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state}, ${siteConfig.address.country}</p>
+
+          <div class="footer">
+            &copy; ${new Date().getFullYear()} ${siteConfig.name}. All Rights Reserved. Official Legal Record.
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(documentHtml);
+    printWindow.document.close();
   };
 
   // Quick Pincode Estimator
@@ -412,7 +523,7 @@ export default function LegalPage() {
               <div className="flex flex-wrap items-center justify-center gap-2.5 pt-0.5 text-[11px] text-slate-500">
                 <span className="flex items-center gap-1">
                   <FiCalendar className="text-amber-700 h-3 w-3" /> Last Updated:{' '}
-                  <strong className="text-slate-900">July 29, 2026</strong>
+                  <strong className="text-slate-900">09 August 2026</strong>
                 </span>
                 <span className="hidden sm:inline print:hidden">&bull;</span>
                 <button
@@ -432,9 +543,9 @@ export default function LegalPage() {
               transition={{ duration: 0.5, delay: 0.15 }}
               className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 max-w-3xl mx-auto print:hidden"
             >
-              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
-                  <FiShield className="h-4 w-4" />
+              <div className="flex flex-col items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-1.5 min-w-0">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiShield className="h-3 w-3" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] text-slate-500 truncate">256-Bit SSL</div>
@@ -442,9 +553,9 @@ export default function LegalPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
-                  <FiTruck className="h-4 w-4" />
+              <div className="flex flex-col items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-1.5 min-w-0">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiTruck className="h-3 w-3" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] text-slate-500 truncate">Pan-India Delivery</div>
@@ -452,9 +563,9 @@ export default function LegalPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
-                  <FiRefreshCw className="h-4 w-4" />
+              <div className="flex flex-col items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-1.5 min-w-0">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiRefreshCw className="h-3 w-3" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] text-slate-500 truncate">Hassle-Free</div>
@@ -462,9 +573,9 @@ export default function LegalPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
-                  <FiCreditCard className="h-4 w-4" />
+              <div className="flex flex-col items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 p-1.5 min-w-0">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 border border-amber-500/20">
+                  <FiCreditCard className="h-3 w-3" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] text-slate-500 truncate">PCI-DSS Gateway</div>
@@ -512,8 +623,8 @@ export default function LegalPage() {
                     type="button"
                     onClick={() => scrollToSection(sec.id)}
                     className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all shrink-0 cursor-pointer ${isActive
-                        ? 'bg-amber-500 text-slate-950 shadow-2xs font-bold'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+                      ? 'bg-amber-500 text-slate-950 shadow-2xs font-bold'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
                       }`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0" />
