@@ -43,7 +43,6 @@ export default function CategoriesListPage() {
 
   const paginationData = data?.data || data || {};
   const categories = paginationData.content ?? [];
-  console.log(categories)
   const totalPages = paginationData.totalPages ?? 1;
   const totalElements = paginationData.totalElements ?? 0;
 
@@ -225,11 +224,16 @@ export default function CategoriesListPage() {
                       </button>
                     </div>
 
-                    {/* Category Title & Supporting Description */}
+                    {/* Category Title, Slug & Supporting Description */}
                     <div className="space-y-1 min-w-0">
                       <h3 className="font-heading text-base font-bold text-slate-900 leading-snug line-clamp-2">
                         {cat.name}
                       </h3>
+                      {cat.slug && (
+                        <p className="font-mono text-[11px] text-slate-400 truncate">
+                          /{cat.slug}
+                        </p>
+                      )}
                       {cat.description && (
                         <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-body">
                           {cat.description}
