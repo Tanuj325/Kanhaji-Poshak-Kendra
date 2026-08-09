@@ -619,7 +619,7 @@ export default function ProductsListPage() {
                             <button
                               type="button"
                               onClick={() => navigate(buildPath.product(product.slug || product.id))}
-                              className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs py-2 px-2 hover:bg-slate-200 transition-colors min-h-[36px] border border-slate-200/60 cursor-pointer"
+                              className="flex flex-col items-center justify-center gap-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs py-2 px-2 hover:bg-slate-200 transition-colors min-h-[36px] border border-slate-200/60 cursor-pointer"
                               title="View in Store"
                             >
                               <FiEye className="h-3.5 w-3.5 text-slate-500" />
@@ -628,7 +628,7 @@ export default function ProductsListPage() {
                             <button
                               type="button"
                               onClick={() => navigate(buildPath.adminProductEdit(product.id))}
-                              className="flex items-center justify-center gap-1.5 rounded-xl bg-amber-50 text-amber-800 font-semibold text-xs py-2 px-2 hover:bg-amber-100 transition-colors min-h-[36px] border border-amber-200/60 cursor-pointer"
+                              className="flex flex-col items-center justify-center gap-1.5 rounded-xl bg-amber-50 text-amber-800 font-semibold text-xs py-2 px-2 hover:bg-amber-100 transition-colors min-h-[36px] border border-amber-200/60 cursor-pointer"
                               title="Edit product"
                             >
                               <FiEdit className="h-3.5 w-3.5 text-amber-700" />
@@ -637,7 +637,7 @@ export default function ProductsListPage() {
                             <button
                               type="button"
                               onClick={() => handleDeleteClick(product.id)}
-                              className="flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 text-rose-700 font-semibold text-xs py-2 px-2 hover:bg-rose-100 transition-colors min-h-[36px] border border-rose-200/60 cursor-pointer"
+                              className="flex flex-col items-center justify-center gap-1.5 rounded-xl bg-rose-50 text-rose-700 font-semibold text-xs py-2 px-2 hover:bg-rose-100 transition-colors min-h-[36px] border border-rose-200/60 cursor-pointer"
                               title="Delete product"
                             >
                               <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
