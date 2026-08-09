@@ -443,44 +443,49 @@ export default function ContactMessagesPage() {
                     </div>
                   )}
 
-                  {/* Bottom Row: Date + Action Buttons */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 min-w-0" onClick={(e) => e.stopPropagation()}>
-                    <span className="text-[10px] text-slate-400 font-mono truncate">
-                      {formatDate(msg.createdAt, { format: 'datetime' })}
-                    </span>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {!msg.resolved && (
-                        <button
-                          type="button"
-                          onClick={() => handleResolve(msg.id)}
-                          disabled={resolveMutation.isPending}
-                          className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors min-h-[32px] cursor-pointer"
-                          title="Mark as Resolved"
-                        >
-                          <FiCheckCircle className="h-3.5 w-3.5" />
-                          <span>Resolve</span>
-                        </button>
-                      )}
+                  {/* Received Date */}
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-2 border-t border-slate-100 min-w-0">
+                    <span className="truncate">Received: {formatDate(msg.createdAt, { format: 'datetime' })}</span>
+                  </div>
+
+                  {/* Action Buttons Grid (Row 1: Delete | Open, Row 2 Merged: Mark Resolved) */}
+                  <div className="grid grid-cols-2 gap-2 pt-0.5 min-w-0" onClick={(e) => e.stopPropagation()}>
+                    {/* Row 1 Col 1: Delete */}
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(msg.id)}
+                      disabled={deleteMutation.isPending}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors min-h-[38px] cursor-pointer w-full"
+                      title="Delete Inquiry"
+                    >
+                      <FiTrash2 className="h-3.5 w-3.5 text-rose-600" />
+                      <span>Delete</span>
+                    </button>
+
+                    {/* Row 1 Col 2: Open */}
+                    <button
+                      type="button"
+                      onClick={() => handleViewDetail(msg)}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs min-h-[38px] cursor-pointer w-full"
+                      title="View Details"
+                    >
+                      <span>Open</span>
+                      <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
+                    </button>
+
+                    {/* Row 2 Merged 2 Columns: Mark Resolved */}
+                    {!msg.resolved && (
                       <button
                         type="button"
-                        onClick={() => setDeleteTarget(msg.id)}
-                        disabled={deleteMutation.isPending}
-                        className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors min-h-[32px] cursor-pointer"
-                        title="Delete Inquiry"
+                        onClick={() => handleResolve(msg.id)}
+                        disabled={resolveMutation.isPending}
+                        className="col-span-2 inline-flex items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors min-h-[38px] cursor-pointer w-full"
+                        title="Mark as Resolved"
                       >
-                        <FiTrash2 className="h-3.5 w-3.5" />
-                        <span>Delete</span>
+                        <FiCheckCircle className="h-4 w-4 text-emerald-600" />
+                        <span>Mark Resolved</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleViewDetail(msg)}
-                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all min-h-[32px] cursor-pointer"
-                        title="View Details"
-                      >
-                        <span>Open</span>
-                        <FiArrowRight className="h-3.5 w-3.5 text-amber-600" />
-                      </button>
-                    </div>
+                    )}
                   </div>
                 </div>
               ))}
