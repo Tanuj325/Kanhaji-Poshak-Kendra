@@ -9,6 +9,7 @@ import com.tanuj.krishanaposhak.mapper.BannerMapper;
 import com.tanuj.krishanaposhak.repository.BannerRepository;
 import com.tanuj.krishanaposhak.service.BannerService;
 import com.tanuj.krishanaposhak.service.CloudinaryService;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import com.tanuj.krishanaposhak.util.UrlUtils;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -123,6 +125,9 @@ public class BannerServiceImpl implements BannerService {
         Banner banner = bannerMapper.toEntity(request);
         banner.setImageUrl(imageUrl);
         banner.setPublicId(publicId);
+        if (banner.getDisplayOrder() == null) {
+            banner.setDisplayOrder(0);
+        }
 
         banner = bannerRepository.save(banner);
         return bannerMapper.toResponse(banner);
@@ -135,10 +140,7 @@ public class BannerServiceImpl implements BannerService {
 
         MultipartFile file = request.getFile();
         if (file != null && !file.isEmpty()) {
-            // Delete old image if exists
-            if (banner.getPublicId() != null) {
-                cloudinaryService.delete(banner.getPublicId());
-            }
+            String oldPublicId = banner.getPublicId();
 
             // Upload new image
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/banners");
@@ -147,10 +149,23 @@ public class BannerServiceImpl implements BannerService {
 
             banner.setImageUrl(imageUrl);
             banner.setPublicId(publicId);
+
+            // Delete old image if exists (safely)
+            if (oldPublicId != null && !oldPublicId.isBlank()) {
+                try {
+                    cloudinaryService.delete(oldPublicId);
+                } catch (Exception e) {
+                    log.warn("Failed to delete old banner image from Cloudinary (publicId: {}): {}", oldPublicId, e.getMessage());
+                }
+            }
         }
 
         // Update other fields
         bannerMapper.updateEntity(request, banner);
+        if (banner.getDisplayOrder() == null) {
+            banner.setDisplayOrder(0);
+        }
+
         banner = bannerRepository.save(banner);
         return bannerMapper.toResponse(banner);
     }

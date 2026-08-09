@@ -19,7 +19,6 @@ public interface BannerMapper {
     @Mapping(target = "publicId", ignore = true)
     Banner toEntity(BannerRequest request);
 
-    @Mapping(target = "displayOrder", constant = "0")
     @Mapping(target = "imageUrl", expression = "java(com.tanuj.krishanaposhak.util.UrlUtils.ensureHttps(banner.getImageUrl()))")
     BannerResponse toResponse(Banner banner);
 

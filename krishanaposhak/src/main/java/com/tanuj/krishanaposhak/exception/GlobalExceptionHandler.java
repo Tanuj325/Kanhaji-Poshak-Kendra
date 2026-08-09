@@ -161,6 +161,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.PAYLOAD_TOO_LARGE, "Uploaded file is too large", request);
     }
 
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<ErrorResponse> handleFileStorage(FileStorageException ex, WebRequest request) {
+        log.error("File storage exception: {}", ex.getMessage(), ex);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
     // ---------------------------------------------------------------------
     // Database
     // ---------------------------------------------------------------------
