@@ -43,9 +43,9 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
         label: isAdminRoute ? 'Admin' : 'Home',
         href: isAdminRoute ? ROUTE_PATHS.ADMIN : ROUTE_PATHS.HOME,
         icon: isAdminRoute ? (
-          <FiGrid className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+          <FiGrid className="h-3.5 w-3.5 text-amber-600 shrink-0" />
         ) : (
-          <FiHome className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+          <FiHome className="h-3.5 w-3.5 text-amber-400 shrink-0" />
         ),
       },
       ...paths
@@ -67,7 +67,7 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
       ) {
         return {
           ...item,
-          icon: <FiHome className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />,
+          icon: <FiHome className="h-3.5 w-3.5 text-amber-400 shrink-0" />,
         };
       }
       return item;
@@ -92,7 +92,10 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
             <li key={index} className="flex items-center gap-1.5 shrink-0 min-w-0">
               {index > 0 && (
                 <FiChevronRight
-                  className="h-3.5 w-3.5 text-slate-400 dark:text-stone-400 shrink-0"
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0',
+                    isAdminRoute ? 'text-slate-400' : 'text-amber-200/80'
+                  )}
                   aria-hidden="true"
                 />
               )}
@@ -100,10 +103,10 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
                 <Link
                   to={item.href}
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition-all shadow-2xs backdrop-blur-xs min-h-[30px]',
+                    'inline-flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition-all shadow-2xs backdrop-blur-md min-h-[30px]',
                     isAdminRoute
                       ? 'border border-slate-200/90 bg-slate-100/90 text-slate-700 hover:text-slate-950 hover:bg-slate-200/90 hover:border-slate-300'
-                      : 'border border-slate-900/10 dark:border-white/15 bg-slate-900/5 dark:bg-white/10 text-slate-800 dark:text-stone-200 hover:text-slate-950 dark:hover:text-white hover:bg-slate-900/10 dark:hover:bg-white/20'
+                      : 'border border-amber-300/30 bg-slate-900/60 text-stone-100 hover:text-amber-300 hover:bg-slate-900/80 hover:border-amber-400/50'
                   )}
                 >
                   {item.icon}
@@ -112,12 +115,14 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
               ) : (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1.5 font-bold rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs backdrop-blur-xs min-h-[30px]',
+                    'inline-flex items-center gap-1.5 font-bold rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs backdrop-blur-md min-h-[30px]',
                     isLast
                       ? isAdminRoute
                         ? 'bg-amber-500/15 text-amber-950 border border-amber-500/30 shadow-2xs'
-                        : 'bg-amber-500/15 dark:bg-amber-400/20 text-amber-950 dark:text-amber-200 border border-amber-500/30 dark:border-amber-400/30 shadow-2xs'
-                      : 'text-slate-600 dark:text-stone-400'
+                        : 'bg-amber-400/25 text-amber-200 border border-amber-400/40 shadow-2xs'
+                      : isAdminRoute
+                      ? 'text-slate-600'
+                      : 'text-stone-200'
                   )}
                   aria-current={isLast ? 'page' : undefined}
                 >
