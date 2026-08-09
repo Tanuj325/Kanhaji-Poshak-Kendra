@@ -4,8 +4,20 @@ import { cn } from '@/utils/cn';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { FiChevronRight, FiHome, FiGrid } from 'react-icons/fi';
 
+const NON_EXISTENT_PATHS = new Set(['/admin/analytics', '/auth']);
+
+const CUSTOM_LABELS = {
+  '/admin/analytics/sales': 'Sales Analytics',
+  '/admin/analytics/products': 'Product Analytics',
+  '/admin/analytics/customers': 'Customer Analytics',
+  '/admin/activity-logs': 'Activity Logs',
+  '/admin/payments': 'Payment Monitoring',
+  '/admin/messages': 'Contact Messages',
+};
+
 function getLabelFromPath(path) {
   if (!path) return '';
+  if (CUSTOM_LABELS[path]) return CUSTOM_LABELS[path];
   const segments = path.split('/').filter(Boolean);
   const lastSegment = segments[segments.length - 1] || '';
   return lastSegment
@@ -17,6 +29,8 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
   const location = useLocation();
   const pathname = location.pathname;
 
+  const isAdminRoute = pathname.startsWith('/admin');
+
   let navItems = items;
   if (!navItems || navItems.length === 0) {
     const paths = pathname
@@ -24,20 +38,19 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
       .filter((p) => p)
       .map((_, index, arr) => '/' + arr.slice(0, index + 1).join('/'));
 
-    const isAdminRoute = pathname.startsWith('/admin');
-
     navItems = [
       {
         label: isAdminRoute ? 'Admin' : 'Home',
         href: isAdminRoute ? ROUTE_PATHS.ADMIN : ROUTE_PATHS.HOME,
         icon: isAdminRoute ? (
-          <FiGrid className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+          <FiGrid className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
         ) : (
-          <FiHome className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+          <FiHome className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
         ),
       },
       ...paths
         .filter((path) => !(isAdminRoute && path === '/admin'))
+        .filter((path) => !NON_EXISTENT_PATHS.has(path))
         .map((path, idx, arr) => ({
           label: getLabelFromPath(path),
           href: idx === arr.length - 1 ? null : path,
@@ -54,7 +67,7 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
       ) {
         return {
           ...item,
-          icon: <FiHome className="h-3.5 w-3.5 text-amber-600 shrink-0" />,
+          icon: <FiHome className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />,
         };
       }
       return item;
@@ -79,14 +92,19 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
             <li key={index} className="flex items-center gap-1.5 shrink-0 min-w-0">
               {index > 0 && (
                 <FiChevronRight
-                  className="h-3.5 w-3.5 text-slate-400 dark:text-stone-500 shrink-0"
+                  className="h-3.5 w-3.5 text-slate-400 dark:text-stone-400 shrink-0"
                   aria-hidden="true"
                 />
               )}
               {item.href && !isLast ? (
                 <Link
                   to={item.href}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/90 dark:border-stone-700/80 bg-slate-100/90 dark:bg-stone-800/80 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-medium text-slate-700 dark:text-stone-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/90 dark:hover:bg-stone-700 hover:border-slate-300 transition-all shadow-2xs min-h-[30px]"
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition-all shadow-2xs backdrop-blur-xs min-h-[30px]',
+                    isAdminRoute
+                      ? 'border border-slate-200/90 bg-slate-100/90 text-slate-700 hover:text-slate-950 hover:bg-slate-200/90 hover:border-slate-300'
+                      : 'border border-slate-900/10 dark:border-white/15 bg-slate-900/5 dark:bg-white/10 text-slate-800 dark:text-stone-200 hover:text-slate-950 dark:hover:text-white hover:bg-slate-900/10 dark:hover:bg-white/20'
+                  )}
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -94,10 +112,12 @@ const Breadcrumb = memo(function Breadcrumb({ items, className }) {
               ) : (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1.5 font-bold rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs min-h-[30px]',
+                    'inline-flex items-center gap-1.5 font-bold rounded-lg px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs backdrop-blur-xs min-h-[30px]',
                     isLast
-                      ? 'bg-amber-500/15 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200 border border-amber-500/30 shadow-2xs'
-                      : 'text-slate-600 dark:text-stone-400',
+                      ? isAdminRoute
+                        ? 'bg-amber-500/15 text-amber-950 border border-amber-500/30 shadow-2xs'
+                        : 'bg-amber-500/15 dark:bg-amber-400/20 text-amber-950 dark:text-amber-200 border border-amber-500/30 dark:border-amber-400/30 shadow-2xs'
+                      : 'text-slate-600 dark:text-stone-400'
                   )}
                   aria-current={isLast ? 'page' : undefined}
                 >
