@@ -195,37 +195,38 @@ export default function ProductCreatePage() {
         <title>Create Product - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-6 font-display max-w-5xl">
+      <div className="w-full max-w-5xl mx-auto space-y-5 sm:space-y-6 font-display">
         <Breadcrumb />
 
         {/* Page Header */}
-        <div className="flex items-center justify-between border-b border-slate-200/60 pb-5">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200/60 pb-4 sm:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pb-5 lg:gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => navigate('/admin/products')}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-2xs"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-2xs active:scale-95"
+              aria-label="Back to Products"
             >
               <FiArrowLeft className="h-4 w-4" />
             </button>
-            <div>
-              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
+            <div className="min-w-0">
+              <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight truncate">
                 Create Divine Attire Product
               </h1>
-              <p className="mt-0.5 text-xs text-stone-600 font-body">Add new poshak product listing, size variants, and media gallery</p>
+              <p className="mt-0.5 text-xs text-stone-600 font-body truncate">Add new poshak product listing, size variants, and media gallery</p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
           {/* Card 1: Essential Info */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-5">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 lg:p-6 shadow-xs space-y-4 sm:space-y-5">
             <h3 className="font-serif text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
               Essential Product Details
             </h3>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 min-w-0 max-w-full">
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Product Name <span className="text-rose-500">*</span>
                 </label>
@@ -240,7 +241,7 @@ export default function ProductCreatePage() {
                 {errors.name && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.name.message}</p>}
               </div>
 
-              <div>
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="slug" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   URL Slug <span className="text-rose-500">*</span>
                 </label>
@@ -255,7 +256,7 @@ export default function ProductCreatePage() {
               </div>
             </div>
 
-            <div>
+            <div className="min-w-0 max-w-full">
               <label htmlFor="shortDescription" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Short Highlight Summary <span className="text-rose-500">*</span>
               </label>
@@ -269,7 +270,7 @@ export default function ProductCreatePage() {
               {errors.shortDescription && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.shortDescription.message}</p>}
             </div>
 
-            <div>
+            <div className="min-w-0 max-w-full">
               <label htmlFor="description" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Comprehensive Description
               </label>
@@ -282,19 +283,19 @@ export default function ProductCreatePage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0 max-w-full">
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="categoryId" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Store Taxonomy Category <span className="text-rose-500">*</span>
                 </label>
                 <Select
                   id="categoryId"
                   {...register('categoryId')}
-                  className="text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
+                  className="w-full min-w-0 max-w-full text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
                 >
                   <option value="">{isLoadingCategories ? 'Loading taxonomy...' : 'Select Category'}</option>
                   {categoryOptions.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
+                    <option key={cat.id} value={cat.id} className="truncate">
                       {cat.name}
                     </option>
                   ))}
@@ -302,7 +303,7 @@ export default function ProductCreatePage() {
                 {errors.categoryId && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.categoryId.message}</p>}
               </div>
 
-              <div>
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="material" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Fabric & Material
                 </label>
@@ -311,11 +312,11 @@ export default function ProductCreatePage() {
                   type="text"
                   placeholder="e.g. Pure Chanderi Silk"
                   {...register('material')}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
               </div>
 
-              <div>
+              <div className="min-w-0 max-w-full">
                 <label htmlFor="careInstructions" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Care Guidelines
                 </label>
@@ -324,21 +325,21 @@ export default function ProductCreatePage() {
                   type="text"
                   placeholder="e.g. Dry Clean Only"
                   {...register('careInstructions')}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-slate-100">
-              <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3.5 sm:gap-6 pt-3 sm:pt-2 border-t border-slate-100 lg:flex-row lg:items-center lg:gap-6 lg:pt-2">
+              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-800 cursor-pointer min-h-[36px] sm:min-h-0 select-none">
                 <input type="checkbox" {...register('featured')} className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400" />
                 Featured Storefront Badge
               </label>
-              <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-800 cursor-pointer min-h-[36px] sm:min-h-0 select-none">
                 <input type="checkbox" {...register('newArrival')} className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400" />
                 New Arrival Tag
               </label>
-              <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+              <label className="flex items-center gap-2.5 text-xs font-bold text-slate-800 cursor-pointer min-h-[36px] sm:min-h-0 select-none">
                 <input type="checkbox" {...register('active')} className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400" />
                 Active Product Visible
               </label>
@@ -346,15 +347,15 @@ export default function ProductCreatePage() {
           </div>
 
           {/* Card 2: Variants Array */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 lg:p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-0 border-b border-slate-100 pb-3">
               <h3 className="font-serif text-base font-bold text-slate-900">
                 Size Variants & Inventory ({variantFields.length})
               </h3>
               <button
                 type="button"
                 onClick={() => appendVariant({ size: '', price: '', discountPrice: '', stock: '10', sku: '' })}
-                className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-300 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-3.5 py-2 sm:py-1.5 rounded-xl border border-amber-300 transition-colors shadow-2xs active:scale-95"
               >
                 <FiPlus className="h-3.5 w-3.5" /> Add Size Variant
               </button>
@@ -366,21 +367,21 @@ export default function ProductCreatePage() {
 
             <div className="space-y-4">
               {variantFields.map((field, index) => (
-                <div key={field.id} className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-3">
+                <div key={field.id} className="rounded-xl border border-slate-200 bg-slate-50/50 p-3.5 sm:p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-bold text-slate-700">Variant #{index + 1}</span>
                     {variantFields.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeVariant(index)}
-                        className="text-rose-500 hover:text-rose-700 text-xs font-semibold inline-flex items-center gap-1"
+                        className="text-rose-500 hover:text-rose-700 text-xs font-semibold inline-flex items-center gap-1 p-1 rounded-lg hover:bg-rose-50 transition-colors"
                       >
                         <FiTrash2 className="h-3.5 w-3.5" /> Remove
                       </button>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Size <span className="text-rose-500">*</span>
@@ -389,7 +390,7 @@ export default function ProductCreatePage() {
                         type="text"
                         placeholder="e.g. Size 4 / Medium"
                         {...register(`variants.${index}.size`)}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 focus:border-amber-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                     <div>
@@ -401,7 +402,7 @@ export default function ProductCreatePage() {
                         step="0.01"
                         placeholder="Price"
                         {...register(`variants.${index}.price`, { valueAsNumber: true })}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                     <div>
@@ -413,7 +414,7 @@ export default function ProductCreatePage() {
                         step="0.01"
                         placeholder="Discounted"
                         {...register(`variants.${index}.discountPrice`, { valueAsNumber: true })}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                     <div>
@@ -424,7 +425,7 @@ export default function ProductCreatePage() {
                         type="number"
                         placeholder="Stock"
                         {...register(`variants.${index}.stock`, { valueAsNumber: true })}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono text-slate-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                       />
                     </div>
                   </div>
@@ -434,15 +435,15 @@ export default function ProductCreatePage() {
           </div>
 
           {/* Card 3: Images Gallery Upload */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 lg:p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-0 border-b border-slate-100 pb-3">
               <h3 className="font-serif text-base font-bold text-slate-900">
                 Product Image Gallery ({imageFields.length})
               </h3>
               <button
                 type="button"
                 onClick={() => appendImage({ file: null, altText: '', displayOrder: '', thumbnail: false })}
-                className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-300 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-3.5 py-2 sm:py-1.5 rounded-xl border border-amber-300 transition-colors shadow-2xs active:scale-95"
               >
                 <FiPlus className="h-3.5 w-3.5" /> Add Gallery Image
               </button>
@@ -452,15 +453,15 @@ export default function ProductCreatePage() {
               <p className="text-rose-500 text-xs font-semibold">{errors.images.message}</p>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
               {imageFields.map((field, index) => (
-                <div key={field.id} className="rounded-xl border border-slate-200 p-4 bg-slate-50/50 space-y-3">
+                <div key={field.id} className="rounded-xl border border-slate-200 p-3.5 sm:p-4 bg-slate-50/50 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-bold text-slate-700">Image Asset #{index + 1}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="text-rose-500 hover:text-rose-700 text-xs font-semibold inline-flex items-center gap-1"
+                      className="text-rose-500 hover:text-rose-700 text-xs font-semibold inline-flex items-center gap-1 p-1 rounded-lg hover:bg-rose-50 transition-colors"
                     >
                       <FiTrash2 className="h-3.5 w-3.5" /> Remove
                     </button>
@@ -471,23 +472,23 @@ export default function ProductCreatePage() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleImageChange(index, e)}
-                      className="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-50 file:text-amber-700"
+                      className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer"
                     />
                     {variantImages[index] && (
-                      <div className="mt-3">
-                        <img src={variantImages[index]} alt={`Preview ${index + 1}`} className="h-24 w-full object-contain rounded-lg border border-slate-200" />
+                      <div className="mt-3 flex items-center justify-center bg-slate-50 rounded-lg p-2 border border-slate-100">
+                        <img src={variantImages[index]} alt={`Preview ${index + 1}`} className="h-24 max-h-36 w-full object-contain rounded-lg border border-slate-200" />
                       </div>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
                     <input
                       type="text"
                       placeholder="Alt Text"
                       {...register(`images.${index}.altText`)}
                       className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-900 focus:border-amber-500 focus:outline-none"
                     />
-                    <label className="flex items-center gap-1 text-xs text-slate-700 font-semibold cursor-pointer">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-700 font-semibold cursor-pointer min-h-[32px] sm:min-h-0 select-none">
                       <input type="checkbox" {...register(`images.${index}.thumbnail`)} className="h-3.5 w-3.5 rounded text-amber-500" />
                       Thumbnail
                     </label>
@@ -497,13 +498,14 @@ export default function ProductCreatePage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-3 sm:pt-4 border-t border-slate-200/60 lg:border-t-0 lg:pt-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => navigate('/admin/products')}
               isDisabled={isSubmitting}
+              className="w-full sm:w-auto min-h-[44px] sm:min-h-[36px] justify-center"
             >
               Cancel
             </Button>
@@ -511,9 +513,10 @@ export default function ProductCreatePage() {
               type="submit"
               variant="primary"
               size="sm"
-              isDisabled={isSubmitting || !isValid}
+              isDisabled={isSubmitting}
               isLoading={isSubmitting}
               leftIcon={<FiPlus className="h-4 w-4" />}
+              className="w-full sm:w-auto min-h-[44px] sm:min-h-[36px] justify-center"
             >
               {isSubmitting ? 'Creating Product...' : 'Create Product'}
             </Button>
