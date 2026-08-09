@@ -70,31 +70,34 @@ export default function BannerCreatePage() {
         <title>Create Hero Banner - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-6 font-display max-w-4xl">
+      <div className="w-full max-w-4xl mx-auto space-y-5 sm:space-y-6 font-display">
         <Breadcrumb />
 
         {/* Page Header */}
-        <div className="flex items-center justify-between border-b border-slate-200/60 pb-5">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between border-b border-slate-200/60 pb-4 sm:pb-5">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => navigate('/admin/banners')}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-2xs"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors shadow-2xs shrink-0 active:scale-95 cursor-pointer min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+              title="Back to Banners"
             >
               <FiArrowLeft className="h-4 w-4" />
             </button>
-            <div>
-              <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
+            <div className="min-w-0">
+              <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight truncate">
                 Create Hero Banner
               </h1>
-              <p className="mt-0.5 text-xs text-stone-600 font-body">Add a new hero carousel slide for store landing page</p>
+              <p className="mt-0.5 text-xs text-stone-600 font-body truncate">
+                Add a new hero carousel slide for store landing page
+              </p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-5">
-            <h3 className="font-serif text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
+            <h3 className="font-serif text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-2.5 sm:pb-3">
               Banner Content & Media
             </h3>
 
@@ -107,7 +110,7 @@ export default function BannerCreatePage() {
                 type="text"
                 placeholder="e.g. Divine Vrindavan Collection 2026"
                 {...register('title')}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none transition-all"
               />
               {errors.title && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.title.message}</p>}
             </div>
@@ -128,17 +131,17 @@ export default function BannerCreatePage() {
             {/* Banner Image Upload Drag/Drop Zone */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                Banner Banner Image Asset <span className="text-rose-500">*</span>
+                Banner Image Asset <span className="text-rose-500">*</span>
               </label>
-              <div className="relative rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-6 text-center hover:bg-slate-50 transition-all">
+              <div className="relative rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-4 sm:p-6 text-center hover:bg-slate-50 transition-all">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-                  <FiUploadCloud className="h-8 w-8 text-amber-500" />
+                <div className="flex flex-col items-center justify-center space-y-1.5 sm:space-y-2 pointer-events-none">
+                  <FiUploadCloud className="h-7 w-7 sm:h-8 sm:w-8 text-amber-500" />
                   <p className="text-xs font-bold text-slate-800">Click or drop banner image here</p>
                   <p className="text-[11px] text-slate-400">PNG, JPG, WEBP recommended (1920 x 800 HD)</p>
                 </div>
@@ -147,15 +150,17 @@ export default function BannerCreatePage() {
 
               {previewUrl && (
                 <div className="mt-4 rounded-xl border border-slate-200 overflow-hidden bg-slate-900 p-2">
-                  <img src={previewUrl} alt="Hero banner preview" className="w-full h-40 object-cover rounded-lg" />
+                  <div className="relative w-full aspect-[21/9] sm:aspect-[16/7] lg:aspect-none lg:h-40 rounded-lg overflow-hidden bg-slate-950 flex items-center justify-center">
+                    <img src={previewUrl} alt="Hero banner preview" className="w-full h-full object-cover rounded-lg" />
+                  </div>
                   <p className="text-center text-[10px] text-slate-400 mt-2 font-mono">Banner Carousel Realtime Preview</p>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-5">
-            <h3 className="font-serif text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
+            <h3 className="font-serif text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-2.5 sm:pb-3">
               Navigation & Sequence
             </h3>
 
@@ -169,7 +174,7 @@ export default function BannerCreatePage() {
                   type="text"
                   placeholder="e.g. /products?category=poshak"
                   {...register('redirectUrl')}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-mono text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-mono text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none transition-all"
                 />
               </div>
 
@@ -182,17 +187,17 @@ export default function BannerCreatePage() {
                   type="number"
                   placeholder="e.g. 1 (First slide)"
                   {...register('displayOrder', { setValueAs: (v) => (v === '' ? undefined : Number(v)) })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none transition-all"
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-1 sm:pt-2">
               <input
                 id="active"
                 type="checkbox"
                 {...register('active')}
-                className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400"
+                className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-400 cursor-pointer"
               />
               <label htmlFor="active" className="text-xs font-bold text-slate-900 cursor-pointer">
                 Publish Active banner in homepage carousel
@@ -200,13 +205,14 @@ export default function BannerCreatePage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2.5 sm:gap-3 pt-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => navigate('/admin/banners')}
               isDisabled={createBanner.isPending}
+              className="w-full sm:w-auto justify-center min-h-[44px] sm:min-h-0"
             >
               Cancel
             </Button>
@@ -217,6 +223,7 @@ export default function BannerCreatePage() {
               isDisabled={createBanner.isPending || !isValid}
               isLoading={createBanner.isPending}
               leftIcon={<FiPlus className="h-4 w-4" />}
+              className="w-full sm:w-auto justify-center min-h-[44px] sm:min-h-0"
             >
               {createBanner.isPending ? 'Uploading Banner...' : 'Create Banner'}
             </Button>
