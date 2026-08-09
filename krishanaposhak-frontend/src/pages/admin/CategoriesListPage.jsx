@@ -153,24 +153,22 @@ export default function CategoriesListPage() {
         </div>
 
         {/* Data Container */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+        <div className="lg:rounded-2xl lg:border lg:border-slate-200/80 lg:bg-white lg:shadow-xs lg:overflow-hidden">
           {isLoading ? (
             <>
               {/* Mobile/Tablet Loading Skeletons */}
-              <div className="lg:hidden p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5" role="status" aria-label="Loading categories">
+              <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5" role="status" aria-label="Loading categories">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-xs">
-                    <div className="flex items-center gap-3">
-                      <Skeleton variant="circle" className="h-11 w-11 shrink-0 rounded-xl" />
-                      <div className="space-y-1.5 flex-1">
-                        <Skeleton variant="text" className="w-32 h-4" />
-                        <Skeleton variant="text" className="w-20 h-3" />
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <Skeleton variant="circle" className="h-16 w-16 shrink-0 rounded-xl" />
+                      <Skeleton variant="text" className="w-20 h-6 rounded-full" />
                     </div>
+                    <Skeleton variant="text" className="w-3/4 h-5" />
                     <Skeleton variant="text" className="w-full h-3" />
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                      <Skeleton variant="text" className="w-24 h-4" />
                       <Skeleton variant="text" className="w-16 h-4" />
-                      <Skeleton variant="text" className="w-24 h-7 rounded-xl" />
                     </div>
                   </div>
                 ))}
@@ -188,7 +186,7 @@ export default function CategoriesListPage() {
               </div>
             </>
           ) : error ? (
-            <div className="p-8 text-center">
+            <div className="p-8 text-center bg-white rounded-2xl border border-slate-200/80 lg:border-0">
               <p className="text-sm text-rose-500 font-semibold mb-3">Failed to load categories</p>
               <Button variant="outline" size="sm" onClick={() => refetch()}>
                 Retry
@@ -197,43 +195,27 @@ export default function CategoriesListPage() {
           ) : categories.length > 0 ? (
             <>
               {/* Mobile & Tablet Card Grid View (<1024px) */}
-              <div className="lg:hidden p-3.5 sm:p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-                {categories.map((cat, idx) => (
+              <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+                {categories.map((cat) => (
                   <div
                     key={cat.id}
-                    className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm hover:shadow-md hover:border-amber-400/50 transition-all duration-200 space-y-3.5 flex flex-col justify-between"
+                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs space-y-3 flex flex-col justify-between"
                   >
-                    {/* Top Row: Thumbnail, Name, Slug & Status Badge */}
-                    <div className="flex items-start justify-between gap-2.5">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <img
-                          src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 80, 80) : PLACEHOLDER_IMAGE}
-                          alt={cat.name}
-                          className="h-12 w-12 rounded-xl object-cover border border-slate-200/90 shrink-0 shadow-xs"
-                        />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-[10px] font-bold text-amber-950/70 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/60 shrink-0">
-                              #{page * size + idx + 1}
-                            </span>
-                            <h3 className="font-heading text-sm font-bold text-slate-900 truncate">
-                              {cat.name}
-                            </h3>
-                          </div>
-                          <p className="font-mono text-[11px] text-slate-400 truncate mt-0.5">
-                            /{cat.slug}
-                          </p>
-                        </div>
-                      </div>
-
+                    {/* Top Row: Thumbnail Image & Status Badge */}
+                    <div className="flex items-start justify-between gap-3">
+                      <img
+                        src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 120, 120) : PLACEHOLDER_IMAGE}
+                        alt={cat.name}
+                        className="h-16 w-16 sm:h-18 sm:w-18 rounded-xl object-cover border border-slate-200/80 shrink-0"
+                      />
                       <button
                         type="button"
                         onClick={() => handleToggleStatus(cat.id)}
                         className={cn(
-                          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-all shrink-0 active:scale-95 shadow-2xs cursor-pointer',
+                          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-all shrink-0 active:scale-95 cursor-pointer',
                           cat.active
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80'
-                            : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200/80'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200'
                         )}
                         title="Click to toggle status"
                       >
@@ -242,48 +224,49 @@ export default function CategoriesListPage() {
                       </button>
                     </div>
 
-                    {/* Description Paragraph */}
-                    {cat.description && (
-                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed bg-slate-50/80 p-2.5 rounded-xl border border-slate-100/80 font-body">
-                        {cat.description}
-                      </p>
-                    )}
-
-                    {/* Taxonomy & Order Bar */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Taxonomy:</span>
-                        {cat.parentCategoryName ? (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50/80 px-2 py-0.5 text-[11px] font-bold text-amber-900 border border-amber-200/60 truncate max-w-[130px]">
-                            <FiLayers className="h-3 w-3 text-amber-600 shrink-0" />
-                            <span className="truncate">{cat.parentCategoryName}</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 border border-slate-200/60">
-                            Root Level
-                          </span>
-                        )}
-                      </div>
-
-                      <span className="font-mono text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200/60">
-                        Order #{cat.displayOrder ?? 0}
-                      </span>
+                    {/* Category Title & Supporting Description */}
+                    <div className="space-y-1 min-w-0">
+                      <h3 className="font-heading text-base font-bold text-slate-900 leading-snug line-clamp-2">
+                        {cat.name}
+                      </h3>
+                      {cat.description && (
+                        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-body">
+                          {cat.description}
+                        </p>
+                      )}
                     </div>
 
-                    {/* Bottom Actions Row */}
-                    <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                    {/* Taxonomy & Order Metadata */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 pt-1">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="font-medium text-slate-400">Taxonomy:</span>
+                        <span className="font-semibold text-slate-700 truncate max-w-[150px]">
+                          {cat.parentCategoryName || 'Root Level'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <span className="font-medium text-slate-400">Order:</span>
+                        <span className="font-mono font-bold text-slate-700">#{cat.displayOrder ?? 0}</span>
+                      </div>
+                    </div>
+
+                    {/* Actions Divider & Buttons */}
+                    <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100">
                       <Link
                         to={`/admin/categories/${cat.id}/edit`}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-300/80 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-2 text-xs font-bold text-amber-950 transition-all shadow-2xs active:scale-[0.98]"
+                        className="flex-1 min-w-0 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 px-3 py-2 text-xs font-bold text-amber-900 transition-colors shadow-2xs active:scale-[0.98] min-h-[40px]"
                       >
-                        <FiEdit2 className="h-3.5 w-3.5 text-amber-700" /> Edit
+                        <FiEdit2 className="h-4 w-4 shrink-0 text-amber-700" />
+                        <span className="truncate">Edit</span>
                       </Link>
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(cat)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/90 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-all shadow-2xs active:scale-[0.98]"
+                        className="flex-1 min-w-0 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-colors shadow-2xs active:scale-[0.98] min-h-[40px]"
                       >
-                        <FiTrash2 className="h-3.5 w-3.5 text-rose-600" /> Delete
+                        <FiTrash2 className="h-4 w-4 shrink-0 text-rose-600" />
+                        <span className="truncate">Delete</span>
                       </button>
                     </div>
                   </div>
