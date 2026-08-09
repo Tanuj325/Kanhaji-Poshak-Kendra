@@ -41,7 +41,7 @@ public class ProductController {
     })
     @GetMapping
     public ResponseEntity<PaginationResponse<ProductCardResponse>> getAllProducts(
-            @Parameter(description = "Filter by category ID") @RequestParam(required = false) Long categoryId,
+            @Parameter(description = "Filter by category ID or slug") @RequestParam(required = false) String categoryId,
             @Parameter(description = "Search term for product name") @RequestParam(required = false) String search,
             @Parameter(description = "Filter by featured flag") @RequestParam(required = false) Boolean featured,
             @Parameter(description = "Filter by active flag") @RequestParam(required = false) Boolean active,

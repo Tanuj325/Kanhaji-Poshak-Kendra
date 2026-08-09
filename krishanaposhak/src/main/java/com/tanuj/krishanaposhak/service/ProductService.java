@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    PaginationResponse<ProductCardResponse> getAllProducts(Long categoryId,
+    PaginationResponse<ProductCardResponse> getAllProducts(String categoryId,
                                                            String search,
                                                            Boolean featured,
                                                            Boolean active,

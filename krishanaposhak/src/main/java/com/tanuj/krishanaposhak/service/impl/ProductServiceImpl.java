@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginationResponse<ProductCardResponse> getAllProducts(Long categoryId,
+    public PaginationResponse<ProductCardResponse> getAllProducts(String categoryParam,
                                                                   String search,
                                                                   Boolean featured,
                                                                   Boolean active,
@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
                                                                   String sort,
                                                                   int page,
                                                                   int size) {
-        Specification<Product> spec = buildSpecification(categoryId, search, featured, active, minPrice, maxPrice, inStock);
+        Specification<Product> spec = buildSpecification(categoryParam, search, featured, active, minPrice, maxPrice, inStock);
         Pageable pageable = buildPageable(sort, page, size);
         Page<Product> productPage = productRepository.findAll(spec, pageable);
         return toPaginationResponse(productPage, productMapper.toCardResponseList(productPage.getContent()));
@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
                                                                       String sort,
                                                                       int page,
                                                                       int size) {
-        Specification<Product> spec = buildSpecification(categoryId, search, featured, active, minPrice, maxPrice, inStock);
+        Specification<Product> spec = buildSpecification(categoryId != null ? String.valueOf(categoryId) : null, search, featured, active, minPrice, maxPrice, inStock);
         Pageable pageable = buildPageable(sort, page, size);
         Page<Product> productPage = productRepository.findAll(spec, pageable);
         return toPaginationResponse(productPage, productMapper.toResponseList(productPage.getContent()));
@@ -155,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Specification<Product> buildSpecification(
-            Long categoryId,
+            String categoryParam,
             String search,
             Boolean featured,
             Boolean active,
@@ -167,13 +167,23 @@ public class ProductServiceImpl implements ProductService {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            if (categoryId != null) {
-                predicates.add(
-                        cb.equal(
-                                root.get("category").get("id"),
-                                categoryId
-                        )
-                );
+            if (StringUtils.isNotBlank(categoryParam)) {
+                try {
+                    Long categoryId = Long.parseLong(categoryParam);
+                    predicates.add(
+                            cb.equal(
+                                    root.get("category").get("id"),
+                                    categoryId
+                            )
+                    );
+                } catch (NumberFormatException e) {
+                    predicates.add(
+                            cb.equal(
+                                    cb.lower(root.get("category").get("slug")),
+                                    categoryParam.toLowerCase()
+                            )
+                    );
+                }
             }
 
             if (featured != null) {
