@@ -16,12 +16,12 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-2xl border border-amber-900/20 bg-white p-3 sm:p-3.5 shadow-lg font-display max-w-xs z-50">
-      <p className="text-xs font-bold text-amber-950 font-heading truncate">{label}</p>
-      <p className="mt-1 text-xs text-amber-900 font-mono font-bold">
+    <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-md font-display max-w-xs z-50">
+      <p className="text-[11px] font-bold text-slate-900 font-heading truncate">{label}</p>
+      <p className="mt-0.5 text-xs text-amber-800 font-mono font-bold">
         Revenue: {formatPrice(data.revenue)}
       </p>
-      <p className="text-[11px] text-stone-500 font-body">
+      <p className="text-[10px] text-slate-500 font-body">
         Orders: {data.orders ?? 0}
       </p>
     </div>
@@ -40,8 +40,8 @@ function SalesChart({ data, isLoading, error, onRetry }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-52 sm:h-64 lg:h-72 items-center justify-center w-full min-w-0" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-44 sm:h-56 lg:h-64 w-full rounded-2xl bg-amber-100/40" />
+      <div className="flex h-44 sm:h-56 lg:h-64 items-center justify-center w-full min-w-0" role="status" aria-label="Loading chart">
+        <Skeleton variant="rect" className="h-36 sm:h-48 lg:h-56 w-full rounded-xl bg-slate-100/60" />
         <span className="sr-only">Loading sales chart...</span>
       </div>
     );
@@ -53,49 +53,49 @@ function SalesChart({ data, isLoading, error, onRetry }) {
         title="Failed to load sales data"
         message={error}
         onRetry={onRetry}
-        className="h-52 sm:h-64 lg:h-72"
+        className="h-44 sm:h-56 lg:h-64"
       />
     );
   }
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-52 sm:h-64 lg:h-72 items-center justify-center text-xs text-stone-500 font-body" role="status">
+      <div className="flex h-44 sm:h-56 lg:h-64 items-center justify-center text-xs text-slate-400 font-body" role="status">
         No sales data available
       </div>
     );
   }
 
   return (
-    <div className="h-52 sm:h-64 lg:h-72 w-full min-w-0 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
+    <div className="h-44 sm:h-56 lg:h-64 w-full min-w-0 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 8, right: 8, left: -14, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+        <BarChart data={chartData} margin={{ top: 6, right: 6, left: -16, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 10, fill: '#78350f' }}
+            tick={{ fontSize: 9, fill: '#64748b' }}
             tickLine={false}
-            axisLine={{ stroke: '#f1f5f9' }}
+            axisLine={{ stroke: '#e2e8f0' }}
             interval="preserveStartEnd"
             minTickGap={10}
           />
           <YAxis
-            tick={{ fontSize: 10, fill: '#78350f' }}
+            tick={{ fontSize: 9, fill: '#64748b' }}
             tickLine={false}
-            axisLine={{ stroke: '#f1f5f9' }}
+            axisLine={{ stroke: '#e2e8f0' }}
             tickFormatter={(v) => {
               if (v >= 100000) return `₹${(v / 100000).toFixed(1)}L`;
               if (v >= 1000) return `₹${(v / 1000).toFixed(0)}k`;
               return `₹${v}`;
             }}
-            width={42}
+            width={38}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(217, 119, 6, 0.08)' }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(245, 158, 11, 0.06)' }} />
           <Bar
             dataKey="revenue"
-            fill="#78350f"
-            radius={[6, 6, 0, 0]}
-            maxBarSize={48}
+            fill="#d97706"
+            radius={[4, 4, 0, 0]}
+            maxBarSize={28}
             aria-label="Revenue bar"
           />
         </BarChart>
