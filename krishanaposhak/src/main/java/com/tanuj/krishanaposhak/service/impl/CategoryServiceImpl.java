@@ -10,6 +10,8 @@ import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.CategoryMapper;
 import com.tanuj.krishanaposhak.repository.CategoryRepository;
 import com.tanuj.krishanaposhak.service.CategoryService;
+import com.tanuj.krishanaposhak.service.CloudinaryService;
+import com.tanuj.krishanaposhak.util.UrlUtils;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -17,9 +19,11 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -86,6 +91,20 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.toEntity(request);
         category.setParentCategory(resolveParent(request.getParentCategoryId()));
 
+        MultipartFile file = request.getFile();
+        if (file != null && !file.isEmpty()) {
+            Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/categories");
+            String imageUrl = UrlUtils.ensureHttps(
+                uploadResult.containsKey("secure_url") 
+                    ? (String) uploadResult.get("secure_url") 
+                    : (String) uploadResult.get("url")
+            );
+            String publicId = (String) uploadResult.get("public_id");
+
+            category.setImageUrl(imageUrl);
+            category.setPublicId(publicId);
+        }
+
         category = categoryRepository.save(category);
         return categoryMapper.toResponse(category);
     }
@@ -104,6 +123,30 @@ public class CategoryServiceImpl implements CategoryService {
         categoryMapper.updateEntityFromRequest(request, category);
         category.setParentCategory(resolveParent(request.getParentCategoryId()));
 
+        MultipartFile file = request.getFile();
+        if (file != null && !file.isEmpty()) {
+            String oldPublicId = category.getPublicId();
+
+            Map<String, Object> uploadResult = cloudinaryService.upload(file, "krishana-poshak/categories");
+            String newImageUrl = UrlUtils.ensureHttps(
+                uploadResult.containsKey("secure_url") 
+                    ? (String) uploadResult.get("secure_url") 
+                    : (String) uploadResult.get("url")
+            );
+            String newPublicId = (String) uploadResult.get("public_id");
+
+            category.setImageUrl(newImageUrl);
+            category.setPublicId(newPublicId);
+
+            if (oldPublicId != null && !oldPublicId.isBlank()) {
+                try {
+                    cloudinaryService.delete(oldPublicId);
+                } catch (Exception e) {
+                    // Safe cleanup warning log
+                }
+            }
+        }
+
         category = categoryRepository.save(category);
         return categoryMapper.toResponse(category);
     }
@@ -111,6 +154,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Long id) {
         Category category = findCategoryOrThrow(id);
+        if (category.getPublicId() != null && !category.getPublicId().isBlank()) {
+            try {
+                cloudinaryService.delete(category.getPublicId());
+            } catch (Exception e) {
+                // Safe cleanup warning log
+            }
+        }
         categoryRepository.delete(category);
     }
 

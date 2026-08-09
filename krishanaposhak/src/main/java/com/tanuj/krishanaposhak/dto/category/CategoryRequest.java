@@ -2,6 +2,7 @@ package com.tanuj.krishanaposhak.dto.category;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CategoryRequest {
@@ -15,6 +16,8 @@ public class CategoryRequest {
     private String description;
 
     private String imageUrl;
+
+    private MultipartFile file;
 
     private Long parentCategoryId;
 

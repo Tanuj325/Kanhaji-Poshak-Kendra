@@ -16,9 +16,15 @@ const categoryService = {
   getBySlug: (slug) => api.get(API_ENDPOINTS.CATEGORIES.BY_SLUG(slug)),
 
   /** Admin endpoints */
-  create: (data) => api.post(API_ENDPOINTS.CATEGORIES.BASE, data),
+  create: (formData) =>
+    api.post(API_ENDPOINTS.CATEGORIES.BASE, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
-  update: (id, data) => api.put(API_ENDPOINTS.CATEGORIES.UPDATE(id), data),
+  update: (id, formData) =>
+    api.put(API_ENDPOINTS.CATEGORIES.UPDATE(id), formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
   delete: (id) => api.delete(API_ENDPOINTS.CATEGORIES.DELETE(id)),
 

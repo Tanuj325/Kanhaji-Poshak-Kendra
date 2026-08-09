@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,17 +7,17 @@ import { categorySchema } from '@/validators/categorySchemas';
 import { useCreateCategory, useCategoryDropdown } from '@/hooks';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import Button from '@/components/ui/Button';
-import Input from '@/components/forms/Input';
 import Textarea from '@/components/forms/Textarea';
 import Select from '@/components/forms/Select';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import { toast } from 'react-hot-toast';
-import { FiArrowLeft, FiPlus, FiImage, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiPlus, FiUploadCloud, FiTrash2 } from 'react-icons/fi';
 
 export default function CategoryCreatePage() {
   const navigate = useNavigate();
   const createMutation = useCreateCategory();
   const { data: dropdownData } = useCategoryDropdown();
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const parentOptions = useMemo(() => {
     const list = dropdownData?.data || dropdownData || [];
@@ -31,8 +31,7 @@ export default function CategoryCreatePage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
-    watch,
+    formState: { errors },
     setValue,
   } = useForm({
     resolver: zodResolver(categorySchema),
@@ -41,15 +40,12 @@ export default function CategoryCreatePage() {
       name: '',
       slug: '',
       description: '',
-      imageUrl: '',
+      file: null,
       parentCategoryId: null,
       displayOrder: '',
       active: true,
     },
   });
-
-  const active = watch('active');
-  const imageUrl = watch('imageUrl');
 
   const handleNameChange = (e) => {
     const val = e.target.value;
@@ -59,18 +55,37 @@ export default function CategoryCreatePage() {
     setValue('slug', generatedSlug, { shouldValidate: true });
   };
 
+  const handleFileChange = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue('file', file, { shouldValidate: true });
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  }, [setValue]);
+
+  const handleRemoveFile = useCallback(() => {
+    setValue('file', null, { shouldValidate: true });
+    setPreviewUrl(null);
+  }, [setValue]);
+
   const onSubmit = async (data) => {
     try {
-      const payload = {
-        name: data.name,
-        slug: data.slug,
-        description: data.description || undefined,
-        imageUrl: data.imageUrl || undefined,
-        parentCategoryId: data.parentCategoryId || null,
-        displayOrder: data.displayOrder || undefined,
-        active: data.active,
-      };
-      await createMutation.mutateAsync(payload);
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('slug', data.slug);
+      if (data.description) formData.append('description', data.description);
+      if (data.parentCategoryId !== null && data.parentCategoryId !== undefined) {
+        formData.append('parentCategoryId', String(data.parentCategoryId));
+      }
+      if (data.displayOrder !== undefined && data.displayOrder !== null && data.displayOrder !== '') {
+        formData.append('displayOrder', String(data.displayOrder));
+      }
+      formData.append('active', data.active ? 'true' : 'false');
+      if (data.file) {
+        formData.append('file', data.file);
+      }
+
+      await createMutation.mutateAsync(formData);
       toast.success('Category created successfully');
       reset();
       navigate(ROUTE_PATHS.ADMIN_CATEGORIES);
@@ -205,24 +220,43 @@ export default function CategoryCreatePage() {
                 </div>
               </div>
 
+              {/* Category Image Upload Dropzone */}
               <div>
-                <label htmlFor="imageUrl" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Image Asset URL
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  Category Image Asset
                 </label>
-                <input
-                  id="imageUrl"
-                  type="text"
-                  placeholder="https://res.cloudinary.com/..."
-                  {...register('imageUrl')}
-                  className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
-                />
-                {imageUrl && (
-                  <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 max-w-full overflow-hidden">
-                    <img src={imageUrl} alt="Category preview" className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-slate-200 shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-slate-700 truncate">Live Image Preview</p>
-                      <p className="text-[11px] text-slate-400 font-mono truncate">{imageUrl}</p>
+                <div className="relative rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-4 sm:p-6 text-center hover:bg-slate-50 transition-all">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
+                    <FiUploadCloud className="h-7 w-7 sm:h-8 sm:w-8 text-amber-500" />
+                    <p className="text-xs font-bold text-slate-800">Click or drop category image here</p>
+                    <p className="text-[11px] text-slate-400">PNG, JPG, WEBP recommended (Max 5MB)</p>
+                  </div>
+                </div>
+                {errors.file && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.file.message}</p>}
+
+                {previewUrl && (
+                  <div className="mt-3 flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 max-w-full overflow-hidden">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <img src={previewUrl} alt="Category preview" className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-slate-200 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-medium text-slate-700 truncate">Selected Image Preview</p>
+                        <p className="text-[11px] text-emerald-600 font-semibold">Ready for upload</p>
+                      </div>
                     </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors shrink-0 cursor-pointer"
+                      title="Remove image"
+                    >
+                      <FiTrash2 className="h-4 w-4" />
+                    </button>
                   </div>
                 )}
               </div>

@@ -38,6 +38,9 @@ public class Category extends BaseEntity {
     @Column(length = 500)
     private String imageUrl;
 
+    @Column(name = "public_id", length = 255)
+    private String publicId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;

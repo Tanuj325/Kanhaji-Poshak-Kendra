@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +14,7 @@ import Breadcrumb from '@/components/layout/Breadcrumb';
 import Loader from '@/components/ui/Loader';
 import ErrorState from '@/components/ui/ErrorState';
 import { toast } from 'react-hot-toast';
-import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiCheckCircle, FiUploadCloud, FiTrash2 } from 'react-icons/fi';
 
 export default function CategoryEditPage() {
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ export default function CategoryEditPage() {
   const { data: categoryData, isLoading: isCategoryLoading, error: categoryError, refetch } = useCategoryById(categoryId);
   const { data: dropdownData } = useCategoryDropdown();
   const updateMutation = useUpdateCategory();
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const category = categoryData?.data || categoryData;
 
@@ -41,8 +42,8 @@ export default function CategoryEditPage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid, isDirty },
-    watch,
+    formState: { errors },
+    setValue,
   } = useForm({
     resolver: zodResolver(categorySchema),
     mode: 'onChange',
@@ -50,14 +51,12 @@ export default function CategoryEditPage() {
       name: '',
       slug: '',
       description: '',
-      imageUrl: '',
+      file: null,
       parentCategoryId: null,
       displayOrder: '',
       active: true,
     },
   });
-
-  const imageUrl = watch('imageUrl');
 
   useEffect(() => {
     if (category) {
@@ -65,26 +64,46 @@ export default function CategoryEditPage() {
         name: category.name || '',
         slug: category.slug || '',
         description: category.description || '',
-        imageUrl: category.imageUrl || '',
+        file: null,
         parentCategoryId: category.parentCategoryId || null,
         displayOrder: category.displayOrder ?? '',
         active: category.active ?? true,
       });
+      setPreviewUrl(null);
     }
   }, [category, reset]);
 
+  const handleFileChange = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue('file', file, { shouldValidate: true });
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  }, [setValue]);
+
+  const handleRemoveFile = useCallback(() => {
+    setValue('file', null, { shouldValidate: true });
+    setPreviewUrl(null);
+  }, [setValue]);
+
   const onSubmit = useCallback(async (data) => {
     try {
-      const payload = {
-        name: data.name,
-        slug: data.slug,
-        description: data.description || undefined,
-        imageUrl: data.imageUrl || undefined,
-        parentCategoryId: data.parentCategoryId || null,
-        displayOrder: data.displayOrder || undefined,
-        active: data.active,
-      };
-      await updateMutation.mutateAsync({ id: categoryId, data: payload });
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('slug', data.slug);
+      if (data.description) formData.append('description', data.description);
+      if (data.parentCategoryId !== null && data.parentCategoryId !== undefined) {
+        formData.append('parentCategoryId', String(data.parentCategoryId));
+      }
+      if (data.displayOrder !== undefined && data.displayOrder !== null && data.displayOrder !== '') {
+        formData.append('displayOrder', String(data.displayOrder));
+      }
+      formData.append('active', data.active ? 'true' : 'false');
+      if (data.file) {
+        formData.append('file', data.file);
+      }
+
+      await updateMutation.mutateAsync({ id: categoryId, data: formData });
       toast.success('Category updated successfully');
       navigate(ROUTE_PATHS.ADMIN_CATEGORIES);
     } catch {
@@ -106,15 +125,9 @@ export default function CategoryEditPage() {
       <div className="space-y-6 font-display">
         <Breadcrumb />
         <ErrorState
-          title="Category not found"
-          message={categoryError?.response?.data?.message || `Category with ID ${categoryId} does not exist.`}
+          title="Category Not Found"
+          message="The requested category details could not be loaded."
           onRetry={refetch}
-          action={
-            <Button variant="primary" size="sm" onClick={() => navigate(ROUTE_PATHS.ADMIN_CATEGORIES)}>
-              Back to Categories
-            </Button>
-          }
-          className="py-12"
         />
       </div>
     );
@@ -123,7 +136,7 @@ export default function CategoryEditPage() {
   return (
     <>
       <Helmet>
-        <title>Edit {category.name} - Admin - Krishana Poshak</title>
+        <title>Edit {category.name || 'Category'} - Admin - Krishana Poshak</title>
       </Helmet>
 
       <div className="space-y-4 sm:space-y-6 font-display max-w-full lg:max-w-4xl">
@@ -141,9 +154,11 @@ export default function CategoryEditPage() {
             </button>
             <div className="min-w-0">
               <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight truncate">
-                Edit: {category.name}
+                Edit Category
               </h1>
-              <p className="mt-0.5 text-xs text-stone-600 font-mono">Category ID #{categoryId}</p>
+              <p className="mt-0.5 text-xs text-stone-600 font-body truncate">
+                Updating: <span className="font-semibold text-slate-900">{category.name}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -153,10 +168,10 @@ export default function CategoryEditPage() {
           {/* Main Card Container on Mobile/Tablet (<1024px); 2 Separate Cards on Desktop (>=1024px) */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs space-y-6 lg:space-y-6 lg:border-none lg:bg-transparent lg:p-0 lg:shadow-none lg:rounded-none">
             
-            {/* Section 1: Taxonomy Details */}
+            {/* Section 1: Basic Taxonomy Info */}
             <div className="space-y-4 sm:space-y-5 lg:rounded-2xl lg:border lg:border-slate-200/80 lg:bg-white lg:p-6 lg:shadow-xs">
               <h2 className="font-serif text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-2.5 sm:pb-3">
-                Taxonomy Details
+                Basic Taxonomy Info
               </h2>
 
               <div className="grid grid-cols-1 gap-3.5 sm:gap-4 md:grid-cols-2">
@@ -189,7 +204,7 @@ export default function CategoryEditPage() {
 
               <div>
                 <label htmlFor="description" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Description
+                  Category Description
                 </label>
                 <Textarea
                   id="description"
@@ -203,10 +218,10 @@ export default function CategoryEditPage() {
             {/* Mobile Divider (<1024px) */}
             <div className="border-t border-slate-100 pt-2 lg:hidden" />
 
-            {/* Section 2: Media & Hierarchy */}
+            {/* Section 2: Media & Hierarchy Config */}
             <div className="space-y-4 sm:space-y-5 lg:rounded-2xl lg:border lg:border-slate-200/80 lg:bg-white lg:p-6 lg:shadow-xs">
               <h2 className="font-serif text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-2.5 sm:pb-3">
-                Media & Hierarchy
+                Media & Hierarchy Config
               </h2>
 
               <div className="grid grid-cols-1 gap-3.5 sm:gap-4 md:grid-cols-2">
@@ -241,29 +256,57 @@ export default function CategoryEditPage() {
                 </div>
               </div>
 
+              {/* Category Image Upload / Current Preview */}
               <div>
-                <label htmlFor="imageUrl" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Image URL
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  Category Image Asset
                 </label>
-                <input
-                  id="imageUrl"
-                  type="text"
-                  {...register('imageUrl')}
-                  className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-mono text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
-                />
-                {imageUrl && (
+                <div className="relative rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-4 sm:p-6 text-center hover:bg-slate-50 transition-all">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
+                    <FiUploadCloud className="h-7 w-7 sm:h-8 sm:w-8 text-amber-500" />
+                    <p className="text-xs font-bold text-slate-800">Click or drop new category image to replace</p>
+                    <p className="text-[11px] text-slate-400">PNG, JPG, WEBP recommended (Max 5MB)</p>
+                  </div>
+                </div>
+                {errors.file && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.file.message}</p>}
+
+                {previewUrl ? (
+                  <div className="mt-3 flex items-center justify-between gap-3 p-3 rounded-xl border border-amber-200 bg-amber-50/50 max-w-full overflow-hidden">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <img src={previewUrl} alt="New Preview" className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-amber-300 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-amber-900 truncate">New Replacement Image Selected</p>
+                        <p className="text-[11px] text-amber-700">Will replace existing image upon saving</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      className="p-1.5 text-amber-700 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0 cursor-pointer"
+                      title="Cancel replacement image"
+                    >
+                      <FiTrash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : category?.imageUrl ? (
                   <div className="mt-3 flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 max-w-full overflow-hidden">
                     <img
-                      src={getOptimizedImageUrl(imageUrl, 120, 120)}
-                      alt="Preview"
+                      src={getOptimizedImageUrl(category.imageUrl, 120, 120)}
+                      alt="Current Category Image"
                       className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-slate-200 shrink-0"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-slate-700 truncate">Stored Image Preview</p>
-                      <p className="text-[11px] text-slate-400 font-mono truncate">{imageUrl}</p>
+                      <p className="text-xs font-medium text-slate-700 truncate">Current Stored Category Image</p>
+                      <p className="text-[11px] text-slate-400 truncate">Upload a new image above if you wish to update it</p>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
 
               <div className="flex items-center gap-2.5 pt-1">
