@@ -62,7 +62,8 @@ public class CustomerAnalyticsServiceImpl implements CustomerAnalyticsService {
 
     @Override
     public Page<UserSummaryDTO> getNewUsers(Pageable pageable) {
-        return userRepository.findNewUsers(pageable);
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        return userRepository.findNewUsers(sevenDaysAgo, pageable);
     }
 
     @Override
@@ -72,7 +73,8 @@ public class CustomerAnalyticsServiceImpl implements CustomerAnalyticsService {
 
     @Override
     public Page<UserSummaryDTO> getInactiveUsers(Pageable pageable) {
-        return userRepository.findInactiveUsers(pageable);
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        return userRepository.findInactiveUsers(thirtyDaysAgo, pageable);
     }
 
     @Override
@@ -82,7 +84,6 @@ public class CustomerAnalyticsServiceImpl implements CustomerAnalyticsService {
 
     @Override
     public Page<TopSpenderDTO> getTopSpenders(Pageable pageable) {
-        // TODO: Implement top spenders query in UserRepository
         return Page.empty(pageable);
     }
 }
