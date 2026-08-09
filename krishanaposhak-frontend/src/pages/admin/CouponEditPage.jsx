@@ -182,7 +182,7 @@ export default function CouponEditPage() {
                   className="text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
                 >
                   <option value="PERCENTAGE">Percentage Discount (%)</option>
-                  <option value="FIXED_AMOUNT">Fixed Amount Discount (₹ Flat)</option>
+                  <option value="FLAT">Fixed Amount Discount (₹ Flat)</option>
                 </Select>
                 {errors.discountType && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.discountType.message}</p>}
               </div>
