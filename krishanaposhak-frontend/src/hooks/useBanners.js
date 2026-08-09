@@ -39,7 +39,7 @@ export function useCreateBanner() {
 export function useUpdateBanner() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, formData }) => bannerService.update(id, formData),
+    mutationFn: ({ id, formData, data }) => bannerService.update(id, formData || data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_BANNERS] });
       toast.success('Banner updated successfully');

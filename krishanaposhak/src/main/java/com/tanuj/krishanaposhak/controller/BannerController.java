@@ -88,7 +88,7 @@ public class BannerController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Banner not found")
     })
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BannerResponse> updateBanner(@Parameter(description = "Banner ID", required = true) @PathVariable Long id, @Valid @ModelAttribute BannerRequest request) {
         BannerResponse response = bannerService.updateBanner(id, request);

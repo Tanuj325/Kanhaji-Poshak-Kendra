@@ -104,7 +104,7 @@ export default function BannerEditPage() {
         formData.append('file', data.file);
       }
 
-      await updateBanner.mutateAsync({ id: Number(id), data: formData });
+      await updateBanner.mutateAsync({ id: Number(id), formData, data: formData });
       toast.success('Hero banner updated successfully');
       navigate('/admin/banners');
     } catch (err) {
