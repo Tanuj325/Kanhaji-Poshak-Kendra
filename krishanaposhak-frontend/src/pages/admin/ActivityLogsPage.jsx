@@ -119,36 +119,44 @@ export default function ActivityLogsPage() {
           />
         ) : (
           <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 sm:space-y-6 min-w-0 overflow-hidden">
-            <div className="relative border-l-2 border-slate-200 ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-5 sm:space-y-6 min-w-0">
+            <div className="relative space-y-5 sm:space-y-6 min-w-0">
+              {/* Connecting line behind timeline icons */}
+              {activities.length > 1 && (
+                <div className="absolute left-[13px] sm:left-[15px] top-4 bottom-4 w-0.5 bg-slate-200 z-0 pointer-events-none" />
+              )}
+
               {activities.map((act, index) => (
-                <div key={act.id ? `activity-${act.id}-${index}` : `act-${index}`} className="relative group min-w-0">
-                  {/* Timeline dot cleanly centered on border-l-2 with zero text overlap */}
-                  <div className="absolute -left-[29px] sm:-left-[33px] top-0 flex h-7 w-7 items-center justify-center rounded-full bg-white border-2 border-amber-500 shadow-2xs z-10 shrink-0">
+                <div key={act.id ? `activity-${act.id}-${index}` : `act-${index}`} className="relative flex items-start gap-3 sm:gap-4 z-10 min-w-0 group">
+                  {/* Timeline icon badge flex item - 100% immune to text overlap */}
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white border-2 border-amber-500 shadow-2xs shrink-0 z-10 mt-0.5">
                     {getActivityIcon(act.type)}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 min-w-0">
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 leading-relaxed break-words">
-                        {act.description}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1 min-w-0">
-                        {act.type && (
-                          <span className="inline-block rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-amber-800 uppercase tracking-wider shrink-0">
-                            {act.type.replace(/_/g, ' ')}
-                          </span>
-                        )}
-                        {act.entityType && (
-                          <span className="text-[9px] sm:text-[10px] text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded-md truncate max-w-full">
-                            {act.entityType} #{act.entityId || ''} {act.entityName ? `(${act.entityName})` : ''}
-                          </span>
-                        )}
+                  {/* Content details flex-1 */}
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 min-w-0">
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-bold text-slate-900 leading-relaxed break-words">
+                          {act.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1 min-w-0">
+                          {act.type && (
+                            <span className="inline-block rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-amber-800 uppercase tracking-wider shrink-0">
+                              {act.type.replace(/_/g, ' ')}
+                            </span>
+                          )}
+                          {act.entityType && (
+                            <span className="text-[9px] sm:text-[10px] text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded-md truncate max-w-full">
+                              {act.entityType} #{act.entityId || ''} {act.entityName ? `(${act.entityName})` : ''}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0 self-start sm:self-auto">
-                      <FiClock className="h-3 w-3 text-slate-400 shrink-0" />
-                      <span className="truncate">{act.createdAt ? formatDate(act.createdAt, { format: 'datetime' }) : 'Just now'}</span>
+                      <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0 self-start sm:self-auto mt-0.5 sm:mt-0">
+                        <FiClock className="h-3 w-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{act.createdAt ? formatDate(act.createdAt, { format: 'datetime' }) : 'Just now'}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
