@@ -195,10 +195,10 @@ export default function SettingsAdminPage() {
                 <Link
                   key={item.title}
                   to={item.to}
-                  className="group relative flex items-center gap-2.5 p-2.5 rounded-lg border border-slate-200/80 bg-slate-50/70 hover:border-amber-400/80 hover:bg-amber-50/40 transition-all duration-150 min-w-0 cursor-pointer"
+                  className="group relative flex flex-col items-center gap-2.5 p-2.5 rounded-lg border border-slate-200/80 bg-slate-50/70 hover:border-amber-400/80 hover:bg-amber-50/40 transition-all duration-150 min-w-0 cursor-pointer"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-amber-700 border border-slate-200 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-all shrink-0 shadow-2xs">
-                    <Icon className="h-3.5 w-3.5" />
+                  <div className="flex h-5 w-5 items-center justify-center rounded-lg bg-white text-amber-700 border border-slate-200 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-all shrink-0 shadow-2xs">
+                    <Icon className="h-3 w-3" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-[11px] text-slate-900 group-hover:text-amber-950 transition-colors truncate">
