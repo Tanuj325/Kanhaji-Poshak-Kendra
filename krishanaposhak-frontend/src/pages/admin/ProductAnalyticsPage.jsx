@@ -333,9 +333,9 @@ export default function ProductAnalyticsPage() {
 
   const handleSelectProduct = useCallback((target) => {
     if (!target) return;
-    const productId = typeof target === 'object' ? (target.id || target.productId) : target;
-    if (productId) {
-      navigate(`/admin/products/${productId}/edit`);
+    const slugOrId = typeof target === 'object' ? (target.slug || target.id || target.productId) : target;
+    if (slugOrId) {
+      navigate(`/product/${slugOrId}`);
     }
   }, [navigate]);
 
