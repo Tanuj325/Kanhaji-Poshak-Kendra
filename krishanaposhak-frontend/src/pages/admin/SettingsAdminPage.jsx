@@ -110,7 +110,7 @@ export default function SettingsAdminPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 min-w-0">
             {/* Theme Toggle */}
-            <div className="flex flex-row items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80 min-w-0">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80 min-w-0">
               <div className="min-w-0">
                 <p className="text-xs font-bold text-slate-900 truncate">Appearance Mode</p>
                 <p className="text-[11px] text-slate-500 mt-0.5 truncate">Toggle light and dark color themes</p>
@@ -119,7 +119,7 @@ export default function SettingsAdminPage() {
                 variant="outline"
                 size="sm"
                 onClick={toggleTheme}
-                leftIcon={isDarkTheme ? <FiSun className="h-4 w-4 text-amber-500" /> : <FiMoon className="h-4 w-4 text-slate-600" />}
+                leftIcon={isDarkTheme ? <FiMoon className="h-4 w-4 text-amber-500" /> : <FiSun className="h-4 w-4 text-slate-600" />}
                 className="min-h-[36px] sm:min-h-0 shrink-0 cursor-pointer"
               >
                 {isDarkTheme ? 'Dark Mode' : 'Light Mode'}
