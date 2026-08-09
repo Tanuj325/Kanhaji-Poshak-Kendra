@@ -131,23 +131,29 @@ export default function UsersListPage() {
             {/* Mobile & Tablet Skeletons (< 1024px) */}
             <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4" role="status" aria-label="Loading users">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center gap-3">
+                <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4.5 space-y-3.5 shadow-xs">
+                  <div className="flex items-start gap-3.5">
                     <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <Skeleton variant="text" className="w-3/4 h-4" />
                       <Skeleton variant="text" className="w-1/2 h-3" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-1">
-                    <Skeleton variant="text" className="w-16 h-5 rounded-full" />
-                    <Skeleton variant="text" className="w-20 h-5 rounded-full" />
+                  <div className="bg-slate-50 rounded-xl p-3 grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Skeleton variant="text" className="w-10 h-2.5" />
+                      <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                    </div>
+                    <div className="space-y-1">
+                      <Skeleton variant="text" className="w-16 h-2.5" />
+                      <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                    </div>
                   </div>
                   <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <Skeleton variant="text" className="w-20 h-6 rounded-full" />
+                    <Skeleton variant="text" className="w-12 h-3" />
                     <div className="flex gap-1.5">
-                      <Skeleton variant="text" className="w-8 h-8 rounded-xl" />
-                      <Skeleton variant="text" className="w-8 h-8 rounded-xl" />
+                      <Skeleton variant="text" className="w-24 h-7 rounded-xl" />
+                      <Skeleton variant="text" className="w-7 h-7 rounded-xl" />
                     </div>
                   </div>
                 </div>
@@ -182,25 +188,40 @@ export default function UsersListPage() {
                   <div
                     key={user.id}
                     onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs hover:border-amber-300/80 hover:shadow-sm transition-all space-y-3 cursor-pointer flex flex-col justify-between"
+                    className="rounded-2xl border border-slate-200/90 bg-white p-4.5 shadow-xs hover:shadow-md hover:border-amber-400/60 transition-all duration-200 space-y-3.5 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
                   >
-                    {/* Card Top: Avatar + Name + Email + Phone */}
-                    <div className="flex items-start gap-3">
+                    {/* Top Accent Gradient Bar on Hover */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    {/* Card Top: Avatar + Name + Contact Info + Verified Badge */}
+                    <div className="flex items-start gap-3.5">
                       <Avatar
                         name={name}
                         src={user.profileImageUrl || user.avatarUrl}
                         size="md"
-                        className="shrink-0 ring-2 ring-slate-100"
+                        className="shrink-0 ring-2 ring-amber-500/20 bg-amber-50 rounded-full shadow-xs"
                       />
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-slate-900 text-sm truncate leading-snug">
-                          {name}
-                        </h3>
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="font-bold text-slate-900 text-sm tracking-tight truncate group-hover:text-amber-900 transition-colors">
+                            {name}
+                          </h3>
+                          <span
+                            className={cn(
+                              'shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border',
+                              user.emailVerified
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : 'bg-amber-50 text-amber-700 border-amber-200'
+                            )}
+                          >
+                            {user.emailVerified ? 'Verified' : 'Unverified'}
+                          </span>
+                        </div>
                         <p className="text-xs text-slate-500 font-mono truncate mt-0.5">
                           {user.email}
                         </p>
                         {user.phoneNumber && (
-                          <p className="text-[11px] text-slate-500 font-mono flex items-center gap-1 mt-1">
+                          <p className="text-[11px] text-slate-500 font-mono flex items-center gap-1.5 mt-1">
                             <FiPhone className="h-3 w-3 text-slate-400 shrink-0" />
                             <span className="truncate">{user.phoneNumber}</span>
                           </p>
@@ -208,65 +229,72 @@ export default function UsersListPage() {
                       </div>
                     </div>
 
-                    {/* Card Badges Row */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      <span
-                        className={cn(
-                          'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
-                          user.role === 'ADMIN'
-                            ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
-                            : 'bg-slate-100 text-slate-700 border border-slate-200'
-                        )}
-                      >
-                        {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600" />}
-                        {user.role || 'CUSTOMER'}
-                      </span>
+                    {/* Structured Metadata Box (Role & Status) */}
+                    <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100 grid grid-cols-2 gap-3 items-center">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Role
+                        </span>
+                        <span
+                          className={cn(
+                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                            user.role === 'ADMIN'
+                              ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
+                              : 'bg-white text-slate-700 border border-slate-200/80 shadow-2xs'
+                          )}
+                        >
+                          {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600 shrink-0" />}
+                          {user.role || 'CUSTOMER'}
+                        </span>
+                      </div>
 
-                      <span
-                        className={cn(
-                          'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border',
-                          user.emailVerified
-                            ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
-                            : 'bg-amber-500/10 text-amber-700 border-amber-500/20'
-                        )}
-                      >
-                        {user.emailVerified ? 'Verified' : 'Unverified'}
-                      </span>
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Account Status
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleStatus.mutate(user.id);
+                          }}
+                          className={cn(
+                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold transition-all border shadow-2xs',
+                            user.enabled
+                              ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/20'
+                              : 'bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/20'
+                          )}
+                        >
+                          {user.enabled ? (
+                            <FiCheckCircle className="h-3 w-3 text-emerald-600 shrink-0" />
+                          ) : (
+                            <FiXCircle className="h-3 w-3 text-rose-600 shrink-0" />
+                          )}
+                          <span>{user.enabled ? 'Active' : 'Disabled'}</span>
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Card Footer: Status Toggle & Quick Actions */}
+                    {/* Card Footer: User ID & Quick Actions */}
                     <div className="border-t border-slate-100 pt-3 flex items-center justify-between gap-2 mt-auto">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleStatus.mutate(user.id);
-                        }}
-                        className={cn(
-                          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold transition-all border',
-                          user.enabled
-                            ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/20'
-                            : 'bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/20'
-                        )}
-                      >
-                        {user.enabled ? <FiCheckCircle className="h-3.5 w-3.5" /> : <FiXCircle className="h-3.5 w-3.5" />}
-                        <span>{user.enabled ? 'Active' : 'Disabled'}</span>
-                      </button>
+                      <div className="text-[11px] text-slate-400 font-mono">
+                        ID: #{user.id}
+                      </div>
 
                       <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
                           onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                          className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors border border-slate-200/70 bg-slate-50/50"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-amber-50 hover:text-amber-900 transition-all border border-slate-200/80 shadow-2xs"
                           title="View user details"
-                          aria-label="View user details"
                         >
-                          <FiEye className="h-4 w-4" />
+                          <FiEye className="h-3.5 w-3.5" />
+                          <span>View Details</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(user)}
-                          className="rounded-xl p-2 text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors border border-rose-200/70 bg-rose-50/50"
+                          className="p-1.5 rounded-xl text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-all border border-rose-200/70 bg-rose-50/40 shadow-2xs"
                           title="Delete user"
                           aria-label="Delete user"
                         >
