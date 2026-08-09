@@ -22,6 +22,7 @@ import {
   FiUser,
 } from 'react-icons/fi';
 import { ROUTE_PATHS } from '@/routes/routePaths';
+import { siteConfig } from '@/config/siteConfig';
 import { useAuth } from '@/context/AuthContext';
 import { useCartContext } from '@/context/CartContext';
 import { useWishlist } from '@/hooks/useWishlist';
