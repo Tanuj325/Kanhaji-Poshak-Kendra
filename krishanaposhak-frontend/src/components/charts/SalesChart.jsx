@@ -16,8 +16,8 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-2xl border border-amber-900/20 bg-white p-3.5 shadow-lg font-display">
-      <p className="text-xs font-bold text-amber-950 font-heading">{label}</p>
+    <div className="rounded-2xl border border-amber-900/20 bg-white p-3 sm:p-3.5 shadow-lg font-display max-w-xs z-50">
+      <p className="text-xs font-bold text-amber-950 font-heading truncate">{label}</p>
       <p className="mt-1 text-xs text-amber-900 font-mono font-bold">
         Revenue: {formatPrice(data.revenue)}
       </p>
@@ -40,8 +40,8 @@ function SalesChart({ data, isLoading, error, onRetry }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-56 items-center justify-center sm:h-72" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-48 w-full sm:h-64 rounded-2xl bg-amber-100/40" />
+      <div className="flex h-52 sm:h-64 lg:h-72 items-center justify-center w-full min-w-0" role="status" aria-label="Loading chart">
+        <Skeleton variant="rect" className="h-44 sm:h-56 lg:h-64 w-full rounded-2xl bg-amber-100/40" />
         <span className="sr-only">Loading sales chart...</span>
       </div>
     );
@@ -53,21 +53,21 @@ function SalesChart({ data, isLoading, error, onRetry }) {
         title="Failed to load sales data"
         message={error}
         onRetry={onRetry}
-        className="h-56 sm:h-72"
+        className="h-52 sm:h-64 lg:h-72"
       />
     );
   }
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center text-xs text-stone-500 sm:h-72 font-body" role="status">
+      <div className="flex h-52 sm:h-64 lg:h-72 items-center justify-center text-xs text-stone-500 font-body" role="status">
         No sales data available
       </div>
     );
   }
 
   return (
-    <div className="h-48 sm:h-60 lg:h-72 w-full min-w-0 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
+    <div className="h-52 sm:h-64 lg:h-72 w-full min-w-0 font-display" role="img" aria-label="Sales chart showing revenue and orders over time">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 8, left: -14, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -77,13 +77,18 @@ function SalesChart({ data, isLoading, error, onRetry }) {
             tickLine={false}
             axisLine={{ stroke: '#f1f5f9' }}
             interval="preserveStartEnd"
+            minTickGap={10}
           />
           <YAxis
             tick={{ fontSize: 10, fill: '#78350f' }}
             tickLine={false}
             axisLine={{ stroke: '#f1f5f9' }}
-            tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
-            width={38}
+            tickFormatter={(v) => {
+              if (v >= 100000) return `₹${(v / 100000).toFixed(1)}L`;
+              if (v >= 1000) return `₹${(v / 1000).toFixed(0)}k`;
+              return `₹${v}`;
+            }}
+            width={42}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(217, 119, 6, 0.08)' }} />
           <Bar
