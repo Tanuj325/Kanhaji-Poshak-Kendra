@@ -257,20 +257,20 @@ export default function CategoriesListPage() {
                     </div>
 
                     {/* Actions Divider & Buttons */}
-                    <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100">
+                    <div className="flex items-center gap-2.5 pt-3 border-t border-slate-100">
                       <Link
                         to={`/admin/categories/${cat.id}/edit`}
-                        className="flex-1 min-w-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 px-3 py-2 text-xs font-bold text-amber-900 transition-colors shadow-2xs active:scale-[0.98] min-h-[40px]"
+                        className="flex-1 min-w-0 h-9 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300/80 bg-amber-50/80 hover:bg-amber-100 text-amber-900 px-3 text-xs font-bold transition-all shadow-2xs active:scale-[0.98]"
                       >
-                        <FiEdit2 className="h-3 w-3 shrink-0 text-amber-700" />
+                        <FiEdit2 className="h-3.5 w-3.5 shrink-0 text-amber-700" />
                         <span className="truncate">Edit</span>
                       </Link>
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(cat)}
-                        className="flex-1 min-w-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-colors shadow-2xs active:scale-[0.98] min-h-[40px]"
+                        className="flex-1 min-w-0 h-9 inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200/80 bg-rose-50/80 hover:bg-rose-100 text-rose-700 px-3 text-xs font-bold transition-all shadow-2xs active:scale-[0.98]"
                       >
-                        <FiTrash2 className="h-3 w-3 shrink-0 text-rose-600" />
+                        <FiTrash2 className="h-3.5 w-3.5 shrink-0 text-rose-600" />
                         <span className="truncate">Delete</span>
                       </button>
                     </div>
