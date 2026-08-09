@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -27,6 +27,41 @@ import { useCartContext } from '@/context/CartContext';
 import { useWishlist } from '@/hooks/useWishlist';
 import { isAdmin } from '@/utils/roleChecker';
 import { cn } from '@/utils/cn';
+
+// Subcomponent for Profile Avatar rendering with image fallback to initial letter
+function UserDrawerAvatar({ user }) {
+  const [imgError, setImgError] = useState(false);
+
+  const avatarSrc =
+    user?.profileImageUrl ||
+    user?.avatarUrl ||
+    user?.avatar ||
+    user?.profileImage ||
+    user?.image ||
+    user?.imageUrl ||
+    null;
+
+  const initialLetter =
+    user?.firstName?.[0]?.toUpperCase() ||
+    user?.name?.[0]?.toUpperCase() ||
+    user?.email?.[0]?.toUpperCase() ||
+    'U';
+
+  return (
+    <div className="w-[64px] h-[64px] rounded-full border-2 border-temple-gold overflow-hidden bg-stone-800 flex items-center justify-center text-amber-300 font-bold text-xl shrink-0 shadow-inner">
+      {avatarSrc && !imgError ? (
+        <img
+          src={avatarSrc}
+          alt={user?.firstName || user?.name || 'Profile'}
+          className="w-full h-full object-cover"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <span>{initialLetter}</span>
+      )}
+    </div>
+  );
+}
 
 const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
   const { user, isAuthenticated, logout } = useAuth();
@@ -103,60 +138,55 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
 
     items.push(
       {
+        id: 'my-orders',
+        label: 'My Orders',
+        path: ROUTE_PATHS.ORDERS || '/account/orders',
+        icon: FiPackage,
+        badge: ordersCount > 0 ? { type: 'neutral', count: ordersCount } : null,
+      },
+      {
         id: 'wishlist',
-        label: 'Wishlist',
+        label: 'My Wishlist',
         path: ROUTE_PATHS.WISHLIST || '/account/wishlist',
         icon: FiHeart,
-        badge: wishlistCount > 0 ? { type: 'red', count: wishlistCount } : null,
+        badge: wishlistCount > 0 ? { type: 'gold', count: wishlistCount } : null,
       },
       {
         id: 'cart',
-        label: 'Cart',
+        label: 'Shopping Cart',
         path: ROUTE_PATHS.CART || '/cart',
         icon: FiShoppingCart,
         badge: cartCount > 0 ? { type: 'gold', count: cartCount } : null,
       },
       {
-        id: 'orders',
-        label: 'Orders',
-        path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
-        icon: FiPackage,
-        badge: ordersCount > 0 ? { type: 'blue', count: ordersCount } : null,
-      },
-      {
         id: 'track-order',
         label: 'Track Order',
-        path: isAuthenticated ? (ROUTE_PATHS.ORDERS || '/account/orders') : ROUTE_PATHS.LOGIN,
+        path: ROUTE_PATHS.ORDERS || '/account/orders',
         icon: FiTruck,
       },
       {
-        id: 'offers',
-        label: 'Offers',
-        path: `${ROUTE_PATHS.SHOP || '/shop'}?discount=10`,
+        id: 'coupons',
+        label: 'Offers & Coupons',
+        path: `${ROUTE_PATHS.SHOP || '/shop'}?offers=true`,
         icon: FiTag,
-      },
-      {
-        id: 'new-arrivals',
-        label: 'New Arrivals',
-        path: `${ROUTE_PATHS.SHOP || '/shop'}?sort=createdAt,desc`,
-        icon: FiZap,
-      },
-      {
-        id: 'contact',
-        label: 'Contact',
-        path: ROUTE_PATHS.CONTACT || '/contact',
-        icon: FiPhone,
+        badge: { type: 'gold', count: 'HOT' },
       },
       {
         id: 'about',
-        label: 'About',
+        label: 'About Us',
         path: ROUTE_PATHS.ABOUT || '/about',
         icon: FiInfo,
       },
       {
-        id: 'faq',
-        label: 'FAQ',
-        path: ROUTE_PATHS.FAQ || '/faq',
+        id: 'contact',
+        label: 'Contact Support',
+        path: ROUTE_PATHS.CONTACT || '/contact',
+        icon: FiPhone,
+      },
+      {
+        id: 'faqs',
+        label: 'FAQs & Help',
+        path: ROUTE_PATHS.FAQ || '/faqs',
         icon: FiHelpCircle,
       },
       {
@@ -167,56 +197,46 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
       },
       {
         id: 'terms',
-        label: 'Terms',
+        label: 'Terms & Conditions',
         path: ROUTE_PATHS.TERMS || '/terms',
         icon: FiFileText,
       }
     );
 
     return items;
-  }, [isUserAdmin, wishlistCount, cartCount, isAuthenticated, ordersCount]);
-
-  const isRouteActive = (path) => {
-    if (path === '/') return currentPath === '/';
-    return currentPath === path || (path !== '/shop' && currentPath.startsWith(path));
-  };
+  }, [isUserAdmin, ordersCount, wishlistCount, cartCount]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation Menu"
-          className="fixed inset-0 z-[100] lg:hidden flex"
-        >
-          {/* Backdrop Overlay (Black 40% opacity, 4px Blur) */}
+        <div className="fixed inset-0 z-50 overflow-hidden font-display lg:hidden">
+          {/* Backdrop Blur Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-[4px]"
+            className="absolute inset-0 bg-black/70 backdrop-blur-xs cursor-pointer"
             aria-hidden="true"
           />
 
-          {/* Drawer Panel Container (Slide from Left, Mobile 85%/340px, Tablet 380px) */}
+          {/* Drawer Container (85% width, max 360px) */}
           <motion.div
             initial={{ x: '-100%' }}
-            animate={{ x: '0%' }}
+            animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="relative w-[85%] max-w-[340px] md:w-[380px] md:max-w-[380px] h-full bg-white flex flex-col z-10 shadow-2xl overflow-hidden rounded-none font-body"
+            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            className="relative w-[85%] max-w-[360px] h-full bg-[#0D1626] border-r border-amber-900/20 shadow-2xl flex flex-col justify-between text-stone-100"
           >
-            {/* ─── 1. TOP PROFILE SECTION (170px Height, Luxury Gradient #0F172A → #1E293B) ─── */}
-            <div className="h-[170px] shrink-0 bg-gradient-to-b from-[#0F172A] to-[#1E293B] p-4 pt-[max(1rem,env(safe-area-inset-top))] flex flex-col justify-between relative shadow-md font-body">
-              {/* Top Right Close Button */}
+            {/* ─── 1. HEADER SECTION (User Info & Close Button) ─── */}
+            <div className="p-4 sm:p-5 border-b border-amber-900/20 bg-gradient-to-b from-[#111C30] to-[#0D1626]">
+              {/* Close Button */}
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close menu drawer"
-                className="absolute right-3.5 top-3.5 text-stone-300 hover:text-white p-1 rounded-full active:scale-90 transition-transform"
+                aria-label="Close navigation drawer"
+                className="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -224,14 +244,8 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
               {/* User Logged In vs Guest View */}
               {isAuthenticated ? (
                 <div className="flex items-center gap-3.5 mt-2">
-                  {/* 64x64 Circular Profile Image */}
-                  <div className="w-[64px] h-[64px] rounded-full border-2 border-temple-gold overflow-hidden bg-stone-800 flex items-center justify-center text-amber-300 font-bold text-xl shrink-0 shadow-inner">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt={user?.firstName || 'User'} className="w-full h-full object-cover" />
-                    ) : (
-                      <span>{user?.firstName?.[0]?.toUpperCase() || 'U'}</span>
-                    )}
-                  </div>
+                  {/* 64x64 Profile Avatar Component with Fallback to First Letter */}
+                  <UserDrawerAvatar user={user} />
 
                   <div className="flex-1 min-w-0">
                     <p className="text-white font-bold text-[15px] truncate leading-tight">
@@ -290,11 +304,11 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
               )}
             </div>
 
-            {/* ─── 2. SCROLLABLE MENU ITEMS SECTION (56px Height, 14px Radius) ─── */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-1 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {/* ─── 2. SCROLLABLE NAVIGATION MENU LIST ─── */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar py-3 px-3 space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const active = isRouteActive(item.path);
+                const isActive = currentPath === item.path;
 
                 return (
                   <Link
@@ -302,69 +316,59 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                     to={item.path}
                     onClick={onClose}
                     className={cn(
-                      'relative flex h-[56px] items-center px-4 rounded-[14px] transition-all duration-200 group active:scale-[0.98]',
-                      active
-                        ? 'bg-amber-50 text-amber-950 font-bold'
-                        : 'text-stone-700 hover:bg-stone-100/70 hover:text-stone-900 font-semibold'
+                      'flex items-center justify-between px-3.5 py-3 rounded-xl transition-all font-medium text-[13.5px]',
+                      isActive
+                        ? 'bg-amber-400/15 border border-amber-400/30 text-amber-300 font-bold'
+                        : 'text-stone-300 hover:bg-white/5 hover:text-white'
                     )}
                   >
-                    {/* Active Route Left Indicator (Nike style) */}
-                    {active && (
-                      <span className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 bg-temple-gold rounded-full" />
-                    )}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Icon className={cn('w-4.5 h-4.5 shrink-0', isActive ? 'text-amber-400' : 'text-stone-400')} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
 
-                    {/* Icon (Left 22px) */}
-                    <Icon
-                      className={cn(
-                        'w-[22px] h-[22px] shrink-0 transition-colors mr-3',
-                        active ? 'text-amber-900' : 'text-stone-500 group-hover:text-stone-900'
+                    <div className="flex items-center gap-2 shrink-0">
+                      {item.badge && (
+                        <span
+                          className={cn(
+                            'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase font-mono tracking-wider',
+                            item.badge.type === 'gold'
+                              ? 'bg-amber-400 text-stone-950 shadow-2xs'
+                              : 'bg-stone-800 text-stone-300 border border-stone-700'
+                          )}
+                        >
+                          {item.badge.count}
+                        </span>
                       )}
-                    />
-
-                    {/* Label (Middle 14px) */}
-                    <span className="text-[14px] flex-1 truncate leading-none">
-                      {item.label}
-                    </span>
-
-                    {/* Badge */}
-                    {item.badge && (
-                      <span
-                        className={cn(
-                          'inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-extrabold rounded-full mr-2 shadow-2xs',
-                          item.badge.type === 'red' && 'bg-rose-600 text-white',
-                          item.badge.type === 'gold' && 'bg-temple-gold text-stone-950',
-                          item.badge.type === 'blue' && 'bg-blue-600 text-white'
-                        )}
-                      >
-                        {item.badge.count}
-                      </span>
-                    )}
-
-                    {/* Chevron (Right) */}
-                    <FiChevronRight
-                      className={cn(
-                        'w-4 h-4 text-stone-400 transition-transform group-hover:translate-x-0.5',
-                        active && 'text-amber-900'
-                      )}
-                    />
+                      <FiChevronRight className="w-4 h-4 text-stone-500 opacity-60" />
+                    </div>
                   </Link>
                 );
               })}
             </div>
 
-            {/* ─── 3. STICKY BOTTOM SECTION ─── */}
-            {isAuthenticated && (
-              <div className="sticky bottom-0 z-20 border-t border-black/[0.06] bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            {/* ─── 3. FOOTER SECTION ─── */}
+            <div className="p-4 border-t border-amber-900/20 bg-[#0A111E] space-y-3">
+              {/* Quick Contact Row */}
+              <div className="flex items-center justify-between text-[11px] text-stone-400">
+                <span>Sacred Meerut Artistry</span>
+                <a href={`tel:${siteConfig.phone}`} className="text-amber-400 font-bold hover:underline">
+                  {siteConfig.phone}
+                </a>
+              </div>
+
+              {/* Logout Button if authenticated */}
+              {isAuthenticated && (
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="w-full h-[44px] rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-all"
+                  className="w-full flex items-center justify-center gap-2 h-[38px] rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs font-bold hover:bg-rose-500/20 active:scale-98 transition-all cursor-pointer"
                 >
                   <FiLogOut className="w-4 h-4" />
-                  <span>Log Out</span>
+                  <span>Log Out of Account</span>
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </motion.div>
         </div>
       )}
