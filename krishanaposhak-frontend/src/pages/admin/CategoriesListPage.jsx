@@ -99,22 +99,22 @@ export default function CategoriesListPage() {
         <title>Categories - Admin - Krishana Poshak</title>
       </Helmet>
 
-      <div className="space-y-6 font-display">
+      <div className="w-full max-w-7xl mx-auto space-y-5 sm:space-y-6 font-display">
         <Breadcrumb />
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/60 pb-5">
-          <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-amber-950 tracking-tight">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200/60 pb-4 sm:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pb-5">
+          <div className="min-w-0">
+            <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-950 tracking-tight truncate">
               Catalog Categories ({totalElements})
             </h1>
-            <p className="mt-1 text-xs text-stone-600 font-body">
+            <p className="mt-0.5 text-xs text-stone-600 font-body truncate">
               Manage category taxonomy, subcategories, and navigation ordering
             </p>
           </div>
           <Link
             to={ROUTE_PATHS.ADMIN_CATEGORY_NEW}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-[#0B1728] shadow-lg shadow-amber-500/20 transition-all hover:shadow-xl active:scale-[0.98] shrink-0"
           >
             <FiPlus className="h-4 w-4" />
             Add Category
@@ -122,22 +122,22 @@ export default function CategoriesListPage() {
         </div>
 
         {/* Filters */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="relative flex-1 w-full">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-xs">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative flex-1 w-full min-w-0 max-w-full">
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search category by name..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
               />
             </div>
             <select
               value={activeFilter}
               onChange={(e) => handleActiveFilter(e.target.value)}
-              className="w-full sm:w-48 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none"
+              className="w-full sm:w-44 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs text-slate-700 focus:border-amber-500 focus:bg-white focus:outline-none cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="true">Active Only</option>
@@ -145,25 +145,48 @@ export default function CategoriesListPage() {
             </select>
             <button
               type="submit"
-              className="w-full sm:w-auto rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-colors"
+              className="w-full sm:w-auto rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors shadow-2xs active:scale-95"
             >
               Search
             </button>
           </form>
         </div>
 
-        {/* Data Table */}
+        {/* Data Container */}
         <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
           {isLoading ? (
-            <div className="p-6 space-y-3" role="status" aria-label="Loading categories">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center gap-4 py-2">
-                  <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
-                  <Skeleton variant="text" className="w-40" />
-                  <Skeleton variant="text" className="w-24" />
-                </div>
-              ))}
-            </div>
+            <>
+              {/* Mobile/Tablet Loading Skeletons */}
+              <div className="lg:hidden p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5" role="status" aria-label="Loading categories">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-xs">
+                    <div className="flex items-center gap-3">
+                      <Skeleton variant="circle" className="h-11 w-11 shrink-0 rounded-xl" />
+                      <div className="space-y-1.5 flex-1">
+                        <Skeleton variant="text" className="w-32 h-4" />
+                        <Skeleton variant="text" className="w-20 h-3" />
+                      </div>
+                    </div>
+                    <Skeleton variant="text" className="w-full h-3" />
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                      <Skeleton variant="text" className="w-16 h-4" />
+                      <Skeleton variant="text" className="w-24 h-7 rounded-xl" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Loading Skeletons */}
+              <div className="hidden lg:block p-6 space-y-3" role="status" aria-label="Loading categories">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center gap-4 py-2">
+                    <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
+                    <Skeleton variant="text" className="w-40" />
+                    <Skeleton variant="text" className="w-24" />
+                  </div>
+                ))}
+              </div>
+            </>
           ) : error ? (
             <div className="p-8 text-center">
               <p className="text-sm text-rose-500 font-semibold mb-3">Failed to load categories</p>
@@ -172,95 +195,185 @@ export default function CategoriesListPage() {
               </Button>
             </div>
           ) : categories.length > 0 ? (
-            <div className="overflow-x-auto custom-scrollbar">
-              <table className="w-full text-left text-xs" aria-label="Categories list">
-                <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
-                  <tr>
-                    <th scope="col" className="py-3.5 px-4 w-12 text-center">#</th>
-                    <th scope="col" className="py-3.5 px-4">Category Details</th>
-                    <th scope="col" className="py-3.5 px-4">Slug</th>
-                    <th scope="col" className="py-3.5 px-4">Parent Category</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Order</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Status</th>
-                    <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {categories.map((cat, idx) => (
-                    <tr key={cat.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3.5 px-4 text-center font-mono text-slate-400">
-                        {page * size + idx + 1}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 60, 60) : PLACEHOLDER_IMAGE}
-                            alt={cat.name}
-                            className="h-10 w-10 rounded-xl object-cover border border-slate-200 shrink-0"
-                          />
-                          <div>
-                            <p className="font-bold text-slate-900">{cat.name}</p>
-                            {cat.description && (
-                              <p className="text-[10px] text-slate-400 line-clamp-1 max-w-[200px]">
-                                {cat.description}
-                              </p>
-                            )}
+            <>
+              {/* Mobile & Tablet Card Grid View (<1024px) */}
+              <div className="lg:hidden p-3.5 sm:p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+                {categories.map((cat, idx) => (
+                  <div
+                    key={cat.id}
+                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs hover:shadow-sm hover:border-amber-300/60 transition-all space-y-3.5 flex flex-col justify-between"
+                  >
+                    {/* Top Row: Thumbnail, Name, Slug & Status */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 min-w-0">
+                        <img
+                          src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 60, 60) : PLACEHOLDER_IMAGE}
+                          alt={cat.name}
+                          className="h-12 w-12 rounded-xl object-cover border border-slate-200/80 shrink-0 shadow-2xs"
+                        />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[11px] font-bold text-slate-400 shrink-0">
+                              #{page * size + idx + 1}
+                            </span>
+                            <h3 className="font-bold text-slate-900 text-sm truncate">
+                              {cat.name}
+                            </h3>
                           </div>
+                          <p className="font-mono text-[11px] text-slate-500 truncate mt-0.5">
+                            {cat.slug}
+                          </p>
                         </div>
-                      </td>
-                      <td className="py-3.5 px-4 font-mono text-slate-500">
-                        {cat.slug}
-                      </td>
-                      <td className="py-3.5 px-4 font-medium text-slate-600">
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(cat.id)}
+                        className={cn(
+                          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold transition-all shrink-0 active:scale-95',
+                          cat.active
+                            ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                            : 'bg-slate-200/80 text-slate-600 hover:bg-slate-300'
+                        )}
+                      >
+                        {cat.active ? 'Active' : 'Inactive'}
+                      </button>
+                    </div>
+
+                    {/* Middle Info: Description & Parent Category */}
+                    <div className="space-y-2 text-xs">
+                      {cat.description && (
+                        <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed">
+                          {cat.description}
+                        </p>
+                      )}
+
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                         {cat.parentCategoryName ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-700">
-                            <FiLayers className="h-3 w-3 text-amber-600" /> {cat.parentCategoryName}
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-800 border border-amber-200/60">
+                            <FiLayers className="h-3 w-3 text-amber-600 shrink-0" />
+                            <span className="truncate max-w-[140px]">{cat.parentCategoryName}</span>
                           </span>
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-[11px] text-slate-400 font-medium">Root Category</span>
                         )}
-                      </td>
-                      <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-700">
-                        {cat.displayOrder ?? 0}
-                      </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleStatus(cat.id)}
-                          className={cn(
-                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
-                            cat.active
-                              ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
-                              : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+
+                        <span className="font-mono text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                          Order: {cat.displayOrder ?? 0}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row: Actions */}
+                    <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                      <Link
+                        to={`/admin/categories/${cat.id}/edit`}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-amber-300/80 bg-amber-50/80 hover:bg-amber-100/80 px-3 py-2 text-xs font-bold text-amber-800 transition-colors shadow-2xs active:scale-[0.98]"
+                      >
+                        <FiEdit2 className="h-3.5 w-3.5" /> Edit
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(cat)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/80 hover:bg-rose-100/80 px-3 py-2 text-xs font-bold text-rose-700 transition-colors shadow-2xs active:scale-[0.98]"
+                      >
+                        <FiTrash2 className="h-3.5 w-3.5" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View (>=1024px) */}
+              <div className="hidden lg:block overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left text-xs" aria-label="Categories list">
+                  <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+                    <tr>
+                      <th scope="col" className="py-3.5 px-4 w-12 text-center">#</th>
+                      <th scope="col" className="py-3.5 px-4">Category Details</th>
+                      <th scope="col" className="py-3.5 px-4">Slug</th>
+                      <th scope="col" className="py-3.5 px-4">Parent Category</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Order</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Status</th>
+                      <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {categories.map((cat, idx) => (
+                      <tr key={cat.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-3.5 px-4 text-center font-mono text-slate-400">
+                          {page * size + idx + 1}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={cat.imageUrl ? getOptimizedImageUrl(cat.imageUrl, 60, 60) : PLACEHOLDER_IMAGE}
+                              alt={cat.name}
+                              className="h-10 w-10 rounded-xl object-cover border border-slate-200 shrink-0"
+                            />
+                            <div>
+                              <p className="font-bold text-slate-900">{cat.name}</p>
+                              {cat.description && (
+                                <p className="text-[10px] text-slate-400 line-clamp-1 max-w-[200px]">
+                                  {cat.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-slate-500">
+                          {cat.slug}
+                        </td>
+                        <td className="py-3.5 px-4 font-medium text-slate-600">
+                          {cat.parentCategoryName ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-700">
+                              <FiLayers className="h-3 w-3 text-amber-600" /> {cat.parentCategoryName}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400">—</span>
                           )}
-                        >
-                          {cat.active ? 'Active' : 'Inactive'}
-                        </button>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Link
-                            to={`/admin/categories/${cat.id}/edit`}
-                            className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors"
-                            title="Edit Category"
-                          >
-                            <FiEdit2 className="h-4 w-4" />
-                          </Link>
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-700">
+                          {cat.displayOrder ?? 0}
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
                           <button
                             type="button"
-                            onClick={() => setDeleteTarget(cat)}
-                            className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
-                            title="Delete Category"
+                            onClick={() => handleToggleStatus(cat.id)}
+                            className={cn(
+                              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
+                              cat.active
+                                ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                                : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+                            )}
                           >
-                            <FiTrash2 className="h-4 w-4" />
+                            {cat.active ? 'Active' : 'Inactive'}
                           </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Link
+                              to={`/admin/categories/${cat.id}/edit`}
+                              className="rounded-lg p-1.5 text-amber-600 hover:bg-amber-50 transition-colors"
+                              title="Edit Category"
+                            >
+                              <FiEdit2 className="h-4 w-4" />
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(cat)}
+                              className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
+                              title="Delete Category"
+                            >
+                              <FiTrash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           ) : (
             <div className="p-12 text-center text-slate-400">
               <FiLayers className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
@@ -270,8 +383,8 @@ export default function CategoriesListPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-slate-200/80 px-4 py-3 bg-slate-50/50">
-              <span className="text-xs text-slate-500">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200/80 px-4 py-3 bg-slate-50/50">
+              <span className="text-xs text-slate-500 text-center sm:text-left">
                 Showing {categories.length} of {totalElements} categories
               </span>
               <Pagination
