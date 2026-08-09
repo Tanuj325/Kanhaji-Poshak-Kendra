@@ -9,13 +9,15 @@ export const categorySchema = z.object({
     .string()
     .min(1, 'Slug is required')
     .max(100, 'Slug must be 100 characters or less'),
-  description: z.string().optional().or(z.literal('')),
-  imageUrl: z.string().optional().or(z.literal('')),
-  parentCategoryId: z.coerce.number().int().positive().optional().nullable(),
-  displayOrder: z.coerce
-    .number({ invalid_type_error: 'Display order must be a number' })
-    .int('Display order must be a whole number')
-    .min(0, 'Display order cannot be negative')
-    .optional(),
+  description: z.string().optional().or(z.literal('')).nullable(),
+  imageUrl: z.string().optional().or(z.literal('')).nullable(),
+  parentCategoryId: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+    z.number().int().positive().nullable().optional()
+  ),
+  displayOrder: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+    z.number().int('Display order must be a whole number').min(0, 'Display order cannot be negative').optional().nullable()
+  ),
   active: z.boolean().optional().default(true),
 });

@@ -296,7 +296,7 @@ export default function CategoryEditPage() {
               type="submit"
               variant="primary"
               size="sm"
-              isDisabled={updateMutation.isPending || !isValid || !isDirty}
+              isDisabled={updateMutation.isPending}
               isLoading={updateMutation.isPending}
               leftIcon={<FiCheckCircle className="h-4 w-4" />}
               className="w-full sm:w-auto h-10 sm:h-9 px-6 text-xs font-bold justify-center"

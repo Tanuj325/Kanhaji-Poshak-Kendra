@@ -48,7 +48,7 @@ const Textarea = forwardRef(function Textarea(
         id={inputId}
         name={name}
         placeholder={placeholder}
-        value={value}
+        {...(value !== undefined ? { value } : {})}
         onChange={onChange}
         disabled={isDisabled}
         readOnly={isReadOnly}
