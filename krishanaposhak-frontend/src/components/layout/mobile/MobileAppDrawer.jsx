@@ -229,13 +229,13 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
             className="relative w-[82%] max-w-[310px] h-full bg-white border-r border-amber-900/10 shadow-xl flex flex-col justify-between text-stone-900"
           >
             {/* ─── 1. HEADER SECTION (User Info & Close Button) ─── */}
-            <div className="p-3.5 border-b border-amber-900/10 bg-gradient-to-b from-amber-50/70 to-white relative">
+            <div className="p-2.5 border-b border-amber-900/10 bg-gradient-to-b from-amber-50/70 to-white relative">
               {/* Close Button */}
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation drawer"
-                className="absolute top-3 right-3 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 active:scale-95 transition-all cursor-pointer"
+                className="absolute top-1 right-1 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 active:scale-95 transition-all cursor-pointer"
               >
                 <FiX className="w-4 h-4" />
               </button>
@@ -255,7 +255,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                       <Link
                         to={ROUTE_PATHS.ACCOUNT_DASHBOARD || '/account/dashboard'}
                         onClick={onClose}
-                        className="inline-flex items-center justify-center h-[26px] px-2.5 bg-amber-500 hover:bg-amber-600 text-stone-950 text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform"
+                        className="inline-flex items-center justify-center h-[26px] px-2 py-1.5 bg-amber-500 hover:bg-amber-600 text-stone-950 text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform"
                       >
                         My Account
                       </Link>
@@ -263,7 +263,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                         <Link
                           to={ROUTE_PATHS.ADMIN || '/admin'}
                           onClick={onClose}
-                          className="inline-flex items-center justify-center h-[26px] px-2 bg-rose-600 hover:bg-rose-700 text-white text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform gap-1"
+                          className="inline-flex items-center justify-center h-[26px] px-2 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform gap-1"
                         >
                           <FiShield className="w-3 h-3" />
                           <span>Admin</span>
@@ -282,18 +282,18 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
                   <div className="flex-1 min-w-0">
                     <p className="text-amber-950 font-bold text-[13.5px]">Welcome, Devotee</p>
                     <p className="text-stone-500 text-[10.5px] truncate mt-0.5">Explore sacred poshak &amp; adornments</p>
-                    <div className="flex items-center gap-1.5 mt-1.5">
+                    <div className="flex flex-col md:flex-row items-center gap-1.5 mt-1.5">
                       <Link
                         to={ROUTE_PATHS.LOGIN || '/login'}
                         onClick={onClose}
-                        className="flex-1 inline-flex items-center justify-center h-[26px] bg-amber-500 text-stone-950 text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform"
+                        className="flex-1 inline-flex p-2 items-center justify-center h-[26px] bg-amber-500 text-stone-950 text-[10.5px] font-extrabold rounded-md shadow-2xs active:scale-95 transition-transform"
                       >
                         Login
                       </Link>
                       <Link
                         to={ROUTE_PATHS.REGISTER || '/register'}
                         onClick={onClose}
-                        className="flex-1 inline-flex items-center justify-center h-[26px] border border-amber-500/40 text-amber-900 text-[10.5px] font-bold rounded-md active:scale-95 transition-transform"
+                        className="flex-1 inline-flex p-2 items-center justify-center h-[26px] border border-amber-500/40 text-amber-900 text-[10.5px] font-bold rounded-md active:scale-95 transition-transform"
                       >
                         Register
                       </Link>
