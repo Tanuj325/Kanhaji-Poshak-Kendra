@@ -19,6 +19,7 @@ import {
   FiShield,
   FiUser,
   FiUsers,
+  FiPhone,
 } from 'react-icons/fi';
 
 export default function UsersListPage() {
@@ -124,133 +125,285 @@ export default function UsersListPage() {
           </div>
         </div>
 
-        {/* Data Table */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-          {isLoading ? (
-            <div className="p-6 space-y-3" role="status" aria-label="Loading users">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex items-center gap-4 py-2">
-                  <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
-                  <Skeleton variant="text" className="w-48" />
-                  <Skeleton variant="text" className="w-24" />
+        {/* Data Container */}
+        {isLoading ? (
+          <>
+            {/* Mobile & Tablet Skeletons (< 1024px) */}
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4" role="status" aria-label="Loading users">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-xs">
+                  <div className="flex items-center gap-3">
+                    <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                      <Skeleton variant="text" className="w-3/4 h-4" />
+                      <Skeleton variant="text" className="w-1/2 h-3" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                    <Skeleton variant="text" className="w-20 h-5 rounded-full" />
+                  </div>
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                    <Skeleton variant="text" className="w-20 h-6 rounded-full" />
+                    <div className="flex gap-1.5">
+                      <Skeleton variant="text" className="w-8 h-8 rounded-xl" />
+                      <Skeleton variant="text" className="w-8 h-8 rounded-xl" />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-          ) : isError ? (
-            <div className="p-8 text-center text-rose-500 font-semibold">
-              Error loading users: {getErrorMessage(error)}
-            </div>
-          ) : filteredUsers.length > 0 ? (
-            <div className="overflow-x-auto custom-scrollbar">
-              <table className="w-full text-left text-xs" aria-label="Users list">
-                <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
-                  <tr>
-                    <th scope="col" className="py-3.5 px-4">Devotee User</th>
-                    <th scope="col" className="py-3.5 px-4">Contact</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Role</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Verified</th>
-                    <th scope="col" className="py-3.5 px-4 text-center">Status</th>
-                    <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredUsers.map((user) => {
-                    const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'User';
 
-                    return (
-                      <tr
-                        key={user.id}
-                        onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                        className="hover:bg-slate-50 cursor-pointer transition-colors"
-                      >
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-3">
-                            <Avatar
-                              name={name}
-                              src={user.profileImageUrl || user.avatarUrl}
-                              size="sm"
-                            />
-                            <div>
-                              <p className="font-bold text-slate-900">{name}</p>
-                              <p className="text-[10px] text-slate-400 font-mono">{user.email}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-500 font-mono">
-                          {user.phoneNumber || '—'}
-                        </td>
-                        <td className="py-3.5 px-4 text-center">
-                          <span
-                            className={cn(
-                              'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
-                              user.role === 'ADMIN'
-                                ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
-                                : 'bg-slate-100 text-slate-700 border border-slate-200'
-                            )}
-                          >
-                            {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600" />}
-                            {user.role || 'CUSTOMER'}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-center">
-                          <span
-                            className={cn(
-                              'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold',
-                              user.emailVerified ? 'bg-emerald-500/10 text-emerald-700' : 'bg-amber-500/10 text-amber-700'
-                            )}
-                          >
-                            {user.emailVerified ? 'Verified' : 'Unverified'}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            type="button"
-                            onClick={() => toggleStatus.mutate(user.id)}
-                            className={cn(
-                              'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
-                              user.enabled
-                                ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
-                                : 'bg-rose-500/10 text-rose-700 hover:bg-rose-500/20'
-                            )}
-                          >
-                            {user.enabled ? <FiCheckCircle className="h-3 w-3" /> : <FiXCircle className="h-3 w-3" />}
-                            <span>{user.enabled ? 'Active' : 'Disabled'}</span>
-                          </button>
-                        </td>
-                        <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-1">
-                            <button
-                              type="button"
-                              onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                              className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-                              title="View user details"
-                            >
-                              <FiEye className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setDeleteTarget(user)}
-                              className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
-                              title="Delete user"
-                            >
-                              <FiTrash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            {/* Desktop Loading Skeletons (>= 1024px) */}
+            <div className="hidden lg:block rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+              <div className="p-6 space-y-3" role="status" aria-label="Loading users">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex items-center gap-4 py-2">
+                    <Skeleton variant="circle" className="h-10 w-10 shrink-0" />
+                    <Skeleton variant="text" className="w-48" />
+                    <Skeleton variant="text" className="w-24" />
+                  </div>
+                ))}
+              </div>
             </div>
-          ) : (
-            <div className="p-12 text-center text-slate-400">
+          </>
+        ) : isError ? (
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center text-rose-500 font-semibold shadow-xs">
+            Error loading users: {getErrorMessage(error)}
+          </div>
+        ) : filteredUsers.length > 0 ? (
+          <>
+            {/* Mobile & Tablet User Cards View (< 1024px) */}
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+              {filteredUsers.map((user) => {
+                const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'User';
+
+                return (
+                  <div
+                    key={user.id}
+                    onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                    className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs hover:border-amber-300/80 hover:shadow-sm transition-all space-y-3 cursor-pointer flex flex-col justify-between"
+                  >
+                    {/* Card Top: Avatar + Name + Email + Phone */}
+                    <div className="flex items-start gap-3">
+                      <Avatar
+                        name={name}
+                        src={user.profileImageUrl || user.avatarUrl}
+                        size="md"
+                        className="shrink-0 ring-2 ring-slate-100"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-slate-900 text-sm truncate leading-snug">
+                          {name}
+                        </h3>
+                        <p className="text-xs text-slate-500 font-mono truncate mt-0.5">
+                          {user.email}
+                        </p>
+                        {user.phoneNumber && (
+                          <p className="text-[11px] text-slate-500 font-mono flex items-center gap-1 mt-1">
+                            <FiPhone className="h-3 w-3 text-slate-400 shrink-0" />
+                            <span className="truncate">{user.phoneNumber}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Card Badges Row */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      <span
+                        className={cn(
+                          'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                          user.role === 'ADMIN'
+                            ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
+                            : 'bg-slate-100 text-slate-700 border border-slate-200'
+                        )}
+                      >
+                        {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600" />}
+                        {user.role || 'CUSTOMER'}
+                      </span>
+
+                      <span
+                        className={cn(
+                          'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border',
+                          user.emailVerified
+                            ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
+                            : 'bg-amber-500/10 text-amber-700 border-amber-500/20'
+                        )}
+                      >
+                        {user.emailVerified ? 'Verified' : 'Unverified'}
+                      </span>
+                    </div>
+
+                    {/* Card Footer: Status Toggle & Quick Actions */}
+                    <div className="border-t border-slate-100 pt-3 flex items-center justify-between gap-2 mt-auto">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleStatus.mutate(user.id);
+                        }}
+                        className={cn(
+                          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold transition-all border',
+                          user.enabled
+                            ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/20'
+                            : 'bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/20'
+                        )}
+                      >
+                        {user.enabled ? <FiCheckCircle className="h-3.5 w-3.5" /> : <FiXCircle className="h-3.5 w-3.5" />}
+                        <span>{user.enabled ? 'Active' : 'Disabled'}</span>
+                      </button>
+
+                      <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                          className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors border border-slate-200/70 bg-slate-50/50"
+                          title="View user details"
+                          aria-label="View user details"
+                        >
+                          <FiEye className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteTarget(user)}
+                          className="rounded-xl p-2 text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors border border-rose-200/70 bg-rose-50/50"
+                          title="Delete user"
+                          aria-label="Delete user"
+                        >
+                          <FiTrash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View (>= 1024px) - EXACT UNCHANGED */}
+            <div className="hidden lg:block rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left text-xs" aria-label="Users list">
+                  <thead className="bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+                    <tr>
+                      <th scope="col" className="py-3.5 px-4">Devotee User</th>
+                      <th scope="col" className="py-3.5 px-4">Contact</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Role</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Verified</th>
+                      <th scope="col" className="py-3.5 px-4 text-center">Status</th>
+                      <th scope="col" className="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredUsers.map((user) => {
+                      const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'User';
+
+                      return (
+                        <tr
+                          key={user.id}
+                          onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                          className="hover:bg-slate-50 cursor-pointer transition-colors"
+                        >
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-3">
+                              <Avatar
+                                name={name}
+                                src={user.profileImageUrl || user.avatarUrl}
+                                size="sm"
+                              />
+                              <div>
+                                <p className="font-bold text-slate-900">{name}</p>
+                                <p className="text-[10px] text-slate-400 font-mono">{user.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-500 font-mono">
+                            {user.phoneNumber || '—'}
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            <span
+                              className={cn(
+                                'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                                user.role === 'ADMIN'
+                                  ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
+                                  : 'bg-slate-100 text-slate-700 border border-slate-200'
+                              )}
+                            >
+                              {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600" />}
+                              {user.role || 'CUSTOMER'}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            <span
+                              className={cn(
+                                'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold',
+                                user.emailVerified ? 'bg-emerald-500/10 text-emerald-700' : 'bg-amber-500/10 text-amber-700'
+                              )}
+                            >
+                              {user.emailVerified ? 'Verified' : 'Unverified'}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              type="button"
+                              onClick={() => toggleStatus.mutate(user.id)}
+                              className={cn(
+                                'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all',
+                                user.enabled
+                                  ? 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
+                                  : 'bg-rose-500/10 text-rose-700 hover:bg-rose-500/20'
+                              )}
+                            >
+                              {user.enabled ? <FiCheckCircle className="h-3 w-3" /> : <FiXCircle className="h-3 w-3" />}
+                              <span>{user.enabled ? 'Active' : 'Disabled'}</span>
+                            </button>
+                          </td>
+                          <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                type="button"
+                                onClick={() => navigate(buildPath.adminUserDetail(user.id))}
+                                className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                                title="View user details"
+                              >
+                                <FiEye className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDeleteTarget(user)}
+                                className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 transition-colors"
+                                title="Delete user"
+                              >
+                                <FiTrash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Mobile/Tablet Empty State */}
+            <div className="lg:hidden rounded-2xl border border-slate-200/80 bg-white p-8 text-center text-slate-400 shadow-xs">
               <FiUsers className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
               <p className="text-sm font-bold text-slate-700">No users found</p>
               <p className="text-xs text-slate-400 mt-1">Try clearing search filters</p>
             </div>
-          )}
-        </div>
+
+            {/* Desktop Empty State */}
+            <div className="hidden lg:block rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+              <div className="p-12 text-center text-slate-400">
+                <FiUsers className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
+                <p className="text-sm font-bold text-slate-700">No users found</p>
+                <p className="text-xs text-slate-400 mt-1">Try clearing search filters</p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Delete User Modal */}
