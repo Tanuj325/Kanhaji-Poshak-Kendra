@@ -229,7 +229,7 @@ const MobileAppDrawer = memo(function MobileAppDrawer({ isOpen, onClose }) {
             className="relative w-[82%] max-w-[310px] h-full bg-white border-r border-amber-900/10 shadow-xl flex flex-col justify-between text-stone-900"
           >
             {/* ─── 1. HEADER SECTION (User Info & Close Button) ─── */}
-            <div className="p-2.5 border-b border-amber-900/10 bg-gradient-to-b from-amber-50/70 to-white relative">
+            <div className="p-1.5 border-b border-amber-900/10 bg-gradient-to-b from-amber-50/70 to-white relative">
               {/* Close Button */}
               <button
                 type="button"
