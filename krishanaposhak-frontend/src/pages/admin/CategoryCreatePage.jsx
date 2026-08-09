@@ -97,7 +97,7 @@ export default function CategoryCreatePage() {
   return (
     <>
       <Helmet>
-        <title>Add Category - Admin - Krishana Poshak</title>
+        <title>Add Category - Admin - Kanhaji Poshak</title>
       </Helmet>
 
       <div className="space-y-4 sm:space-y-6 font-display max-w-full lg:max-w-4xl">
@@ -126,7 +126,7 @@ export default function CategoryCreatePage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
           {/* Main Card Container on Mobile/Tablet (<1024px); 2 Separate Cards on Desktop (>=1024px) */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs space-y-6 lg:space-y-6 lg:border-none lg:bg-transparent lg:p-0 lg:shadow-none lg:rounded-none">
-            
+
             {/* Section 1: Basic Taxonomy Info */}
             <div className="space-y-4 sm:space-y-5 lg:rounded-2xl lg:border lg:border-slate-200/80 lg:bg-white lg:p-6 lg:shadow-xs">
               <h2 className="font-serif text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-2.5 sm:pb-3">
