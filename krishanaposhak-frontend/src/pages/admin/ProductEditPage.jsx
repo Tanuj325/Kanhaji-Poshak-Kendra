@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import {
   productImageService,
   categoryService,
 } from '@/services';
+import { useCategoryDropdown, useCategories } from '@/hooks';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -71,19 +72,21 @@ export default function ProductEditPage() {
   const [variantImages, setVariantImages] = useState([]);
   const [originalVariants, setOriginalVariants] = useState([]);
   const [originalImages, setOriginalImages] = useState([]);
-  const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await categoryService.getAll();
-        setCategories(res.data || []);
-      } catch (error) {
-        console.error('Failed to fetch categories:', error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const { data: dropdownData } = useCategoryDropdown();
+  const { data: allCategoriesData } = useCategories({ size: 100 });
+
+  const categories = useMemo(() => {
+    const dropdownList = Array.isArray(dropdownData)
+      ? dropdownData
+      : dropdownData?.data || dropdownData?.content || [];
+    if (dropdownList.length > 0) return dropdownList;
+
+    const allList = Array.isArray(allCategoriesData)
+      ? allCategoriesData
+      : allCategoriesData?.content || allCategoriesData?.data || [];
+    return allList;
+  }, [dropdownData, allCategoriesData]);
 
   const {
     data: productData,
@@ -316,7 +319,7 @@ export default function ProductEditPage() {
   return (
     <>
       <Helmet>
-        <title>Edit {productData.name} - Admin - Krishana Poshak</title>
+        <title>Edit {productData.name} - Admin - Kanhaji Poshak</title>
       </Helmet>
 
       <div className="w-full max-w-5xl mx-auto space-y-5 sm:space-y-6 font-display">
@@ -411,12 +414,14 @@ export default function ProductEditPage() {
                   {...register('categoryId')}
                   className="text-xs bg-slate-50 border-slate-200 font-semibold text-slate-800"
                 >
+                  <option value="">Select a Category</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>
                   ))}
                 </Select>
+                {errors.categoryId && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.categoryId.message}</p>}
               </div>
 
               <div>
@@ -572,7 +577,7 @@ export default function ProductEditPage() {
               type="submit"
               variant="primary"
               size="sm"
-              isDisabled={isSubmitting || !isValid || !isDirty}
+              isDisabled={isSubmitting}
               isLoading={isSubmitting}
               leftIcon={<FiCheckCircle className="h-4 w-4" />}
               className="w-full sm:w-auto min-h-[44px] sm:min-h-[36px] justify-center"
