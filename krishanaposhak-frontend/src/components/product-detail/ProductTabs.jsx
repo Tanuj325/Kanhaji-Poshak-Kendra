@@ -58,7 +58,7 @@ export default function ProductTabs({ product }) {
           <div className="p-4 sm:p-5 rounded-xl bg-amber-50/50 border border-amber-900/10 space-y-1.5">
             <div className="flex items-center gap-2 text-amber-950 font-bold font-display">
               <FiTruck className="h-4 w-4 text-amber-800" />
-              <span>Express Delivery</span>
+              <span>Standard Delivery</span>
             </div>
             <p className="text-stone-600">Dispatched within 24-48 hours. Delivered nationwide in 3-5 business days with live tracking.</p>
           </div>

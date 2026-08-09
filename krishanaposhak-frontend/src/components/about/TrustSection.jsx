@@ -4,7 +4,7 @@ import { FiShield, FiTruck, FiRefreshCw, FiAward } from 'react-icons/fi';
 const TrustSection = memo(function TrustSection() {
   const items = [
     { icon: FiAward, title: 'Authentic Meerut Artisans', desc: 'Directly from heritage handcraft workshops' },
-    { icon: FiTruck, title: 'Express Delivery Across India', desc: 'Free delivery on orders above ₹8,000' },
+    { icon: FiTruck, title: 'Standard Delivery Across India', desc: 'Free delivery on orders above ₹8,000' },
     { icon: FiShield, title: 'Safe & Encrypted Razorpay', desc: 'UPI, Cards & Netbanking SSL Secured' },
     { icon: FiRefreshCw, title: '7-Day Easy Size Exchange', desc: 'Hassle-free size adjustment guarantee' },
   ];

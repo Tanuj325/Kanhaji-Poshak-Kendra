@@ -424,8 +424,8 @@ export default function MobileCart({
             <FiTruck className="h-4 w-4 text-emerald-600 shrink-0" />
             <span className="font-semibold text-emerald-900">
               {safeShipping === 0
-                ? '🚚 Free Express Delivery • Dispatch in 24 hrs'
-                : `🚚 Express Delivery • ₹${safeShipping} Shipping`}
+                ? '🚚 Free Delivery • Dispatch in 24 hrs'
+                : `🚚 Standard Delivery • ₹${safeShipping} Shipping`}
             </span>
           </div>
           <span className="text-[10px] font-bold uppercase bg-emerald-100 px-2 py-0.5 rounded-full text-emerald-800">

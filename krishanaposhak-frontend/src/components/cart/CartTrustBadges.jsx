@@ -13,7 +13,7 @@ const CartTrustBadges = memo(function CartTrustBadges({ compact = false }) {
     {
       id: 'shipping',
       icon: FiTruck,
-      title: 'Express Delivery',
+      title: 'Standard Delivery',
       subtitle: '3-5 Business Days',
       iconBg: 'bg-amber-100/70 text-amber-800',
     },
