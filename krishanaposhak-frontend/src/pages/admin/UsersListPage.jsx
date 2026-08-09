@@ -129,37 +129,33 @@ export default function UsersListPage() {
         {isLoading ? (
           <>
             {/* Mobile & Tablet Skeletons (< 1024px) */}
-            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4" role="status" aria-label="Loading users">
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3.5" role="status" aria-label="Loading users">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="rounded-2xl border border-slate-200/80 bg-white p-4.5 space-y-3.5 shadow-xs">
-                  {/* Top Bar Skeleton */}
+                <div key={i} className="rounded-xl border border-slate-200/80 bg-white p-3.5 space-y-2.5 shadow-2xs">
                   <div className="flex items-center justify-between">
-                    <Skeleton variant="text" className="w-16 h-5 rounded-lg" />
-                    <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                    <Skeleton variant="text" className="w-14 h-4 rounded" />
+                    <Skeleton variant="text" className="w-14 h-4 rounded-full" />
                   </div>
-                  {/* Avatar + Info Skeleton */}
-                  <div className="flex items-center gap-3.5">
-                    <Skeleton variant="circle" className="h-12 w-12 shrink-0 rounded-full" />
-                    <div className="space-y-1.5 flex-1 min-w-0">
-                      <Skeleton variant="text" className="w-3/4 h-4" />
-                      <Skeleton variant="text" className="w-1/2 h-3" />
+                  <div className="flex items-center gap-3">
+                    <Skeleton variant="circle" className="h-9 w-9 shrink-0" />
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <Skeleton variant="text" className="w-3/4 h-3.5" />
+                      <Skeleton variant="text" className="w-1/2 h-2.5" />
                     </div>
                   </div>
-                  {/* Grid Box Skeleton */}
-                  <div className="bg-slate-50 rounded-xl p-3 grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <Skeleton variant="text" className="w-10 h-2.5" />
-                      <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                  <div className="bg-slate-50 rounded-lg p-2 grid grid-cols-2 gap-2">
+                    <div className="space-y-0.5">
+                      <Skeleton variant="text" className="w-8 h-2" />
+                      <Skeleton variant="text" className="w-14 h-4 rounded-full" />
                     </div>
-                    <div className="space-y-1">
-                      <Skeleton variant="text" className="w-16 h-2.5" />
-                      <Skeleton variant="text" className="w-16 h-5 rounded-full" />
+                    <div className="space-y-0.5">
+                      <Skeleton variant="text" className="w-10 h-2" />
+                      <Skeleton variant="text" className="w-14 h-4 rounded-full" />
                     </div>
                   </div>
-                  {/* Footer Skeleton */}
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 gap-2">
-                    <Skeleton variant="text" className="w-full h-8 rounded-xl" />
-                    <Skeleton variant="text" className="w-8 h-8 rounded-xl shrink-0" />
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 gap-2">
+                    <Skeleton variant="text" className="w-full h-7 rounded-lg" />
+                    <Skeleton variant="text" className="w-7 h-7 rounded-lg shrink-0" />
                   </div>
                 </div>
               ))}
@@ -185,7 +181,7 @@ export default function UsersListPage() {
         ) : filteredUsers.length > 0 ? (
           <>
             {/* Mobile & Tablet User Cards View (< 1024px) */}
-            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
               {filteredUsers.map((user) => {
                 const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'User';
 
@@ -193,23 +189,20 @@ export default function UsersListPage() {
                   <div
                     key={user.id}
                     onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                    className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-white to-amber-50/20 px-1 shadow-xs hover:shadow-md hover:border-amber-400/70 transition-all duration-200 space-y-3.5 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
+                    className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-amber-300/90 hover:shadow-xs transition-all space-y-2.5 cursor-pointer flex flex-col justify-between group"
                   >
-                    {/* Top Accent Line on Hover */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-
                     {/* TOP HEADER BAR: User ID (Left) + Verification Badge (Right) */}
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-100/80 pb-2.5">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-mono font-extrabold bg-slate-100 text-slate-700 border border-slate-200/90 shadow-2xs tracking-wide">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200/80">
                         ID: #{user.id}
                       </span>
 
                       <span
                         className={cn(
-                          'inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs',
+                          'inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full border',
                           user.emailVerified
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200/90'
-                            : 'bg-amber-50 text-amber-800 border-amber-200/90'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-amber-50 text-amber-800 border-amber-200'
                         )}
                       >
                         <span className={cn('h-1.5 w-1.5 rounded-full', user.emailVerified ? 'bg-emerald-500' : 'bg-amber-500')} />
@@ -217,52 +210,52 @@ export default function UsersListPage() {
                       </span>
                     </div>
 
-                    {/* USER PROFILE ROW: Large Avatar + Name + Contact */}
-                    <div className="flex items-start gap-3.5 pt-0.5">
+                    {/* USER PROFILE ROW: Compact Avatar + Name + Contact */}
+                    <div className="flex items-center gap-3 pt-0.5">
                       <Avatar
                         name={name}
                         src={user.profileImageUrl || user.avatarUrl}
-                        size="md"
-                        className="shrink-0 ring-2 ring-amber-500/30 ring-offset-2 ring-offset-white bg-amber-50 rounded-full shadow-xs"
+                        size="sm"
+                        className="shrink-0 ring-1 ring-slate-200 bg-slate-50"
                       />
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-heading font-extrabold text-slate-900 text-base tracking-tight truncate group-hover:text-amber-950 transition-colors leading-snug">
+                        <h3 className="font-bold text-slate-900 text-xs sm:text-sm tracking-tight truncate group-hover:text-amber-900 transition-colors leading-tight">
                           {name}
                         </h3>
-                        <p className="text-xs text-slate-500 font-mono truncate mt-0.5">
+                        <p className="text-[11px] text-slate-500 font-mono truncate mt-0.5">
                           {user.email}
                         </p>
                         {user.phoneNumber && (
-                          <p className="inline-flex items-center gap-1 text-[11px] text-amber-900/80 font-mono bg-amber-50/80 px-2 py-0.5 rounded-md border border-amber-200/60 mt-1.5">
-                            <FiPhone className="h-3 w-3 text-amber-600 shrink-0" />
+                          <p className="text-[10px] text-slate-500 font-mono flex items-center gap-1 mt-0.5">
+                            <FiPhone className="h-2.5 w-2.5 text-slate-400 shrink-0" />
                             <span className="truncate">{user.phoneNumber}</span>
                           </p>
                         )}
                       </div>
                     </div>
 
-                    {/* STRUCTURED METADATA BOX: Role (Left) & Account Status (Right) */}
-                    <div className="bg-gradient-to-r from-slate-50/90 to-amber-50/40 rounded-xl p-3 border border-slate-200/70 grid grid-cols-2 gap-3 items-center">
+                    {/* STRUCTURED METADATA BOX: Role & Account Status */}
+                    <div className="bg-slate-50/80 rounded-lg p-2 border border-slate-100 grid grid-cols-2 gap-2 items-center">
                       <div>
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-1">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
                           Role
                         </span>
                         <span
                           className={cn(
-                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider shadow-2xs',
+                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider',
                             user.role === 'ADMIN'
-                              ? 'bg-purple-100 text-purple-800 border border-purple-300'
-                              : 'bg-white text-slate-700 border border-slate-200/80'
+                              ? 'bg-purple-500/10 text-purple-700 border border-purple-500/20'
+                              : 'bg-white text-slate-700 border border-slate-200'
                           )}
                         >
-                          {user.role === 'ADMIN' && <FiShield className="h-3 w-3 text-purple-600 shrink-0" />}
+                          {user.role === 'ADMIN' && <FiShield className="h-2.5 w-2.5 text-purple-600 shrink-0" />}
                           {user.role || 'CUSTOMER'}
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-1">
-                          Account Status
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                          Status
                         </span>
                         <button
                           type="button"
@@ -271,28 +264,28 @@ export default function UsersListPage() {
                             toggleStatus.mutate(user.id);
                           }}
                           className={cn(
-                            'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold transition-all border shadow-2xs',
+                            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold transition-all border',
                             user.enabled
                               ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/20'
                               : 'bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/20'
                           )}
                         >
                           {user.enabled ? (
-                            <FiCheckCircle className="h-3 w-3 text-emerald-600 shrink-0" />
+                            <FiCheckCircle className="h-2.5 w-2.5 text-emerald-600 shrink-0" />
                           ) : (
-                            <FiXCircle className="h-3 w-3 text-rose-600 shrink-0" />
+                            <FiXCircle className="h-2.5 w-2.5 text-rose-600 shrink-0" />
                           )}
                           <span>{user.enabled ? 'Active' : 'Disabled'}</span>
                         </button>
                       </div>
                     </div>
 
-                    {/* CARD FOOTER: Action Buttons */}
-                    <div className="border-t border-slate-100/90 pt-3 flex items-center justify-between gap-2 mt-auto">
+                    {/* CARD FOOTER: Compact Action Buttons */}
+                    <div className="border-t border-slate-100 pt-2 flex items-center justify-between gap-2 mt-auto">
                       <button
                         type="button"
                         onClick={() => navigate(buildPath.adminUserDetail(user.id))}
-                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold text-amber-950 bg-amber-100/70 hover:bg-amber-500 hover:text-white transition-all shadow-2xs active:scale-[0.98]"
+                        className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-amber-50 hover:text-amber-900 transition-colors border border-slate-200/70"
                         title="View user details"
                       >
                         <FiEye className="h-3.5 w-3.5" />
@@ -305,11 +298,11 @@ export default function UsersListPage() {
                           e.stopPropagation();
                           setDeleteTarget(user);
                         }}
-                        className="p-2 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white border border-rose-200/70 transition-all shadow-2xs shrink-0 active:scale-[0.98]"
+                        className="p-1.5 rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-200/60 shrink-0"
                         title="Delete user"
                         aria-label="Delete user"
                       >
-                        <FiTrash2 className="h-4 w-4" />
+                        <FiTrash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
