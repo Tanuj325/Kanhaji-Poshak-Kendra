@@ -65,6 +65,7 @@ function ProductBarChart({
   dataKey = 'unitsSold',
   color = '#d97706',
   label = 'Units Sold',
+  onItemClick,
 }) {
   const chartData = useMemo(() => {
     if (!data || !Array.isArray(data)) return [];
@@ -132,6 +133,8 @@ function ProductBarChart({
             radius={[0, 4, 4, 0]}
             maxBarSize={18}
             aria-label={label}
+            onClick={(entry) => onItemClick?.(entry)}
+            className={onItemClick ? 'cursor-pointer hover:opacity-85' : ''}
           />
         </BarChart>
       </ResponsiveContainer>

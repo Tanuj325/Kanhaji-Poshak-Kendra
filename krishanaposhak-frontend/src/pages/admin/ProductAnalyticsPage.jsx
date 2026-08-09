@@ -51,6 +51,7 @@ function TopSellingSection() {
         dataKey="unitsSold"
         color="#F59E0B"
         label="Units Sold"
+        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
@@ -96,6 +97,7 @@ function TopRatedSection() {
         dataKey="averageRating"
         color="#D97706"
         label="Average Rating"
+        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
@@ -122,6 +124,7 @@ function TopRatedSection() {
 
 function MostReviewedSection() {
   const { data, isLoading, error, refetch } = useMostReviewedProducts(10);
+  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -139,13 +142,34 @@ function MostReviewedSection() {
         dataKey="reviewCount"
         color="#3B82F6"
         label="Review Count"
+        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
       />
+      {data && data.length > 0 && (
+        <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
+          {data.slice(0, 5).map((p, idx) => (
+            <div
+              key={p.id || idx}
+              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+            >
+              <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
+              <span className="font-bold text-blue-600 shrink-0 text-[11px] sm:text-xs">
+                {p.reviewCount} reviews
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 function MostWishlistedSection() {
   const { data, isLoading, error, refetch } = useMostWishlistedProducts(10);
+  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -163,7 +187,27 @@ function MostWishlistedSection() {
         dataKey="wishlistCount"
         color="#F43F5E"
         label="Wishlist Count"
+        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
       />
+      {data && data.length > 0 && (
+        <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
+          {data.slice(0, 5).map((p, idx) => (
+            <div
+              key={p.id || idx}
+              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+            >
+              <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
+              <span className="font-bold text-rose-600 shrink-0 text-[11px] sm:text-xs">
+                ❤️ {p.wishlistCount} saves
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
