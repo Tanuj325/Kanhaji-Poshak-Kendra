@@ -118,12 +118,12 @@ export default function ActivityLogsPage() {
             message="No system activity events match the selected filter criteria."
           />
         ) : (
-          <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-6 shadow-2xs space-y-4 sm:space-y-6 min-w-0 overflow-hidden">
-            <div className="relative border-l-2 border-slate-200 ml-3 sm:ml-4 pl-4 sm:pl-6 space-y-4 sm:space-y-6 min-w-0">
+          <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-2xs space-y-4 sm:space-y-6 min-w-0 overflow-hidden">
+            <div className="relative border-l-2 border-slate-200 ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-5 sm:space-y-6 min-w-0">
               {activities.map((act, index) => (
                 <div key={act.id ? `activity-${act.id}-${index}` : `act-${index}`} className="relative group min-w-0">
-                  {/* Timeline dot */}
-                  <div className="absolute -left-[29px] sm:-left-[33px] top-0.5 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-white border-2 border-amber-500 shadow-2xs shrink-0">
+                  {/* Timeline dot cleanly centered on border-l-2 with zero text overlap */}
+                  <div className="absolute -left-[29px] sm:-left-[33px] top-0 flex h-7 w-7 items-center justify-center rounded-full bg-white border-2 border-amber-500 shadow-2xs z-10 shrink-0">
                     {getActivityIcon(act.type)}
                   </div>
 
