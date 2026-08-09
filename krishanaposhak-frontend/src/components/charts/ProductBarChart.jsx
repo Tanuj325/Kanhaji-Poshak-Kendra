@@ -16,15 +16,15 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
   const data = payload[0].payload;
   return (
-    <div className="rounded-2xl border border-amber-900/20 bg-white p-3.5 shadow-lg font-display">
-      <p className="text-xs font-bold text-amber-950 font-heading">{label}</p>
+    <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-md font-display max-w-xs z-50">
+      <p className="text-[11px] font-bold text-slate-900 font-heading truncate">{label}</p>
       {data.unitsSold !== undefined && (
-        <p className="mt-1 text-xs text-stone-600 font-body">
-          Units Sold: <strong className="text-amber-950 font-mono">{data.unitsSold}</strong>
+        <p className="mt-0.5 text-xs text-slate-600 font-body">
+          Units Sold: <strong className="text-amber-900 font-mono">{data.unitsSold}</strong>
         </p>
       )}
       {data.revenue !== undefined && data.revenue !== null && (
-        <p className="text-xs text-amber-900 font-mono font-bold">
+        <p className="text-xs text-amber-800 font-mono font-bold">
           Revenue: {formatPrice(data.revenue)}
         </p>
       )}
@@ -34,22 +34,22 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload, label }) {
         </p>
       )}
       {data.reviewCount !== undefined && (
-        <p className="text-xs text-stone-500 font-body">
+        <p className="text-[11px] text-slate-500 font-body">
           Reviews: {data.reviewCount}
         </p>
       )}
       {data.wishlistCount !== undefined && (
-        <p className="text-xs text-stone-500 font-body">
+        <p className="text-[11px] text-slate-500 font-body">
           Wishlisted: {data.wishlistCount}
         </p>
       )}
       {data.productsSold !== undefined && (
-        <p className="text-xs text-stone-500 font-body">
+        <p className="text-[11px] text-slate-500 font-body">
           Products Sold: {data.productsSold}
         </p>
       )}
       {data.quantitySold !== undefined && (
-        <p className="text-xs text-stone-500 font-body">
+        <p className="text-[11px] text-slate-500 font-body">
           Quantity: {data.quantitySold}
         </p>
       )}
@@ -63,7 +63,7 @@ function ProductBarChart({
   error,
   onRetry,
   dataKey = 'unitsSold',
-  color = '#78350f',
+  color = '#d97706',
   label = 'Units Sold',
 }) {
   const chartData = useMemo(() => {
@@ -76,8 +76,8 @@ function ProductBarChart({
 
   if (isLoading) {
     return (
-      <div className="flex h-52 items-center justify-center sm:h-64 font-display" role="status" aria-label="Loading chart">
-        <Skeleton variant="rect" className="h-44 w-full sm:h-56 rounded-2xl bg-amber-100/40" />
+      <div className="flex h-44 sm:h-56 items-center justify-center w-full min-w-0 font-display" role="status" aria-label="Loading chart">
+        <Skeleton variant="rect" className="h-36 sm:h-48 w-full rounded-xl bg-slate-100/60" />
         <span className="sr-only">Loading chart data...</span>
       </div>
     );
@@ -89,21 +89,21 @@ function ProductBarChart({
         title="Failed to load data"
         message={error}
         onRetry={onRetry}
-        className="h-52 sm:h-64"
+        className="h-44 sm:h-56"
       />
     );
   }
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-52 items-center justify-center text-xs text-stone-500 sm:h-64 font-body" role="status">
+      <div className="flex h-44 sm:h-56 items-center justify-center text-xs text-slate-400 font-body" role="status">
         No data available
       </div>
     );
   }
 
   return (
-    <div className="h-52 w-full sm:h-64 font-display" role="img" aria-label={`Bar chart showing ${label}`}>
+    <div className="h-44 sm:h-56 w-full min-w-0 font-display" role="img" aria-label={`Bar chart showing ${label}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
@@ -113,24 +113,24 @@ function ProductBarChart({
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
           <XAxis
             type="number"
-            tick={{ fontSize: 11, fill: '#78350f' }}
+            tick={{ fontSize: 9, fill: '#64748b' }}
             tickLine={false}
-            axisLine={{ stroke: '#f1f5f9' }}
+            axisLine={{ stroke: '#e2e8f0' }}
           />
           <YAxis
             type="category"
             dataKey="name"
-            tick={{ fontSize: 10, fill: '#451a03' }}
+            tick={{ fontSize: 9, fill: '#334155' }}
             tickLine={false}
             axisLine={false}
-            width={88}
+            width={84}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(217, 119, 6, 0.08)' }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(245, 158, 11, 0.06)' }} />
           <Bar
             dataKey={dataKey}
             fill={color}
-            radius={[0, 6, 6, 0]}
-            maxBarSize={20}
+            radius={[0, 4, 4, 0]}
+            maxBarSize={18}
             aria-label={label}
           />
         </BarChart>
