@@ -5,6 +5,7 @@ import com.tanuj.krishanaposhak.dto.user.UserResponse;
 import com.tanuj.krishanaposhak.entity.EmailVerificationToken;
 import com.tanuj.krishanaposhak.entity.PasswordResetToken;
 import com.tanuj.krishanaposhak.entity.User;
+import com.tanuj.krishanaposhak.exception.BadRequestException;
 import com.tanuj.krishanaposhak.exception.FileStorageException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.UserMapper;
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
             userRepository.flush();
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             log.warn("Cannot delete user ID {} due to existing referenced records/orders: {}", userId, e.getMessage());
-            throw new IllegalStateException("Cannot delete user with existing order or transaction history. Please disable the account instead.");
+            throw new BadRequestException("Cannot delete user with existing order or transaction history. Please disable the account instead.");
         }
     }
 
