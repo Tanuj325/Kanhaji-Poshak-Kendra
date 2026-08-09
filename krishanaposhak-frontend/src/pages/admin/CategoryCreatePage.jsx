@@ -213,7 +213,7 @@ export default function CategoryCreatePage() {
                   <input
                     id="displayOrder"
                     type="number"
-                    placeholder="0 (Highest priority)"
+                    placeholder="e.g. 1"
                     {...register('displayOrder', { setValueAs: (v) => (v === '' ? undefined : Number(v)) })}
                     className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                   />
