@@ -29,9 +29,8 @@ import {
   FiTrendingUp,
 } from 'react-icons/fi';
 
-function TopSellingSection() {
+function TopSellingSection({ onSelectProduct }) {
   const { data, isLoading, error, refetch } = useTopSellingProducts(10);
-  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -51,18 +50,18 @@ function TopSellingSection() {
         dataKey="unitsSold"
         color="#F59E0B"
         label="Units Sold"
-        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
+        onItemClick={onSelectProduct}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
           {data.slice(0, 5).map((p, idx) => (
             <div
-              key={p.id || idx}
-              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              key={p.id || p.productId || idx}
+              onClick={() => onSelectProduct(p)}
               className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(p); }}
             >
               <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
               <div className="text-right shrink-0 text-[11px] sm:text-xs">
@@ -77,9 +76,8 @@ function TopSellingSection() {
   );
 }
 
-function TopRatedSection() {
+function TopRatedSection({ onSelectProduct }) {
   const { data, isLoading, error, refetch } = useTopRatedProducts(10);
-  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -97,18 +95,18 @@ function TopRatedSection() {
         dataKey="averageRating"
         color="#D97706"
         label="Average Rating"
-        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
+        onItemClick={onSelectProduct}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
           {data.slice(0, 5).map((p, idx) => (
             <div
-              key={p.id || idx}
-              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              key={p.id || p.productId || idx}
+              onClick={() => onSelectProduct(p)}
               className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(p); }}
             >
               <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
               <span className="font-bold text-amber-700 shrink-0 text-[11px] sm:text-xs">
@@ -122,9 +120,8 @@ function TopRatedSection() {
   );
 }
 
-function MostReviewedSection() {
+function MostReviewedSection({ onSelectProduct }) {
   const { data, isLoading, error, refetch } = useMostReviewedProducts(10);
-  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -142,18 +139,18 @@ function MostReviewedSection() {
         dataKey="reviewCount"
         color="#3B82F6"
         label="Review Count"
-        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
+        onItemClick={onSelectProduct}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
           {data.slice(0, 5).map((p, idx) => (
             <div
-              key={p.id || idx}
-              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              key={p.id || p.productId || idx}
+              onClick={() => onSelectProduct(p)}
               className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(p); }}
             >
               <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
               <span className="font-bold text-blue-600 shrink-0 text-[11px] sm:text-xs">
@@ -167,9 +164,8 @@ function MostReviewedSection() {
   );
 }
 
-function MostWishlistedSection() {
+function MostWishlistedSection({ onSelectProduct }) {
   const { data, isLoading, error, refetch } = useMostWishlistedProducts(10);
-  const navigate = useNavigate();
 
   return (
     <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 sm:p-4 shadow-2xs font-display space-y-3 sm:space-y-4 min-w-0">
@@ -187,18 +183,18 @@ function MostWishlistedSection() {
         dataKey="wishlistCount"
         color="#F43F5E"
         label="Wishlist Count"
-        onItemClick={(item) => item?.id && navigate(`/admin/products/${item.id}/edit`)}
+        onItemClick={onSelectProduct}
       />
       {data && data.length > 0 && (
         <div className="mt-3 divide-y divide-slate-100 border-t border-slate-100 pt-2">
           {data.slice(0, 5).map((p, idx) => (
             <div
-              key={p.id || idx}
-              onClick={() => navigate(`/admin/products/${p.id}/edit`)}
+              key={p.id || p.productId || idx}
+              onClick={() => onSelectProduct(p)}
               className="py-2 flex items-center justify-between text-xs cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors min-w-0"
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${p.id}/edit`); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(p); }}
             >
               <span className="font-semibold text-slate-900 truncate max-w-[140px] sm:max-w-[200px] text-[11px] sm:text-xs">{p.name}</span>
               <span className="font-bold text-rose-600 shrink-0 text-[11px] sm:text-xs">
@@ -212,10 +208,9 @@ function MostWishlistedSection() {
   );
 }
 
-function InventoryStockSection() {
+function InventoryStockSection({ onSelectProduct }) {
   const lowStock = useLowStockProducts(10);
   const outOfStock = useOutOfStockProducts();
-  const navigate = useNavigate();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 lg:gap-6 font-display min-w-0">
@@ -243,12 +238,12 @@ function InventoryStockSection() {
           <div className="divide-y divide-slate-100 max-h-60 overflow-y-auto custom-scrollbar">
             {lowStock.data.map((item, idx) => (
               <div
-                key={item.id || idx}
-                onClick={() => navigate(`/admin/products/${item.id}/edit`)}
+                key={item.id || item.productId || idx}
+                onClick={() => onSelectProduct(item)}
                 className="py-2 flex items-center justify-between text-xs hover:bg-slate-50 px-2 rounded-lg cursor-pointer transition-colors min-w-0"
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${item.id}/edit`); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(item); }}
               >
                 <span className="font-semibold text-slate-900 truncate max-w-[180px] sm:max-w-[240px] text-[11px] sm:text-xs">{item.name}</span>
                 <span className="font-mono font-bold text-amber-700 shrink-0 text-[11px] sm:text-xs">{item.stock} in stock</span>
@@ -284,12 +279,12 @@ function InventoryStockSection() {
           <div className="divide-y divide-slate-100 max-h-60 overflow-y-auto custom-scrollbar">
             {outOfStock.data.map((item, idx) => (
               <div
-                key={item.id || idx}
-                onClick={() => navigate(`/admin/products/${item.id}/edit`)}
+                key={item.id || item.productId || idx}
+                onClick={() => onSelectProduct(item)}
                 className="py-2 flex items-center justify-between text-xs hover:bg-slate-50 px-2 rounded-lg cursor-pointer transition-colors min-w-0"
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/admin/products/${item.id}/edit`); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') onSelectProduct(item); }}
               >
                 <span className="font-semibold text-slate-900 truncate max-w-[180px] sm:max-w-[240px] text-[11px] sm:text-xs">{item.name}</span>
                 <span className="font-mono font-bold text-rose-600 shrink-0 text-[11px] sm:text-xs">Out of Stock</span>
@@ -328,12 +323,21 @@ function TopCategoriesSection() {
 export default function ProductAnalyticsPage() {
   const refreshAnalytics = useRefreshAnalytics();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const navigate = useNavigate();
 
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
     refreshAnalytics();
     setTimeout(() => setIsRefreshing(false), 800);
   }, [refreshAnalytics]);
+
+  const handleSelectProduct = useCallback((target) => {
+    if (!target) return;
+    const productId = typeof target === 'object' ? (target.id || target.productId) : target;
+    if (productId) {
+      navigate(`/admin/products/${productId}/edit`);
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -367,17 +371,17 @@ export default function ProductAnalyticsPage() {
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 lg:gap-6 min-w-0">
-          <TopSellingSection />
-          <TopRatedSection />
+          <TopSellingSection onSelectProduct={handleSelectProduct} />
+          <TopRatedSection onSelectProduct={handleSelectProduct} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 lg:gap-6 min-w-0">
-          <MostReviewedSection />
-          <MostWishlistedSection />
+          <MostReviewedSection onSelectProduct={handleSelectProduct} />
+          <MostWishlistedSection onSelectProduct={handleSelectProduct} />
         </div>
 
         {/* Inventory Stock Section */}
-        <InventoryStockSection />
+        <InventoryStockSection onSelectProduct={handleSelectProduct} />
 
         {/* Category Analytics */}
         <TopCategoriesSection />

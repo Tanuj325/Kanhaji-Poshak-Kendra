@@ -133,7 +133,12 @@ function ProductBarChart({
             radius={[0, 4, 4, 0]}
             maxBarSize={18}
             aria-label={label}
-            onClick={(entry) => onItemClick?.(entry)}
+            onClick={(entry) => {
+              const rawData = entry?.payload || entry;
+              if (onItemClick) {
+                onItemClick(rawData);
+              }
+            }}
             className={onItemClick ? 'cursor-pointer hover:opacity-85' : ''}
           />
         </BarChart>
