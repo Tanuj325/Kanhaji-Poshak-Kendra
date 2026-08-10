@@ -121,7 +121,7 @@ export default function HeaderNotificationDropdown({
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className={badgeClassName || "absolute right-1 top-1 flex h-2 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 font-mono text-[9px] font-bold text-white shadow-2xs ring-2 ring-white"}
+            className={badgeClassName || "absolute top-2 right-2 flex h-2 w-2 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 font-mono text-[9px] font-bold text-white shadow-2xs ring-2 ring-white"}
           >
             {unreadCountNum > 99 ? '99+' : unreadCountNum}
           </motion.span>
