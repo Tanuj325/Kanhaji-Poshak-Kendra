@@ -160,94 +160,90 @@ export default function HeroBanner() {
   const banner = bannerList[currentIndex];
 
   return (
-    <section className="relative overflow-hidden bg-deep-navy font-display select-none">
-      {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
-      <div className="block lg:hidden w-full overflow-hidden relative bg-stone-950">
-        <div
-          className="relative h-[185px] w-full overflow-hidden group select-none"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={banner.id || currentIndex}
-              initial={{ opacity: 0, scale: 1.03 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="absolute inset-0"
-            >
-              <OptimizedImage
-                src={banner.imageUrl}
-                alt={banner.title || 'Krishana Poshak Banner'}
-                className="h-full w-full object-cover object-center"
-                loading="eager"
-                fetchpriority="high"
-              />
-            </motion.div>
-          </AnimatePresence>
+    <section className="relative overflow-hidden bg-white lg:bg-deep-navy font-display select-none">
+      {/* ─── MOBILE & TABLET BANNER UI (<1024px - Premium Centered Card with White Background) ─── */}
+      <div className="block lg:hidden w-full bg-white py-3.5 px-3.5 sm:px-6 sm:py-4 md:px-8 md:py-5">
+        <div className="max-w-4xl lg:max-w-5xl mx-auto">
+          <div
+            className="relative h-[185px] sm:h-[250px] md:h-[320px] w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] md:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-stone-200/60 bg-stone-900 group select-none"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={banner.id || currentIndex}
+                initial={{ opacity: 0, scale: 1.03 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="absolute inset-0"
+              >
+                <OptimizedImage
+                  src={banner.imageUrl}
+                  alt={banner.title || 'Krishana Poshak Banner'}
+                  className="h-full w-full object-cover object-center"
+                  loading="eager"
+                  fetchpriority="high"
+                />
+              </motion.div>
+            </AnimatePresence>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent pointer-events-none" />
+            {/* Gradient Overlays for text and dot contrast */}
+            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-stone-950/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent pointer-events-none" />
 
-          {/* Banner Content: Badge, Full Title, CTA Button */}
-          <div className="absolute bottom-5 left-4 right-4 flex items-end justify-between gap-3 z-10">
-            <div className="space-y-1 min-w-0 flex-1">
-              <span className="text-[9px] font-bold text-stone-950 bg-amber-400 px-2 py-0.5 rounded-full inline-block uppercase tracking-wider shadow-xs">
-                {banner.subtitle || 'Special Collection'}
-              </span>
-              <h1 className="text-[14px] font-semibold text-white tracking-tight leading-snug line-clamp-2 drop-shadow-md">
-                {banner.title || siteConfig.name}
-              </h1>
-            </div>
-
-            <Link
-              to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1 h-[25px] px-2.5 rounded-full bg-amber-400 text-stone-950 text-[10px] font-semibold active-tap-scale shrink-0 shadow-none"
-            >
-              <span>Shop Now</span>
-              <FiArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          {/* Bottom Running Timeline Progress Dots */}
-          {bannerList.length > 1 && (
-            <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
-              {bannerList.map((_, i) => {
-                const isActive = i === currentIndex;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => goTo(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className="p-1 focus:outline-none"
-                  >
-                    {isActive ? (
-                      <div className="h-1.5 w-6 rounded-full bg-white/30 overflow-hidden relative">
-                        <div
-                          className="h-full bg-amber-400 rounded-full transition-all duration-75 ease-linear"
-                          style={{ width: `${progress}%` }}
+            {/* Top-Center Dots Indicator (Mobile & Tablet) */}
+            {bannerList.length > 1 && (
+              <div className="absolute top-3 inset-x-0 z-20 flex justify-center items-center pointer-events-none">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/15 pointer-events-auto shadow-xs">
+                  {bannerList.map((_, i) => {
+                    const isActive = i === currentIndex;
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => goTo(i)}
+                        aria-label={`Go to slide ${i + 1}`}
+                        className="p-1 focus:outline-none transition-all duration-300 flex items-center justify-center"
+                      >
+                        <span
+                          className={cn(
+                            'rounded-full transition-all duration-300',
+                            isActive
+                              ? 'h-2 w-2 bg-amber-400 scale-125 shadow-[0_0_6px_rgba(251,191,36,0.8)]'
+                              : 'h-1.5 w-1.5 bg-white/60 hover:bg-white/90',
+                          )}
                         />
-                      </div>
-                    ) : (
-                      <div className="h-1.5 w-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-colors" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
-          {/* Running Timeline Edge Bar at Very Bottom */}
-          {bannerList.length > 1 && (
-            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/15 z-20 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-all duration-75 ease-linear"
-                style={{ width: `${progress}%` }}
-              />
+            {/* Banner Content: Badge, Title, CTA Button */}
+            <div className="absolute bottom-3 left-3.5 right-3.5 sm:bottom-5 sm:left-5 sm:right-5 flex items-end justify-between gap-3 z-10">
+              <div className="space-y-1 min-w-0 flex-1">
+                {banner.subtitle && (
+                  <span className="text-[9px] sm:text-xs font-bold text-stone-950 bg-amber-400 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full inline-block uppercase tracking-wider shadow-xs">
+                    {banner.subtitle}
+                  </span>
+                )}
+                <h2 className="text-xs sm:text-base md:text-lg font-semibold text-white tracking-tight leading-snug line-clamp-2 drop-shadow-md">
+                  {banner.title || siteConfig.name}
+                </h2>
+              </div>
+
+              <Link
+                to={banner.redirectUrl || '/shop'}
+                className="inline-flex items-center gap-1 sm:gap-1.5 h-7 sm:h-9 px-2.5 sm:px-4 rounded-full bg-amber-400 text-stone-950 text-[10px] sm:text-xs md:text-sm font-semibold active:scale-95 transition-transform shrink-0 shadow-sm hover:bg-amber-300"
+              >
+                <span>Shop Now</span>
+                <FiArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
+              </Link>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
