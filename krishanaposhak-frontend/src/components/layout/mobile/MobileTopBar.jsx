@@ -19,11 +19,12 @@ import { useScrollDirection } from '@/hooks/useScrollDirection';
 import { highlightMatch } from '@/utils/highlightMatch';
 import { formatPrice } from '@/utils/formatPrice';
 import OptimizedImage from '@/components/ui/OptimizedImage';
+import HeaderNotificationDropdown from '@/components/layout/HeaderNotificationDropdown';
 
 /**
  * MobileTopBar (<1024px)
  * Native Shopping App Redesigned Header:
- * Row 1: 52px height - Menu (☰) | Logo | Wishlist | Cart
+ * Row 1: 52px height - Menu (☰) | Logo | Notification
  * Row 2: 40px search bar, 16px radius, edge to edge with 12px margins (px-3)
  * Row 3: 32px height compact scrollable category chips
  */
