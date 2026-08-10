@@ -222,8 +222,8 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                         className="p-2.5 hover:bg-slate-50 cursor-pointer transition-colors rounded-xl m-0.5"
                       >
                         <p className="text-xs text-slate-900 font-semibold">{notif.title || notif.message}</p>
-                        {notif.description && (
-                          <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{notif.description}</p>
+                        {notif.title && notif.message && (
+                          <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{notif.message}</p>
                         )}
                         <span className="text-[9px] text-slate-400 mt-1 block font-mono">
                           {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}

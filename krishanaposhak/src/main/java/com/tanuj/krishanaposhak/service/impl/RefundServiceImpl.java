@@ -29,6 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.tanuj.krishanaposhak.enums.NotificationType;
+import com.tanuj.krishanaposhak.service.EmailService;
+import com.tanuj.krishanaposhak.service.NotificationService;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,7 @@ public class RefundServiceImpl implements RefundService {
     private final OrderRepository orderRepository;
     private final RazorpayService razorpayService;
     private final EmailService emailService;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -135,6 +140,14 @@ public class RefundServiceImpl implements RefundService {
                     .build();
 
             refund = refundRepository.save(refund);
+
+            // Create in-app refund notification for customer
+            notificationService.createNotification(
+                    order.getUser(),
+                    "Refund Processed",
+                    "Refund of ₹" + order.getTotalAmount() + " for order #" + order.getOrderNumber() + " has been processed.",
+                    NotificationType.PAYMENT
+            );
 
             long duration = System.currentTimeMillis() - startTime;
             log.info("[AUDIT] Refund Success -> Order ID: {}, Payment ID: {}, Razorpay Refund ID: {}, Amount: ₹{}, Time Taken: {} ms",

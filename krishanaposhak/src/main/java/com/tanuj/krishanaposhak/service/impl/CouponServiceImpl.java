@@ -7,12 +7,14 @@ import com.tanuj.krishanaposhak.dto.coupon.CouponValidationResponse;
 import com.tanuj.krishanaposhak.dto.common.PaginationResponse;
 import com.tanuj.krishanaposhak.entity.Coupon;
 import com.tanuj.krishanaposhak.enums.DiscountType;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.CouponMapper;
 import com.tanuj.krishanaposhak.repository.CouponRepository;
 import com.tanuj.krishanaposhak.repository.CouponUsageRepository;
 import com.tanuj.krishanaposhak.service.CouponService;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +36,7 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
     private final CouponUsageRepository couponUsageRepository;
     private final CouponMapper couponMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -229,6 +232,15 @@ public class CouponServiceImpl implements CouponService {
                 .build();
 
         Coupon saved = couponRepository.save(coupon);
+
+        if (Boolean.TRUE.equals(saved.getActive())) {
+            notificationService.createGlobalNotification(
+                    "New Coupon Available!",
+                    "Use coupon code '" + saved.getCode() + "' to get special discounts on your orders.",
+                    NotificationType.COUPON
+            );
+        }
+
         return couponMapper.toResponse(saved);
     }
 

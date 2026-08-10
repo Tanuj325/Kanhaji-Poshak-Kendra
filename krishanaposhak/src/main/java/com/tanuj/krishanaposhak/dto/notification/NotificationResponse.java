@@ -1,5 +1,6 @@
 package com.tanuj.krishanaposhak.dto.notification;
 
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +15,8 @@ public class NotificationResponse {
     private String title;
 
     private String message;
+
+    private NotificationType type;
 
     private boolean read;
 

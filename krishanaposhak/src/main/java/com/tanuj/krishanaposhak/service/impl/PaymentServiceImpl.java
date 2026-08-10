@@ -3,6 +3,7 @@ package com.tanuj.krishanaposhak.service.impl;
 import com.tanuj.krishanaposhak.dto.payment.*;
 import com.tanuj.krishanaposhak.dto.order.PlaceOrderRequest;
 import com.tanuj.krishanaposhak.entity.*;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.enums.OrderStatus;
 import com.tanuj.krishanaposhak.enums.PaymentStatus;
 import com.tanuj.krishanaposhak.enums.RefundStatus;
@@ -14,6 +15,7 @@ import com.tanuj.krishanaposhak.exception.WebhookProcessingException;
 import com.tanuj.krishanaposhak.mapper.PaymentMapper;
 import com.tanuj.krishanaposhak.repository.*;
 import com.tanuj.krishanaposhak.service.EmailService;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import com.tanuj.krishanaposhak.service.OrderService;
 import com.tanuj.krishanaposhak.service.PaymentService;
 import com.tanuj.krishanaposhak.service.RazorpayService;
@@ -52,6 +54,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final CouponRepository couponRepository;
     private final CouponUsageRepository couponUsageRepository;
     private final com.tanuj.krishanaposhak.service.RazorpayWebhookEventService razorpayWebhookEventService;
+    private final NotificationService notificationService;
 
     @Override
     public RazorpayOrderResponse createRazorpayOrder(Long orderId) {
@@ -387,6 +390,19 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (Exception e) {
             log.error("Failed to send order confirmation email for order {}", order.getOrderNumber(), e);
         }
+
+        // Create payment success and order notifications
+        notificationService.createNotification(
+                order.getUser(),
+                "Payment Successful",
+                "Payment of ₹" + order.getTotalAmount() + " for order #" + order.getOrderNumber() + " was successful.",
+                NotificationType.PAYMENT
+        );
+        notificationService.createAdminNotifications(
+                "New Order Received",
+                "New online order #" + order.getOrderNumber() + " received from " + order.getCustomerName() + " for ₹" + order.getTotalAmount() + ".",
+                NotificationType.ORDER
+        );
 
         log.info("[ORDER_FULFILLED] Successfully created and confirmed Order #{} for Razorpay Order ID: {}", order.getOrderNumber(), razorpayOrderId);
 

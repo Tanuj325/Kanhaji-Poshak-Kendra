@@ -5,6 +5,7 @@ import com.tanuj.krishanaposhak.dto.auth.LoginRequest;
 import com.tanuj.krishanaposhak.dto.auth.RefreshTokenRequest;
 import com.tanuj.krishanaposhak.dto.auth.RegisterRequest;
 import com.tanuj.krishanaposhak.entity.User;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.enums.Role;
 import com.tanuj.krishanaposhak.exception.BadRequestException;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
@@ -14,6 +15,7 @@ import com.tanuj.krishanaposhak.mapper.AuthMapper;
 import com.tanuj.krishanaposhak.repository.UserRepository;
 import com.tanuj.krishanaposhak.security.jwt.JwtService;
 import com.tanuj.krishanaposhak.service.AuthService;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import com.tanuj.krishanaposhak.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthMapper authMapper;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -53,6 +56,14 @@ public class AuthServiceImpl implements AuthService {
 
         // Send verification email
         userService.sendVerificationEmail(user);
+
+        // Create welcome notification
+        notificationService.createNotification(
+                user,
+                "Welcome to Krishana Poshak",
+                "Thank you for joining Krishna Poshak Kendra! Discover our divine collection of poshaks and accessories.",
+                NotificationType.SYSTEM
+        );
 
         // Generate JWT tokens
         String accessToken = jwtService.generateAccessToken(user);

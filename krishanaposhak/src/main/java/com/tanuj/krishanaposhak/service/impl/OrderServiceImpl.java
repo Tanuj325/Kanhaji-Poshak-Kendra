@@ -7,6 +7,7 @@ import com.tanuj.krishanaposhak.dto.order.OrderResponse;
 import com.tanuj.krishanaposhak.dto.order.OrderSummaryResponse;
 import com.tanuj.krishanaposhak.dto.order.PlaceOrderRequest;
 import com.tanuj.krishanaposhak.entity.*;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.enums.OrderStatus;
 import com.tanuj.krishanaposhak.enums.PaymentMethod;
 import com.tanuj.krishanaposhak.enums.PaymentStatus;
@@ -25,6 +26,7 @@ import com.tanuj.krishanaposhak.repository.ProductVariantRepository;
 import com.tanuj.krishanaposhak.repository.UserRepository;
 import com.tanuj.krishanaposhak.service.CouponService;
 import com.tanuj.krishanaposhak.service.EmailService;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import com.tanuj.krishanaposhak.service.OrderService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
     private final EmailService emailService;
     private final com.tanuj.krishanaposhak.service.RefundService refundService;
     private final PaymentRepository paymentRepository;
+    private final NotificationService notificationService;
 
     @Override
     public OrderResponse placeOrder(Long userId, PlaceOrderRequest request) {
@@ -149,6 +152,19 @@ public class OrderServiceImpl implements OrderService {
         }
 
         cartRepository.findByUserId(userId).ifPresent(c -> cartItemRepository.deleteByCartId(c.getId()));
+
+        // Create order placement notifications for Customer and Admin
+        notificationService.createNotification(
+                order.getUser(),
+                "Order Placed Successfully",
+                "Your order #" + order.getOrderNumber() + " has been placed successfully for ₹" + order.getTotalAmount() + ".",
+                NotificationType.ORDER
+        );
+        notificationService.createAdminNotifications(
+                "New Order Received",
+                "New order #" + order.getOrderNumber() + " received from " + order.getCustomerName() + " for ₹" + order.getTotalAmount() + ".",
+                NotificationType.ORDER
+        );
 
         // Send order confirmation email asynchronously for COD orders
         if (method == PaymentMethod.COD) {
@@ -353,6 +369,13 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(OrderStatus.CANCELLED);
         order = orderRepository.save(order);
 
+        notificationService.createNotification(
+                order.getUser(),
+                "Order Cancelled",
+                "Your order #" + order.getOrderNumber() + " has been cancelled.",
+                NotificationType.ORDER
+        );
+
         // Process automatic Razorpay refund if eligible
         if (refundService.isEligibleForRefund(order)) {
             try {
@@ -376,6 +399,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
 
+        OrderStatus previousStatus = order.getOrderStatus();
         order.setOrderStatus(status);
 
         // COD Payment Lifecycle: When admin marks a COD order as DELIVERED, automatically mark payment status as PAID
@@ -414,6 +438,16 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order = orderRepository.save(order);
+
+        if (previousStatus != status) {
+            notificationService.createNotification(
+                    order.getUser(),
+                    "Order Status Updated",
+                    "Your order #" + order.getOrderNumber() + " status has been updated to " + status + ".",
+                    NotificationType.ORDER
+            );
+        }
+
         return orderMapper.toResponse(order);
     }
 

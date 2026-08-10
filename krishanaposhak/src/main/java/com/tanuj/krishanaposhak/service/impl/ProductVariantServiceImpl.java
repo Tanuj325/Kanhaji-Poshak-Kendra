@@ -4,12 +4,14 @@ import com.tanuj.krishanaposhak.dto.product.ProductVariantRequest;
 import com.tanuj.krishanaposhak.dto.product.ProductVariantResponse;
 import com.tanuj.krishanaposhak.entity.Product;
 import com.tanuj.krishanaposhak.entity.ProductVariant;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.exception.BadRequestException;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.ProductVariantMapper;
 import com.tanuj.krishanaposhak.repository.ProductRepository;
 import com.tanuj.krishanaposhak.repository.ProductVariantRepository;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import com.tanuj.krishanaposhak.service.ProductVariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductRepository productRepository;
     private final ProductVariantMapper productVariantMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -58,6 +61,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setSku(sku);
 
         variant = productVariantRepository.save(variant);
+
+        checkStockNotifications(variant);
+
         return productVariantMapper.toResponse(variant);
     }
 
@@ -68,6 +74,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         productVariantMapper.updateEntityFromRequest(request, variant);
 
         variant = productVariantRepository.save(variant);
+
+        checkStockNotifications(variant);
+
         return productVariantMapper.toResponse(variant);
     }
 
@@ -91,7 +100,28 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         }
         ProductVariant variant = findVariantOrThrow(variantId);
         variant.setStock(stock);
-        productVariantRepository.save(variant);
+        variant = productVariantRepository.save(variant);
+
+        checkStockNotifications(variant);
+    }
+
+    private void checkStockNotifications(ProductVariant variant) {
+        if (variant == null || variant.getStock() == null) return;
+        String productName = variant.getProduct() != null ? variant.getProduct().getName() : "Product";
+        String sizeInfo = variant.getSize() != null ? " (Size: " + variant.getSize() + ")" : "";
+        if (variant.getStock() == 0) {
+            notificationService.createAdminNotifications(
+                    "Product Out of Stock",
+                    "Product '" + productName + "'" + sizeInfo + " is now out of stock.",
+                    NotificationType.SYSTEM
+            );
+        } else if (variant.getStock() <= 5) {
+            notificationService.createAdminNotifications(
+                    "Low Stock Alert",
+                    "Product '" + productName + "'" + sizeInfo + " is running low on stock (" + variant.getStock() + " remaining).",
+                    NotificationType.SYSTEM
+            );
+        }
     }
 
     private ProductVariant findVariantOrThrow(Long variantId) {

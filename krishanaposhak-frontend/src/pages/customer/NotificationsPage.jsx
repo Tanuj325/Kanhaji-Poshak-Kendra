@@ -199,7 +199,7 @@ export default function NotificationsPage() {
               </div>
 
               <p className="text-sm text-dark-charcoal leading-relaxed whitespace-pre-line font-normal">
-                {selectedNotif.description || selectedNotif.message || selectedNotif.title}
+                {selectedNotif.message || selectedNotif.title}
               </p>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-muted-sand/20">

@@ -123,9 +123,9 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
                     <p className="text-xs text-dark-charcoal font-bold line-clamp-1">
                       {notif.title || notif.message}
                     </p>
-                    {notif.description && (
+                    {notif.title && notif.message && (
                       <p className="text-[11px] text-natural-wood line-clamp-2 font-light">
-                        {notif.description}
+                        {notif.message}
                       </p>
                     )}
                     <span className="text-[9px] text-natural-wood block font-mono">

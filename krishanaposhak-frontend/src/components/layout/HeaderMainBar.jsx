@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { ROUTE_PATHS } from '@/routes/routePaths';
@@ -7,6 +8,7 @@ import { useCartContext } from '@/context/CartContext';
 import { useWishlistContext } from '@/context/WishlistContext';
 import HeaderSearch from './HeaderSearch';
 import HeaderUserMenu from './HeaderUserMenu';
+import HeaderNotificationDropdown from './HeaderNotificationDropdown';
 
 /**
  * MAIN HEADER BAR (Compact Height: 64px, Shrinks to 58px on scroll)
@@ -24,6 +26,7 @@ export default function HeaderMainBar({
   const { user, isAuthenticated } = useAuth();
   const { cartCount, openDrawer } = useCartContext();
   const { wishlistCount } = useWishlistContext();
+  const [notifOpen, setNotifOpen] = useState(false);
 
   return (
     <div
@@ -98,6 +101,15 @@ export default function HeaderMainBar({
                 </Link>
               )}
             </div>
+
+            {/* Notification Bell (Visible when authenticated) */}
+            {isAuthenticated && (
+              <HeaderNotificationDropdown
+                isOpen={notifOpen}
+                onToggle={() => setNotifOpen((v) => !v)}
+                onClose={() => setNotifOpen(false)}
+              />
+            )}
 
             {/* Wishlist */}
             <Link

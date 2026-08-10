@@ -39,8 +39,8 @@ const NotificationItem = memo(function NotificationItem({ notification, onMarkRe
         >
           {notification.title || notification.message}
         </p>
-        {notification.description && (
-          <p className="text-xs text-stone-600 mt-1 line-clamp-2 leading-relaxed font-body">{notification.description}</p>
+        {notification.title && notification.message && (
+          <p className="text-xs text-stone-600 mt-1 line-clamp-2 leading-relaxed font-body">{notification.message}</p>
         )}
         <p className="text-[11px] text-stone-400 mt-1.5 font-mono">
           {notification.createdAt ? formatDate(notification.createdAt, { format: 'datetime' }) : ''}

@@ -6,6 +6,7 @@ import com.tanuj.krishanaposhak.dto.common.PaginationResponse;
 import com.tanuj.krishanaposhak.entity.Product;
 import com.tanuj.krishanaposhak.entity.Review;
 import com.tanuj.krishanaposhak.entity.User;
+import com.tanuj.krishanaposhak.enums.NotificationType;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
 import com.tanuj.krishanaposhak.exception.ForbiddenException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import com.tanuj.krishanaposhak.mapper.ReviewMapper;
 import com.tanuj.krishanaposhak.repository.ProductRepository;
 import com.tanuj.krishanaposhak.repository.ReviewRepository;
 import com.tanuj.krishanaposhak.repository.UserRepository;
+import com.tanuj.krishanaposhak.service.NotificationService;
 import com.tanuj.krishanaposhak.service.ReviewService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ReviewMapper reviewMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +77,13 @@ public class ReviewServiceImpl implements ReviewService {
         review.setProduct(product);
 
         review = reviewRepository.save(review);
+
+        notificationService.createAdminNotifications(
+                "New Review Submitted",
+                "New " + review.getRating() + "-star review submitted for product '" + product.getName() + "' by " + user.getFirstName() + " " + user.getLastName() + ".",
+                NotificationType.SYSTEM
+        );
+
         return reviewMapper.toResponse(review);
     }
 
