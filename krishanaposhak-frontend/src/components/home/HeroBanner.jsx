@@ -162,9 +162,9 @@ export default function HeroBanner() {
   return (
     <section className="relative overflow-hidden bg-white font-display select-none">
       {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
-      <div className="block mx-3 mt-3 mb-3 lg:hidden w-auto overflow-hidden relative bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-black/5">
+      <div className="block mt-3 mr-1 ml-1 mb-0 lg:hidden w-full overflow-hidden relative bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] ring-1 ring-black/5">
         <div
-          className="relative h-[190px] w-full overflow-hidden group select-none rounded-2xl"
+          className="relative h-[190px] w-full overflow-hidden group select-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -188,9 +188,11 @@ export default function HeroBanner() {
             </motion.div>
           </AnimatePresence>
 
+          {/* Richer multi-stop gradient for depth */}
           <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/40 via-40% to-transparent pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-950/20 pointer-events-none" />
 
+          {/* Banner Content: Badge, Full Title, CTA Button */}
           <div className="absolute bottom-6 left-4 right-4 flex items-end justify-between gap-3 z-10">
             <div className="space-y-1.5 min-w-0 flex-1">
               <span className="text-[9px] font-bold text-stone-950 bg-gradient-to-r from-amber-400 to-amber-300 px-2.5 py-1 rounded-full inline-block uppercase tracking-widest shadow-[0_2px_8px_rgba(251,191,36,0.4)]">
@@ -203,13 +205,14 @@ export default function HeroBanner() {
 
             <Link
               to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1 h-[27px] px-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 text-stone-950 text-[10px] font-bold active-tap-scale shrink-0 shadow-[0_4px_12px_rgba(251,191,36,0.45)]"
+              className="inline-flex items-center gap-1 h-[27px] px-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 text-stone-950 text-[10px] font-bold active-tap-scale shrink-0 shadow-[0_4px_12px_rgba(251,191,36,0.45)] backdrop-blur-sm"
             >
               <span>Shop Now</span>
               <FiArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
+          {/* Bottom Running Timeline Progress Dots */}
           {bannerList.length > 1 && (
             <div className="absolute bottom-2.5 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
               {bannerList.map((_, i) => {
@@ -223,7 +226,7 @@ export default function HeroBanner() {
                     className="p-1 focus:outline-none"
                   >
                     {isActive ? (
-                      <div className="h-1.5 w-7 rounded-full bg-white/25 overflow-hidden relative">
+                      <div className="h-1.5 w-7 rounded-full bg-white/25 overflow-hidden relative backdrop-blur-sm">
                         <div
                           className="h-full bg-gradient-to-r from-amber-400 to-amber-300 rounded-full transition-all duration-75 ease-linear shadow-[0_0_6px_rgba(251,191,36,0.6)]"
                           style={{ width: `${progress}%` }}
@@ -238,6 +241,7 @@ export default function HeroBanner() {
             </div>
           )}
 
+          {/* Subtle inner top highlight for glass feel */}
           <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/10 to-transparent pointer-events-none z-[5]" />
         </div>
       </div>
