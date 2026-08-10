@@ -160,9 +160,9 @@ export default function HeroBanner() {
   const banner = bannerList[currentIndex];
 
   return (
-    <section className="relative overflow-hidden bg-deep-navy font-display select-none">
+    <section className="relative overflow-hidden bg-stone-50/60 font-display select-none">
       {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
-      <div className="block mt-2 ml-1 mr-2 mb-0  lg:hidden w-full overflow-hidden relative bg-stone-50/60 rounded-xl">
+      <div className="block mt-4 ml-1 m4-2 mb-0  lg:hidden w-full overflow-hidden relative bg-white rounded-xl">
         <div
           className="relative h-[185px] w-full overflow-hidden group select-none"
           onTouchStart={handleTouchStart}
