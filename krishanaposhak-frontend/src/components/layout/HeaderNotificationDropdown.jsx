@@ -1,7 +1,17 @@
 import { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiBell, FiCheck, FiInbox, FiChevronDown } from 'react-icons/fi';
+import {
+  FiBell,
+  FiCheck,
+  FiInbox,
+  FiChevronRight,
+  FiShoppingBag,
+  FiCreditCard,
+  FiTag,
+  FiInfo,
+  FiGift,
+} from 'react-icons/fi';
 import Spinner from '@/components/ui/Spinner';
 import { formatDate } from '@/utils/formatDate';
 import { ROUTE_PATHS } from '@/routes/routePaths';
@@ -11,6 +21,38 @@ import {
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
 } from '@/hooks/useNotifications';
+
+const getNotifIcon = (type) => {
+  switch (type) {
+    case 'ORDER':
+      return <FiShoppingBag className="h-3.5 w-3.5 text-amber-700" />;
+    case 'PAYMENT':
+      return <FiCreditCard className="h-3.5 w-3.5 text-emerald-700" />;
+    case 'COUPON':
+      return <FiTag className="h-3.5 w-3.5 text-indigo-700" />;
+    case 'PROMOTION':
+      return <FiGift className="h-3.5 w-3.5 text-rose-700" />;
+    case 'SYSTEM':
+    default:
+      return <FiInfo className="h-3.5 w-3.5 text-blue-700" />;
+  }
+};
+
+const getIconBg = (type) => {
+  switch (type) {
+    case 'ORDER':
+      return 'bg-amber-100/80 border-amber-200/60';
+    case 'PAYMENT':
+      return 'bg-emerald-100/80 border-emerald-200/60';
+    case 'COUPON':
+      return 'bg-indigo-100/80 border-indigo-200/60';
+    case 'PROMOTION':
+      return 'bg-rose-100/80 border-rose-200/60';
+    case 'SYSTEM':
+    default:
+      return 'bg-blue-100/80 border-blue-200/60';
+  }
+};
 
 export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }) {
   const dropdownRef = useRef(null);
@@ -52,45 +94,49 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
 
   return (
     <div className="relative" ref={dropdownRef}>
+      {/* Trigger Bell Button */}
       <button
         type="button"
         onClick={onToggle}
-        className={`group relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-lotus-white transition-all duration-200 hover:border-temple-gold/60 hover:bg-temple-gold/15 hover:text-temple-gold-light hover:shadow-[0_6px_18px_rgba(201,154,59,0.22)] active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-temple-gold/60 ${
-          isOpen ? 'border-temple-gold/60 bg-temple-gold/15 text-temple-gold-light' : ''
+        className={`group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${
+          isOpen
+            ? 'border-[#C99A3B]/60 bg-amber-50/80 text-[#C99A3B] shadow-2xs'
+            : 'border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-[#C99A3B]/50 hover:bg-amber-50/50 hover:text-[#C99A3B]'
         }`}
         aria-label={`Notifications (${unreadCountNum} unread)`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <FiBell className="h-5 w-5" />
+        <FiBell className="h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-105" />
         {unreadCountNum > 0 && (
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold font-mono text-white shadow-sm animate-badge-pop"
+            className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 font-mono text-[9px] font-bold text-white shadow-2xs ring-2 ring-white"
           >
             {unreadCountNum > 99 ? '99+' : unreadCountNum}
           </motion.span>
         )}
       </button>
 
+      {/* Dropdown Container */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute right-0 top-full z-50 mt-3 w-[min(21rem,calc(100vw-1rem))] max-w-[calc(100vw-24px)] origin-top-right overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,36,64,0.18)]"
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+            className="absolute right-0 top-full z-50 mt-2.5 w-[calc(100vw-1.5rem)] max-w-sm origin-top-right overflow-hidden rounded-2xl border border-slate-200/90 bg-white font-sans text-slate-800 shadow-[0_20px_50px_rgba(15,36,64,0.16)]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 bg-warm-cream/40 px-4 py-3">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-amber-50/30 px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-deep-navy">
+                <span className="font-heading text-xs font-bold uppercase tracking-wider text-[#0F2440]">
                   Notifications
                 </span>
                 {unreadCountNum > 0 && (
-                  <span className="rounded-full bg-rose-500/10 px-2 py-0.5 text-[9px] font-bold text-rose-600 font-mono border border-rose-500/30">
+                  <span className="rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 font-mono text-[10px] font-bold text-rose-600">
                     {unreadCountNum} New
                   </span>
                 )}
@@ -100,55 +146,74 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
                   type="button"
                   onClick={() => markAllReadMutation.mutate()}
                   disabled={markAllReadMutation.isPending}
-                  className="flex items-center gap-1 text-[10px] font-bold text-temple-gold-dark hover:underline disabled:opacity-50"
+                  className="flex items-center gap-1 text-[11px] font-semibold text-[#C99A3B] transition-colors hover:text-amber-800 hover:underline disabled:opacity-50"
                 >
                   <FiCheck className="h-3 w-3" /> Mark all read
                 </button>
               )}
             </div>
 
-            {/* Notifications List */}
-            <div className="max-h-72 divide-y divide-slate-100 overflow-y-auto">
+            {/* Notification List */}
+            <div className="max-h-72 divide-y divide-slate-100 overflow-y-auto custom-scrollbar">
               {isLoading ? (
                 <div className="p-6 text-center">
                   <Spinner size="sm" label="Loading notifications..." />
                 </div>
               ) : notifList.length > 0 ? (
-                notifList.map((notif) => (
-                  <div
-                    key={notif.id}
-                    onClick={() => handleNotificationClick(notif)}
-                    className="cursor-pointer space-y-1 p-3.5 transition-colors hover:bg-temple-gold/5"
-                  >
-                    <p className="text-xs text-dark-charcoal font-bold line-clamp-1">
-                      {notif.title || notif.message}
-                    </p>
-                    {notif.title && notif.message && (
-                      <p className="text-[11px] text-natural-wood line-clamp-2 font-light">
-                        {notif.message}
-                      </p>
-                    )}
-                    <span className="text-[9px] text-natural-wood block font-mono">
-                      {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}
-                    </span>
-                  </div>
-                ))
+                notifList.map((notif) => {
+                  const isUnread = !notif.isRead && !notif.read;
+                  return (
+                    <div
+                      key={notif.id}
+                      onClick={() => handleNotificationClick(notif)}
+                      className={`flex cursor-pointer items-start gap-3 p-3.5 transition-colors ${
+                        isUnread ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border ${getIconBg(notif.type)}`}>
+                        {getNotifIcon(notif.type)}
+                      </div>
+
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <div className="flex items-start justify-between gap-1">
+                          <p className={`text-xs leading-snug ${isUnread ? 'font-bold text-slate-950 font-heading' : 'font-semibold text-slate-800 font-sans'}`}>
+                            {notif.title || notif.message}
+                          </p>
+                          {isUnread && (
+                            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />
+                          )}
+                        </div>
+
+                        {notif.title && notif.message && (
+                          <p className="line-clamp-2 text-[11px] leading-relaxed text-slate-500 font-normal">
+                            {notif.message}
+                          </p>
+                        )}
+
+                        <span className="block font-mono text-[9px] text-slate-400">
+                          {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
               ) : (
-                <div className="space-y-1 p-8 text-center text-natural-wood">
-                  <FiInbox className="h-6 w-6 mx-auto opacity-50 text-temple-gold" />
-                  <p className="text-xs font-semibold">No new notifications</p>
+                <div className="space-y-1 p-8 text-center text-slate-400">
+                  <FiInbox className="mx-auto h-6 w-6 text-amber-500/70 opacity-60" />
+                  <p className="text-xs font-semibold text-slate-600">No unread notifications</p>
+                  <p className="text-[11px] text-slate-400">You are all caught up!</p>
                 </div>
               )}
             </div>
 
             {/* Footer */}
-            <div className="border-t border-slate-100 bg-warm-cream/20">
+            <div className="border-t border-slate-100 bg-slate-50/60 p-1.5 text-center">
               <Link
                 to={ROUTE_PATHS.NOTIFICATIONS}
                 onClick={onClose}
-                className="flex items-center justify-center gap-1 px-4 py-2.5 text-[11px] font-bold text-temple-gold-dark hover:bg-warm-cream/60 transition-colors"
+                className="flex items-center justify-center gap-1 rounded-xl px-3 py-2 text-xs font-bold text-[#C99A3B] transition-colors hover:bg-white hover:shadow-2xs"
               >
-                View Notification Center <FiChevronDown className="h-3.5 w-3.5 -rotate-90" />
+                Notification Center <FiChevronRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </motion.div>

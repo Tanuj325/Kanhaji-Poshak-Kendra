@@ -211,29 +211,46 @@ export default function AdminTopbar({ title, onMenuToggle }) {
                       <Spinner size="sm" label="Loading notifications..." />
                     </div>
                   ) : notifList.length > 0 ? (
-                    notifList.map((notif) => (
-                      <div
-                        key={notif.id}
-                        onClick={() => {
-                          if (!notif.isRead && !notif.read) {
-                            markReadMutation.mutate({ id: notif.id, data: { isRead: true, read: true } });
-                          }
-                        }}
-                        className="p-2.5 hover:bg-slate-50 cursor-pointer transition-colors rounded-xl m-0.5"
-                      >
-                        <p className="text-xs text-slate-900 font-semibold">{notif.title || notif.message}</p>
-                        {notif.title && notif.message && (
-                          <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{notif.message}</p>
-                        )}
-                        <span className="text-[9px] text-slate-400 mt-1 block font-mono">
-                          {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}
-                        </span>
-                      </div>
-                    ))
+                    notifList.map((notif) => {
+                      const isUnread = !notif.isRead && !notif.read;
+                      return (
+                        <div
+                          key={notif.id}
+                          onClick={() => {
+                            if (isUnread) {
+                              markReadMutation.mutate({ id: notif.id, data: { isRead: true, read: true } });
+                            }
+                          }}
+                          className={`flex items-start gap-2.5 p-2.5 cursor-pointer transition-colors rounded-xl m-0.5 ${
+                            isUnread ? 'bg-amber-50/50 hover:bg-amber-50/80' : 'hover:bg-slate-50'
+                          }`}
+                        >
+                          <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-amber-100/80 border border-amber-200/60 text-amber-800">
+                            <FiBell className="h-3.5 w-3.5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-start justify-between gap-1">
+                              <p className={`text-xs ${isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}`}>
+                                {notif.title || notif.message}
+                              </p>
+                              {isUnread && (
+                                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />
+                              )}
+                            </div>
+                            {notif.title && notif.message && (
+                              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{notif.message}</p>
+                            )}
+                            <span className="text-[9px] text-slate-400 mt-1 block font-mono">
+                              {notif.createdAt ? formatDate(notif.createdAt, { format: 'datetime' }) : ''}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })
                   ) : (
                     <div className="p-6 text-center text-slate-400">
                       <FiInbox className="h-5 w-5 mx-auto mb-1.5 opacity-40 text-amber-500" />
-                      <p className="text-xs">No unread notifications</p>
+                      <p className="text-xs font-semibold text-slate-600">No unread notifications</p>
                     </div>
                   )}
                 </div>
