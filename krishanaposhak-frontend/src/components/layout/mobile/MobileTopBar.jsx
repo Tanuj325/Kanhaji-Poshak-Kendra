@@ -156,7 +156,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
               onClose={() => setNotifOpen(false)}
               buttonClassName="relative flex h-7 w-7 items-center justify-center text-white/90 hover:text-white active-tap-scale rounded-md bg-transparent border-0 outline-none focus:outline-none p-0"
               iconClassName="w-[18px] h-[18px]"
-              badgeClassName="absolute -top-1 -right-1 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-amber-400 px-0.5 font-mono text-[8px] font-bold text-stone-950 border border-[#0f2440] shadow-2xs"
+              badgeClassName="absolute top-1 right-1 flex h-2 w-2 min-w-[14px] items-center justify-center rounded-full bg-amber-400 px-0.5 font-mono text-[8px] font-bold text-stone-950 border border-[#0f2440] shadow-2xs"
             />
           </div>
         </div>
