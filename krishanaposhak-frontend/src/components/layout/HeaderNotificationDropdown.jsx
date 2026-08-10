@@ -54,7 +54,7 @@ const getIconBg = (type) => {
   }
 };
 
-export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }) {
+export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose, buttonClassName }) {
   const dropdownRef = useRef(null);
 
   const { data: unreadCount = 0 } = useUnreadNotificationCount();
@@ -92,6 +92,10 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
     }
   };
 
+  const defaultBtnClass = isOpen
+    ? 'border-[#C99A3B]/60 bg-amber-50/80 text-[#C99A3B] shadow-2xs'
+    : 'border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-[#C99A3B]/50 hover:bg-amber-50/50 hover:text-[#C99A3B]';
+
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Trigger Bell Button */}
@@ -99,9 +103,7 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose }
         type="button"
         onClick={onToggle}
         className={`group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${
-          isOpen
-            ? 'border-[#C99A3B]/60 bg-amber-50/80 text-[#C99A3B] shadow-2xs'
-            : 'border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-[#C99A3B]/50 hover:bg-amber-50/50 hover:text-[#C99A3B]'
+          buttonClassName || defaultBtnClass
         }`}
         aria-label={`Notifications (${unreadCountNum} unread)`}
         aria-expanded={isOpen}

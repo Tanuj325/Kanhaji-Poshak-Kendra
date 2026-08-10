@@ -23,11 +23,12 @@ import { useScrollDirection } from '@/hooks/useScrollDirection';
 import { highlightMatch } from '@/utils/highlightMatch';
 import { formatPrice } from '@/utils/formatPrice';
 import OptimizedImage from '@/components/ui/OptimizedImage';
+import HeaderNotificationDropdown from '../HeaderNotificationDropdown';
 
 /**
  * MobileTopBar (<1024px)
  * Native Shopping App Redesigned Header:
- * Row 1: 52px height - Menu (☰) | Logo | Wishlist | Cart
+ * Row 1: 52px height - Menu (☰) | Logo | Notification | Cart
  * Row 2: 40px search bar, 16px radius, edge to edge with 12px margins (px-3)
  * Row 3: 32px height compact scrollable category chips
  */
@@ -40,7 +41,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
   const { cartCount } = useCartContext();
   const { wishlistCount } = useWishlistContext();
 
-  // Search State
+  // Notification & Search State
+  const [notifOpen, setNotifOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -154,18 +156,12 @@ export default function MobileTopBar({ onOpenDrawer }) {
           </Link>
 
           <div className="flex items-center">
-            <Link
-              to={ROUTE_PATHS.WISHLIST || '/customer/wishlist'}
-              aria-label={`Wishlist (${wishlistCount} items)`}
-              className="relative flex h-7 w-7 items-center justify-center text-white/90 hover:text-white active-tap-scale rounded-md"
-            >
-              <FiHeart className="w-[18px] h-[18px]" aria-hidden="true" />
-              {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[13px] h-[13px] px-0.5 flex items-center justify-center bg-amber-400 text-stone-950 text-[8px] font-bold rounded-full border border-[#0f2440]">
-                  {wishlistCount > 99 ? '99+' : wishlistCount}
-                </span>
-              )}
-            </Link>
+            <HeaderNotificationDropdown
+              isOpen={notifOpen}
+              onToggle={() => setNotifOpen((v) => !v)}
+              onClose={() => setNotifOpen(false)}
+              buttonClassName="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            />
           </div>
         </div>
 
