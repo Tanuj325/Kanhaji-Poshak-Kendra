@@ -54,7 +54,14 @@ const getIconBg = (type) => {
   }
 };
 
-export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose, buttonClassName }) {
+export default function HeaderNotificationDropdown({
+  isOpen,
+  onToggle,
+  onClose,
+  buttonClassName,
+  iconClassName,
+  badgeClassName,
+}) {
   const dropdownRef = useRef(null);
 
   const { data: unreadCount = 0 } = useUnreadNotificationCount();
@@ -102,19 +109,17 @@ export default function HeaderNotificationDropdown({ isOpen, onToggle, onClose, 
       <button
         type="button"
         onClick={onToggle}
-        className={`group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${
-          buttonClassName || defaultBtnClass
-        }`}
+        className={buttonClassName || `group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${defaultBtnClass}`}
         aria-label={`Notifications (${unreadCountNum} unread)`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <FiBell className="h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-105" />
+        <FiBell className={iconClassName || "h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-105"} />
         {unreadCountNum > 0 && (
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 font-mono text-[9px] font-bold text-white shadow-2xs ring-2 ring-white"
+            className={badgeClassName || "absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 font-mono text-[9px] font-bold text-white shadow-2xs ring-2 ring-white"}
           >
             {unreadCountNum > 99 ? '99+' : unreadCountNum}
           </motion.span>

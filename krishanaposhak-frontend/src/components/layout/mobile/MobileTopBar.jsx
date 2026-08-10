@@ -5,16 +5,12 @@ import {
   FiMenu,
   FiSearch,
   FiX,
-  FiHeart,
-  FiShoppingBag,
   FiClock,
   FiTrash2,
   FiArrowRight,
   FiLoader,
 } from 'react-icons/fi';
 import { ROUTE_PATHS } from '@/routes/routePaths';
-import { useCartContext } from '@/context/CartContext';
-import { useWishlistContext } from '@/context/WishlistContext';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategoryDropdown } from '@/hooks/useCategories';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
@@ -23,12 +19,11 @@ import { useScrollDirection } from '@/hooks/useScrollDirection';
 import { highlightMatch } from '@/utils/highlightMatch';
 import { formatPrice } from '@/utils/formatPrice';
 import OptimizedImage from '@/components/ui/OptimizedImage';
-import HeaderNotificationDropdown from '../HeaderNotificationDropdown';
 
 /**
  * MobileTopBar (<1024px)
  * Native Shopping App Redesigned Header:
- * Row 1: 52px height - Menu (☰) | Logo | Notification | Cart
+ * Row 1: 52px height - Menu (☰) | Logo | Wishlist | Cart
  * Row 2: 40px search bar, 16px radius, edge to edge with 12px margins (px-3)
  * Row 3: 32px height compact scrollable category chips
  */
@@ -38,11 +33,8 @@ export default function MobileTopBar({ onOpenDrawer }) {
   const activeCategoryParam = searchParams.get('categoryId') || searchParams.get('category') || 'all';
 
   const isVisible = useScrollDirection(60);
-  const { cartCount } = useCartContext();
-  const { wishlistCount } = useWishlistContext();
 
-  // Notification & Search State
-  const [notifOpen, setNotifOpen] = useState(false);
+  // Search State
   const [query, setQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -134,7 +126,7 @@ export default function MobileTopBar({ onOpenDrawer }) {
         className={`fixed top-0 left-0 right-0 z-40 bg-[#0f2440] text-white shadow-xs transition-transform duration-300 ease-in-out pt-safe ${isVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
       >
-        {/* ROW 1: Sleek Height 44px - Menu (☰) | Logo | Wishlist ONLY */}
+        {/* ROW 1: Sleek Height 44px - Menu (☰) | Logo | Notification */}
         <div className="flex items-center justify-between h-[44px] px-1.5 max-w-full">
           <button
             type="button"
@@ -160,7 +152,9 @@ export default function MobileTopBar({ onOpenDrawer }) {
               isOpen={notifOpen}
               onToggle={() => setNotifOpen((v) => !v)}
               onClose={() => setNotifOpen(false)}
-              buttonClassName="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+              buttonClassName="relative flex h-7 w-7 items-center justify-center text-white/90 hover:text-white active-tap-scale rounded-md bg-transparent border-none outline-none focus:outline-none"
+              iconClassName="w-[18px] h-[18px]"
+              badgeClassName="absolute top-0.5 right-0.5 min-w-[13px] h-[13px] px-0.5 flex items-center justify-center bg-amber-400 text-stone-950 text-[8px] font-bold rounded-full border border-[#0f2440]"
             />
           </div>
         </div>
