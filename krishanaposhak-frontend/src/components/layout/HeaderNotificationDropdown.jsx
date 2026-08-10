@@ -99,9 +99,11 @@ export default function HeaderNotificationDropdown({
     }
   };
 
-  const defaultBtnClass = isOpen
-    ? 'border-[#C99A3B]/60 bg-amber-50/80 text-[#C99A3B] shadow-2xs'
-    : 'border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-[#C99A3B]/50 hover:bg-amber-50/50 hover:text-[#C99A3B]';
+  const defaultBtnClass = `group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${
+    isOpen
+      ? 'border-[#C99A3B]/60 bg-amber-50/80 text-[#C99A3B] shadow-2xs'
+      : 'border-slate-200/80 bg-slate-50/70 text-slate-700 hover:border-[#C99A3B]/50 hover:bg-amber-50/50 hover:text-[#C99A3B]'
+  }`;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -109,7 +111,7 @@ export default function HeaderNotificationDropdown({
       <button
         type="button"
         onClick={onToggle}
-        className={buttonClassName || `group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A3B]/50 ${defaultBtnClass}`}
+        className={buttonClassName || defaultBtnClass}
         aria-label={`Notifications (${unreadCountNum} unread)`}
         aria-expanded={isOpen}
         aria-haspopup="true"
