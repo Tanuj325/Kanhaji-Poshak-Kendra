@@ -160,11 +160,11 @@ export default function HeroBanner() {
   const banner = bannerList[currentIndex];
 
   return (
-    <section className="relative m-5 mb-0 overflow-hidden bg-white font-display select-none">
+    <section className="relative overflow-hidden bg-white font-display select-none">
       {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
-      <div className="block lg:hidden w-full overflow-hidden relative bg-stone-950">
+      <div className="block m-2 mb-0 lg:hidden w-full overflow-hidden relative bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] ring-1 ring-black/5">
         <div
-          className="relative h-[185px] w-full overflow-hidden group select-none"
+          className="relative h-[190px] w-full overflow-hidden group select-none"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -172,10 +172,10 @@ export default function HeroBanner() {
           <AnimatePresence mode="wait">
             <motion.div
               key={banner.id || currentIndex}
-              initial={{ opacity: 0, scale: 1.03 }}
+              initial={{ opacity: 0, scale: 1.06 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0"
             >
               <OptimizedImage
@@ -188,22 +188,24 @@ export default function HeroBanner() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent pointer-events-none" />
+          {/* Richer multi-stop gradient for depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/40 via-40% to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-950/20 pointer-events-none" />
 
           {/* Banner Content: Badge, Full Title, CTA Button */}
-          <div className="absolute bottom-5 left-4 right-4 flex items-end justify-between gap-3 z-10">
-            <div className="space-y-1 min-w-0 flex-1">
-              <span className="text-[9px] font-bold text-stone-950 bg-amber-400 px-2 py-0.5 rounded-full inline-block uppercase tracking-wider shadow-xs">
+          <div className="absolute bottom-6 left-4 right-4 flex items-end justify-between gap-3 z-10">
+            <div className="space-y-1.5 min-w-0 flex-1">
+              <span className="text-[9px] font-bold text-stone-950 bg-gradient-to-r from-amber-400 to-amber-300 px-2.5 py-1 rounded-full inline-block uppercase tracking-widest shadow-[0_2px_8px_rgba(251,191,36,0.4)]">
                 {banner.subtitle || 'Special Collection'}
               </span>
-              <h1 className="text-[14px] font-semibold text-white tracking-tight leading-snug line-clamp-2 drop-shadow-md">
+              <h1 className="text-[15px] font-semibold text-white tracking-tight leading-snug line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                 {banner.title || siteConfig.name}
               </h1>
             </div>
 
             <Link
               to={banner.redirectUrl || '/shop'}
-              className="inline-flex items-center gap-1 h-[25px] px-2.5 rounded-full bg-amber-400 text-stone-950 text-[10px] font-semibold active-tap-scale shrink-0 shadow-none"
+              className="inline-flex items-center gap-1 h-[27px] px-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 text-stone-950 text-[10px] font-bold active-tap-scale shrink-0 shadow-[0_4px_12px_rgba(251,191,36,0.45)] backdrop-blur-sm"
             >
               <span>Shop Now</span>
               <FiArrowRight className="h-3 w-3" />
@@ -212,7 +214,7 @@ export default function HeroBanner() {
 
           {/* Bottom Running Timeline Progress Dots */}
           {bannerList.length > 1 && (
-            <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
+            <div className="absolute bottom-2.5 left-0 right-0 z-20 flex justify-center items-center gap-1.5 pointer-events-auto">
               {bannerList.map((_, i) => {
                 const isActive = i === currentIndex;
                 return (
@@ -224,14 +226,14 @@ export default function HeroBanner() {
                     className="p-1 focus:outline-none"
                   >
                     {isActive ? (
-                      <div className="h-1.5 w-6 rounded-full bg-white/30 overflow-hidden relative">
+                      <div className="h-1.5 w-7 rounded-full bg-white/25 overflow-hidden relative backdrop-blur-sm">
                         <div
-                          className="h-full bg-amber-400 rounded-full transition-all duration-75 ease-linear"
+                          className="h-full bg-gradient-to-r from-amber-400 to-amber-300 rounded-full transition-all duration-75 ease-linear shadow-[0_0_6px_rgba(251,191,36,0.6)]"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
                     ) : (
-                      <div className="h-1.5 w-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-colors" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/35 hover:bg-white/70 transition-colors duration-200" />
                     )}
                   </button>
                 );
@@ -239,15 +241,8 @@ export default function HeroBanner() {
             </div>
           )}
 
-          {/* Running Timeline Edge Bar at Very Bottom */}
-          {bannerList.length > 1 && (
-            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/15 z-20 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-all duration-75 ease-linear"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          )}
+          {/* Subtle inner top highlight for glass feel */}
+          <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/10 to-transparent pointer-events-none z-[5]" />
         </div>
       </div>
 
