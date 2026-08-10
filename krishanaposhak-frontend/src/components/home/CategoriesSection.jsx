@@ -75,7 +75,7 @@ const CategoriesSection = memo(function CategoriesSection() {
         {/* ─── NEW MOBILE UI (<1024px) ─── */}
         <div className="block lg:hidden">
           {/* Header: Title left 16px, View All right 12px */}
-          <div className="flex items-center justify-between mb-3 px-4">
+          <div className="flex items-center justify-between mb-3 px-1">
             <h2 className="text-[16px] font-semibold text-stone-900 leading-none">
               Featured Collections
             </h2>
@@ -89,7 +89,7 @@ const CategoriesSection = memo(function CategoriesSection() {
           </div>
 
           {/* Horizontal Snap Scroll Category Strip */}
-          <div className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-4 pb-1">
+          <div className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-3 px-1 pb-1">
             {categoryList.map((category) => (
               <Link
                 key={category.slug}

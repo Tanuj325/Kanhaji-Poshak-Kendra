@@ -126,7 +126,7 @@ const FeaturedProducts = memo(function FeaturedProducts() {
         {/* ─── NEW MOBILE UI (<1024px) ─── */}
         <div className="block lg:hidden">
           {/* Header: Title left 16px, View All right 12px */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 px-4">
             <h2 className="text-[16px] font-semibold text-stone-900 leading-none">
               Featured Products
             </h2>
