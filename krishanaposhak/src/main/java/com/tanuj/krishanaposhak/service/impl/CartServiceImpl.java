@@ -53,11 +53,18 @@ public class CartServiceImpl implements CartService {
                 ? request.getColor().trim()
                 : null;
 
-        // Look up existing item in cart by variant ID to avoid duplicate key conflicts
+        // Find existing cart item matching Product Variant AND Selected Color
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProductVariant() != null && item.getProductVariant().getId().equals(variant.getId()))
+                .filter(item -> {
+                    if (targetColor == null) {
+                        return item.getColor() == null || item.getColor().trim().isEmpty();
+                    } else {
+                        return item.getColor() != null && item.getColor().trim().equalsIgnoreCase(targetColor);
+                    }
+                })
                 .findFirst()
-                .orElseGet(() -> cartItemRepository.findByCartIdAndProductVariantId(cart.getId(), variant.getId()).orElse(null));
+                .orElse(null);
 
         int desiredQuantity = (cartItem == null ? 0 : cartItem.getQuantity()) + request.getQuantity();
         if (variant.getStock() < desiredQuantity) {
@@ -76,9 +83,6 @@ public class CartServiceImpl implements CartService {
             cart.getCartItems().add(cartItem);
         } else {
             cartItem.setQuantity(desiredQuantity);
-            if (targetColor != null) {
-                cartItem.setColor(targetColor);
-            }
             cartItemRepository.save(cartItem);
         }
 
