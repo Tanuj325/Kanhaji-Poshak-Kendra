@@ -564,12 +564,17 @@ export default memo(function MobileOrderDetail({
                           {productName}
                         </Link>
 
-                        <div className="flex items-center gap-2 text-xs text-stone-500 font-medium mt-1">
+                        <div className="flex items-center gap-1.5 flex-wrap text-xs text-stone-500 font-medium mt-1">
                           {(item.size || item.variantName || item.variant?.size) && (
                             <span>Size: {item.size || item.variantName || item.variant?.size}</span>
                           )}
-                          {(item.size || item.variantName || item.variant?.size) && <span>•</span>}
-                          <span>Qty: {item.quantity || 1}</span>
+                          {item.color && (
+                            <>
+                              {(item.size || item.variantName || item.variant?.size) && <span>•</span>}
+                              <span className="text-amber-900 font-bold">Color: {item.color}</span>
+                            </>
+                          )}
+                          <span>• Qty: {item.quantity || 1}</span>
                         </div>
 
                         <p className="text-base md:text-lg font-bold text-[#0f2440] font-display mt-1.5">
