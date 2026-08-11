@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -83,8 +82,6 @@ public class SecurityConfig {
                                                 // Protected APIs
                                                 .anyRequest().authenticated())
 
-                                .authenticationProvider(authenticationProvider())
-
                                 .addFilterBefore(
                                                 jwtAuthenticationFilter,
                                                 UsernamePasswordAuthenticationFilter.class)
@@ -103,16 +100,6 @@ public class SecurityConfig {
                                                                 HeadersConfigurer.HstsConfig::disable));
 
                 return http.build();
-        }
-
-        @Bean
-        public DaoAuthenticationProvider authenticationProvider() {
-
-                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-
-                provider.setPasswordEncoder(passwordEncoder());
-
-                return provider;
         }
 
         @Bean
