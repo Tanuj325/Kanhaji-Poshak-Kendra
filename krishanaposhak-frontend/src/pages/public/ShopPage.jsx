@@ -184,7 +184,14 @@ export default function ShopPage() {
   const wishlistVariantIds = useMemo(() => {
     if (!wishlist) return new Set();
     const items = Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || [];
-    return new Set(items.map((item) => item.productVariantId || item.variantId || item.id));
+    const set = new Set();
+    items.forEach((item) => {
+      if (item.productId) set.add(Number(item.productId));
+      if (item.variantId) set.add(Number(item.variantId));
+      if (item.productVariantId) set.add(Number(item.productVariantId));
+      if (item.id) set.add(Number(item.id));
+    });
+    return set;
   }, [wishlist]);
 
   const activeFilterCount = useMemo(() => {
@@ -283,12 +290,13 @@ export default function ShopPage() {
         navigate(`${ROUTE_PATHS.LOGIN || '/login'}?redirect=${encodeURIComponent(location.pathname + location.search)}`);
         return;
       }
-      const variantId = product?.variantId || product?.variants?.[0]?.id || product?.id;
-      if (!variantId) return;
-      if (wishlistVariantIds.has(variantId)) {
-        removeFromWishlistMutation.mutate(variantId);
+      const targetId = product?.variantId || product?.variants?.[0]?.id || product?.id;
+      if (!targetId) return;
+      const isWishlisted = wishlistVariantIds.has(Number(product.id)) || (product.variantId && wishlistVariantIds.has(Number(product.variantId))) || wishlistVariantIds.has(Number(targetId));
+      if (isWishlisted) {
+        removeFromWishlistMutation.mutate(targetId);
       } else {
-        addToWishlistMutation.mutate({ productId: variantId });
+        addToWishlistMutation.mutate({ productId: targetId });
       }
     },
     [isAuthenticated, navigate, location, wishlistVariantIds, addToWishlistMutation, removeFromWishlistMutation],
@@ -534,7 +542,7 @@ className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-1.
                           onAddToCart={handleAddToCart}
                           onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
                           onQuickView={setQuickViewProduct}
-                          isInWishlist={wishlistVariantIds.has(product.id)}
+                          isInWishlist={wishlistVariantIds.has(Number(product.id)) || (product.variantId && wishlistVariantIds.has(Number(product.variantId)))}
                         />
                       </motion.div>
                     ))}

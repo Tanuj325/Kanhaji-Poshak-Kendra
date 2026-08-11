@@ -55,7 +55,14 @@ const BestSellers = memo(function BestSellers() {
   const wishlistVariantIds = useMemo(() => {
     if (!wishlist) return new Set();
     const items = Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || [];
-    return new Set(items.map((item) => item.productVariantId || item.variantId || item.id));
+    const set = new Set();
+    items.forEach((item) => {
+      if (item.productId) set.add(Number(item.productId));
+      if (item.variantId) set.add(Number(item.variantId));
+      if (item.productVariantId) set.add(Number(item.productVariantId));
+      if (item.id) set.add(Number(item.id));
+    });
+    return set;
   }, [wishlist]);
 
   const productList = useMemo(() => {
@@ -75,12 +82,13 @@ const BestSellers = memo(function BestSellers() {
   const handleWishlistToggle = useCallback(
     (product) => {
       if (!isAuthenticated) return;
-      const variantId = product?.variantId || product?.id;
-      if (!variantId) return;
-      if (wishlistVariantIds.has(variantId)) {
-        removeFromWishlistMutation.mutate(variantId);
+      const targetId = product?.variantId || product?.id;
+      if (!targetId) return;
+      const isWishlisted = wishlistVariantIds.has(Number(product.id)) || (product.variantId && wishlistVariantIds.has(Number(product.variantId)));
+      if (isWishlisted) {
+        removeFromWishlistMutation.mutate(targetId);
       } else {
-        addToWishlistMutation.mutate({ productId: variantId });
+        addToWishlistMutation.mutate({ productId: targetId });
       }
     },
     [isAuthenticated, wishlistVariantIds, addToWishlistMutation, removeFromWishlistMutation],
@@ -150,7 +158,7 @@ const BestSellers = memo(function BestSellers() {
                   product={product}
                   onAddToCart={handleAddToCart}
                   onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
-                  isInWishlist={wishlistVariantIds.has(product.id)}
+                  isInWishlist={wishlistVariantIds.has(Number(product.id)) || (product.variantId && wishlistVariantIds.has(Number(product.variantId)))}
                 />
               </div>
             ))}
@@ -190,7 +198,7 @@ const BestSellers = memo(function BestSellers() {
                   product={product}
                   onAddToCart={handleAddToCart}
                   onAddToWishlist={isAuthenticated ? handleWishlistToggle : undefined}
-                  isInWishlist={wishlistVariantIds.has(product.id)}
+                  isInWishlist={wishlistVariantIds.has(Number(product.id)) || (product.variantId && wishlistVariantIds.has(Number(product.variantId)))}
                 />
               </motion.div>
             ))}

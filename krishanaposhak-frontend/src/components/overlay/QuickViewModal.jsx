@@ -54,14 +54,20 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
   const stock = selectedVariant ? selectedVariant.stock : product.stock ?? 10;
   const isOutOfStock = stock === 0;
 
-  const wishlistVariantIds = new Set(
-    (Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || []).map(
-      (item) => item.productVariantId || item.variantId || item.id,
-    ),
-  );
+  const wishlistVariantIds = useMemo(() => {
+    const set = new Set();
+    const items = Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || [];
+    items.forEach((item) => {
+      if (item.productId) set.add(Number(item.productId));
+      if (item.variantId) set.add(Number(item.variantId));
+      if (item.productVariantId) set.add(Number(item.productVariantId));
+      if (item.id) set.add(Number(item.id));
+    });
+    return set;
+  }, [wishlist]);
 
   const targetVariantId = selectedVariant?.id || product.id;
-  const isInWishlist = wishlistVariantIds.has(targetVariantId);
+  const isInWishlist = wishlistVariantIds.has(Number(targetVariantId)) || wishlistVariantIds.has(Number(product.id));
 
   const handleAddToCart = () => {
     if (!targetVariantId) return;

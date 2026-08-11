@@ -36,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistMapper wishlistMapper;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<WishlistResponse> getWishlist(Long userId) {
         Wishlist wishlist = findOrCreateWishlist(userId);
         List<WishlistItem> items = wishlistItemRepository.findByWishlistIdOrderByCreatedAtDesc(wishlist.getId());
@@ -72,7 +72,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean isInWishlist(Long userId, Long productVariantId) {
         Wishlist wishlist = findOrCreateWishlist(userId);
         return wishlistItemRepository.existsByWishlistIdAndProductVariantId(wishlist.getId(), productVariantId);
