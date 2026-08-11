@@ -24,12 +24,17 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class RateLimitingFilter extends OncePerRequestFilter {
 
     private final RateLimiterService rateLimiterService;
     private final RateLimitProperties rateLimitProperties;
     private final ObjectMapper objectMapper;
+
+    public RateLimitingFilter(RateLimiterService rateLimiterService, RateLimitProperties rateLimitProperties) {
+        this.rateLimiterService = rateLimiterService;
+        this.rateLimitProperties = rateLimitProperties;
+        this.objectMapper = new ObjectMapper().findAndRegisterModules();
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
