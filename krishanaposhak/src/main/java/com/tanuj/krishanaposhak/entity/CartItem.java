@@ -16,7 +16,8 @@ import java.math.BigDecimal;
         name = "cart_items",
         indexes = {
                 @Index(name = "idx_cart_item_cart", columnList = "cart_id"),
-                @Index(name = "idx_cart_item_variant", columnList = "product_variant_id")
+                @Index(name = "idx_cart_item_variant", columnList = "product_variant_id"),
+                @Index(name = "idx_cart_item_cart_variant_color", columnList = "cart_id, product_variant_id, color")
         }
 )
 public class CartItem extends BaseEntity {

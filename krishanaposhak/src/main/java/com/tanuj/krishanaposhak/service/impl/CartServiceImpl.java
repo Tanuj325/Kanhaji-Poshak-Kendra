@@ -49,18 +49,42 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product variant not found with id: " + request.getProductVariantId()));
 
-        String targetColor = org.apache.commons.lang3.StringUtils.isNotBlank(request.getColor())
-                ? request.getColor().trim()
+        String rawColor = request.getColor();
+        String targetColor = org.apache.commons.lang3.StringUtils.isNotBlank(rawColor)
+                ? rawColor.trim()
                 : null;
 
-        // Look up existing cart item matching BOTH Product Variant AND Color
+        // Authoritative color validation against product configuration
+        com.tanuj.krishanaposhak.entity.Product product = variant.getProduct();
+        String configuredColor = product != null ? product.getColor() : null;
+
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(targetColor)) {
+            if (org.apache.commons.lang3.StringUtils.isBlank(configuredColor)) {
+                throw new BadRequestException("Color selection is not allowed for this product");
+            }
+            java.util.List<String> allowedColors = java.util.Arrays.stream(configuredColor.split(","))
+                    .map(String::trim)
+                    .filter(org.apache.commons.lang3.StringUtils::isNotBlank)
+                    .collect(java.util.stream.Collectors.toList());
+
+            final String searchColorReq = targetColor;
+            String matchedColor = allowedColors.stream()
+                    .filter(c -> c.equalsIgnoreCase(searchColorReq))
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException(
+                            "Selected color '" + rawColor + "' is not available for product '" + product.getName() + "'. Available colors: " + configuredColor));
+            targetColor = matchedColor;
+        }
+
+        // Look up existing cart item matching BOTH Product Variant AND Color (handling NULL correctly)
+        final String searchColor = targetColor;
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProductVariant() != null && item.getProductVariant().getId().equals(variant.getId()))
                 .filter(item -> {
-                    if (targetColor == null) {
+                    if (searchColor == null) {
                         return item.getColor() == null || item.getColor().trim().isEmpty();
                     } else {
-                        return item.getColor() != null && item.getColor().trim().equalsIgnoreCase(targetColor);
+                        return item.getColor() != null && item.getColor().trim().equalsIgnoreCase(searchColor);
                     }
                 })
                 .findFirst()

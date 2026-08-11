@@ -91,10 +91,15 @@ const CartItem = memo(function CartItem({
             {productName}
           </Link>
 
-          <div className="flex items-center gap-2 text-[11px] text-slate-300">
+          <div className="flex items-center gap-2 text-[11px] text-slate-300 flex-wrap">
             {size && (
               <span className="bg-amber-400/20 text-amber-200 font-semibold px-2 py-0.5 rounded text-[10px] uppercase">
                 Size: {size}
+              </span>
+            )}
+            {item.color && (
+              <span className="bg-amber-400/20 text-amber-200 font-semibold px-2 py-0.5 rounded text-[10px]">
+                Color: {item.color}
               </span>
             )}
             <span className="font-semibold text-white">
@@ -225,6 +230,11 @@ const CartItem = memo(function CartItem({
                 {size && (
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100/70 text-amber-950 border border-amber-300/40">
                     Size: {size}
+                  </span>
+                )}
+                {item.color && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100/70 text-amber-950 border border-amber-300/40">
+                    Color: {item.color}
                   </span>
                 )}
                 {itemSku && (

@@ -100,7 +100,7 @@ export default function ProductDetailPage() {
       toast.error('Please select a size first');
       return;
     }
-    addItem(selectedVariant.id, 1);
+    addItem(selectedVariant.id, 1, selectedColor);
   };
 
   const activePrice = selectedVariant?.price || product?.price;

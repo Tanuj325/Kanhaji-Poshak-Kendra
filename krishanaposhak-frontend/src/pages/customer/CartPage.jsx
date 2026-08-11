@@ -258,7 +258,7 @@ function CartPage() {
                 <AnimatePresence mode="popLayout">
                   {items.map((item) => (
                     <CartItem
-                      key={`cart-page-item-${item.cartItemId || item.id || item.variantId || item.productId}`}
+                      key={`cart-page-item-${item.cartItemId || item.id || `${item.variantId}-${item.color || 'default'}`}`}
                       item={item}
                       onUpdateQuantity={handleUpdateQuantity}
                       onRemove={handleRemoveItem}

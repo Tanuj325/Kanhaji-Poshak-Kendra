@@ -160,7 +160,7 @@ export const CartDrawer = memo(function CartDrawer() {
                     <AnimatePresence mode="popLayout">
                       {cartItems.map((item) => (
                         <CartItem
-                          key={`drawer-item-${item.cartItemId || item.id || item.variantId}`}
+                          key={`drawer-item-${item.cartItemId || item.id || `${item.variantId}-${item.color || 'default'}`}`}
                           item={item}
                           compact
                           onUpdateQuantity={(id, qty) => updateQuantity(id, qty)}
