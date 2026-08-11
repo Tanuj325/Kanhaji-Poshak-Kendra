@@ -162,7 +162,7 @@ export default function HeroBanner() {
   return (
     <section className="relative overflow-hidden bg-stone-50/60 font-display select-none">
       {/* ─── NEW MOBILE UI (<1024px - Full-width Edge-to-Edge Premium Banner) ─── */}
-      <div className="block mt-3 ml-1 mr-1 mb-0 lg:hidden w-[calc(100%-1.5rem)] overflow-hidden relative bg-white rounded-l rounded-r">
+      <div className="block mt-3 ml-1.5 mr-1 mb-0 lg:hidden w-[calc(100%-1.5rem)] overflow-hidden relative bg-white rounded-l rounded-r">
         <div
           className="relative h-[185px] w-full overflow-hidden group select-none"
           onTouchStart={handleTouchStart}
