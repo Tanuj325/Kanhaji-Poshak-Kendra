@@ -82,7 +82,7 @@ export function CartProvider({ children }) {
   const grandTotal = Math.max(0, (subtotal + shippingCharge) - discount);
 
   const addItem = useCallback(
-    async (variantId, quantity = 1) => {
+    async (variantId, quantity = 1, color = null) => {
       if (!isAuthenticated) {
         toast.error('Please log in to add items to cart');
         return;
@@ -92,7 +92,7 @@ export function CartProvider({ children }) {
         toast.error('Invalid product variant');
         return;
       }
-      await addToCartMutation.mutateAsync({ productVariantId: targetVariantId, quantity });
+      await addToCartMutation.mutateAsync({ productVariantId: targetVariantId, quantity, color });
       openDrawer();
     },
     [isAuthenticated, addToCartMutation, openDrawer],

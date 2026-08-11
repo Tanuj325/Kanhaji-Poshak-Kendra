@@ -275,7 +275,7 @@ public class OrderServiceImpl implements OrderService {
                     .productName(variant.getProduct().getName())
                     .sku(variant.getSku())
                     .size(variant.getSize())
-                    .color(variant.getProduct().getColor())
+                    .color(item.getColor())
                     .productImage(pickThumbnail(variant))
                     .price(unitPrice)
                     .quantity(item.getQuantity())

@@ -10,7 +10,7 @@ import { ROUTE_PATHS, buildPath } from '@/routes/routePaths';
 import toast from 'react-hot-toast';
 import { FiShoppingBag, FiHeart, FiShare2, FiZap, FiInfo } from 'react-icons/fi';
 
-function ActionsBar({ selectedVariant }) {
+function ActionsBar({ selectedVariant, selectedColor }) {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const { isAuthenticated } = useAuth();
@@ -30,8 +30,8 @@ function ActionsBar({ selectedVariant }) {
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, quantity);
-  }, [isAuthenticated, selectedVariant, quantity, addItem, navigate]);
+    await addItem(selectedVariant.id, quantity, selectedColor);
+  }, [isAuthenticated, selectedVariant, quantity, selectedColor, addItem, navigate]);
 
   const handleBuyNow = useCallback(async () => {
     if (!isAuthenticated) {
@@ -43,9 +43,9 @@ function ActionsBar({ selectedVariant }) {
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, quantity);
+    await addItem(selectedVariant.id, quantity, selectedColor);
     navigate(ROUTE_PATHS.CHECKOUT);
-  }, [isAuthenticated, selectedVariant, quantity, addItem, navigate]);
+  }, [isAuthenticated, selectedVariant, quantity, selectedColor, addItem, navigate]);
 
   const handleWishlist = useCallback(async () => {
     if (!isAuthenticated) {

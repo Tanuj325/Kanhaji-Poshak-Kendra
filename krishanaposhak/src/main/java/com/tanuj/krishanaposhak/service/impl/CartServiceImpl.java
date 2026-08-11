@@ -49,9 +49,13 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product variant not found with id: " + request.getProductVariantId()));
 
-        CartItem cartItem = cartItemRepository
-                .findByCartIdAndProductVariantId(cart.getId(), variant.getId())
-                .orElse(null);
+        String targetColor = org.apache.commons.lang3.StringUtils.isNotBlank(request.getColor())
+                ? request.getColor().trim()
+                : null;
+
+        CartItem cartItem = targetColor != null
+                ? cartItemRepository.findByCartIdAndProductVariantIdAndColor(cart.getId(), variant.getId(), targetColor).orElse(null)
+                : cartItemRepository.findByCartIdAndProductVariantIdAndColorIsNull(cart.getId(), variant.getId()).orElse(null);
 
         int desiredQuantity = (cartItem == null ? 0 : cartItem.getQuantity()) + request.getQuantity();
         if (variant.getStock() < desiredQuantity) {
@@ -62,6 +66,7 @@ public class CartServiceImpl implements CartService {
             cartItem = CartItem.builder()
                     .cart(cart)
                     .productVariant(variant)
+                    .color(targetColor)
                     .quantity(request.getQuantity())
                     .price(variant.getPrice())
                     .build();

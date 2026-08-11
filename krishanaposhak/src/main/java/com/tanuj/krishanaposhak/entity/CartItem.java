@@ -17,12 +17,6 @@ import java.math.BigDecimal;
         indexes = {
                 @Index(name = "idx_cart_item_cart", columnList = "cart_id"),
                 @Index(name = "idx_cart_item_variant", columnList = "product_variant_id")
-        },
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_cart_variant",
-                        columnNames = {"cart_id", "product_variant_id"}
-                )
         }
 )
 public class CartItem extends BaseEntity {
@@ -34,6 +28,9 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id", nullable = false)
     private ProductVariant productVariant;
+
+    @Column(length = 50)
+    private String color;
 
     @Column(nullable = false)
     private Integer quantity;

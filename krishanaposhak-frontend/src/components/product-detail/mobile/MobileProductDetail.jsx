@@ -153,8 +153,8 @@ export default function MobileProductDetail({
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, numericQuantity);
-  }, [isAuthenticated, selectedVariant, numericQuantity, addItem, navigate]);
+    await addItem(selectedVariant.id, numericQuantity, selectedColor);
+  }, [isAuthenticated, selectedVariant, numericQuantity, selectedColor, addItem, navigate]);
 
   const handleBuyNow = useCallback(async () => {
     if (!isAuthenticated) {
@@ -166,9 +166,9 @@ export default function MobileProductDetail({
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, numericQuantity);
+    await addItem(selectedVariant.id, numericQuantity, selectedColor);
     navigate(ROUTE_PATHS.CHECKOUT);
-  }, [isAuthenticated, selectedVariant, numericQuantity, addItem, navigate]);
+  }, [isAuthenticated, selectedVariant, numericQuantity, selectedColor, addItem, navigate]);
 
   const handleWishlistToggle = useCallback(async () => {
     if (!isAuthenticated) {
