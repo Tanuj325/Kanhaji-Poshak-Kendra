@@ -211,9 +211,7 @@ const COLOR_MAP = {
   steel: '#71797E',
 
   // Special / Luxury
-  royalBlue: '#4169E1',
   royalRed: '#9B111E',
-  royalPurple: '#7851A9',
   royalGreen: '#006B3C',
   royalMaroon: '#800000',
   templeGold: '#D4AF37',

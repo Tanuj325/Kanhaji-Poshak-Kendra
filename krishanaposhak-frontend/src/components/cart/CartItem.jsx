@@ -178,6 +178,11 @@ const CartItem = memo(function CartItem({
                   Size: {size}
                 </span>
               )}
+              {item.color && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100/70 text-amber-950 border border-amber-300/40 whitespace-nowrap">
+                  Color: {item.color}
+                </span>
+              )}
               {itemSku && (
                 <span className="text-[10px] font-mono text-stone-400 truncate max-w-[120px]">
                   SKU: {itemSku}

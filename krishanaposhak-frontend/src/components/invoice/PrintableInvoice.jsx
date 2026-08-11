@@ -123,6 +123,7 @@ export default function PrintableInvoice({ order }) {
               <td className="py-3 px-3 text-center font-mono font-bold text-slate-500">{index + 1}</td>
               <td className="py-3 px-3">
                 <p className="font-bold text-slate-900">{item.productName || item.name || 'Product Item'}</p>
+                {item.color && <p className="text-[10px] text-amber-900 font-semibold">Color: {item.color}</p>}
                 {item.sku && <p className="text-[10px] text-slate-500 font-mono">SKU: {item.sku}</p>}
               </td>
               <td className="py-3 px-3 text-center font-mono">{item.size || item.variantSize || 'Standard'}</td>

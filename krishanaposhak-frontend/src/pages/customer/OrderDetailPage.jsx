@@ -293,7 +293,10 @@ export default function OrderDetailPage() {
                         <Link to={`/product/${item.productId || item.id}`} className="font-bold text-dark-charcoal text-sm hover:text-royal-blue transition-colors leading-snug block truncate">
                           {item.productName}
                         </Link>
-                        {item.size && <p className="text-xs text-natural-wood mt-0.5 font-medium">Size: {item.size}</p>}
+                        <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                          {item.size && <span className="text-xs text-natural-wood font-medium">Size: {item.size}</span>}
+                          {item.color && <span className="text-xs text-amber-900 font-semibold">• Color: {item.color}</span>}
+                        </div>
                         <p className="text-xs text-natural-wood/80 mt-0.5 font-medium">Qty: {item.quantity} × {formatPrice(item.price || 0)}</p>
                       </div>
                     </div>

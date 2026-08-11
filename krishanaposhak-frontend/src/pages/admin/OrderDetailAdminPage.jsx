@@ -231,6 +231,11 @@ export default function OrderDetailAdminPage() {
                                 <span className="inline-block bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-[10px] font-bold">
                                   Size: {item.size || item.variantSize || 'Standard'}
                                 </span>
+                                {item.color && (
+                                  <span className="inline-block bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-[10px] font-bold">
+                                    Color: {item.color}
+                                  </span>
+                                )}
                                 {item.sku && (
                                   <span className="text-[10px] text-slate-400 font-mono">
                                     SKU: {item.sku}
@@ -275,6 +280,7 @@ export default function OrderDetailAdminPage() {
                         <p className="font-bold text-slate-900 text-xs truncate">{item.productName || item.name || 'Product Item'}</p>
                         <div className="flex items-center gap-1.5 flex-wrap text-[10px] mt-0.5">
                           <span className="text-amber-900 font-bold">Size: {item.size || item.variantSize || 'Standard'}</span>
+                          {item.color && <span className="text-amber-900 font-bold">• Color: {item.color}</span>}
                           <span className="text-slate-400">• Qty: {item.quantity}</span>
                         </div>
                       </div>
