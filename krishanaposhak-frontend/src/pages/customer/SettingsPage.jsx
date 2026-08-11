@@ -38,16 +38,6 @@ export default function SettingsPage() {
 
   const userData = profile || authUser;
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await logout();
-      toast.success('Signed out successfully');
-      navigate(ROUTE_PATHS.LOGIN, { replace: true });
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-    }
-  }, [logout, navigate]);
-
   if (!isDesktop) {
     return (
       <>
@@ -66,6 +56,16 @@ export default function SettingsPage() {
       </>
     );
   }
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await logout();
+      toast.success('Signed out successfully');
+      navigate(ROUTE_PATHS.LOGIN, { replace: true });
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    }
+  }, [logout, navigate]);
 
   const handlePasswordReset = async () => {
     if (!userData?.email) return;

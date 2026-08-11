@@ -29,16 +29,6 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
     reportCompressedSize: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-core': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-query': ['@tanstack/react-query', 'axios'],
-          'vendor-ui': ['framer-motion', 'swiper', 'clsx', 'tailwind-merge'],
-          'vendor-charts': ['recharts'],
-        },
-      },
-    },
   },
   server: {
     port: 3000,

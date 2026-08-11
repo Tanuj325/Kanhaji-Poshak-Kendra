@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiFeather, FiShield, FiTruck, FiBookOpen, FiChevronDown } from 'react-icons/fi';
 
 export default function ProductTabs({ product }) {
-  const [activeTab, setActiveTab] = useState('description');
-
   if (!product) return null;
 
   const tabs = [
@@ -75,6 +73,8 @@ export default function ProductTabs({ product }) {
       ),
     },
   ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   const currentTab = tabs.find((t) => t.id === activeTab) || tabs[0];
 

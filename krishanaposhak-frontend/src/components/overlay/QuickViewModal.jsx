@@ -43,6 +43,17 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
     setSelectedImageIndex(0);
   }, [product]);
 
+  if (!product) return null;
+
+  const images = product.images || (product.imageUrl ? [{ imageUrl: product.imageUrl }] : []);
+  const activeImage = images[selectedImageIndex]?.imageUrl || images[selectedImageIndex]?.url || product.imageUrl || '/placeholder.svg';
+
+  const price = selectedVariant?.price || product.price || product.discountPrice;
+  const discountPrice = selectedVariant?.discountPrice || product.discountPrice;
+
+  const stock = selectedVariant ? selectedVariant.stock : product.stock ?? 10;
+  const isOutOfStock = stock === 0;
+
   const wishlistVariantIds = useMemo(() => {
     const set = new Set();
     const items = Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || [];
@@ -54,17 +65,6 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
     });
     return set;
   }, [wishlist]);
-
-  if (!product) return null;
-
-  const images = product.images || (product.imageUrl ? [{ imageUrl: product.imageUrl }] : []);
-  const activeImage = images[selectedImageIndex]?.imageUrl || images[selectedImageIndex]?.url || product.imageUrl || '/placeholder.svg';
-
-  const price = selectedVariant?.price || product.price || product.discountPrice;
-  const discountPrice = selectedVariant?.discountPrice || product.discountPrice;
-
-  const stock = selectedVariant ? selectedVariant.stock : product.stock ?? 10;
-  const isOutOfStock = stock === 0;
 
   const targetVariantId = selectedVariant?.id || product.id;
   const isInWishlist = wishlistVariantIds.has(Number(targetVariantId)) || wishlistVariantIds.has(Number(product.id));
@@ -115,11 +115,10 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
                   key={i}
                   type="button"
                   onClick={() => setSelectedImageIndex(i)}
-                  className={`relative h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all min-h-[44px] min-w-[44px] ${
-                    selectedImageIndex === i
+                  className={`relative h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all min-h-[44px] min-w-[44px] ${selectedImageIndex === i
                       ? 'border-amber-800 ring-2 ring-amber-700/30 scale-105'
                       : 'border-amber-900/15 opacity-70 hover:opacity-100'
-                  }`}
+                    }`}
                 >
                   <img
                     src={img.imageUrl || img.url}
@@ -174,13 +173,12 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
                         type="button"
                         onClick={() => setSelectedVariant(variant)}
                         disabled={isVarOutOfStock}
-                        className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition-all min-h-[44px] ${
-                          isSelected
+                        className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition-all min-h-[44px] ${isSelected
                             ? 'border-amber-900 bg-[linear-gradient(135deg,#0f2440,#1b3a5c)] text-white shadow-gold scale-102'
                             : isVarOutOfStock
-                            ? 'border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed'
-                            : 'border-amber-900/20 bg-white text-amber-950 hover:border-amber-800'
-                        }`}
+                              ? 'border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed'
+                              : 'border-amber-900/20 bg-white text-amber-950 hover:border-amber-800'
+                          }`}
                       >
                         {variant.size || variant.color || `Variant ${variant.id}`}
                       </button>
@@ -220,11 +218,10 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
               <button
                 type="button"
                 onClick={handleWishlistToggle}
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl border transition-all min-h-[48px] min-w-[48px] ${
-                  isInWishlist
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl border transition-all min-h-[48px] min-w-[48px] ${isInWishlist
                     ? 'border-rose-300 bg-rose-50 text-rose-600 shadow-xs'
                     : 'border-amber-900/20 bg-white text-stone-700 hover:border-rose-300 hover:text-rose-600'
-                }`}
+                  }`}
                 aria-label="Toggle wishlist"
               >
                 <FiHeart className={`h-4 w-4 ${isInWishlist ? 'fill-current' : ''}`} />

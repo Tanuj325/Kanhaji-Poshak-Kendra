@@ -5,12 +5,12 @@ import { formatDate } from '@/utils/formatDate';
 import { FiCheckCircle, FiEdit2, FiTrash2, FiThumbsUp, FiShoppingBag } from 'react-icons/fi';
 
 const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onDelete }) {
-  const [helpfulCount, setHelpfulCount] = useState(0);
-  const [hasVotedHelpful, setHasVotedHelpful] = useState(false);
-
   if (!review) return null;
 
   const { id, rating, comment, createdAt, user, userName, userId, customerName } = review;
+
+  const [helpfulCount, setHelpfulCount] = useState(0);
+  const [hasVotedHelpful, setHasVotedHelpful] = useState(false);
 
   const isOwner = currentUserId && (userId === currentUserId || user?.id === currentUserId);
 
@@ -100,11 +100,10 @@ const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onD
         <button
           type="button"
           onClick={handleHelpfulClick}
-          className={`inline-flex items-center justify-center gap-1 h-7 px-2.5 rounded-lg border text-[11px] font-semibold transition-colors ${
-            hasVotedHelpful
+          className={`inline-flex items-center justify-center gap-1 h-7 px-2.5 rounded-lg border text-[11px] font-semibold transition-colors ${hasVotedHelpful
               ? 'bg-slate-900 text-white border-slate-900'
               : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-          }`}
+            }`}
         >
           <FiThumbsUp className="h-3 w-3 shrink-0" />
           <span>Helpful {helpfulCount > 0 ? `(${helpfulCount})` : ''}</span>

@@ -23,6 +23,20 @@ function getCloudinaryOptimizedUrl(url, width = 400, height = 500) {
   return url;
 }
 
+/**
+ * Preconnect to Cloudinary when an image component mounts
+ * (idempotent — safe to call multiple times)
+ */
+function preconnectCloudinary() {
+  if (typeof window !== 'undefined' && !window.__cloudinaryPreconnected) {
+    const link1 = document.createElement('link');
+    link1.rel = 'preconnect';
+    link1.href = 'https://res.cloudinary.com';
+    document.head.appendChild(link1);
+    window.__cloudinaryPreconnected = true;
+  }
+}
+
 const OptimizedImage = memo(function OptimizedImage({
   src,
   alt = 'Kanahaji Poshak product image',
@@ -36,9 +50,15 @@ const OptimizedImage = memo(function OptimizedImage({
   onClick,
   ...props
 }) {
-  const isEager = loading === 'eager' || fetchpriority === 'high';
-  const [loaded, setLoaded] = useState(isEager);
+  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+
+  // Preconnect to Cloudinary on first mount
+  useState(() => {
+    if (src?.includes('cloudinary')) {
+      preconnectCloudinary();
+    }
+  });
 
   const handleLoad = useCallback(() => {
     setLoaded(true);
@@ -61,8 +81,8 @@ const OptimizedImage = memo(function OptimizedImage({
       className={`relative overflow-hidden bg-stone-900/40 ${aspectRatio} ${className}`}
       onClick={onClick}
     >
-      {/* Skeleton placeholder while loading (only for lazy/non-eager images) */}
-      {!loaded && !isEager && (
+      {/* Skeleton / Blur placeholder while loading */}
+      {!loaded && (
         <div
           className="absolute inset-0 z-10 animate-pulse bg-gradient-to-r from-stone-800/60 via-stone-700/40 to-stone-800/60"
           aria-hidden="true"
@@ -75,12 +95,11 @@ const OptimizedImage = memo(function OptimizedImage({
         alt={alt}
         loading={loading}
         {...(fetchpriority ? { fetchpriority } : {})}
-        decoding={isEager ? 'sync' : 'async'}
+        decoding="async"
         onLoad={handleLoad}
         onError={handleError}
-        className={`h-full w-full object-cover ${
-          isEager ? 'opacity-100' : `transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`
-        }`}
+        className={`h-full w-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'
+          }`}
         {...props}
       />
 
@@ -93,7 +112,6 @@ const OptimizedImage = memo(function OptimizedImage({
     </div>
   );
 });
-
 
 OptimizedImage.propTypes = {
   src: PropTypes.string,
