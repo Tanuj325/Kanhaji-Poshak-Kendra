@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
                 ? request.getColor().trim()
                 : null;
 
-        // Find existing cart item matching Product Variant AND Selected Color
+        // Look up existing cart item matching BOTH Product Variant AND Color
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProductVariant() != null && item.getProductVariant().getId().equals(variant.getId()))
                 .filter(item -> {
