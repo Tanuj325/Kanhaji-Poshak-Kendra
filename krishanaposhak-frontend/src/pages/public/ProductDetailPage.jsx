@@ -279,7 +279,7 @@ export default function ProductDetailPage() {
               />
 
               {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
-              <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} />
+              <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
 
               {/* Trust Badges */}
               <TrustBadges />

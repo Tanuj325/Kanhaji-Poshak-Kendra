@@ -151,7 +151,9 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        cartRepository.findByUserId(userId).ifPresent(c -> cartItemRepository.deleteByCartId(c.getId()));
+        if (!Boolean.TRUE.equals(order.getIsBuyNow())) {
+            cartRepository.findByUserId(userId).ifPresent(c -> cartItemRepository.deleteByCartId(c.getId()));
+        }
 
         // Create order placement notifications for Customer and Admin
         notificationService.createNotification(
@@ -180,8 +182,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Creates a pending order (not saved) for the purpose of generating a Razorpay order.
-     * Validates the cart, items, coupon, and calculates the total amount.
+     * Creates a pending order (not saved) for the purpose of generating a Razorpay order or COD order.
+     * Validates the item/cart, coupon, and calculates the total amount authoritatively.
      * Does NOT save order items, update stock, clear cart, or send email.
      *
      * @param userId      the user ID
@@ -192,26 +194,48 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new BadRequestException("Your cart is empty"));
-
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
-        if (cartItems.isEmpty()) {
-            throw new BadRequestException("Your cart is empty");
-        }
-
+        boolean isBuyNow = Boolean.TRUE.equals(request.getIsBuyNow()) || request.getVariantId() != null;
         BigDecimal subtotal = BigDecimal.ZERO;
-        for (CartItem item : cartItems) {
-            ProductVariant variant = item.getProductVariant();
-            if (variant == null || !Boolean.TRUE.equals(variant.getProduct().getActive())) {
-                throw new BadRequestException("Product is not available: " + (variant != null ? variant.getProduct().getName() : "Unknown"));
+
+        if (isBuyNow) {
+            if (request.getVariantId() == null) {
+                throw new BadRequestException("Product variant is required for Buy Now");
             }
-            if (variant.getStock() < item.getQuantity()) {
-                throw new BadRequestException(
-                        "Insufficient stock for " + variant.getProduct().getName() + " (" + variant.getSize() + ")");
+            int qty = request.getQuantity() != null && request.getQuantity() > 0 ? request.getQuantity() : 1;
+
+            ProductVariant variant = productVariantRepository.findById(request.getVariantId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product variant not found"));
+
+            if (variant.getProduct() == null || !Boolean.TRUE.equals(variant.getProduct().getActive())) {
+                throw new BadRequestException("Product is not available: " + (variant.getProduct() != null ? variant.getProduct().getName() : "Unknown"));
             }
-            BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : item.getPrice();
-            subtotal = subtotal.add(unitPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
+            if (variant.getStock() < qty) {
+                throw new BadRequestException("Insufficient stock for " + variant.getProduct().getName() + " (" + variant.getSize() + ")");
+            }
+
+            BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : variant.getPrice();
+            subtotal = unitPrice.multiply(BigDecimal.valueOf(qty));
+        } else {
+            Cart cart = cartRepository.findByUserId(userId)
+                    .orElseThrow(() -> new BadRequestException("Your cart is empty"));
+
+            List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
+            if (cartItems.isEmpty()) {
+                throw new BadRequestException("Your cart is empty");
+            }
+
+            for (CartItem item : cartItems) {
+                ProductVariant variant = item.getProductVariant();
+                if (variant == null || variant.getProduct() == null || !Boolean.TRUE.equals(variant.getProduct().getActive())) {
+                    throw new BadRequestException("Product is not available: " + (variant != null && variant.getProduct() != null ? variant.getProduct().getName() : "Unknown"));
+                }
+                if (variant.getStock() < item.getQuantity()) {
+                    throw new BadRequestException(
+                            "Insufficient stock for " + variant.getProduct().getName() + " (" + variant.getSize() + ")");
+                }
+                BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : item.getPrice();
+                subtotal = subtotal.add(unitPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
+            }
         }
 
         Coupon coupon = null;
@@ -262,12 +286,15 @@ public class OrderServiceImpl implements OrderService {
                 .country(shippingAddress.getCountry())
                 .postalCode(shippingAddress.getPostalCode())
                 .notes(request.getOrderNotes())
+                .isBuyNow(isBuyNow)
                 .build();
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem item : cartItems) {
-            ProductVariant variant = item.getProductVariant();
-            BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : item.getPrice();
+        if (isBuyNow) {
+            ProductVariant variant = productVariantRepository.findById(request.getVariantId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product variant not found"));
+            int qty = request.getQuantity() != null && request.getQuantity() > 0 ? request.getQuantity() : 1;
+            BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : variant.getPrice();
 
             orderItems.add(OrderItem.builder()
                     .order(order)
@@ -275,12 +302,32 @@ public class OrderServiceImpl implements OrderService {
                     .productName(variant.getProduct().getName())
                     .sku(variant.getSku())
                     .size(variant.getSize())
-                    .color(item.getColor())
+                    .color(request.getColor())
                     .productImage(pickThumbnail(variant))
                     .price(unitPrice)
-                    .quantity(item.getQuantity())
-                    .totalPrice(unitPrice.multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .quantity(qty)
+                    .totalPrice(unitPrice.multiply(BigDecimal.valueOf(qty)))
                     .build());
+        } else {
+            Cart cart = cartRepository.findByUserId(userId).orElse(null);
+            List<CartItem> cartItems = cart != null ? cartItemRepository.findByCartId(cart.getId()) : List.of();
+            for (CartItem item : cartItems) {
+                ProductVariant variant = item.getProductVariant();
+                BigDecimal unitPrice = variant.getDiscountPrice() != null ? variant.getDiscountPrice() : item.getPrice();
+
+                orderItems.add(OrderItem.builder()
+                        .order(order)
+                        .productVariant(variant)
+                        .productName(variant.getProduct().getName())
+                        .sku(variant.getSku())
+                        .size(variant.getSize())
+                        .color(item.getColor())
+                        .productImage(pickThumbnail(variant))
+                        .price(unitPrice)
+                        .quantity(item.getQuantity())
+                        .totalPrice(unitPrice.multiply(BigDecimal.valueOf(item.getQuantity())))
+                        .build());
+            }
         }
         order.setOrderItems(orderItems);
 

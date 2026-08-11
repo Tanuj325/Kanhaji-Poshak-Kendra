@@ -223,6 +223,10 @@ public class PaymentServiceImpl implements PaymentService {
         placeOrderRequest.setCouponCode(couponCode);
         placeOrderRequest.setOrderNotes(orderNotes);
         placeOrderRequest.setPaymentMethod("RAZORPAY");
+        placeOrderRequest.setIsBuyNow(request.getIsBuyNow());
+        placeOrderRequest.setVariantId(request.getVariantId());
+        placeOrderRequest.setQuantity(request.getQuantity());
+        placeOrderRequest.setColor(request.getColor());
 
         Payment payment = createAndFulfillConfirmedOrder(userId, placeOrderRequest, request.getRazorpayOrderId(), request.getRazorpayPaymentId(), request.getRazorpaySignature());
 
@@ -372,9 +376,11 @@ public class PaymentServiceImpl implements PaymentService {
             });
         }
 
-        // Clear user's cart
-        cartRepository.findByUserId(userId)
-                .ifPresent(cart -> cartItemRepository.deleteByCartId(cart.getId()));
+        // Clear user's cart (only for normal cart orders, not direct Buy Now)
+        if (!Boolean.TRUE.equals(order.getIsBuyNow())) {
+            cartRepository.findByUserId(userId)
+                    .ifPresent(cart -> cartItemRepository.deleteByCartId(cart.getId()));
+        }
 
         // Send order confirmation email asynchronously
         try {

@@ -58,9 +58,9 @@ export default function LoginPage() {
         const from = location.state?.from?.pathname;
         const role = response?.role;
         if (redirectParam) {
-          navigate(redirectParam, { replace: true });
+          navigate(redirectParam, { replace: true, state: location.state });
         } else if (from && from !== ROUTE_PATHS.LOGIN) {
-          navigate(from, { replace: true });
+          navigate(from, { replace: true, state: location.state });
         } else if (role === 'ADMIN') {
           navigate(ROUTE_PATHS.ADMIN, { replace: true });
         } else {

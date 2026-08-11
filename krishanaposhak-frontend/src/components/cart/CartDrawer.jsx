@@ -51,11 +51,21 @@ export const CartDrawer = memo(function CartDrawer() {
   }, [isDrawerOpen]);
 
   const handleCheckout = useCallback(() => {
+    try {
+      sessionStorage.removeItem('kp_buy_now_item');
+    } catch {
+      // Ignore
+    }
     closeDrawer();
     navigate('/checkout');
   }, [closeDrawer, navigate]);
 
   const handleViewCart = useCallback(() => {
+    try {
+      sessionStorage.removeItem('kp_buy_now_item');
+    } catch {
+      // Ignore
+    }
     closeDrawer();
     navigate('/cart');
   }, [closeDrawer, navigate]);

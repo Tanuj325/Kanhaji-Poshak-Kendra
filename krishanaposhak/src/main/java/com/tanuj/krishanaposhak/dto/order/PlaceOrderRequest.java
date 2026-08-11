@@ -24,4 +24,15 @@ public class PlaceOrderRequest {
     @Size(max = 1000, message = "Order notes must not exceed 1000 characters")
     private String orderNotes;
 
+    private Boolean isBuyNow;
+
+    @Positive(message = "Variant ID must be positive")
+    private Long variantId;
+
+    @Positive(message = "Quantity must be positive")
+    private Integer quantity;
+
+    @Size(max = 50, message = "Color must not exceed 50 characters")
+    private String color;
+
 }

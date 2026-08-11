@@ -49,4 +49,24 @@ public class PaymentVerificationRequest {
      * Optional delivery notes.
      */
     private String orderNotes;
+
+    /**
+     * Optional Buy Now flag.
+     */
+    private Boolean isBuyNow;
+
+    /**
+     * Optional variant ID for Buy Now flow.
+     */
+    private Long variantId;
+
+    /**
+     * Optional quantity for Buy Now flow.
+     */
+    private Integer quantity;
+
+    /**
+     * Optional color for Buy Now flow.
+     */
+    private String color;
 }

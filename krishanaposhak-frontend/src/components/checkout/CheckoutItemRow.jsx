@@ -34,6 +34,11 @@ const CheckoutItemRow = memo(function CheckoutItemRow({ item }) {
               Size: {item.size}
             </span>
           )}
+          {item.color && (
+            <span className="bg-amber-100/70 text-amber-950 font-bold px-2 py-0.2 rounded text-[10px] uppercase">
+              Color: {item.color}
+            </span>
+          )}
           <span>Qty: {item.quantity}</span>
         </div>
       </div>

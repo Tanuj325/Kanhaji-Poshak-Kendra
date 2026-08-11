@@ -92,6 +92,10 @@ public class Order extends BaseEntity {
     private String notes;
 
     @Builder.Default
+    @Column(name = "is_buy_now")
+    private Boolean isBuyNow = false;
+
+    @Builder.Default
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,

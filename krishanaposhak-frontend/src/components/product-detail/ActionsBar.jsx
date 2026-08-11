@@ -9,8 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ROUTE_PATHS, buildPath } from '@/routes/routePaths';
 import toast from 'react-hot-toast';
 import { FiShoppingBag, FiHeart, FiShare2, FiZap, FiInfo } from 'react-icons/fi';
-
-function ActionsBar({ selectedVariant, selectedColor }) {
+function ActionsBar({ selectedVariant, selectedColor, product }) {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const { isAuthenticated } = useAuth();
@@ -33,19 +32,54 @@ function ActionsBar({ selectedVariant, selectedColor }) {
     await addItem(selectedVariant.id, quantity, selectedColor);
   }, [isAuthenticated, selectedVariant, quantity, selectedColor, addItem, navigate]);
 
-  const handleBuyNow = useCallback(async () => {
-    if (!isAuthenticated) {
-      toast.error('Please log in to purchase');
-      navigate(buildPath.loginWithRedirect(window.location.pathname));
-      return;
-    }
+  const handleBuyNow = useCallback(() => {
     if (!selectedVariant) {
       toast.error('Please select a size first');
       return;
     }
-    await addItem(selectedVariant.id, quantity, selectedColor);
-    navigate(ROUTE_PATHS.CHECKOUT);
-  }, [isAuthenticated, selectedVariant, quantity, selectedColor, addItem, navigate]);
+    if (selectedVariant.stock <= 0) {
+      toast.error('This size variant is currently out of stock');
+      return;
+    }
+    if (quantity > selectedVariant.stock) {
+      toast.error(`Only ${selectedVariant.stock} items available in stock`);
+      return;
+    }
+
+    const buyNowPrice = selectedVariant.discountPrice || selectedVariant.price || product?.discountPrice || product?.price || 0;
+    const buyNowItem = {
+      isBuyNow: true,
+      variantId: selectedVariant.id,
+      quantity,
+      color: selectedColor || null,
+      productName: product?.name || selectedVariant.productName || 'Sacred Poshak',
+      size: selectedVariant.size,
+      sku: selectedVariant.sku,
+      price: buyNowPrice,
+      totalPrice: buyNowPrice * quantity,
+      imageUrl: product?.imageUrl || product?.images?.[0]?.imageUrl || selectedVariant.imageUrl,
+      product: {
+        id: product?.id,
+        name: product?.name,
+        slug: product?.slug,
+      },
+      variant: selectedVariant,
+    };
+
+    try {
+      sessionStorage.setItem('kp_buy_now_item', JSON.stringify(buyNowItem));
+    } catch {
+      // Ignore
+    }
+
+    if (!isAuthenticated) {
+      toast.error('Please log in to purchase');
+      navigate(buildPath.loginWithRedirect(ROUTE_PATHS.CHECKOUT), { state: { buyNowItem } });
+      return;
+    }
+
+    navigate(ROUTE_PATHS.CHECKOUT, { state: { buyNowItem } });
+  }, [isAuthenticated, selectedVariant, quantity, selectedColor, product, navigate]);
 
   const handleWishlist = useCallback(async () => {
     if (!isAuthenticated) {

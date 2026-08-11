@@ -50,6 +50,38 @@ function CheckoutPage() {
   const { user } = useAuth();
   const { cartItems, cartCount, subtotal, discount, shippingCharge, isLoading: cartLoading, isError: cartError, loadCart } = useCartContext();
 
+  const buyNowItem = useMemo(() => {
+    if (location.state?.buyNowItem) return location.state.buyNowItem;
+    try {
+      const saved = sessionStorage.getItem('kp_buy_now_item');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  }, [location.state]);
+
+  const isBuyNowFlow = Boolean(buyNowItem);
+
+  const effectiveCartItems = useMemo(() => {
+    if (isBuyNowFlow && buyNowItem) return [buyNowItem];
+    return cartItems;
+  }, [isBuyNowFlow, buyNowItem, cartItems]);
+
+  const effectiveCartCount = useMemo(() => {
+    if (isBuyNowFlow && buyNowItem) return buyNowItem.quantity || 1;
+    return cartCount;
+  }, [isBuyNowFlow, buyNowItem, cartCount]);
+
+  const effectiveSubtotal = useMemo(() => {
+    if (isBuyNowFlow && buyNowItem) return Number(buyNowItem.totalPrice || (buyNowItem.price * buyNowItem.quantity)) || 0;
+    return subtotal;
+  }, [isBuyNowFlow, buyNowItem, subtotal]);
+
+  const effectiveDiscount = useMemo(() => {
+    if (isBuyNowFlow && buyNowItem) return 0;
+    return discount;
+  }, [isBuyNowFlow, buyNowItem, discount]);
+
   const [currentStep, setCurrentStep] = useState('address');
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('RAZORPAY');
@@ -101,15 +133,15 @@ function CheckoutPage() {
   }, [addrLoading, addrList, selectedAddressId]);
 
   const isOrderValid = useMemo(() => {
-    if (cartCount === 0) return false;
+    if (effectiveCartCount === 0) return false;
     if (!selectedAddressId) return false;
     return true;
-  }, [cartCount, selectedAddressId]);
+  }, [effectiveCartCount, selectedAddressId]);
 
   const couponDiscount = Number(appliedCoupon?.discountAmount) || 0;
-  const finalDiscount = (Number(discount) || 0) + couponDiscount;
-  const { shipping: activeShippingCharge } = calculateShipping(subtotal);
-  const finalGrandTotal = Math.max(0, (subtotal + activeShippingCharge) - finalDiscount);
+  const finalDiscount = (Number(effectiveDiscount) || 0) + couponDiscount;
+  const { shipping: activeShippingCharge } = calculateShipping(effectiveSubtotal);
+  const finalGrandTotal = Math.max(0, (effectiveSubtotal + activeShippingCharge) - finalDiscount);
 
   const handleCouponApply = useCallback((code, discountAmount) => {
     const validAmount = Number(discountAmount) || 0;
@@ -146,6 +178,12 @@ function CheckoutPage() {
         paymentMethod: 'COD',
         ...(couponCode && { couponCode }),
         ...(orderNotes && { orderNotes }),
+        ...(isBuyNowFlow && buyNowItem && {
+          isBuyNow: true,
+          variantId: buyNowItem.variantId,
+          quantity: buyNowItem.quantity,
+          ...(buyNowItem.color && { color: buyNowItem.color }),
+        }),
       };
 
       const response = await placeOrderMutation.mutateAsync(payload);
@@ -154,6 +192,7 @@ function CheckoutPage() {
 
       try {
         sessionStorage.removeItem('kp_applied_coupon');
+        sessionStorage.removeItem('kp_buy_now_item');
       } catch {
         // Ignore
       }
@@ -175,7 +214,7 @@ function CheckoutPage() {
       paymentLockRef.current = false;
       setIsProcessingOrder(false);
     }
-  }, [isOrderValid, selectedAddressId, couponCode, orderNotes, placeOrderMutation, loadCart, navigate]);
+  }, [isOrderValid, selectedAddressId, couponCode, orderNotes, isBuyNowFlow, buyNowItem, placeOrderMutation, loadCart, navigate]);
 
   const handleRazorpayOrder = useCallback(async () => {
     if (!isOrderValid || paymentLockRef.current) return;
@@ -192,6 +231,12 @@ function CheckoutPage() {
         paymentMethod: 'RAZORPAY',
         ...(couponCode && { couponCode }),
         ...(orderNotes && { orderNotes }),
+        ...(isBuyNowFlow && buyNowItem && {
+          isBuyNow: true,
+          variantId: buyNowItem.variantId,
+          quantity: buyNowItem.quantity,
+          ...(buyNowItem.color && { color: buyNowItem.color }),
+        }),
       };
 
       const razorpayResponse = await razorpayOrderMutation.mutateAsync(payload);
@@ -216,6 +261,12 @@ function CheckoutPage() {
               shippingAddressId: selectedAddressId,
               ...(couponCode && { couponCode }),
               ...(orderNotes && { orderNotes }),
+              ...(isBuyNowFlow && buyNowItem && {
+                isBuyNow: true,
+                variantId: buyNowItem.variantId,
+                quantity: buyNowItem.quantity,
+                ...(buyNowItem.color && { color: buyNowItem.color }),
+              }),
             };
 
             const verificationResult = await verifyPayment(verificationPayload);
@@ -224,6 +275,7 @@ function CheckoutPage() {
 
             try {
               sessionStorage.removeItem('kp_applied_coupon');
+              sessionStorage.removeItem('kp_buy_now_item');
             } catch {
               // Ignore
             }
@@ -250,7 +302,7 @@ function CheckoutPage() {
           setIsProcessingOrder(false);
           resetPaymentLock();
           if (err?.isCancelled) {
-            toast('Payment was cancelled. Your cart is still saved. You can try again.', {
+            toast('Payment was cancelled. You can try again.', {
               icon: 'ℹ️',
             });
           } else {
@@ -269,7 +321,7 @@ function CheckoutPage() {
       setFailureReason(msg);
       setFailureModalOpen(true);
     }
-  }, [isOrderValid, loadRazorpayScript, selectedAddressId, couponCode, orderNotes, razorpayOrderMutation, initiatePayment, selectedAddress, user, verifyPayment, loadCart, navigate, resetPaymentLock]);
+  }, [isOrderValid, loadRazorpayScript, selectedAddressId, couponCode, orderNotes, isBuyNowFlow, buyNowItem, razorpayOrderMutation, initiatePayment, selectedAddress, user, verifyPayment, loadCart, navigate, resetPaymentLock]);
 
   const handlePlaceOrder = useCallback(() => {
     if (paymentMethod === 'COD') {
@@ -281,17 +333,22 @@ function CheckoutPage() {
 
   const handleStepClick = (stepId) => {
     if (stepId === 'cart') {
+      try {
+        sessionStorage.removeItem('kp_buy_now_item');
+      } catch {
+        // Ignore
+      }
       navigate('/cart');
     } else {
       setCurrentStep(stepId);
     }
   };
 
-  if (cartLoading) {
+  if (!isBuyNowFlow && cartLoading) {
     return <CheckoutSkeleton />;
   }
 
-  if (cartError) {
+  if (!isBuyNowFlow && cartError) {
     return (
       <div className="container-page py-12 font-display">
         <div className="text-center py-12 bg-white rounded-3xl p-8 border border-amber-900/10 shadow-xs max-w-md mx-auto space-y-4">
@@ -304,7 +361,7 @@ function CheckoutPage() {
     );
   }
 
-  if (cartCount === 0) {
+  if (effectiveCartCount === 0) {
     return (
       <div className="container-page py-12 font-display">
         <EmptyState
@@ -341,7 +398,14 @@ function CheckoutPage() {
           onDelete={(id) => deleteAddr.mutateAsync(id)}
           onSetDefault={(id) => setDefaultAddr.mutateAsync(id)}
           onContinue={() => setCurrentStep('payment')}
-          onBack={() => navigate(ROUTE_PATHS.CART)}
+          onBack={() => {
+            try {
+              sessionStorage.removeItem('kp_buy_now_item');
+            } catch {
+              // Ignore
+            }
+            navigate(ROUTE_PATHS.CART);
+          }}
           mode="checkout"
         />
       </>
@@ -358,8 +422,8 @@ function CheckoutPage() {
         </Helmet>
 
         <MobileCheckoutSummary
-          cartItems={cartItems}
-          subtotal={subtotal}
+          cartItems={effectiveCartItems}
+          subtotal={effectiveSubtotal}
           discount={finalDiscount}
           shippingCharge={activeShippingCharge}
           grandTotal={finalGrandTotal}
@@ -454,7 +518,7 @@ function CheckoutPage() {
                   >
                     {/* Coupon Section */}
                     <CouponInput
-                      orderAmount={subtotal}
+                      orderAmount={effectiveSubtotal}
                       appliedCoupon={appliedCoupon}
                       onApply={handleCouponApply}
                       onRemove={handleCouponRemove}
@@ -592,8 +656,8 @@ function CheckoutPage() {
             <div className="lg:col-span-5 w-full">
               <div className="space-y-4 lg:sticky lg:top-24">
                 <CheckoutOrderSummary
-                  items={cartItems}
-                  subtotal={subtotal}
+                  items={effectiveCartItems}
+                  subtotal={effectiveSubtotal}
                   discount={finalDiscount}
                   shippingCharge={activeShippingCharge}
                   grandTotal={finalGrandTotal}

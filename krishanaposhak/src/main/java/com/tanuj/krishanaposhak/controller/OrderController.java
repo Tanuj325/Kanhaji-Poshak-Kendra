@@ -128,6 +128,12 @@ public class OrderController {
         if (placeOrderRequest.getOrderNotes() != null) {
             notes.put("orderNotes", placeOrderRequest.getOrderNotes());
         }
+        if (Boolean.TRUE.equals(placeOrderRequest.getIsBuyNow())) {
+            notes.put("isBuyNow", "true");
+            if (placeOrderRequest.getVariantId() != null) notes.put("variantId", String.valueOf(placeOrderRequest.getVariantId()));
+            if (placeOrderRequest.getQuantity() != null) notes.put("quantity", String.valueOf(placeOrderRequest.getQuantity()));
+            if (placeOrderRequest.getColor() != null) notes.put("color", placeOrderRequest.getColor());
+        }
         razorpayRequest.setNotes(notes);
 
         try {

@@ -134,6 +134,11 @@ function CartPage() {
   }, []);
 
   const handleProceedToCheckout = useCallback(() => {
+    try {
+      sessionStorage.removeItem('kp_buy_now_item');
+    } catch {
+      // Ignore
+    }
     navigate('/checkout', { state: { appliedCoupon } });
   }, [navigate, appliedCoupon]);
 
