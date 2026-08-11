@@ -9,11 +9,13 @@ import com.tanuj.krishanaposhak.repository.ContactMessageRepository;
 import com.tanuj.krishanaposhak.service.ContactMessageService;
 import com.tanuj.krishanaposhak.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -79,8 +81,8 @@ public class ContactMessageServiceImpl implements ContactMessageService {
         try {
             sendReplyEmail(message);
         } catch (Exception e) {
-            // Log the error but don't fail the request
-            System.err.println("Failed to send reply email for contact message " + id + ": " + e.getMessage());
+            // Log the error with stack trace but don't fail the client request
+            log.error("Failed to send reply email for contact message {}: {}", id, e.getMessage(), e);
         }
         return contactMessageMapper.toResponse(message);
     }

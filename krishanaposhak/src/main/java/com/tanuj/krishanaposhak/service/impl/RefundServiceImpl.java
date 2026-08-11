@@ -195,10 +195,10 @@ public class RefundServiceImpl implements RefundService {
 
         } catch (Exception e) {
             long duration = System.currentTimeMillis() - startTime;
-            log.error("[AUDIT] Refund Failed -> Unexpected Error for Order ID: {}, Payment ID: {}, Error: {}, Time Taken: {} ms",
-                    order.getId(), razorpayPaymentId, e.getMessage(), duration);
+            log.error("[AUDIT] Refund Failed -> Unexpected Error for Order ID: {}, Payment ID: {}, Time Taken: {} ms",
+                    order.getId(), razorpayPaymentId, duration, e);
 
-            throw new BadRequestException("Unexpected failure during refund processing: " + e.getMessage());
+            throw new BadRequestException("Unable to process refund at this time. Please try again later.");
         }
     }
 

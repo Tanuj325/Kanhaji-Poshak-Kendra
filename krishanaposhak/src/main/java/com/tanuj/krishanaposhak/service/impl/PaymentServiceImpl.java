@@ -98,7 +98,8 @@ public class PaymentServiceImpl implements PaymentService {
                     .build();
 
         } catch (Exception e) {
-            throw new BadRequestException("Unable to create Razorpay order: " + e.getMessage());
+            log.error("Failed to create Razorpay order for order {}", order.getOrderNumber(), e);
+            throw new BadRequestException("Unable to initialize payment. Please try again.");
         }
     }
 
@@ -184,7 +185,8 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             isValid = razorpayService.verifyPayment(request);
         } catch (Exception e) {
-            throw new BadRequestException("Unable to verify payment signature: " + e.getMessage());
+            log.error("Error verifying payment signature for Razorpay Order {}", request.getRazorpayOrderId(), e);
+            throw new BadRequestException("Unable to verify payment signature. Please try again.");
         }
 
         if (!isValid) {
@@ -1039,10 +1041,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             refundRepository.save(failedRefund);
 
-            throw new BadRequestException("Refund failed: " + e.getMessage());
+            throw new BadRequestException("Refund processing failed. Please contact support.");
         } catch (Exception e) {
-            log.error("Unexpected error while processing refund: {}", e.getMessage());
-            throw new BadRequestException("Failed to process refund: " + e.getMessage());
+            log.error("Unexpected error while processing refund", e);
+            throw new BadRequestException("Failed to process refund. Please try again later.");
         }
     }
 

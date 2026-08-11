@@ -21,9 +21,6 @@ export function getErrorMessage(error, fallback = 'Something went wrong') {
 
   const { data, status } = error.response;
 
-  if (data?.message) return data.message;
-  if (data?.error) return data.error;
-
   const statusMessages = {
     400: 'Invalid request. Please check your input.',
     401: 'Authentication required. Please log in.',
@@ -35,6 +32,15 @@ export function getErrorMessage(error, fallback = 'Something went wrong') {
     500: 'Server error. Please try again later.',
     503: 'Service unavailable. Please try again later.',
   };
+
+  const rawMessage = data?.message || data?.error;
+  if (rawMessage && typeof rawMessage === 'string') {
+    // Intercept and sanitize any raw technical leak strings (SQL, Exception, Hibernate, StackTrace, file paths)
+    const isTechnicalLeak = /SQL|Hibernate|Exception|Constraint|NullPointer|Jdbc|Column|Table|SyntaxError|StackTrace|C:\\|\/var\/www|Cloudinary|SMTP/i.test(rawMessage);
+    if (!isTechnicalLeak) {
+      return rawMessage;
+    }
+  }
 
   return statusMessages[status] || fallback;
 }

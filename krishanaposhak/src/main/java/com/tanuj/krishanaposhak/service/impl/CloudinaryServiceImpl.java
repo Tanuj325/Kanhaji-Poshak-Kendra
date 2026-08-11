@@ -40,9 +40,12 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             "^.*/image/upload/(?:v\\d+/)?(.+?)(?:\\.[^.]+)?$");
 
     private final Cloudinary cloudinary;
+    private final com.tanuj.krishanaposhak.security.validator.FileUploadSecurityValidator fileUploadSecurityValidator;
 
-    public CloudinaryServiceImpl(Cloudinary cloudinary) {
+    public CloudinaryServiceImpl(Cloudinary cloudinary,
+                                 com.tanuj.krishanaposhak.security.validator.FileUploadSecurityValidator fileUploadSecurityValidator) {
         this.cloudinary = cloudinary;
+        this.fileUploadSecurityValidator = fileUploadSecurityValidator;
     }
 
     @Override
@@ -129,7 +132,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             return success;
         } catch (Exception e) {
             logger.error("Failed to delete image from Cloudinary: {}", e.getMessage(), e);
-            throw new FileStorageException("Failed to delete image: " + e.getMessage(), e);
+            throw new FileStorageException("Failed to delete image", e);
         }
     }
 
@@ -193,20 +196,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
      * @throws FileStorageException if the file is invalid
      */
     private void validateFile(MultipartFile file) throws FileStorageException {
-        if (file == null || file.isEmpty()) {
-            throw new FileStorageException("File is empty");
-        }
-
-        if (file.getSize() > MAX_FILE_SIZE) {
-            throw new FileStorageException(
-                    String.format("File size exceeds the maximum allowed size of %d MB", MAX_FILE_SIZE / (1024 * 1024)));
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase())) {
-            throw new FileStorageException(
-                    String.format("Invalid file type: '%s'. Allowed types are: %s",
-                            contentType, String.join(", ", ALLOWED_CONTENT_TYPES)));
-        }
+        fileUploadSecurityValidator.validate(file);
     }
 }

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import Modal from '@/components/overlay/Modal';
 import Button from '@/components/ui/Button';
 import Textarea from '@/components/forms/Textarea';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { reviewSchema } from '@/validators/reviewSchemas';
 import { FiStar, FiX, FiCheckCircle } from 'react-icons/fi';
 
 const RATING_LABELS = {
@@ -39,8 +41,14 @@ export default function ReviewModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!comment.trim()) return;
-    onSubmit({ rating, comment: comment.trim() });
+    const payload = { rating, comment: comment.trim() };
+    const result = reviewSchema.safeParse(payload);
+    if (!result.success) {
+      const firstError = result.error.errors[0]?.message || 'Please check your input';
+      toast.error(firstError);
+      return;
+    }
+    onSubmit(payload);
   };
 
   const activeStar = hoveredRating || rating;

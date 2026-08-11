@@ -3,6 +3,7 @@ package com.tanuj.krishanaposhak.dto.coupon;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -25,8 +26,10 @@ public class CouponRequest {
     @Positive(message = "Discount value must be positive")
     private Double discountValue;
 
+    @PositiveOrZero(message = "Minimum order amount cannot be negative")
     private Double minimumOrderAmount;
 
+    @PositiveOrZero(message = "Maximum discount amount cannot be negative")
     private Double maximumDiscountAmount;
 
     @NotNull(message = "Usage limit is required")

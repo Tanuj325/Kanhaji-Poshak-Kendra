@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react';
 import SEO from '@/components/common/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import Breadcrumb from '@/components/navigation/Breadcrumb';
 import Input from '@/components/forms/Input';
 import Textarea from '@/components/forms/Textarea';
 import Button from '@/components/ui/Button';
 import { useSubmitContact } from '@/hooks/useContact';
+import { contactSchema } from '@/validators/contactSchemas';
 import { siteConfig } from '@/config/siteConfig';
 import {
   FiMail,
@@ -80,17 +82,28 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+    const payload = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phoneNumber.trim(),
+      subject: formData.subject.trim(),
+      message: formData.message.trim(),
+    };
+
+    const validationResult = contactSchema.safeParse(payload);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0]?.message || 'Please check your input';
+      toast.error(firstError);
       return;
     }
 
     try {
       await submitContact.mutateAsync({
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phoneNumber: formData.phoneNumber.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim(),
+        name: payload.name,
+        email: payload.email,
+        phoneNumber: payload.phone,
+        subject: payload.subject,
+        message: payload.message,
       });
       setSubmitted(true);
       setFormData({ name: '', email: '', phoneNumber: '', subject: '', message: '' });

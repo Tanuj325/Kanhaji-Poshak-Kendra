@@ -2,6 +2,7 @@ package com.tanuj.krishanaposhak.config;
 
 import com.tanuj.krishanaposhak.security.filter.JwtAuthenticationEntryPoint;
 import com.tanuj.krishanaposhak.security.filter.JwtAuthenticationFilter;
+import com.tanuj.krishanaposhak.security.ratelimit.RateLimitingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ public class SecurityConfig {
         private final UserDetailsService userDetailsService;
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
         private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+        private final RateLimitingFilter rateLimitingFilter;
         private final Environment environment;
 
         private static final String[] PUBLIC_GET_ENDPOINTS = {
@@ -86,6 +88,10 @@ public class SecurityConfig {
                                 .addFilterBefore(
                                                 jwtAuthenticationFilter,
                                                 UsernamePasswordAuthenticationFilter.class)
+
+                                .addFilterAfter(
+                                                rateLimitingFilter,
+                                                JwtAuthenticationFilter.class)
 
                                 .headers(headers -> headers
                                                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)

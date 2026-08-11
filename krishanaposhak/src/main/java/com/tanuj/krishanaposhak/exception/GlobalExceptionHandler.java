@@ -62,6 +62,22 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleRateLimitExceeded(RateLimitExceededException ex, WebRequest request) {
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.add("Retry-After", String.valueOf(ex.getRetryAfterSeconds()));
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.TOO_MANY_REQUESTS.value())
+                .error(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(extractPath(request))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).headers(headers).body(errorResponse);
+    }
+
     // ---------------------------------------------------------------------
     // Spring Security
     // ---------------------------------------------------------------------
@@ -164,7 +180,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileStorageException.class)
     public ResponseEntity<ErrorResponse> handleFileStorage(FileStorageException ex, WebRequest request) {
         log.error("File storage exception: {}", ex.getMessage(), ex);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Failed to process image upload. Please ensure the file format is supported and try again.", request);
     }
 
     // ---------------------------------------------------------------------
@@ -174,9 +190,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex,
                                                                       WebRequest request) {
-        log.warn("Data integrity violation: {}", ex.getMessage());
+        log.warn("Data integrity violation: {}", ex.getMessage(), ex);
         return buildErrorResponse(HttpStatus.CONFLICT,
                 "This action conflicts with existing data (duplicate or referenced record)", request);
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataAccessException(org.springframework.dao.DataAccessException ex,
+                                                                   WebRequest request) {
+        log.error("Database access exception occurred", ex);
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                "An error occurred while processing your request. Please try again later.", request);
     }
 
     // ---------------------------------------------------------------------
