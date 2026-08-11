@@ -38,7 +38,7 @@ public class AuthController {
                             schema = @Schema(implementation = AuthResponse.class),
                             examples = @ExampleObject(value = "{\"accessToken\":\"token\",\"refreshToken\":\"refreshToken\"}"))),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "409", description = "Email or phone number already exists")
+            @ApiResponse(responseCode = "409", description = "Email already exists")
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {

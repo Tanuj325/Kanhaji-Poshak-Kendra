@@ -23,8 +23,7 @@ import java.util.List;
                 @Index(name = "idx_user_phone", columnList = "phone_number")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_user_email", columnNames = "email"),
-                @UniqueConstraint(name = "uk_user_phone", columnNames = "phone_number")
+                @UniqueConstraint(name = "uk_user_email", columnNames = "email")
         }
 )
 public class User extends BaseEntity {

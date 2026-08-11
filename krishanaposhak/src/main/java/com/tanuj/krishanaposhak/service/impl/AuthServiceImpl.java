@@ -41,9 +41,6 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException("Email is already registered");
         }
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new DuplicateResourceException("Phone number is already registered");
-        }
 
         User user = new User();
         authMapper.registerDtoToUser(request, user);
