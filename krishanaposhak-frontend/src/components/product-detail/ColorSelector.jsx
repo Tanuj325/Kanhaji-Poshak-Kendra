@@ -25,7 +25,7 @@ const COLOR_MAP = {
   brown: '#78350F',
 };
 
-const ColorSelector = memo(function ColorSelector({ color, selectedColor, onSelect }) {
+const ColorSelector = memo(function ColorSelector({ color, selectedColor, onSelect, isCompact = false }) {
   const colors = useMemo(() => {
     if (!color || typeof color !== 'string') return [];
     return color
@@ -50,21 +50,21 @@ const ColorSelector = memo(function ColorSelector({ color, selectedColor, onSele
   };
 
   return (
-    <div className="space-y-3 font-display">
+    <div className="space-y-2 sm:space-y-2.5 font-display">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+        <label className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
           <span>Available Color{colors.length > 1 ? 's' : ''}</span>
           {activeSelected && (
-            <span className="text-deep-navy font-extrabold normal-case">
+            <span className="text-[#C99A3B] font-bold normal-case">
               — {activeSelected}
             </span>
           )}
         </label>
       </div>
 
-      {/* Color Options Grid */}
+      {/* Color Options Grid - Compact Mobile height (34px) */}
       <div
-        className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-amber-200 sm:flex-wrap"
+        className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none flex-wrap"
         role="radiogroup"
         aria-label="Select poshak color"
       >
@@ -81,29 +81,28 @@ const ColorSelector = memo(function ColorSelector({ color, selectedColor, onSele
               aria-checked={isSelected}
               aria-label={`Color ${colorName}`}
               onClick={() => onSelect && onSelect(colorName)}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{ scale: 0.96 }}
               className={cn(
-                'relative flex-shrink-0 flex items-center gap-2 min-h-[42px] px-3.5 py-2 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/50 font-display cursor-pointer',
+                'relative flex-shrink-0 flex items-center gap-1.5 h-[34px] sm:h-[38px] px-2.5 sm:px-3 py-1 rounded-[10px] sm:rounded-[12px] border transition-all duration-150 font-display cursor-pointer text-[11px] sm:text-xs',
                 isSelected
-                  ? 'border-amber-800 bg-amber-900 text-amber-50 font-bold shadow-md ring-2 ring-amber-800/20'
-                  : 'border-amber-900/15 bg-white text-stone-800 hover:border-amber-700/50 hover:bg-amber-50/50'
+                  ? 'bg-gradient-to-r from-[#D4AF37] via-[#C99A3B] to-[#B3832B] text-white font-bold border-transparent shadow-2xs scale-[1.01]'
+                  : 'bg-slate-50/80 text-slate-700 border-slate-200 hover:border-[#C99A3B]/40 font-medium'
               )}
             >
               {/* Color Circle Swatch */}
               <span
                 className={cn(
-                  'h-4 w-4 rounded-full shadow-2xs shrink-0 flex items-center justify-center border',
+                  'h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-full shadow-2xs shrink-0 border',
                   isWhite ? 'border-slate-300' : 'border-black/10'
                 )}
                 style={swatchStyle}
               />
 
-              <span className="text-xs sm:text-sm font-semibold capitalize whitespace-nowrap">
+              <span className="capitalize whitespace-nowrap">
                 {colorName}
               </span>
 
-              {isSelected && <FiCheck className="h-3.5 w-3.5 text-amber-200 shrink-0 ml-0.5" />}
+              {isSelected && <FiCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-100 shrink-0 ml-0.5" />}
             </motion.button>
           );
         })}
