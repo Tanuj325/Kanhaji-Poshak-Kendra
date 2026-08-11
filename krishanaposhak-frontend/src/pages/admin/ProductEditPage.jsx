@@ -456,11 +456,36 @@ export default function ProductEditPage() {
                 <input
                   id="color"
                   type="text"
-                  placeholder="e.g. Red, Blue, Multicolor"
+                  placeholder="e.g. Red, Blue, Yellow (comma-separated)"
                   {...register('color')}
                   className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
                 {errors.color && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.color.message}</p>}
+                
+                {/* Quick Color Presets */}
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] text-slate-400 font-semibold">Presets:</span>
+                  {['Red', 'Blue', 'Yellow', 'Pink', 'Green', 'White', 'Black', 'Peach', 'Multicolor'].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => {
+                        const currentVal = (control._formValues?.color || '').trim();
+                        const valList = currentVal ? currentVal.split(',').map((c) => c.trim()).filter(Boolean) : [];
+                        const idx = valList.findIndex((c) => c.toLowerCase() === preset.toLowerCase());
+                        if (idx >= 0) {
+                          valList.splice(idx, 1);
+                        } else {
+                          valList.push(preset);
+                        }
+                        setValue('color', valList.join(', '), { shouldValidate: true, shouldDirty: true });
+                      }}
+                      className="px-2 py-0.5 rounded-md border border-slate-200 bg-slate-100 hover:bg-amber-100 hover:border-amber-300 text-[10px] font-semibold text-slate-700 transition-colors"
+                    >
+                      + {preset}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 

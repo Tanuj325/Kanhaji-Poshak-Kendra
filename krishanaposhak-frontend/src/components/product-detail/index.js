@@ -3,6 +3,7 @@ export { default as ImageGallery } from './ImageGallery';
 export { default as ProductInfo } from './ProductInfo';
 export { default as PricingSection } from './PricingSection';
 export { default as VariantSelector } from './VariantSelector';
+export { default as ColorSelector } from './ColorSelector';
 export { default as ActionsBar } from './ActionsBar';
 export { default as TrustBadges } from './TrustBadges';
 export { default as ProductTabs } from './ProductTabs';

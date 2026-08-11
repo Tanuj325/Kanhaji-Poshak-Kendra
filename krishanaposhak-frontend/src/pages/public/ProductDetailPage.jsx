@@ -13,6 +13,7 @@ import ImageGallery from '@/components/product-detail/ImageGallery';
 import ProductInfo from '@/components/product-detail/ProductInfo';
 import PricingSection from '@/components/product-detail/PricingSection';
 import VariantSelector from '@/components/product-detail/VariantSelector';
+import ColorSelector from '@/components/product-detail/ColorSelector';
 import ActionsBar from '@/components/product-detail/ActionsBar';
 import TrustBadges from '@/components/product-detail/TrustBadges';
 import ProductTabs from '@/components/product-detail/ProductTabs';
@@ -53,6 +54,7 @@ export default function ProductDetailPage() {
   }, [product]);
 
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
     if (!variants.length) {
@@ -62,6 +64,15 @@ export default function ProductDetailPage() {
     const firstAvailable = variants.find((v) => v.active !== false && v.stock > 0) || variants[0];
     setSelectedVariant(firstAvailable);
   }, [variants]);
+
+  useEffect(() => {
+    if (product?.color) {
+      const firstColor = product.color.split(',')[0]?.trim();
+      setSelectedColor(firstColor || null);
+    } else {
+      setSelectedColor(null);
+    }
+  }, [product?.color]);
 
   const categoryId = product?.categoryId || product?.category?.id;
 
@@ -202,6 +213,8 @@ export default function ProductDetailPage() {
           variants={variants}
           selectedVariant={selectedVariant}
           setSelectedVariant={setSelectedVariant}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
           breadcrumbItems={breadcrumbItems}
           canonicalUrl={canonicalUrl}
         />
@@ -210,7 +223,7 @@ export default function ProductDetailPage() {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // DESKTOP VIEW (>=1024px - 100% UNTOUCHED ORIGINAL)
+  // DESKTOP VIEW (>=1024px)
   // ══════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
@@ -231,8 +244,6 @@ export default function ProductDetailPage() {
 
         {/* ══════════════════════════════════════════════════════════════
             STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
-            On mobile: stacked (gallery → purchase card)
-            On lg+: side-by-side (gallery left, purchase sticky right)
            ══════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 xl:gap-10 items-start">
           {/* LEFT: Image Gallery (7 columns on desktop) */}
@@ -252,6 +263,13 @@ export default function ProductDetailPage() {
 
               {/* Pricing */}
               <PricingSection variant={selectedVariant} product={product} />
+
+              {/* Color Selector */}
+              <ColorSelector
+                color={product.color}
+                selectedColor={selectedColor}
+                onSelect={setSelectedColor}
+              />
 
               {/* Size Selector */}
               <VariantSelector

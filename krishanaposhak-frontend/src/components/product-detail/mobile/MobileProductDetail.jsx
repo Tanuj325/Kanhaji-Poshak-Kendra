@@ -22,6 +22,7 @@ import {
 } from 'react-icons/fi';
 import PriceDisplay from '@/components/ui/PriceDisplay';
 import OptimizedImage from '@/components/ui/OptimizedImage';
+import ColorSelector from '@/components/product-detail/ColorSelector';
 import ProductReviewsSection from '@/components/product-detail/ProductReviewsSection';
 import RelatedProductsSection from '@/components/product-detail/RelatedProductsSection';
 import { useCartContext } from '@/context/CartContext';
@@ -37,6 +38,8 @@ export default function MobileProductDetail({
   variants = [],
   selectedVariant,
   setSelectedVariant,
+  selectedColor,
+  setSelectedColor,
   breadcrumbItems = [],
   canonicalUrl,
 }) {
@@ -431,6 +434,17 @@ export default function MobileProductDetail({
             )}
           </div>
         </section>
+
+        {/* ─── COLOR SELECTION ─── */}
+        {product?.color && (
+          <section className="bg-white rounded-[16px] p-3 sm:p-4 border border-slate-100 shadow-2xs">
+            <ColorSelector
+              color={product.color}
+              selectedColor={selectedColor}
+              onSelect={setSelectedColor}
+            />
+          </section>
+        )}
 
         {/* ─── 3. VARIANT SELECTION (Chips Height 36px, Rounded 12px) ─── */}
         {variants.length > 0 && (
