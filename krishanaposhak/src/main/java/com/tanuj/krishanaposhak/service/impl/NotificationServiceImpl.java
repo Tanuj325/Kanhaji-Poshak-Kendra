@@ -105,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void createNotification(User recipient, String title, String message, NotificationType type) {
         if (recipient == null || title == null || message == null || type == null) {
             log.warn("Cannot create notification with null recipient, title, message, or type.");
@@ -127,7 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void createAdminNotifications(String title, String message, NotificationType type) {
         if (title == null || message == null || type == null) {
             log.warn("Cannot create admin notification with null title, message, or type.");

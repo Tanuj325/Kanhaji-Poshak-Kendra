@@ -45,7 +45,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "gender", nullable = true)
     private Gender gender;
 
     @Column(name = "date_of_birth")

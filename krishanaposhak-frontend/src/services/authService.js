@@ -13,8 +13,8 @@ const authService = {
       email: data.email,
       phoneNumber: data.phoneNumber,
       password: data.password,
-      gender: data.gender,
-      dateOfBirth: data.dateOfBirth,
+      gender: data.gender || null,
+      dateOfBirth: data.dateOfBirth || null,
     }),
 
   login: (email, password) =>
