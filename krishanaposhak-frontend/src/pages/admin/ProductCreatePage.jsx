@@ -48,6 +48,10 @@ const productSchema = z.object({
   categoryId: z.coerce.number({ invalid_type_error: 'Category is required' }).int().positive('Category is required'),
   material: z.string().optional(),
   careInstructions: z.string().optional(),
+  color: z.preprocess(
+    (val) => (val === '' || val === undefined || val === null ? undefined : val),
+    z.string().max(50, 'Color must be 50 characters or less').optional(),
+  ),
   featured: z.boolean().default(false),
   newArrival: z.boolean().default(false),
   active: z.boolean().default(true),
@@ -93,6 +97,7 @@ export default function ProductCreatePage() {
       categoryId: '',
       material: '',
       careInstructions: '',
+      color: '',
       featured: false,
       newArrival: false,
       active: true,
@@ -153,6 +158,7 @@ export default function ProductCreatePage() {
         categoryId: data.categoryId,
         material: data.material,
         careInstructions: data.careInstructions,
+        color: data.color || null,
         featured: data.featured,
         newArrival: data.newArrival,
         active: data.active,
@@ -327,6 +333,22 @@ export default function ProductCreatePage() {
                   {...register('careInstructions')}
                   className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0 max-w-full">
+              <div className="min-w-0 max-w-full">
+                <label htmlFor="color" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Product Color <span className="text-slate-400 font-normal normal-case">(optional)</span>
+                </label>
+                <input
+                  id="color"
+                  type="text"
+                  placeholder="e.g. Red, Blue, Multicolor"
+                  {...register('color')}
+                  className="w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none"
+                />
+                {errors.color && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{errors.color.message}</p>}
               </div>
             </div>
 

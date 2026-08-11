@@ -24,7 +24,7 @@ public class EmailServiceImpl implements com.tanuj.krishanaposhak.service.EmailS
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-    private static final String FROMEMAIL = "tanujiimt1@gmail.com";
+    private static final String FROMEMAIL = "kanhajiposhak.support@gmail.com";
 
     @Override
     @Async
@@ -39,8 +39,10 @@ public class EmailServiceImpl implements com.tanuj.krishanaposhak.service.EmailS
             log.info("Sent simple email to {}", to);
         } catch (Exception e) {
             log.error("Failed to send email to {}: {}", to, e.getMessage());
-            // In a real application, you might want to throw a custom exception or handle it as per your error handling strategy.
-            // For now, we log the error and continue as the method is async, and we don't want to block the caller.
+            // In a real application, you might want to throw a custom exception or handle
+            // it as per your error handling strategy.
+            // For now, we log the error and continue as the method is async, and we don't
+            // want to block the caller.
         }
     }
 

@@ -41,7 +41,7 @@ export default function PrintableInvoice({ order }) {
             Datawali, Meerut, Uttar Pradesh, India, 250001
           </p>
           <p className="text-[10px] font-sans text-slate-500">
-            Email: support@krishanaposhak.com | Contact: +91 7060785107
+            Email: kanhajiposhak.support@gmail.com | Contact: +91 7060785107
           </p>
         </div>
         <div className="text-right">
@@ -167,7 +167,7 @@ export default function PrintableInvoice({ order }) {
         <div className="max-w-md text-[10px] text-slate-500 space-y-1">
           <p className="font-bold text-amber-900 text-xs">Radhe Radhe! 🙏</p>
           <p>Thank you for choosing Kanhaji Poshak Kendra for your divine seva attire.</p>
-          <p>For support, returns or sizing guidance, reach out to support@krishanaposhak.com</p>
+          <p>For support, returns or sizing guidance, reach out to kanhajiposhak.support@gmail.com</p>
           <p className="text-[9px] text-slate-400">This is a computer generated invoice and does not require a physical signature.</p>
         </div>
 

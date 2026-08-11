@@ -23,6 +23,8 @@ public class ProductCardResponse {
 
     private String size;
 
+    private String color;
+
     private boolean featured;
 
     private boolean newArrival;

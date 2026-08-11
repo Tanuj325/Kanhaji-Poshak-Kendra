@@ -73,7 +73,7 @@ const PaymentFailureModal = memo(function PaymentFailureModal({
 
           <div className="pt-3 flex items-center justify-between border-t border-amber-900/10 text-xs font-semibold">
             <a
-              href="mailto:support@krishanaposhak.com"
+              href="mailto:kanhajiposhak.support@gmail.com"
               className="text-amber-900 hover:underline flex items-center gap-1 font-display"
             >
               <FiHelpCircle className="h-3.5 w-3.5" /> Need Assistance? Contact Support

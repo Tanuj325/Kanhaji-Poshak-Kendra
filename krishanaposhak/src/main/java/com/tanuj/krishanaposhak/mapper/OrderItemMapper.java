@@ -16,6 +16,7 @@ public interface OrderItemMapper {
     @Mapping(target = "sku", source = "sku")
     @Mapping(target = "imageUrl", expression = "java(com.tanuj.krishanaposhak.util.UrlUtils.ensureHttps(orderItem.getProductImage()))")
     @Mapping(target = "size", source = "size")
+    @Mapping(target = "color", source = "color")
     @Mapping(target = "price",
             expression = "java(orderItem.getPrice() == null ? null : orderItem.getPrice().doubleValue())")
     @Mapping(target = "quantity", source = "quantity")

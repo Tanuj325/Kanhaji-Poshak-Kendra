@@ -41,6 +41,9 @@ public class OrderItem extends BaseEntity {
     @Column(length = 30)
     private String size;
 
+    @Column(length = 50)
+    private String color;
+
     @Column(name = "product_image", length = 500)
     private String productImage;
 

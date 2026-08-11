@@ -32,6 +32,9 @@ public class ProductRequest {
 
     private String careInstructions;
 
+    @Size(max = 50, message = "Color must be 50 characters or less")
+    private String color;
+
     private boolean featured;
 
     private boolean newArrival;

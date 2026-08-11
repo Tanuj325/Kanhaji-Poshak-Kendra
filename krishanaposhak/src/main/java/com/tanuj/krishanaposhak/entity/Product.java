@@ -46,6 +46,9 @@ public class Product extends BaseEntity {
     @Column(name = "care_instructions", length = 500)
     private String careInstructions;
 
+    @Column(length = 50)
+    private String color;
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean featured = false;

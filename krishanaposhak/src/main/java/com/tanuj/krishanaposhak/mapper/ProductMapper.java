@@ -64,7 +64,8 @@ public interface ProductMapper {
                 .slug(product.getSlug())
                 .imageUrl(thumbnailUrl)
                 .featured(Boolean.TRUE.equals(product.getFeatured()))
-                .newArrival(Boolean.TRUE.equals(product.getNewArrival()));
+                .newArrival(Boolean.TRUE.equals(product.getNewArrival()))
+                .color(product.getColor());
 
         if (variant != null) {
             builder.variantId(variant.getId())

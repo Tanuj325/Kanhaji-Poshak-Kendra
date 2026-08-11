@@ -587,6 +587,12 @@ export default function MobileProductDetail({
                   <span className="text-slate-500 font-medium">Material</span>
                   <span className="font-semibold text-slate-800">{product?.material || 'Silk & Brocade'}</span>
                 </div>
+                {product?.color && (
+                  <div className="flex justify-between py-0.5 border-b border-slate-50">
+                    <span className="text-slate-500 font-medium">Color</span>
+                    <span className="font-semibold text-slate-800">{product.color}</span>
+                  </div>
+                )}
                 <div className="flex justify-between py-0.5 border-b border-slate-50">
                   <span className="text-slate-500 font-medium">Crafting Origin</span>
                   <span className="font-semibold text-slate-800">Meerut, Uttar Pradesh</span>

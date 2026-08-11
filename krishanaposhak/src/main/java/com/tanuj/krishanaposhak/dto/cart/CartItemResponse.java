@@ -21,6 +21,8 @@ public class CartItemResponse {
 
     private String size;
 
+    private String color;
+
     private Double price;
 
     private Double discountPrice;

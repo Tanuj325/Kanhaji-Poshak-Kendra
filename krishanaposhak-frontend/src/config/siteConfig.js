@@ -7,7 +7,7 @@ export const siteConfig = {
     ? 'https://kanhajiposhak.vercel.app'
     : 'https://kanhajiposhak.vercel.app',
   ogImage: '/og-image.png',
-  email: 'support@krishanaposhak.com',
+  email: 'kanhajiposhak.support@gmail.com',
   phone: '+917060785107',
   address: {
     street: 'Datawali',

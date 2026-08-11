@@ -27,6 +27,8 @@ public class ProductResponse {
 
     private String careInstructions;
 
+    private String color;
+
     private boolean featured;
 
     private boolean newArrival;

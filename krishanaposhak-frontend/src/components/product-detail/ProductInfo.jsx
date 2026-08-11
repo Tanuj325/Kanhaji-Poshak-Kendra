@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Rating from '@/components/ui/Rating';
-import { FiCheckCircle, FiXCircle, FiTag, FiFeather, FiAward, FiHash } from 'react-icons/fi';
+import { FiCheckCircle, FiXCircle, FiTag, FiFeather, FiAward, FiHash, FiDroplet } from 'react-icons/fi';
 
 const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, reviewCount = 0 }) {
   if (!product) return null;
@@ -89,6 +89,15 @@ const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, revi
           <FiFeather className="h-4 w-4 text-amber-800 shrink-0" />
           <span className="font-bold text-amber-950">Fabric:</span>
           <span className="font-medium text-stone-700">{product.material}</span>
+        </div>
+      )}
+
+      {/* Color Highlight */}
+      {product.color && (
+        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-stone-800 font-body bg-amber-50/40 px-3.5 py-2.5 rounded-xl border border-amber-900/10">
+          <FiDroplet className="h-4 w-4 text-amber-800 shrink-0" />
+          <span className="font-bold text-amber-950">Color:</span>
+          <span className="font-medium text-stone-700">{product.color}</span>
         </div>
       )}
     </div>

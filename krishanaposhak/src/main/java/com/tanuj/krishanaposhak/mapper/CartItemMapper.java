@@ -21,6 +21,7 @@ public interface CartItemMapper {
     @Mapping(target = "slug", source = "productVariant.product.slug")
     @Mapping(target = "imageUrl", source = ".", qualifiedByName = "imageUrl")
     @Mapping(target = "size", source = "productVariant.size")
+    @Mapping(target = "color", source = "productVariant.product.color")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "discountPrice", source = "productVariant.discountPrice")
     @Mapping(target = "quantity", source = "quantity")

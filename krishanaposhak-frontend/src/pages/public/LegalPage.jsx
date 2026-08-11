@@ -138,7 +138,7 @@ const returnTimelineSteps = [
 const legalFaqs = [
   {
     q: 'How do I request a return or exchange for a deity dress?',
-    a: 'You can initiate a return or size exchange within 7 days of delivery through My Account > Orders or by emailing support@krishanaposhak.com. Items must be unwashed, unused, and in original sacred packaging.',
+    a: 'You can initiate a return or size exchange within 7 days of delivery through My Account > Orders or by emailing kanhajiposhak.support@gmail.com. Items must be unwashed, unused, and in original sacred packaging.',
   },
   {
     q: 'How long does a refund take to reflect in my bank account?',
@@ -365,16 +365,16 @@ export default function LegalPage() {
             </thead>
             <tbody>
               ${shippingZoneRates
-                  .map(
-                    (z) => `
+        .map(
+          (z) => `
                 <tr>
                   <td><strong>${z.zone}</strong></td>
                   <td>${z.regions}</td>
                   <td>${z.deliveryTime}</td>
                 </tr>
               `
-                  )
-                  .join('')}
+        )
+        .join('')}
             </tbody>
           </table>
 

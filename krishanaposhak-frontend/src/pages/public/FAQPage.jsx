@@ -65,7 +65,7 @@ const faqData = [
   {
     category: 'returns',
     question: 'Can I exchange a product if the size does not fit?',
-    answer: 'Yes! We offer a 7-day hassle-free size exchange policy. Ensure the attire remains unused with original tags intact. Reach out to support@krishanaposhak.com to initiate an exchange.',
+    answer: 'Yes! We offer a 7-day hassle-free size exchange policy. Ensure the attire remains unused with original tags intact. Reach out to kanhajiposhak.support@gmail.com to initiate an exchange.',
   },
   {
     category: 'returns',
@@ -165,11 +165,10 @@ export default function FAQPage() {
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 font-display min-h-[40px] ${
-                    isActive
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 font-display min-h-[40px] ${isActive
                       ? 'bg-amber-900 text-amber-50 shadow-md border border-amber-800'
                       : 'bg-white text-stone-700 hover:bg-amber-50 border border-amber-900/10'
-                  }`}
+                    }`}
                 >
                   <Icon className={`h-4 w-4 ${isActive ? 'text-amber-200' : 'text-amber-800'}`} />
                   <span>{cat.label}</span>
@@ -202,9 +201,8 @@ export default function FAQPage() {
                         {faq.question}
                       </span>
                       <FiChevronDown
-                        className={`h-5 w-5 text-amber-800 shrink-0 transition-transform duration-200 ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
+                        className={`h-5 w-5 text-amber-800 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
 

@@ -25,6 +25,8 @@ public class ProductDetailsResponse {
 
     private String careInstructions;
 
+    private String color;
+
     private List<ProductVariantResponse> variants;
 
     private List<ProductImageResponse> images;
