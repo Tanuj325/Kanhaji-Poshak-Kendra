@@ -43,17 +43,6 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
     setSelectedImageIndex(0);
   }, [product]);
 
-  if (!product) return null;
-
-  const images = product.images || (product.imageUrl ? [{ imageUrl: product.imageUrl }] : []);
-  const activeImage = images[selectedImageIndex]?.imageUrl || images[selectedImageIndex]?.url || product.imageUrl || '/placeholder.svg';
-
-  const price = selectedVariant?.price || product.price || product.discountPrice;
-  const discountPrice = selectedVariant?.discountPrice || product.discountPrice;
-
-  const stock = selectedVariant ? selectedVariant.stock : product.stock ?? 10;
-  const isOutOfStock = stock === 0;
-
   const wishlistVariantIds = useMemo(() => {
     const set = new Set();
     const items = Array.isArray(wishlist) ? wishlist : wishlist?.items || wishlist?.data || [];
@@ -65,6 +54,17 @@ export default function QuickViewModal({ isOpen, onClose, product }) {
     });
     return set;
   }, [wishlist]);
+
+  if (!product) return null;
+
+  const images = product.images || (product.imageUrl ? [{ imageUrl: product.imageUrl }] : []);
+  const activeImage = images[selectedImageIndex]?.imageUrl || images[selectedImageIndex]?.url || product.imageUrl || '/placeholder.svg';
+
+  const price = selectedVariant?.price || product.price || product.discountPrice;
+  const discountPrice = selectedVariant?.discountPrice || product.discountPrice;
+
+  const stock = selectedVariant ? selectedVariant.stock : product.stock ?? 10;
+  const isOutOfStock = stock === 0;
 
   const targetVariantId = selectedVariant?.id || product.id;
   const isInWishlist = wishlistVariantIds.has(Number(targetVariantId)) || wishlistVariantIds.has(Number(product.id));

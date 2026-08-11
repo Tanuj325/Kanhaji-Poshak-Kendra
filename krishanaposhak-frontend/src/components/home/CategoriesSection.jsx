@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { useRootCategories } from '@/hooks/useCategories';
 import CategoryCard from '@/components/cards/CategoryCard';
 import Skeleton from '@/components/ui/Skeleton';
-import ErrorState from '@/components/ui/ErrorState';
 import { ROUTE_PATHS } from '@/routes/routePaths';
 import { FiGrid, FiArrowRight } from 'react-icons/fi';
+import { getOptimizedImageUrl } from '@/utils/imageHelpers';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -99,8 +99,11 @@ const CategoriesSection = memo(function CategoriesSection() {
                 <div className="w-[80px] h-[80px] rounded-xl bg-stone-50 overflow-hidden border border-stone-100 mb-1.5 relative">
                   {category.image ? (
                     <img
-                      src={category.image}
+                      src={getOptimizedImageUrl(category.image, 160, 160)}
                       alt={category.name}
+                      loading="lazy"
+                      width={80}
+                      height={80}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (

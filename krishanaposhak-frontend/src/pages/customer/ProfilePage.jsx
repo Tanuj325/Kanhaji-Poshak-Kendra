@@ -45,24 +45,6 @@ export default function ProfilePage() {
   const { data: profile, isLoading, error, refetch } = useProfile();
   const updateProfile = useUpdateProfile();
 
-  if (!isDesktop) {
-    return (
-      <>
-        <Helmet>
-          <title>{`My Profile | ${siteConfig.name}`}</title>
-          <meta name="robots" content="noindex, nofollow" />
-        </Helmet>
-        <MobileAccountSettings
-          user={user}
-          profile={profile}
-          isLoading={isLoading}
-          refetch={refetch}
-          updateProfile={updateProfile}
-          logout={logout}
-        />
-      </>
-    );
-  }
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -89,6 +71,39 @@ export default function ProfilePage() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isResendingVerification, setIsResendingVerification] = useState(false);
 
+  useEffect(() => {
+    const data = profile || user;
+    if (data) {
+      reset({
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
+        email: data.email || '',
+        phoneNumber: data.phoneNumber || '',
+        gender: data.gender || '',
+        dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : '',
+      });
+    }
+  }, [profile, user, reset]);
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Helmet>
+          <title>{`My Profile | ${siteConfig.name}`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <MobileAccountSettings
+          user={user}
+          profile={profile}
+          isLoading={isLoading}
+          refetch={refetch}
+          updateProfile={updateProfile}
+          logout={logout}
+        />
+      </>
+    );
+  }
+
   const currentUserData = profile || user;
 
   const handleResendVerificationLink = async () => {
@@ -104,22 +119,6 @@ export default function ProfilePage() {
     }
   };
 
-  useEffect(() => {
-    const data = profile || user;
-    if (data) {
-      reset({
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        email: data.email || '',
-        phoneNumber: data.phoneNumber || '',
-        gender: data.gender || '',
-        dateOfBirth: data.dateOfBirth || '',
-      });
-      if (data.profileImageUrl) {
-        setPreviewUrl(data.profileImageUrl);
-      }
-    }
-  }, [profile, user, reset]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

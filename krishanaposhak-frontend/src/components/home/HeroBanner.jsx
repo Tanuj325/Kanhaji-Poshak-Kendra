@@ -105,16 +105,23 @@ export default function HeroBanner() {
 
   if (isLoading) {
     return (
-      <section className="relative h-[min(55svh,36rem)] min-h-[24rem] sm:h-[65svh] sm:min-h-[28rem] lg:h-[85vh] w-full bg-deep-navy overflow-hidden">
-        <Skeleton className="h-full w-full bg-deep-navy/80" />
-        <div className="absolute inset-0 flex items-center">
-          <div className="container-page space-y-4 max-w-xl">
-            <Skeleton className="h-6 w-40 bg-temple-gold/20 rounded-full" />
-            <Skeleton className="h-12 w-full bg-lotus-white/10 rounded-xl" />
-            <Skeleton className="h-6 w-3/4 bg-lotus-white/10 rounded-lg" />
-            <div className="flex gap-4 pt-4">
-              <Skeleton className="h-12 w-36 bg-temple-gold/30 rounded-xl" />
-              <Skeleton className="h-12 w-36 bg-lotus-white/10 rounded-xl" />
+      <section className="relative overflow-hidden bg-stone-50/60 font-display select-none">
+        {/* Mobile Skeleton (matches exact loaded mobile banner height 185px) */}
+        <div className="block mt-3 ml-1.5 mr-1 mb-0 lg:hidden w-[calc(100%-1.5rem)] overflow-hidden relative bg-stone-900/60 rounded-l rounded-r h-[185px]">
+          <Skeleton className="h-full w-full bg-stone-800/80" />
+        </div>
+        {/* Desktop Skeleton */}
+        <div className="hidden lg:block relative h-[85vh] w-full bg-deep-navy overflow-hidden">
+          <Skeleton className="h-full w-full bg-deep-navy/80" />
+          <div className="absolute inset-0 flex items-center">
+            <div className="container-page space-y-4 max-w-xl">
+              <Skeleton className="h-6 w-40 bg-temple-gold/20 rounded-full" />
+              <Skeleton className="h-12 w-full bg-lotus-white/10 rounded-xl" />
+              <Skeleton className="h-6 w-3/4 bg-lotus-white/10 rounded-lg" />
+              <div className="flex gap-4 pt-4">
+                <Skeleton className="h-12 w-36 bg-temple-gold/30 rounded-xl" />
+                <Skeleton className="h-12 w-36 bg-lotus-white/10 rounded-xl" />
+              </div>
             </div>
           </div>
         </div>
@@ -182,8 +189,10 @@ export default function HeroBanner() {
                 src={banner.imageUrl}
                 alt={banner.title || 'Krishana Poshak Banner'}
                 className="h-full w-full object-cover object-center"
-                loading="eager"
-                fetchpriority="high"
+                loading={currentIndex === 0 ? 'eager' : 'lazy'}
+                fetchpriority={currentIndex === 0 ? 'high' : 'auto'}
+                width={600}
+                height={310}
               />
             </motion.div>
           </AnimatePresence>
@@ -226,8 +235,8 @@ export default function HeroBanner() {
                     {isActive ? (
                       <div className="h-1.5 w-6 rounded-full bg-white/30 overflow-hidden relative">
                         <div
-                          className="h-full bg-amber-400 rounded-full transition-all duration-75 ease-linear"
-                          style={{ width: `${progress}%` }}
+                          className="h-full bg-amber-400 rounded-full transition-transform duration-75 ease-linear origin-left"
+                          style={{ transform: `scaleX(${progress / 100})`, transformOrigin: 'left' }}
                         />
                       </div>
                     ) : (
@@ -243,8 +252,8 @@ export default function HeroBanner() {
           {bannerList.length > 1 && (
             <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/15 z-20 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-all duration-75 ease-linear"
-                style={{ width: `${progress}%` }}
+                className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-transform duration-75 ease-linear origin-left"
+                style={{ transform: `scaleX(${progress / 100})`, transformOrigin: 'left' }}
               />
             </div>
           )}
@@ -353,8 +362,8 @@ export default function HeroBanner() {
               >
                 {i === currentIndex && (
                   <motion.div
-                    className="absolute inset-y-0 left-0 bg-amber-400"
-                    style={{ width: `${progress}%` }}
+                    className="absolute inset-y-0 left-0 bg-amber-400 w-full origin-left"
+                    style={{ transform: `scaleX(${progress / 100})`, transformOrigin: 'left' }}
                   />
                 )}
               </button>

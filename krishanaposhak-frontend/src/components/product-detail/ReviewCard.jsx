@@ -5,12 +5,12 @@ import { formatDate } from '@/utils/formatDate';
 import { FiCheckCircle, FiEdit2, FiTrash2, FiThumbsUp, FiShoppingBag } from 'react-icons/fi';
 
 const ReviewCard = memo(function ReviewCard({ review, currentUserId, onEdit, onDelete }) {
+  const [helpfulCount, setHelpfulCount] = useState(0);
+  const [hasVotedHelpful, setHasVotedHelpful] = useState(false);
+
   if (!review) return null;
 
   const { id, rating, comment, createdAt, user, userName, userId, customerName } = review;
-
-  const [helpfulCount, setHelpfulCount] = useState(0);
-  const [hasVotedHelpful, setHasVotedHelpful] = useState(false);
 
   const isOwner = currentUserId && (userId === currentUserId || user?.id === currentUserId);
 
