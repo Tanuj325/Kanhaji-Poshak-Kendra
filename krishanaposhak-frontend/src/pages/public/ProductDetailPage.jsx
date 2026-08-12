@@ -245,15 +245,15 @@ export default function ProductDetailPage() {
         {/* ══════════════════════════════════════════════════════════════
             STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
            ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-start">
-          {/* LEFT: Image Gallery (7 columns on desktop) */}
-          <div className="lg:col-span-7 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-start">
+          {/* LEFT: Image Gallery (7 columns on desktop, sticky pinned to top) */}
+          <div className="lg:col-span-7 w-full lg:sticky lg:top-24 self-start">
             <ImageGallery images={product.images} productName={product.name} />
           </div>
 
-          {/* RIGHT: Purchase Panel (5 columns on desktop, sticky) */}
+          {/* RIGHT: Purchase Panel (5 columns on desktop, compact & streamlined) */}
           <div className="lg:col-span-5 w-full">
-            <div className="lg:sticky lg:top-24 rounded-2xl bg-white p-5 xl:p-6 border border-slate-200/80 shadow-[0_2px_16px_rgba(15,23,42,0.04)] space-y-4">
+            <div className="rounded-2xl bg-white p-4 lg:p-5 border border-slate-200/80 shadow-[0_2px_14px_rgba(15,23,42,0.04)] space-y-3">
               {/* Product Info: Title, Category, Rating, Material */}
               <ProductInfo
                 product={product}
@@ -285,7 +285,7 @@ export default function ProductDetailPage() {
               <TrustBadges />
 
               {/* Social Share */}
-              <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between flex-wrap gap-3">
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between flex-wrap gap-3">
                 <SocialShareButtons
                   url={canonicalUrl}
                   title={`Handcrafted ${product.name} - ${siteConfig.name}`}
