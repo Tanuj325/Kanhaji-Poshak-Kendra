@@ -172,7 +172,7 @@ function WishlistPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="space-y-8 w-full max-w-6xl font-display"
+        className="space-y-8 w-full max-w-7xl font-display"
       >
         <Breadcrumb items={breadcrumbItems} />
 
@@ -236,7 +236,7 @@ function WishlistPage() {
           />
         ) : (
           <AnimatePresence mode="popLayout">
-            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+            <div className="grid grid-cols-3 xl:grid-cols-4 gap-6">
               {items.map((item) => {
                 const discountPercent = calculateDiscount(item.price, item.discountPrice);
                 const isInStock = item.inStock !== false;
@@ -255,16 +255,16 @@ function WishlistPage() {
                     exit={{ opacity: 0, scale: 0.9 }}
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.25 }}
-                    className="group relative flex flex-col rounded-3xl bg-white border border-temple-gold/20 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full"
+                    className="group relative flex flex-col rounded-2xl bg-white border border-stone-200/80 overflow-hidden shadow-[0_2px_12px_rgba(15,23,42,0.05)] hover:shadow-[0_12px_28px_rgba(15,36,64,0.12)] hover:border-[#C99A3B]/40 transition-all duration-300 h-full font-display"
                   >
-                    {/* Product Image Container */}
-                    <div className="relative aspect-[4/5] w-full overflow-hidden bg-warm-cream/40">
+                    {/* Product Image Container — Square / Balanced aspect ratio */}
+                    <div className="relative aspect-square w-full overflow-hidden bg-stone-50">
                       <Link to={`/product/${item.slug || item.productId}`} className="block w-full h-full">
                         {imgSrc ? (
                           <img
                             src={imgSrc}
                             alt={item.productName}
-                            className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                            className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                             loading="lazy"
                             onError={(e) => {
                               e.target.style.display = 'none';
@@ -279,7 +279,7 @@ function WishlistPage() {
                           className="flex flex-col items-center justify-center gap-1.5 p-4 text-natural-wood/40 text-center w-full h-full"
                           style={{ display: imgSrc ? 'none' : 'flex' }}
                         >
-                          <FiPackage className="h-12 w-12 text-temple-gold/40" />
+                          <FiPackage className="h-10 w-10 text-temple-gold/40" />
                           <span className="text-xs font-bold text-dark-charcoal">Poshak Collection</span>
                         </div>
                       </Link>
@@ -308,7 +308,7 @@ function WishlistPage() {
                           e.stopPropagation();
                           handleRemove(item.variantId || item.productId);
                         }}
-                        className="absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-md text-natural-wood shadow-md transition-all duration-200 hover:scale-110 hover:bg-error hover:text-white"
+                        className="absolute top-3 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 backdrop-blur-md text-stone-500 shadow-xs transition-all duration-200 hover:scale-105 hover:bg-rose-500 hover:text-white"
                         title="Remove from Wishlist"
                         aria-label={`Remove ${item.productName} from wishlist`}
                       >
@@ -317,22 +317,22 @@ function WishlistPage() {
                     </div>
 
                     {/* Product Details */}
-                    <div className="flex flex-col flex-1 p-4 sm:p-5 justify-between font-display">
+                    <div className="flex flex-col flex-1 p-4 justify-between font-display bg-white">
                       <div>
                         <Link
                           to={`/product/${item.slug || item.productId}`}
-                          className="text-sm font-display font-bold text-dark-charcoal hover:text-royal-blue transition-colors line-clamp-2 leading-snug mb-2 block min-h-[2.5rem]"
+                          className="text-sm font-bold text-[#0F2440] hover:text-[#C99A3B] transition-colors line-clamp-2 leading-snug mb-1.5 block min-h-[2.4rem]"
                         >
                           {item.productName}
                         </Link>
 
                         {item.rating > 0 ? (
-                          <div className="flex items-center gap-1 text-xs text-natural-wood mb-2.5">
-                            <FiStar className="h-3.5 w-3.5 text-temple-gold fill-temple-gold flex-shrink-0" />
-                            <span className="font-bold text-dark-charcoal text-xs">{item.rating}</span>
+                          <div className="flex items-center gap-1 text-xs text-stone-600 mb-2">
+                            <FiStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500 flex-shrink-0" />
+                            <span className="font-bold text-[#0F2440] text-xs">{item.rating}</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1 text-xs text-emerald-600 font-bold mb-2.5">
+                          <div className="flex items-center gap-1 text-xs text-emerald-600 font-bold mb-2">
                             <FiCheckCircle className="h-3.5 w-3.5 flex-shrink-0" />
                             <span>Saved Item</span>
                           </div>
@@ -342,16 +342,16 @@ function WishlistPage() {
                       </div>
 
                       {/* Move to Cart Action Button */}
-                      <div className="mt-4 pt-3 border-t border-muted-sand/20">
+                      <div className="mt-3 pt-3 border-t border-slate-100">
                         <Button
                           type="button"
                           variant="primary"
-                          size="sm"
+                          size="md"
                           isFullWidth
                           onClick={() => handleMoveToCart(item)}
                           disabled={!isInStock || isCurrentItemLoading}
                           leftIcon={<FiShoppingCart className="h-4 w-4" />}
-                          className="font-bold shadow-md"
+                          className="font-bold shadow-xs uppercase tracking-wider text-xs h-10"
                         >
                           {isInStock ? 'Move to Cart' : 'Out of Stock'}
                         </Button>
