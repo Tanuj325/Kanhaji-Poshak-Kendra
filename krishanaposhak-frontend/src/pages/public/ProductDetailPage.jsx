@@ -196,37 +196,8 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Render Mobile/Tablet view (<1024px) vs Desktop view (>=1024px)
-  if (!isDesktop) {
-    return (
-      <>
-        <SEO
-          title={product.name}
-          description={product.shortDescription || product.description || `Handcrafted ${product.name} from Kanhaji Poshak Kendra Meerut. Premium devotional wear.`}
-          canonicalUrl={canonicalUrl}
-          ogImage={productImage}
-          ogType="product"
-          jsonLd={productSchemas}
-        />
-        <MobileProductDetail
-          product={product}
-          variants={variants}
-          selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          breadcrumbItems={breadcrumbItems}
-          canonicalUrl={canonicalUrl}
-        />
-      </>
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // DESKTOP VIEW (>=1024px)
-  // ══════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <>
       <SEO
         title={product.name}
         description={product.shortDescription || product.description || `Handcrafted ${product.name} from Kanhaji Poshak Kendra Meerut. Premium devotional wear.`}
@@ -235,108 +206,17 @@ export default function ProductDetailPage() {
         ogType="product"
         jsonLd={productSchemas}
       />
-
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 font-display">
-        {/* Breadcrumb */}
-        <div className="pb-4">
-          <Breadcrumb items={breadcrumbItems} />
-        </div>
-
-        {/* ══════════════════════════════════════════════════════════════
-            STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
-           ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-start">
-          {/* LEFT: Image Gallery (7 columns on desktop, sticky pinned to top) */}
-          <div className="lg:col-span-7 w-full lg:sticky lg:top-24 self-start">
-            <ImageGallery images={product.images} productName={product.name} />
-          </div>
-
-          {/* RIGHT: Purchase Panel (5 columns on desktop, compact & streamlined) */}
-          <div className="lg:col-span-5 w-full">
-            <div className="rounded-2xl bg-white p-4 lg:p-5 border border-slate-200/80 shadow-[0_2px_14px_rgba(15,23,42,0.04)] space-y-3">
-              {/* Product Info: Title, Category, Rating, Material */}
-              <ProductInfo
-                product={product}
-                averageRating={product.averageRating || 0}
-                reviewCount={product.reviewCount || 0}
-              />
-
-              {/* Pricing */}
-              <PricingSection variant={selectedVariant} product={product} />
-
-              {/* Color Selector */}
-              <ColorSelector
-                color={product.color}
-                selectedColor={selectedColor}
-                onSelect={setSelectedColor}
-              />
-
-              {/* Size Selector */}
-              <VariantSelector
-                variants={variants}
-                selectedVariant={selectedVariant}
-                onSelect={setSelectedVariant}
-              />
-
-              {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
-              <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
-
-              {/* Trust Badges */}
-              <TrustBadges />
-
-              {/* Social Share */}
-              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between flex-wrap gap-3">
-                <SocialShareButtons
-                  url={canonicalUrl}
-                  title={`Handcrafted ${product.name} - ${siteConfig.name}`}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ══════════════════════════════════════════════════════════════
-            STAGE 2: Full-Width Content Sections
-           ══════════════════════════════════════════════════════════════ */}
-        <div className="space-y-10 mt-10 w-full">
-          <ProductTabs product={product} />
-          <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
-          <RelatedProductsSection
-            categoryId={categoryId}
-            currentProductSlug={slug}
-            currentProductId={product.id}
-          />
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════
-          Mobile Sticky Bottom Purchase Bar
-         ══════════════════════════════════════════════════════════════ */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white/95 backdrop-blur-xl p-3 sm:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-amber-900/10 shadow-[0_-4px_20px_rgba(44,40,36,0.12)]">
-        <div className="flex items-center justify-between gap-2.5 max-w-[1600px] mx-auto font-display min-w-0">
-          <div className="flex min-w-0 flex-col shrink-0">
-            <span className="text-[9px] uppercase font-bold text-stone-500 tracking-wider">Total Price</span>
-            <PriceDisplay
-              price={activeDiscountPrice || activePrice}
-              originalPrice={activeDiscountPrice ? activePrice : undefined}
-              size="sm"
-            />
-          </div>
-
-          <Button
-            variant="primary"
-            size="md"
-            className="flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 text-amber-50 font-bold py-3 text-xs sm:text-sm shadow-md border border-amber-500/20 min-h-[48px]"
-            onClick={handleStickyAddToCart}
-            isLoading={isAddingItem}
-            disabled={!selectedVariant || selectedVariant.stock === 0}
-          >
-            <FiShoppingBag className="h-4 w-4 text-amber-200 shrink-0" />
-            <span className="truncate">Add to Cart</span>
-          </Button>
-        </div>
-      </div>
-    </div>
+      <MobileProductDetail
+        product={product}
+        variants={variants}
+        selectedVariant={selectedVariant}
+        setSelectedVariant={setSelectedVariant}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        breadcrumbItems={breadcrumbItems}
+        canonicalUrl={canonicalUrl}
+      />
+    </>
   );
 }
 
