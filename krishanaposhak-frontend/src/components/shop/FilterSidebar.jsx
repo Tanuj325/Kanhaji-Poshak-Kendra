@@ -140,7 +140,7 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
                 placeholder="Max"
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
-                className="w-full rounded-2xl border border-stone-200 bg-stone-50/60 py-2.5 pl-5 pr-2 text-xs font-extrabold text-[#0F2440] placeholder:text-stone-400 focus:border-[#C99A3B] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#C99A3B]/20 transition-all shadow-2xs font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-full rounded-2xl border border-stone-200 bg-stone-50/60 py-2.5 pl-4 pr-2 text-xs font-extrabold text-[#0F2440] placeholder:text-stone-400 focus:border-[#C99A3B] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#C99A3B]/20 transition-all shadow-2xs font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 aria-label="Maximum price in Rupees"
                 min={0}
               />
