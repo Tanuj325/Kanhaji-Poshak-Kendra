@@ -140,8 +140,9 @@ public class OrderController {
             CreateRazorpayOrderResponse response = razorpayService.createOrder(razorpayRequest);
             return ResponseEntity.ok(response);
         } catch (com.razorpay.RazorpayException e) {
+            log.error("[RAZORPAY_ORDER_ERROR] Failed to create Razorpay order: {}", e.getMessage(), e);
             throw new com.tanuj.krishanaposhak.exception.RazorpayException(
-                    "Failed to create Razorpay order",
+                    "Failed to create Razorpay order: " + e.getMessage(),
                     e
             );
         }
