@@ -28,4 +28,5 @@ public interface OrderService {
 
     Order createPendingOrder(Long userId, PlaceOrderRequest request);
 
+    Order createAndPersistPendingOrder(Long userId, PlaceOrderRequest request);
 }

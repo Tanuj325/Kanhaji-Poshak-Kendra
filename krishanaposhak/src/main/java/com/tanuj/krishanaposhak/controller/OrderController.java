@@ -110,17 +110,27 @@ public class OrderController {
             );
         }
 
-        // Build pending order object to validate cart/address/coupon/stock and calculate totals (DO NOT SAVE TO DB YET)
-        Order order = orderService.createPendingOrder(userId, placeOrderRequest);
+        // Build and persist pending order snapshot in MySQL
+        Order order = orderService.createAndPersistPendingOrder(userId, placeOrderRequest);
+
+        // Reject zero or negative online-payment amounts
+        if (order.getTotalAmount() == null || order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            log.warn("[RAZORPAY_ZERO_AMOUNT] Order total amount is zero or negative for user {}. Total: {}", userId, order.getTotalAmount());
+            throw new com.tanuj.krishanaposhak.exception.BadRequestException(
+                    "Order total amount must be greater than zero for online payment."
+            );
+        }
 
         // Prepare Razorpay order request with notes for server-side reconciliation resilience
         CreateRazorpayOrderRequest razorpayRequest = new CreateRazorpayOrderRequest();
         razorpayRequest.setAmount(order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue()); // Convert to paise
         razorpayRequest.setCurrency("INR");
-        razorpayRequest.setReceipt("RCPT_" + System.currentTimeMillis());
+        razorpayRequest.setReceipt(order.getOrderNumber());
 
         java.util.Map<String, String> notes = new java.util.HashMap<>();
         notes.put("userId", String.valueOf(userId));
+        notes.put("orderId", String.valueOf(order.getId()));
+        notes.put("orderNumber", order.getOrderNumber());
         notes.put("shippingAddressId", String.valueOf(placeOrderRequest.getShippingAddressId()));
         if (placeOrderRequest.getCouponCode() != null) {
             notes.put("couponCode", placeOrderRequest.getCouponCode());
@@ -138,9 +148,25 @@ public class OrderController {
 
         try {
             CreateRazorpayOrderResponse response = razorpayService.createOrder(razorpayRequest);
+
+            // Persist the Payment record linked to the pending Order with razorpay_order_id
+            Payment payment = Payment.builder()
+                    .order(order)
+                    .paymentMethod(PaymentMethod.RAZORPAY)
+                    .paymentStatus(PaymentStatus.PENDING)
+                    .amount(order.getTotalAmount())
+                    .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
+                    .razorpayOrderId(response.getId())
+                    .build();
+            paymentRepository.save(payment);
+            order.setPayment(payment);
+
+            log.info("[RAZORPAY_ORDER_CREATED] Created Razorpay Order ID {} and linked to pending Order #{}",
+                    response.getId(), order.getOrderNumber());
+
             return ResponseEntity.ok(response);
         } catch (com.razorpay.RazorpayException e) {
-            log.error("[RAZORPAY_ORDER_ERROR] Failed to create Razorpay order: {}", e.getMessage(), e);
+            log.error("[RAZORPAY_ORDER_ERROR] Failed to create Razorpay order for Order #{}: {}", order.getOrderNumber(), e.getMessage(), e);
             throw new com.tanuj.krishanaposhak.exception.RazorpayException(
                     "Failed to create Razorpay order: " + e.getMessage(),
                     e

@@ -15,6 +15,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Optional<Payment> findByRazorpayOrderId(String razorpayOrderId);
 
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM Payment p WHERE p.razorpayOrderId = :razorpayOrderId")
+    Optional<Payment> findByRazorpayOrderIdWithLock(@org.springframework.data.repository.query.Param("razorpayOrderId") String razorpayOrderId);
+
     Optional<Payment> findByRazorpayPaymentId(String razorpayPaymentId);
 
     boolean existsByTransactionId(String transactionId);

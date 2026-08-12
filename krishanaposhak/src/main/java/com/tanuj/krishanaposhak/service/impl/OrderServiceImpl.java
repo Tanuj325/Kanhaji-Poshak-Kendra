@@ -335,6 +335,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public Order createAndPersistPendingOrder(Long userId, PlaceOrderRequest request) {
+        Order order = createPendingOrder(userId, request);
+        order.setOrderStatus(OrderStatus.PENDING);
+        order.setPaymentStatus(PaymentStatus.PENDING);
+        Order savedOrder = orderRepository.save(order);
+        log.info("[PENDING_ORDER_PERSISTED] Persisted pending Order #{} with {} items for user {}",
+                savedOrder.getOrderNumber(), savedOrder.getOrderItems() != null ? savedOrder.getOrderItems().size() : 0, userId);
+        return savedOrder;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long userId, Long orderId) {
         return orderMapper.toResponse(findOwnedOrderOrThrow(userId, orderId));
