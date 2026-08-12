@@ -243,108 +243,110 @@ public class PaymentServiceImpl implements PaymentService {
                                                     String razorpayPaymentId,
                                                     String razorpaySignature) {
 
-        // Idempotency / Concurrency Check: If payment already exists for razorpayOrderId, return it
-        java.util.Optional<Payment> existingPaymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
-        if (existingPaymentOpt.isPresent()) {
-            Payment existingPayment = existingPaymentOpt.get();
-            log.info("[IDEMPOTENT] Payment and Order already exist for Razorpay Order ID: {}. Returning existing record.", razorpayOrderId);
-            return existingPayment;
-        }
+        // Idempotency / Concurrency Check: Synchronize on razorpayOrderId to prevent concurrent duplicate creation
+        synchronized (razorpayOrderId.intern()) {
+            java.util.Optional<Payment> existingPaymentOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+            if (existingPaymentOpt.isPresent()) {
+                Payment existingPayment = existingPaymentOpt.get();
+                log.info("[IDEMPOTENT] Payment and Order already exist for Razorpay Order ID: {}. Returning existing record.", razorpayOrderId);
+                return existingPayment;
+            }
 
-        // Validate cart, stock, coupon, address and build pending order
-        Order order = orderService.createPendingOrder(userId, placeOrderRequest);
+            // Validate cart, stock, coupon, address and build pending order
+            Order order = orderService.createPendingOrder(userId, placeOrderRequest);
 
-        // Pre-check stock availability with pessimistic locks
-        boolean stockInsufficient = false;
-        String insufficientProductName = "";
+            // Pre-check stock availability with pessimistic locks
+            boolean stockInsufficient = false;
+            String insufficientProductName = "";
 
-        if (order.getOrderItems() != null) {
-            for (OrderItem item : order.getOrderItems()) {
-                if (item.getProductVariant() != null) {
-                    ProductVariant variant = productVariantRepository.findByIdWithLock(item.getProductVariant().getId())
-                            .orElse(item.getProductVariant());
-                    if (variant.getStock() < item.getQuantity()) {
-                        stockInsufficient = true;
-                        insufficientProductName = variant.getProduct() != null ? variant.getProduct().getName() : "Variant ID " + variant.getId();
-                        break;
+            if (order.getOrderItems() != null) {
+                for (OrderItem item : order.getOrderItems()) {
+                    if (item.getProductVariant() != null) {
+                        ProductVariant variant = productVariantRepository.findByIdWithLock(item.getProductVariant().getId())
+                                .orElse(item.getProductVariant());
+                        if (variant.getStock() < item.getQuantity()) {
+                            stockInsufficient = true;
+                            insufficientProductName = variant.getProduct() != null ? variant.getProduct().getName() : "Variant ID " + variant.getId();
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if (stockInsufficient) {
-            log.warn("[STOCK_EXHAUSTION_AFTER_PAYMENT] Stock exhausted for Order #{} during payment completion. Initiating automatic refund.", order.getOrderNumber());
+            if (stockInsufficient) {
+                log.warn("[STOCK_EXHAUSTION_AFTER_PAYMENT] Stock exhausted for Order #{} during payment completion. Initiating automatic refund.", order.getOrderNumber());
 
-            order.setOrderStatus(OrderStatus.FAILED_INSUFFICIENT_STOCK);
-            order.setPaymentStatus(PaymentStatus.REFUND_PENDING);
+                order.setOrderStatus(OrderStatus.FAILED_INSUFFICIENT_STOCK);
+                order.setPaymentStatus(PaymentStatus.REFUND_PENDING);
+                order = orderRepository.save(order);
+
+                Payment payment = Payment.builder()
+                        .order(order)
+                        .paymentMethod(PaymentMethod.RAZORPAY)
+                        .paymentStatus(PaymentStatus.REFUND_PENDING)
+                        .amount(order.getTotalAmount())
+                        .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
+                        .razorpayOrderId(razorpayOrderId)
+                        .razorpayPaymentId(razorpayPaymentId)
+                        .razorpaySignature(razorpaySignature)
+                        .build();
+
+                try {
+                    payment = paymentRepository.save(payment);
+                } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                    java.util.Optional<Payment> pOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+                    if (pOpt.isPresent()) return pOpt.get();
+                }
+                order.setPayment(payment);
+
+                // Initiate automatic refund via Razorpay API
+                try {
+                    refundService.processAutomaticRefund(order, "Automatic refund: stock unavailable for " + insufficientProductName + " after payment capture");
+                    payment.setPaymentStatus(PaymentStatus.REFUNDED);
+                    paymentRepository.save(payment);
+                    order.setPaymentStatus(PaymentStatus.REFUNDED);
+                    orderRepository.save(order);
+                } catch (Exception e) {
+                    log.error("Automatic refund trigger error for Order {}: {}", order.getOrderNumber(), e.getMessage());
+                }
+
+                return payment;
+            }
+
+            // Normal Fulfillment Flow (Stock available)
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+            order.setPaymentStatus(PaymentStatus.PAID);
             order = orderRepository.save(order);
+
+            if (order.getOrderItems() != null) {
+                for (OrderItem item : order.getOrderItems()) {
+                    item.setOrder(order);
+                }
+            }
 
             Payment payment = Payment.builder()
                     .order(order)
                     .paymentMethod(PaymentMethod.RAZORPAY)
-                    .paymentStatus(PaymentStatus.REFUND_PENDING)
+                    .paymentStatus(PaymentStatus.PAID)
                     .amount(order.getTotalAmount())
                     .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
                     .razorpayOrderId(razorpayOrderId)
                     .razorpayPaymentId(razorpayPaymentId)
                     .razorpaySignature(razorpaySignature)
+                    .paidAt(Instant.now())
                     .build();
 
             try {
                 payment = paymentRepository.save(payment);
             } catch (org.springframework.dao.DataIntegrityViolationException e) {
-                payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId).orElse(payment);
+                log.warn("[CONCURRENCY_PROTECTION] Duplicate razorpay_order_id caught: {}", razorpayOrderId);
+                java.util.Optional<Payment> pOpt = paymentRepository.findByRazorpayOrderId(razorpayOrderId);
+                if (pOpt.isPresent()) return pOpt.get();
             }
+
             order.setPayment(payment);
 
-            // Initiate automatic refund via Razorpay API
-            try {
-                refundService.processAutomaticRefund(order, "Automatic refund: stock unavailable for " + insufficientProductName + " after payment capture");
-                payment.setPaymentStatus(PaymentStatus.REFUNDED);
-                paymentRepository.save(payment);
-                order.setPaymentStatus(PaymentStatus.REFUNDED);
-                orderRepository.save(order);
-            } catch (Exception e) {
-                log.error("Automatic refund trigger error for Order {}: {}", order.getOrderNumber(), e.getMessage());
-            }
-
-            return payment;
-        }
-
-        // Normal Fulfillment Flow (Stock available)
-        order.setOrderStatus(OrderStatus.CONFIRMED);
-        order.setPaymentStatus(PaymentStatus.PAID);
-        order = orderRepository.save(order);
-
-        if (order.getOrderItems() != null) {
-            for (OrderItem item : order.getOrderItems()) {
-                item.setOrder(order);
-            }
-        }
-
-        Payment payment = Payment.builder()
-                .order(order)
-                .paymentMethod(PaymentMethod.RAZORPAY)
-                .paymentStatus(PaymentStatus.PAID)
-                .amount(order.getTotalAmount())
-                .transactionId("TXN" + UUID.randomUUID().toString().substring(0, 10).toUpperCase())
-                .razorpayOrderId(razorpayOrderId)
-                .razorpayPaymentId(razorpayPaymentId)
-                .razorpaySignature(razorpaySignature)
-                .paidAt(Instant.now())
-                .build();
-
-        try {
-            payment = paymentRepository.save(payment);
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            log.warn("[CONCURRENCY_PROTECTION] Duplicate razorpay_order_id caught: {}", razorpayOrderId);
-            return paymentRepository.findByRazorpayOrderId(razorpayOrderId)
-                    .orElseThrow(() -> e);
-        }
-
-        order.setPayment(payment);
-
-        // Reduce stock for products in the order
+            // Reduce stock for products in the order
         if (order.getOrderItems() != null) {
             for (OrderItem item : order.getOrderItems()) {
                 if (item.getProductVariant() != null) {
@@ -414,7 +416,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         log.info("[ORDER_FULFILLED] Successfully created and confirmed Order #{} for Razorpay Order ID: {}", order.getOrderNumber(), razorpayOrderId);
 
-        return payment;
+            return payment;
+        }
     }
 
     /**

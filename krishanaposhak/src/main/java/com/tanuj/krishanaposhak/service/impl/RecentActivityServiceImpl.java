@@ -15,6 +15,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class RecentActivityServiceImpl implements RecentActivityService {
 
     private static final int FETCH_LIMIT_PER_TYPE = 50;
