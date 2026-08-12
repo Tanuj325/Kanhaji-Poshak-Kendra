@@ -84,19 +84,19 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
 
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
-      {/* Luxury Pill Search Container (Height 44px, 120-130px Button) */}
+      {/* Luxury Pill Search Container */}
       <form
         onSubmit={handleSubmit}
         role="search"
-        className="group relative flex h-[44px] w-full items-center overflow-hidden rounded-full border border-slate-200 bg-slate-50/70 shadow-xs transition-all duration-200 focus-within:bg-white focus-within:border-[#C99A3B] focus-within:ring-2 focus-within:ring-[#C99A3B]/20 hover:border-slate-300 hover:shadow-md"
+        className="group relative flex h-[44px] w-full items-center overflow-hidden rounded-full border border-slate-200/90 bg-slate-50/80 pl-3.5 pr-1 shadow-2xs transition-all duration-200 hover:border-slate-300 hover:shadow-xs focus-within:bg-white focus-within:border-[#C99A3B] focus-within:ring-2 focus-within:ring-[#C99A3B]/20"
       >
-        {/* Search Icon Inside Input */}
-        <div className="pl-3.5 text-slate-400 group-focus-within:text-[#C99A3B] transition-colors shrink-0">
+        {/* Left Search Icon */}
+        <div className="flex shrink-0 items-center text-slate-400 transition-colors group-focus-within:text-[#C99A3B]">
           <FiSearch className="h-4 w-4" />
         </div>
 
-        {/* Search Input Field */}
-        <div className="relative flex-1 min-w-0 h-full flex items-center">
+        {/* Input & Clear Button Area */}
+        <div className="relative flex h-full flex-1 min-w-0 items-center px-2.5">
           <input
             ref={inputRef}
             type="text"
@@ -107,7 +107,7 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
             }}
             onFocus={() => setIsOpen(true)}
             placeholder="Search for Poshak, Mukut, Jewellery..."
-            className="h-full w-full border-0 bg-transparent py-2.5 px-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-normal focus:outline-none focus:ring-0"
+            className="h-full w-full border-0 bg-transparent py-2.5 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400/90 focus:outline-none focus:ring-0 pr-7"
           />
           {query && (
             <button
@@ -116,21 +116,24 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
                 setQuery('');
                 inputRef.current?.focus();
               }}
-              className="mr-2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+              className="absolute right-1 flex items-center justify-center p-1 text-slate-400 hover:bg-slate-200/60 hover:text-slate-700 rounded-full transition-colors"
               aria-label="Clear input"
             >
-              <FiX className="h-4 w-4" />
+              <FiX className="h-3.5 w-3.5" />
             </button>
           )}
         </div>
 
-        {/* Compact Temple Gold Search Button (Width ~120-130px only) */}
+        {/* Floating Temple Gold Search Button */}
         <button
           type="submit"
-          className="flex h-full w-[110px] sm:w-[130px] shrink-0 items-center justify-center gap-1.5 bg-gradient-to-r from-[#D4AF37] via-[#C99A3B] to-[#B8860B] px-3 text-xs font-bold uppercase tracking-wider text-slate-950 transition-all duration-150 hover:brightness-105 active:scale-[0.98] rounded-r-full shadow-xs"
+          className="flex h-[36px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#C99A3B] to-[#B8860B] px-4 sm:px-5 text-slate-950 shadow-2xs transition-all duration-150 hover:brightness-105 hover:shadow-xs active:scale-[0.97]"
           aria-label="Submit search"
         >
-          <FiSearch className="h-3.5 w-3.5" />
+          <FiSearch className="h-3.5 w-3.5 shrink-0 stroke-[2.5]" />
+          <span className="font-extrabold text-[11px] sm:text-xs tracking-wider uppercase whitespace-nowrap">
+            Search
+          </span>
         </button>
       </form>
 
