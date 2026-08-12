@@ -1,8 +1,8 @@
 package com.tanuj.krishanaposhak.controller;
 
-import com.tanuj.krishanaposhak.exception.WebhookProcessingException;
 import com.tanuj.krishanaposhak.service.PaymentService;
 import com.tanuj.krishanaposhak.service.RazorpayService;
+import com.tanuj.krishanaposhak.service.RazorpayWebhookEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +23,15 @@ import java.io.InputStreamReader;
 /**
  * Controller for handling Razorpay webhooks.
  * This endpoint is publicly accessible (no authentication required).
+ *
+ * <p>Uses an accept-then-process-async pattern:
+ * <ol>
+ *   <li>Validate signature (reject invalid requests with 400)</li>
+ *   <li>Parse event metadata (reject malformed with 400)</li>
+ *   <li>Check idempotency and record event as RECEIVED</li>
+ *   <li>Return HTTP 200 immediately to Razorpay</li>
+ *   <li>Process business logic asynchronously</li>
+ * </ol>
  */
 @Slf4j
 @RestController
@@ -33,25 +42,28 @@ public class RazorpayWebhookController {
 
     private final RazorpayService razorpayService;
     private final PaymentService paymentService;
+    private final RazorpayWebhookEventService razorpayWebhookEventService;
 
     @Operation(summary = "Handle Razorpay webhook events")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Webhook processed successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload or signature"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during processing")
+            @ApiResponse(responseCode = "200", description = "Webhook accepted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request payload or signature")
     })
     @PostMapping("/razorpay")
     public ResponseEntity<Void> handleWebhook(
             @Parameter(description = "HTTP request containing the webhook payload in the body", required = true) HttpServletRequest request,
             @Parameter(description = "Razorpay signature header for webhook verification", required = true) @RequestHeader(value = "X-Razorpay-Signature", required = false) String razorpaySignature) {
-        log.info("Razorpay webhook POST request received");
 
+        long startTime = System.currentTimeMillis();
+        log.info("[WEBHOOK_RECEIVED] Razorpay webhook POST request received");
+
+        // ── 1. Validate signature header ──
         if (razorpaySignature == null || razorpaySignature.isBlank()) {
-            log.warn("Razorpay webhook request missing X-Razorpay-Signature header. Status: 400 Bad Request");
+            log.warn("[WEBHOOK_REJECTED] Missing X-Razorpay-Signature header. Status: 400");
             return ResponseEntity.badRequest().build();
         }
 
-        // Read the request body
+        // ── 2. Read request body ──
         StringBuilder payloadBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
             String line;
@@ -59,33 +71,34 @@ public class RazorpayWebhookController {
                 payloadBuilder.append(line);
             }
         } catch (Exception e) {
-            log.error("Failed to read Razorpay webhook request body. Status: 400 Bad Request", e);
+            log.error("[WEBHOOK_REJECTED] Failed to read request body. Status: 400", e);
             return ResponseEntity.badRequest().build();
         }
         String payload = payloadBuilder.toString();
 
-        // Verify the webhook signature
+        // ── 3. Verify signature ──
         boolean isValidSignature;
         try {
             isValidSignature = razorpayService.verifyWebhookSignature(payload, razorpaySignature);
         } catch (Exception e) {
-            log.warn("Razorpay webhook signature verification error: {}. Status: 400 Bad Request", e.getMessage());
+            log.warn("[WEBHOOK_REJECTED] Signature verification error: {}. Status: 400", e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
         if (!isValidSignature) {
-            log.warn("Razorpay webhook signature verification failed. Status: 400 Bad Request");
+            log.warn("[WEBHOOK_REJECTED] Signature verification failed. Status: 400");
             return ResponseEntity.badRequest().build();
         }
+        log.info("[WEBHOOK_SIGNATURE_VALID] Razorpay webhook signature verified successfully");
 
-        log.info("Razorpay webhook signature verification succeeded");
-
-        // Parse the payload to extract event id, type, payment ID, and order ID for logging and processing
+        // ── 4. Parse event metadata ──
+        String eventId;
+        String eventType;
         try {
             org.json.JSONObject json = new org.json.JSONObject(payload);
-            String eventId = json.optString("id", null);
-            String eventType = json.optString("event", null);
+            eventId = json.optString("id", null);
+            eventType = json.optString("event", null);
 
+            // Extract payment/order IDs for logging only
             String razorpayPaymentId = null;
             String razorpayOrderId = null;
             if (json.has("payload") && !json.isNull("payload")) {
@@ -101,30 +114,38 @@ public class RazorpayWebhookController {
                     }
                 }
             }
-
-            log.info("Processing Razorpay webhook event. EventId: {}, EventType: {}, PaymentId: {}, OrderId: {}",
+            log.info("[WEBHOOK_EVENT_PARSED] EventId: {}, EventType: {}, PaymentId: {}, OrderId: {}",
                     eventId, eventType, razorpayPaymentId, razorpayOrderId);
-
-            if (eventId == null || eventType == null) {
-                log.warn("Razorpay webhook payload missing event ID or type. Status: 400 Bad Request");
-                return ResponseEntity.badRequest().build();
-            }
-
-            // Process the event
-            paymentService.processWebhookEvent(eventId, eventType, payload);
-            log.info("Razorpay webhook event processed successfully. EventId: {}. Status: 200 OK", eventId);
-            return ResponseEntity.ok().build();
-        } catch (WebhookProcessingException e) {
-            if (!e.isTransientError()) {
-                log.warn("Non-transient error processing Razorpay webhook event. Returning HTTP 200 OK to stop retries. Reason: {}", e.getMessage());
-                return ResponseEntity.ok().build();
-            } else {
-                log.error("Transient error processing Razorpay webhook event. Returning HTTP 500 Internal Server Error for retry.", e);
-                return ResponseEntity.internalServerError().build();
-            }
         } catch (Exception e) {
-            log.error("Internal error while processing Razorpay webhook event. Status: 500 Internal Server Error", e);
-            return ResponseEntity.internalServerError().build();
+            log.error("[WEBHOOK_REJECTED] Failed to parse webhook payload. Status: 400", e);
+            return ResponseEntity.badRequest().build();
         }
+
+        if (eventId == null || eventType == null) {
+            log.warn("[WEBHOOK_REJECTED] Missing event ID or type in payload. Status: 400");
+            return ResponseEntity.badRequest().build();
+        }
+
+        // ── 5. Idempotency check — if already accepted/processed, return 200 immediately ──
+        if (razorpayWebhookEventService.isAlreadyAccepted(eventId)) {
+            long duration = System.currentTimeMillis() - startTime;
+            log.info("[WEBHOOK_DUPLICATE] Event already accepted/processed. EventId: {}, Duration: {}ms. Status: 200",
+                    eventId, duration);
+            return ResponseEntity.ok().build();
+        }
+
+        // ── 6. Record event as RECEIVED (returns false if concurrent duplicate) ──
+        boolean accepted = razorpayWebhookEventService.recordEventAccepted(eventId, eventType);
+
+        // ── 7. Kick off async business processing only for genuinely new events ──
+        if (accepted) {
+            paymentService.processWebhookEventAsync(eventId, eventType, payload);
+        }
+
+        // ── 8. Return 200 immediately — Razorpay is acknowledged ──
+        long duration = System.currentTimeMillis() - startTime;
+        log.info("[WEBHOOK_ACCEPTED] EventId: {}, EventType: {}, Duration: {}ms. Status: 200",
+                eventId, eventType, duration);
+        return ResponseEntity.ok().build();
     }
 }

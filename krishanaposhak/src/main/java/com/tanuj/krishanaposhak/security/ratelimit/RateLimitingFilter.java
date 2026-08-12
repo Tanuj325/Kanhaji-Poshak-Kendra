@@ -53,6 +53,13 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
 
         String path = request.getRequestURI();
+
+        // Bypass rate limiting for webhook endpoints (security is handled by signature verification)
+        if (path.startsWith("/api/payment/webhook/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String method = request.getMethod();
         String clientIp = rateLimiterService.getClientIp(request);
 

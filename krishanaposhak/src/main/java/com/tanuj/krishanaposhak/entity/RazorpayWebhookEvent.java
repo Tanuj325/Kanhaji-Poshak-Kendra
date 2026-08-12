@@ -33,7 +33,17 @@ public class RazorpayWebhookEvent {
     @Column(name = "event_type", nullable = false, length = 50)
     private String eventType;
 
+    @Column(name = "received_at")
+    private Instant receivedAt;
+
     @Column(name = "processed_at")
     private Instant processedAt;
+
+    @Column(name = "status", length = 20)
+    @Builder.Default
+    private String status = "RECEIVED";
+
+    @Column(name = "failure_reason", length = 500)
+    private String failureReason;
 
 }

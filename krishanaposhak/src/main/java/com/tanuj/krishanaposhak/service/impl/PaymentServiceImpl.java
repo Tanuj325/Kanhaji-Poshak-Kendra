@@ -633,6 +633,52 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+    @Override
+    @org.springframework.scheduling.annotation.Async
+    @Transactional
+    public void processWebhookEventAsync(String eventId, String eventType, String payload) {
+        long startTime = System.currentTimeMillis();
+        log.info("[WEBHOOK_ASYNC_START] Processing webhook event asynchronously. EventId: {}, EventType: {}", eventId, eventType);
+
+        try {
+            processWebhookEvent(eventId, eventType, payload);
+            long duration = System.currentTimeMillis() - startTime;
+            log.info("[WEBHOOK_ASYNC_COMPLETE] Successfully processed webhook event. EventId: {}, EventType: {}, Duration: {}ms",
+                    eventId, eventType, duration);
+        } catch (WebhookProcessingException e) {
+            long duration = System.currentTimeMillis() - startTime;
+            if (e.isTransientError()) {
+                // Transient errors were NOT recorded as processed — mark as FAILED for observability
+                log.error("[WEBHOOK_ASYNC_TRANSIENT_FAILURE] Transient error processing webhook event. EventId: {}, Duration: {}ms, Error: {}",
+                        eventId, duration, e.getMessage(), e);
+                try {
+                    String reason = e.getMessage() != null
+                            ? e.getMessage().substring(0, Math.min(e.getMessage().length(), 450))
+                            : "Transient error";
+                    razorpayWebhookEventService.markEventFailed(eventId, reason);
+                } catch (Exception ex) {
+                    log.error("[WEBHOOK_ASYNC_MARK_FAILED_ERROR] Could not mark event {} as failed", eventId, ex);
+                }
+            } else {
+                // Non-transient errors were already recorded as processed by processWebhookEvent
+                log.warn("[WEBHOOK_ASYNC_PERMANENT_FAILURE] Permanent error processing webhook event (already recorded). EventId: {}, Duration: {}ms, Error: {}",
+                        eventId, duration, e.getMessage());
+            }
+        } catch (Exception e) {
+            long duration = System.currentTimeMillis() - startTime;
+            log.error("[WEBHOOK_ASYNC_UNEXPECTED_FAILURE] Unexpected error processing webhook event. EventId: {}, Duration: {}ms, Error: {}",
+                    eventId, duration, e.getMessage(), e);
+            try {
+                String reason = e.getMessage() != null
+                        ? e.getMessage().substring(0, Math.min(e.getMessage().length(), 450))
+                        : "Unexpected error";
+                razorpayWebhookEventService.markEventFailed(eventId, reason);
+            } catch (Exception ex) {
+                log.error("[WEBHOOK_ASYNC_MARK_FAILED_ERROR] Could not mark event {} as failed", eventId, ex);
+            }
+        }
+    }
+
     private void handlePaymentCaptured(JSONObject json) {
         String razorpayPaymentId = null;
         String razorpayOrderId = null;

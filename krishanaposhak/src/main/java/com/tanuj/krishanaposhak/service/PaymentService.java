@@ -42,6 +42,19 @@ public interface PaymentService {
     void processWebhookEvent(String eventId, String eventType, String payload);
 
     /**
+     * Asynchronously processes a Razorpay webhook event after it has been accepted.
+     * All exceptions are handled internally; this method never propagates exceptions.
+     * <p>
+     * This method assumes the webhook signature has already been validated and
+     * the event has been recorded as RECEIVED.
+     *
+     * @param eventId   the unique identifier of the webhook event
+     * @param eventType the type of the webhook event (e.g., payment.captured)
+     * @param payload   the raw payload of the webhook request
+     */
+    void processWebhookEventAsync(String eventId, String eventType, String payload);
+
+    /**
      * Initiates a refund for a payment.
      *
      * @param userId    the ID of the user requesting the refund
