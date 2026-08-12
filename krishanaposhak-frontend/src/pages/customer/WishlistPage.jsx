@@ -236,7 +236,7 @@ function WishlistPage() {
           />
         ) : (
           <AnimatePresence mode="popLayout">
-            <div className="grid grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-6">
               {items.map((item) => {
                 const discountPercent = calculateDiscount(item.price, item.discountPrice);
                 const isInStock = item.inStock !== false;
@@ -257,8 +257,8 @@ function WishlistPage() {
                     transition={{ duration: 0.25 }}
                     className="group relative flex flex-col rounded-2xl bg-white border border-stone-200/80 overflow-hidden shadow-[0_2px_12px_rgba(15,23,42,0.05)] hover:shadow-[0_12px_28px_rgba(15,36,64,0.12)] hover:border-[#C99A3B]/40 transition-all duration-300 h-full font-display"
                   >
-                    {/* Product Image Container — Square / Balanced aspect ratio */}
-                    <div className="relative aspect-square w-full overflow-hidden bg-stone-50">
+                    {/* Product Image Container — Landscape aspect ratio (aspect-[4/3]) for wide luxury feel */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-50">
                       <Link to={`/product/${item.slug || item.productId}`} className="block w-full h-full">
                         {imgSrc ? (
                           <img
@@ -316,33 +316,36 @@ function WishlistPage() {
                       </button>
                     </div>
 
-                    {/* Product Details */}
-                    <div className="flex flex-col flex-1 p-4 justify-between font-display bg-white">
+                    {/* Product Details — Compact & Perfectly Proportioned */}
+                    <div className="flex flex-col flex-1 p-4 justify-between font-display bg-white gap-3">
                       <div>
                         <Link
                           to={`/product/${item.slug || item.productId}`}
-                          className="text-sm font-bold text-[#0F2440] hover:text-[#C99A3B] transition-colors line-clamp-2 leading-snug mb-1.5 block min-h-[2.4rem]"
+                          className="text-base font-bold text-[#0F2440] hover:text-[#C99A3B] transition-colors line-clamp-1 leading-snug mb-2 block"
+                          title={item.productName}
                         >
                           {item.productName}
                         </Link>
 
-                        {item.rating > 0 ? (
-                          <div className="flex items-center gap-1 text-xs text-stone-600 mb-2">
-                            <FiStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500 flex-shrink-0" />
-                            <span className="font-bold text-[#0F2440] text-xs">{item.rating}</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1 text-xs text-emerald-600 font-bold mb-2">
-                            <FiCheckCircle className="h-3.5 w-3.5 flex-shrink-0" />
-                            <span>Saved Item</span>
-                          </div>
-                        )}
+                        <div className="flex items-center justify-between gap-2">
+                          <PriceDisplay price={item.price} discountPrice={item.discountPrice} size="md" />
 
-                        <PriceDisplay price={item.price} discountPrice={item.discountPrice} size="md" />
+                          {item.rating > 0 ? (
+                            <div className="flex items-center gap-1 text-xs text-stone-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60 shrink-0">
+                              <FiStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500 flex-shrink-0" />
+                              <span className="font-bold text-[#0F2440] text-xs">{item.rating}</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shrink-0">
+                              <FiCheckCircle className="h-3 w-3 flex-shrink-0" />
+                              <span>Saved</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Move to Cart Action Button */}
-                      <div className="mt-3 pt-3 border-t border-slate-100">
+                      <div className="pt-2 border-t border-slate-100">
                         <Button
                           type="button"
                           variant="primary"
