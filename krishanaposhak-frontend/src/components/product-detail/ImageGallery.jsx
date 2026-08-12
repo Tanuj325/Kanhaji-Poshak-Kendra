@@ -88,7 +88,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
       {/* Desktop Vertical Thumbnails (Left Side) */}
       {sorted.length > 1 && (
         <div
-          className="hidden lg:flex flex-col gap-2.5 w-16 xl:w-20 shrink-0 max-h-[520px] xl:max-h-[580px] overflow-y-auto scrollbar-none pr-1"
+          className="hidden lg:flex flex-col gap-2.5 w-16 xl:w-20 shrink-0 max-h-[380px] lg:max-h-[420px] overflow-y-auto scrollbar-none pr-1"
           role="tablist"
           aria-label="Product image thumbnails"
         >
@@ -124,13 +124,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
       {/* Main Image Stage */}
       <div className="flex-1 flex flex-col gap-3 w-full min-w-0">
         <div
-          className="group relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-stone-50 border border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => {
-            setIsHovering(false);
-            setZoomPos({ x: 50, y: 50 });
-          }}
+          className="group relative h-[320px] sm:h-[380px] lg:h-[420px] w-full cursor-pointer overflow-hidden rounded-2xl bg-stone-50 border border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
           onClick={() => setIsFullscreen(true)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -151,17 +145,12 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="h-full w-full flex items-center justify-center p-2"
+              className="h-full w-full flex items-center justify-center p-3"
             >
               <OptimizedImage
                 src={current?.imageUrl}
                 alt={alt}
-                aspectRatio="aspect-square"
-                className="h-full w-full object-contain object-center transition-transform duration-500 ease-out"
-                style={{
-                  transform: isHovering ? 'scale(1.5)' : 'scale(1)',
-                  transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                }}
+                className="h-full w-full object-contain object-center"
                 loading="eager"
               />
             </motion.div>
