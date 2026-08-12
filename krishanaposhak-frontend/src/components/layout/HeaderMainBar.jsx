@@ -121,7 +121,7 @@ export default function HeaderMainBar({
               aria-label={`Wishlist (${wishlistCount} items)`}
             >
               <FiHeart className="h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="hidden lg:inline">Wishlist</span>
+              {/* <span className="hidden lg:inline">Wishlist</span> */}
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 lg:static lg:ml-0.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#0F2440] px-1 text-[9px] font-bold text-white ring-2 ring-white lg:ring-0">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
@@ -137,7 +137,7 @@ export default function HeaderMainBar({
               aria-label={`Cart (${cartCount} items)`}
             >
               <FiShoppingBag className="h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="hidden lg:inline">Cart</span>
+              {/* <span className="hidden lg:inline">Cart</span> */}
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 lg:top-0.5 lg:right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-gradient-to-b from-[#E8C158] via-[#C99A3B] to-[#B8860B] px-1 text-[10px] font-bold text-slate-950 shadow-[0_1px_3px_rgba(184,134,11,0.4)] ring-2 ring-white">
                   {cartCount > 99 ? '99+' : cartCount}
