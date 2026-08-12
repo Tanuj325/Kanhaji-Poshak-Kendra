@@ -52,7 +52,8 @@ public class RazorpayWebhookController {
     @PostMapping("/razorpay")
     public ResponseEntity<Void> handleWebhook(
             @Parameter(description = "HTTP request containing the webhook payload in the body", required = true) HttpServletRequest request,
-            @Parameter(description = "Razorpay signature header for webhook verification", required = true) @RequestHeader(value = "X-Razorpay-Signature", required = false) String razorpaySignature) {
+            @Parameter(description = "Razorpay signature header for webhook verification", required = true) @RequestHeader(value = "X-Razorpay-Signature", required = false) String razorpaySignature,
+            @Parameter(description = "Razorpay event ID header", required = false) @RequestHeader(value = "X-Razorpay-Event-Id", required = false) String razorpayEventIdHeader) {
 
         long startTime = System.currentTimeMillis();
         log.info("[WEBHOOK_RECEIVED] Razorpay webhook POST request received");
@@ -91,16 +92,16 @@ public class RazorpayWebhookController {
         log.info("[WEBHOOK_SIGNATURE_VALID] Razorpay webhook signature verified successfully");
 
         // ── 4. Parse event metadata ──
-        String eventId;
-        String eventType;
+        String eventId = null;
+        String eventType = null;
+        String razorpayPaymentId = null;
+        String razorpayOrderId = null;
+
         try {
             org.json.JSONObject json = new org.json.JSONObject(payload);
-            eventId = json.optString("id", null);
             eventType = json.optString("event", null);
 
-            // Extract payment/order IDs for logging only
-            String razorpayPaymentId = null;
-            String razorpayOrderId = null;
+            // Extract payment/order IDs for logging and fallback ID construction
             if (json.has("payload") && !json.isNull("payload")) {
                 org.json.JSONObject payloadObj = json.optJSONObject("payload");
                 if (payloadObj != null && payloadObj.has("payment") && !payloadObj.isNull("payment")) {
@@ -113,7 +114,37 @@ public class RazorpayWebhookController {
                         }
                     }
                 }
+                if (razorpayOrderId == null && payloadObj != null && payloadObj.has("order") && !payloadObj.isNull("order")) {
+                    org.json.JSONObject orderObj = payloadObj.optJSONObject("order");
+                    if (orderObj != null && orderObj.has("entity") && !orderObj.isNull("entity")) {
+                        org.json.JSONObject entity = orderObj.optJSONObject("entity");
+                        if (entity != null) {
+                            razorpayOrderId = entity.optString("id", null);
+                        }
+                    }
+                }
             }
+
+            // Extract Event ID with proper priority:
+            // Priority 1: X-Razorpay-Event-Id header parameter
+            if (razorpayEventIdHeader != null && !razorpayEventIdHeader.isBlank()) {
+                eventId = razorpayEventIdHeader.trim();
+            }
+            // Priority 2: HttpServletRequest header (case insensitive check)
+            if (eventId == null || eventId.isBlank()) {
+                eventId = request.getHeader("x-razorpay-event-id");
+            }
+            // Priority 3: Top-level JSON "id" field
+            if (eventId == null || eventId.isBlank()) {
+                eventId = json.optString("id", null);
+            }
+            // Priority 4: Deterministic fallback ID from event type + paymentId/orderId so valid webhooks are NEVER rejected with 400
+            if (eventId == null || eventId.isBlank()) {
+                String targetId = razorpayPaymentId != null ? razorpayPaymentId : (razorpayOrderId != null ? razorpayOrderId : String.valueOf(System.currentTimeMillis()));
+                eventId = "evt_" + (eventType != null ? eventType : "unknown") + "_" + targetId;
+                log.info("[WEBHOOK_EVENT_ID_FALLBACK] Generated fallback EventId: {}", eventId);
+            }
+
             log.info("[WEBHOOK_EVENT_PARSED] EventId: {}, EventType: {}, PaymentId: {}, OrderId: {}",
                     eventId, eventType, razorpayPaymentId, razorpayOrderId);
         } catch (Exception e) {
@@ -121,8 +152,8 @@ public class RazorpayWebhookController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (eventId == null || eventType == null) {
-            log.warn("[WEBHOOK_REJECTED] Missing event ID or type in payload. Status: 400");
+        if (eventType == null || eventType.isBlank()) {
+            log.warn("[WEBHOOK_REJECTED] Missing event type in payload. Status: 400");
             return ResponseEntity.badRequest().build();
         }
 

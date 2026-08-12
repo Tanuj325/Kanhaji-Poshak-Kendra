@@ -634,6 +634,7 @@ public class OrderServiceImpl implements OrderService {
 
         Map<String, Object> model = new HashMap<>();
         model.put("order", order);
+        model.put("user", order.getUser());
         model.put("orderItems", order.getOrderItems());
         model.put("customerName", order.getCustomerName());
         model.put("orderNumber", order.getOrderNumber());

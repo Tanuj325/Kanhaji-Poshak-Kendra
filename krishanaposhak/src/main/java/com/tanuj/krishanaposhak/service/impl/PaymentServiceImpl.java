@@ -535,6 +535,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             Map<String, Object> model = new HashMap<>();
             model.put("order", lockedOrder);
+            model.put("user", lockedOrder.getUser());
             model.put("orderItems", lockedOrder.getOrderItems());
             model.put("customerName", lockedOrder.getCustomerName());
             model.put("orderNumber", lockedOrder.getOrderNumber());
