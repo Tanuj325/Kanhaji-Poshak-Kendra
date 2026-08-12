@@ -48,17 +48,17 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
   return (
     <div className="space-y-6 font-display">
       {/* Category Filter Section */}
-      <div className="pb-5 border-b border-amber-900/10">
+      <div className="pb-5 border-b border-stone-200/70">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-            <FiGrid className="h-3.5 w-3.5 text-amber-800" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F2440] flex items-center gap-1.5">
+            <FiGrid className="h-3.5 w-3.5 text-[#C99A3B]" />
             <span>Categories</span>
           </h3>
           {selectedCategoryId && (
             <button
               type="button"
               onClick={() => onCategoryChange('')}
-              className="text-[11px] font-bold text-amber-800 hover:text-amber-950 transition-colors"
+              className="text-[11px] font-bold text-[#C99A3B] hover:text-amber-800 transition-colors"
             >
               Reset
             </button>
@@ -93,10 +93,10 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
       </div>
 
       {/* Price Filter Section */}
-      <div className="pb-5 border-b border-amber-900/10">
+      <div className="pb-5 border-b border-stone-200/70">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-            <FiDollarSign className="h-3.5 w-3.5 text-amber-800" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F2440] flex items-center gap-1.5">
+            <FiDollarSign className="h-3.5 w-3.5 text-[#C99A3B]" />
             <span>Price Range (₹)</span>
           </h3>
           {(minPrice || maxPrice || localMin || localMax) && (
@@ -107,17 +107,17 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
                 setLocalMax('');
                 onPriceReset();
               }}
-              className="text-[11px] font-bold text-amber-800 hover:text-amber-950 transition-colors"
+              className="text-[11px] font-bold text-[#C99A3B] hover:text-amber-800 transition-colors"
             >
               Reset
             </button>
           )}
         </div>
 
-        <form onSubmit={handleApplyPrice} className="space-y-2.5">
+        <form onSubmit={handleApplyPrice} className="space-y-3">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-stone-500 font-bold">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-600 z-10">
                 ₹
               </span>
               <input
@@ -125,14 +125,14 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
                 placeholder="Min"
                 value={localMin}
                 onChange={(e) => setLocalMin(e.target.value)}
-                className="w-full rounded-xl border border-amber-900/15 py-2 pl-6 pr-2 text-xs font-bold text-amber-950 focus:border-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-700/20 bg-amber-50/20"
+                className="w-full rounded-xl border border-stone-200/90 bg-white py-2 pl-7 pr-2 text-xs font-bold text-stone-900 placeholder:text-stone-400 focus:border-[#C99A3B] focus:outline-none focus:ring-2 focus:ring-[#C99A3B]/20 shadow-2xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 aria-label="Minimum price in Rupees"
                 min={0}
               />
             </div>
-            <span className="text-stone-400 text-xs font-bold">—</span>
+            <span className="text-stone-400 text-xs font-bold shrink-0">—</span>
             <div className="relative flex-1">
-              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-stone-500 font-bold">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-600 z-10">
                 ₹
               </span>
               <input
@@ -140,7 +140,7 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
                 placeholder="Max"
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
-                className="w-full rounded-xl border border-amber-900/15 py-2 pl-6 pr-2 text-xs font-bold text-amber-950 focus:border-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-700/20 bg-amber-50/20"
+                className="w-full rounded-xl border border-stone-200/90 bg-white py-2 pl-7 pr-2 text-xs font-bold text-stone-900 placeholder:text-stone-400 focus:border-[#C99A3B] focus:outline-none focus:ring-2 focus:ring-[#C99A3B]/20 shadow-2xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 aria-label="Maximum price in Rupees"
                 min={0}
               />
@@ -148,17 +148,17 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
           </div>
           <button
             type="submit"
-            className="w-full rounded-xl bg-amber-100/80 hover:bg-amber-200/80 text-amber-950 py-1.5 px-3 text-xs font-bold transition-colors min-h-[36px] border border-amber-800/20"
+            className="w-full rounded-xl bg-[#0F2440] hover:bg-[#1b3a5c] text-white py-2 px-3 text-xs font-bold transition-all min-h-[36px] shadow-xs active:scale-[0.98]"
           >
-            Apply Price
+            Apply Price Filter
           </button>
         </form>
       </div>
 
       {/* Availability Filter Section */}
-      <div className="pb-5 border-b border-amber-900/10">
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-          <FiCheckSquare className="h-3.5 w-3.5 text-amber-800" />
+      <div className="pb-5 border-b border-stone-200/70">
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-[#0F2440] flex items-center gap-1.5">
+          <FiCheckSquare className="h-3.5 w-3.5 text-[#C99A3B]" />
           <span>Availability</span>
         </h3>
         <Checkbox
@@ -170,9 +170,9 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
       </div>
 
       {/* Rating Filter Section */}
-      <div className="pb-5 border-b border-amber-900/10">
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-          <FiStar className="h-3.5 w-3.5 text-amber-800 fill-amber-800/20" />
+      <div className="pb-5 border-b border-stone-200/70">
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-[#0F2440] flex items-center gap-1.5">
+          <FiStar className="h-3.5 w-3.5 text-[#C99A3B] fill-amber-400" />
           <span>Customer Ratings</span>
         </h3>
         <div className="space-y-2">
@@ -202,10 +202,10 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
         </div>
       </div>
 
-      {/* Discount Filter Section (Client/Catalog side) */}
+      {/* Discount Filter Section */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-          <FiTag className="h-3.5 w-3.5 text-amber-800" />
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-[#0F2440] flex items-center gap-1.5">
+          <FiTag className="h-3.5 w-3.5 text-[#C99A3B]" />
           <span>Special Discounts</span>
         </h3>
         <div className="space-y-2">
@@ -245,13 +245,13 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
 
 const FilterSidebar = memo(function FilterSidebar(props) {
   return (
-    <aside className="hidden xl:block w-72 flex-shrink-0" aria-label="Catalog filters sidebar">
-      <div className="sticky top-28 space-y-6 rounded-3xl bg-white/95 p-6 border border-amber-900/10 shadow-[0_4px_20px_rgba(44,40,36,0.04)] backdrop-blur-md">
-        <div className="flex items-center gap-2.5 pb-4 border-b border-amber-900/10">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100/80 text-amber-900 shadow-2xs">
-            <FiSliders className="h-4 w-4" />
+    <aside className="hidden lg:block w-64 xl:w-72 flex-shrink-0" aria-label="Catalog filters sidebar">
+      <div className="sticky top-28 space-y-6 rounded-3xl bg-white p-6 border border-stone-200/80 shadow-[0_4px_20px_rgba(15,23,42,0.04)] font-display">
+        <div className="flex items-center gap-2.5 pb-4 border-b border-stone-200/70">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-[#0F2440] border border-amber-200/60 shadow-2xs">
+            <FiSliders className="h-4 w-4 text-[#C99A3B]" />
           </div>
-          <h2 className="text-xs font-bold uppercase tracking-wider text-amber-950 font-display">
+          <h2 className="text-xs font-extrabold uppercase tracking-wider text-[#0F2440] font-display">
             Refine Collection
           </h2>
         </div>
