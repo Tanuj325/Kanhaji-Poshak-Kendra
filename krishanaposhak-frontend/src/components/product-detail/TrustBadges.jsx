@@ -38,22 +38,22 @@ const TrustBadges = memo(function TrustBadges() {
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 border-t border-slate-200/80">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-3xl bg-white border border-stone-200/70 shadow-[0_2px_16px_rgba(15,23,42,0.03)] font-display">
       {badges.map((badge) => {
         const Icon = badge.icon;
         return (
           <div
             key={badge.id}
-            className="flex flex-col items-center justify-center p-2.5 rounded-xl bg-stone-50 border border-slate-200/80 gap-1 text-center transition-all hover:border-[#C99A3B]/40"
+            className="flex items-center gap-3 p-3 rounded-2xl bg-amber-50/40 border border-stone-200/60 transition-all hover:border-[#C99A3B]/50 hover:bg-amber-50/80"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 shrink-0">
-              <Icon className="h-3.5 w-3.5 text-[#C99A3B]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0F2440] text-[#F5E4B5] shrink-0 shadow-xs">
+              <Icon className="h-5 w-5 text-[#C99A3B]" />
             </div>
-            <div className="space-y-0.5">
-              <span className="text-[11px] font-bold text-[#0F2440] block leading-tight font-display">
+            <div className="space-y-0.5 min-w-0">
+              <span className="text-xs font-extrabold text-[#0F2440] block truncate">
                 {badge.title}
               </span>
-              <span className="text-[10px] text-stone-500 font-medium block leading-tight">
+              <span className="text-[11px] text-stone-500 font-medium block truncate">
                 {badge.subtitle}
               </span>
             </div>

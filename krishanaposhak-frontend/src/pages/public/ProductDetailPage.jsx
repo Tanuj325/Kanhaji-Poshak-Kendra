@@ -236,70 +236,59 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 font-display">
+      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 font-display space-y-6">
         {/* Breadcrumb */}
-        <div className="pb-6">
+        <div>
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
-        {/* ══════════════════════════════════════════════════════════════
-            STAGE 1: Side-by-Side Luxury Hero Layout (Gallery + Purchase Card)
-           ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-start">
-          {/* LEFT: Image Gallery (7 columns on desktop, sticky pinned to top) */}
-          <div className="lg:col-span-7 w-full lg:sticky lg:top-24 self-start">
-            <ImageGallery images={product.images} productName={product.name} />
-          </div>
+        {/* 1. FIRST: Product Image Gallery */}
+        <div className="w-full rounded-3xl bg-white p-4 lg:p-6 border border-stone-200/70 shadow-[0_4px_25px_rgba(15,23,42,0.04)] overflow-hidden">
+          <ImageGallery images={product.images} productName={product.name} />
+        </div>
 
-          {/* RIGHT: Purchase & Info Panel (5 columns on desktop) */}
-          <div className="lg:col-span-5 w-full">
-            <div className="rounded-3xl bg-white p-5 lg:p-7 border border-stone-200/70 shadow-[0_4px_25px_rgba(15,23,42,0.04)] space-y-4 font-display">
-              {/* Product Info: Title, Category, Rating, Material */}
-              <ProductInfo
-                product={product}
-                averageRating={product.averageRating || 0}
-                reviewCount={product.reviewCount || 0}
-              />
+        {/* 2. THEN: Product Purchase & Info Panel */}
+        <div className="w-full rounded-3xl bg-white p-6 lg:p-8 border border-stone-200/70 shadow-[0_4px_25px_rgba(15,23,42,0.04)] space-y-5 font-display">
+          {/* Product Info: Title, Category, Rating, Material */}
+          <ProductInfo
+            product={product}
+            averageRating={product.averageRating || 0}
+            reviewCount={product.reviewCount || 0}
+          />
 
-              {/* Pricing */}
-              <PricingSection variant={selectedVariant} product={product} />
+          {/* Pricing */}
+          <PricingSection variant={selectedVariant} product={product} />
 
-              {/* Color Selector */}
-              <ColorSelector
-                color={product.color}
-                selectedColor={selectedColor}
-                onSelect={setSelectedColor}
-              />
+          {/* Color Selector */}
+          <ColorSelector
+            color={product.color}
+            selectedColor={selectedColor}
+            onSelect={setSelectedColor}
+          />
 
-              {/* Size Selector */}
-              <VariantSelector
-                variants={variants}
-                selectedVariant={selectedVariant}
-                onSelect={setSelectedVariant}
-              />
+          {/* Size Selector */}
+          <VariantSelector
+            variants={variants}
+            selectedVariant={selectedVariant}
+            onSelect={setSelectedVariant}
+          />
 
-              {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
-              <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
+          {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
+          <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
 
-              {/* Trust Badges */}
-              <TrustBadges />
-
-              {/* Social Share */}
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between flex-wrap gap-3 text-xs">
-                <span className="font-bold uppercase tracking-wider text-stone-400">Share this piece</span>
-                <SocialShareButtons
-                  url={canonicalUrl}
-                  title={`Handcrafted ${product.name} - ${siteConfig.name}`}
-                />
-              </div>
-            </div>
+          {/* Social Share */}
+          <div className="pt-3 border-t border-stone-100 flex items-center justify-between flex-wrap gap-3 text-xs">
+            <span className="font-bold uppercase tracking-wider text-stone-400">Share this piece</span>
+            <SocialShareButtons
+              url={canonicalUrl}
+              title={`Handcrafted ${product.name} - ${siteConfig.name}`}
+            />
           </div>
         </div>
 
-        {/* ══════════════════════════════════════════════════════════════
-            STAGE 2: Full-Width Content Sections
-           ══════════════════════════════════════════════════════════════ */}
-        <div className="space-y-12 mt-12 w-full">
+        {/* 3. THEN OTHER: Trust Badges, Tabs, Reviews & Related Products */}
+        <div className="space-y-8 w-full pt-2">
+          <TrustBadges />
           <ProductTabs product={product} />
           <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
           <RelatedProductsSection
