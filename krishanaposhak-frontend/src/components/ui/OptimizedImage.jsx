@@ -8,7 +8,7 @@ const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1617627143750-d86bc21e
  * Build optimized Cloudinary URL with auto-format, auto-quality, and responsive sizing.
  * Falls back to the original URL or placeholder if not a Cloudinary URL.
  */
-function getCloudinaryOptimizedUrl(url, width = 400, height = 500) {
+function getCloudinaryOptimizedUrl(url, width = 400, height = 500, cropMode = 'c_fill') {
   if (!url) return null;
   // Only apply Cloudinary transformations if it's a Cloudinary URL
   if (url.includes('cloudinary')) {
@@ -17,7 +17,7 @@ function getCloudinaryOptimizedUrl(url, width = 400, height = 500) {
     if (uploadIdx !== -1) {
       const baseUrl = url.substring(0, uploadIdx + upload.length);
       const path = url.substring(uploadIdx + upload.length);
-      return `${baseUrl}w_${width},h_${height},c_fill,f_auto,q_auto:eco/${path}`;
+      return `${baseUrl}w_${width},h_${height},${cropMode},f_auto,q_auto:eco/${path}`;
     }
   }
   return url;
@@ -39,14 +39,16 @@ function preconnectCloudinary() {
 
 const OptimizedImage = memo(function OptimizedImage({
   src,
-  alt = 'Kanahaji Poshak product image',
+  alt = 'Kanhaji Poshak product image',
   className = '',
-  aspectRatio = 'aspect-square',
+  aspectRatio = '',
   loading = 'lazy',
   fetchpriority,
   fallbackSrc = FALLBACK_IMAGE,
   width = 400,
   height = 500,
+  objectFit = 'cover',
+  fitMode = 'fill',
   onClick,
   ...props
 }) {
@@ -69,22 +71,26 @@ const OptimizedImage = memo(function OptimizedImage({
     setLoaded(true);
   }, []);
 
+  const cropMode = fitMode === 'contain' || fitMode === 'fit' || objectFit === 'contain' ? 'c_fit' : 'c_fill';
+
   // Build optimized URL for Cloudinary images
   const optimizedSrc = src?.includes('cloudinary')
-    ? getCloudinaryOptimizedUrl(src, width, height)
+    ? getCloudinaryOptimizedUrl(src, width, height, cropMode)
     : src;
 
   const finalSrc = error || !optimizedSrc ? fallbackSrc : optimizedSrc;
 
+  const fitClass = objectFit === 'contain' ? 'object-contain' : objectFit === 'fill' ? 'object-fill' : 'object-cover';
+
   return (
     <div
-      className={`relative overflow-hidden bg-stone-900/40 ${aspectRatio} ${className}`}
+      className={`relative overflow-hidden ${aspectRatio} ${className}`}
       onClick={onClick}
     >
       {/* Skeleton / Blur placeholder while loading */}
       {!loaded && (
         <div
-          className="absolute inset-0 z-10 animate-pulse bg-gradient-to-r from-stone-800/60 via-stone-700/40 to-stone-800/60"
+          className="absolute inset-0 z-10 animate-pulse bg-stone-200/50"
           aria-hidden="true"
         />
       )}
@@ -98,14 +104,14 @@ const OptimizedImage = memo(function OptimizedImage({
         decoding="async"
         onLoad={handleLoad}
         onError={handleError}
-        className={`h-full w-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'
+        className={`h-full w-full ${fitClass} transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'
           }`}
         {...props}
       />
 
       {/* Error State Overlay Icon if fallback also fails */}
       {error && !loaded && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-900 text-stone-600">
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-100 text-stone-400">
           <FiImage className="h-6 w-6" />
         </div>
       )}

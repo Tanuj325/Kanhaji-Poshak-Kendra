@@ -112,7 +112,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
                 <img
                   src={img.imageUrl}
                   alt={img.altText || `Thumbnail ${index + 1}`}
-                  className="h-full w-full object-cover object-center"
+                  className="h-full w-full object-contain object-center p-0.5"
                   loading="lazy"
                 />
               </button>
@@ -124,7 +124,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
       {/* Main Image Stage */}
       <div className="flex-1 flex flex-col gap-3 w-full min-w-0">
         <div
-          className="group relative h-[320px] sm:h-[380px] lg:h-[420px] w-full cursor-pointer overflow-hidden rounded-2xl bg-stone-50 border border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
+          className="group relative h-[320px] sm:h-[380px] lg:h-[440px] w-full cursor-pointer overflow-hidden rounded-2xl bg-stone-50 border border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
           onClick={() => setIsFullscreen(true)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -150,6 +150,10 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
               <OptimizedImage
                 src={current?.imageUrl}
                 alt={alt}
+                objectFit="contain"
+                fitMode="contain"
+                width={800}
+                height={800}
                 className="h-full w-full object-contain object-center"
                 loading="eager"
               />
@@ -239,7 +243,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
                   <img
                     src={img.imageUrl}
                     alt={img.altText || `Thumbnail ${index + 1}`}
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-contain object-center p-0.5"
                     loading="lazy"
                   />
                 </button>
