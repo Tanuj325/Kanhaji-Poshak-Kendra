@@ -236,7 +236,7 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 font-display space-y-6">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 lg:py-8 font-display space-y-6">
         {/* Breadcrumb */}
         <div>
           <Breadcrumb items={breadcrumbItems} />
