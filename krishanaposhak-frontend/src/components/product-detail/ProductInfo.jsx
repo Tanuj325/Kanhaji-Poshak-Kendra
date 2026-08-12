@@ -25,52 +25,52 @@ const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, revi
     : product.stock > 0;
 
   return (
-    <div className="space-y-3.5 sm:space-y-4">
+    <div className="space-y-3 font-display">
       {/* Category Tag & Stock Status */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-1.5 rounded-full bg-amber-100/80 px-3 py-1 sm:px-3.5 sm:py-1.5 border border-amber-800/20 text-amber-950 font-bold text-[10px] sm:text-xs uppercase tracking-wider font-display max-w-[65%] truncate">
-          <FiTag className="h-3.5 w-3.5 text-amber-800 shrink-0" />
+        <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 border border-amber-200/80 text-[#C99A3B] font-bold text-xs uppercase tracking-wider font-display max-w-[70%] truncate">
+          <FiTag className="h-3.5 w-3.5 text-[#C99A3B] shrink-0" />
           <span className="truncate">{categoryName}</span>
         </div>
 
         {hasStock ? (
-          <span className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm font-bold text-emerald-800 bg-emerald-50 px-2.5 sm:px-3 py-1 rounded-full border border-emerald-200/80 shadow-2xs whitespace-nowrap">
-            <FiCheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 shrink-0" /> In Stock
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 whitespace-nowrap">
+            <FiCheckCircle className="h-3.5 w-3.5 text-emerald-600 shrink-0" /> In Stock
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm font-bold text-rose-800 bg-rose-50 px-2.5 sm:px-3 py-1 rounded-full border border-rose-200/80 whitespace-nowrap">
-            <FiXCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-rose-600 shrink-0" /> Out of Stock
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200/80 whitespace-nowrap">
+            <FiXCircle className="h-3.5 w-3.5 text-rose-600 shrink-0" /> Out of Stock
           </span>
         )}
       </div>
 
       {/* Product Title */}
-      <h1 className="font-heading text-lg min-[360px]:text-xl min-[412px]:text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold text-amber-950 leading-snug sm:leading-tight tracking-tight break-words">
+      <h1 className="font-heading text-2xl lg:text-3xl font-extrabold text-[#0F2440] leading-snug tracking-tight break-words">
         {product.name}
       </h1>
 
-      {/* Rating & Review Count */}
-      <div className="flex items-center gap-2.5 flex-wrap">
+      {/* Rating & Review Count & SKU */}
+      <div className="flex items-center gap-3 flex-wrap">
         {effectiveAverageRating > 0 || effectiveReviewCount > 0 ? (
-          <div className="flex items-center gap-2 bg-amber-50/80 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-amber-900/10 shadow-2xs">
+          <div className="flex items-center gap-2 bg-stone-50 px-3 py-1.5 rounded-lg border border-slate-200/80">
             <Rating rating={effectiveAverageRating || 5} size="xs" />
-            <span className="text-xs sm:text-sm font-bold text-amber-950 font-mono">
+            <span className="text-xs font-bold text-[#0F2440] font-mono">
               {Number(effectiveAverageRating || 5).toFixed(1)}
             </span>
-            <span className="text-amber-800/30">|</span>
-            <span className="text-xs sm:text-sm font-bold text-amber-900 font-display">
+            <span className="text-stone-300">|</span>
+            <span className="text-xs font-bold text-stone-600 font-display">
               {effectiveReviewCount} {effectiveReviewCount === 1 ? 'Review' : 'Reviews'}
             </span>
           </div>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-900 bg-amber-100/60 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-amber-800/20 font-display">
-            <FiAward className="h-4 w-4 text-amber-700 shrink-0" /> Handcrafted Sacred Arrival
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200/60 font-display">
+            <FiAward className="h-3.5 w-3.5 text-[#C99A3B] shrink-0" /> Handcrafted Sacred Arrival
           </span>
         )}
 
         {/* SKU Display */}
         {product.sku && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-stone-500 font-mono truncate">
+          <span className="inline-flex items-center gap-1 text-xs text-stone-500 font-mono">
             <FiHash className="h-3 w-3 shrink-0" /> {product.sku}
           </span>
         )}
@@ -78,26 +78,17 @@ const ProductInfo = memo(function ProductInfo({ product, averageRating = 0, revi
 
       {/* Short Description */}
       {product.shortDescription && (
-        <p className="text-xs sm:text-sm xl:text-base leading-relaxed text-stone-700 border-l-[3px] border-temple-gold/50 pl-3.5 sm:pl-4 py-1 font-body">
+        <p className="text-sm leading-relaxed text-stone-600 border-l-2 border-[#C99A3B]/60 pl-3 py-0.5 font-body">
           {product.shortDescription}
         </p>
       )}
 
       {/* Material Highlight */}
       {product.material && (
-        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-stone-800 pt-1 font-body bg-amber-50/40 px-3.5 py-2.5 rounded-xl border border-amber-900/10">
-          <FiFeather className="h-4 w-4 text-amber-800 shrink-0" />
-          <span className="font-bold text-amber-950">Fabric:</span>
-          <span className="font-medium text-stone-700">{product.material}</span>
-        </div>
-      )}
-
-      {/* Color Highlight */}
-      {product.color && (
-        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-stone-800 font-body bg-amber-50/40 px-3.5 py-2.5 rounded-xl border border-amber-900/10">
-          <FiDroplet className="h-4 w-4 text-amber-800 shrink-0" />
-          <span className="font-bold text-amber-950">Color:</span>
-          <span className="font-medium text-stone-700">{product.color}</span>
+        <div className="flex items-center gap-2 text-xs text-stone-700 font-body bg-stone-50 px-3 py-2 rounded-lg border border-slate-200/60">
+          <FiFeather className="h-3.5 w-3.5 text-[#C99A3B] shrink-0" />
+          <span className="font-bold text-[#0F2440]">Fabric:</span>
+          <span className="font-medium text-stone-600">{product.material}</span>
         </div>
       )}
     </div>

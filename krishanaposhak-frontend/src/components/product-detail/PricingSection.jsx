@@ -21,49 +21,46 @@ const PricingSection = memo(function PricingSection({ variant, product }) {
   if (!price) return null;
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-amber-50/90 via-stone-50/80 to-amber-50/60 border border-amber-900/10 shadow-[0_2px_12px_rgba(44,40,36,0.03)] overflow-hidden">
-      <div className="p-3.5 sm:p-5 xl:p-6 space-y-2.5 sm:space-y-3">
-        {/* Price Display */}
-        <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap whitespace-nowrap">
-          <motion.span
-            key={finalPrice}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-xl min-[360px]:text-2xl sm:text-3xl xl:text-4xl font-extrabold text-amber-950 tracking-tight"
-          >
-            ₹{Number(finalPrice).toLocaleString('en-IN')}
-          </motion.span>
+    <div className="rounded-xl bg-stone-50/80 border border-slate-200/80 p-4 space-y-2.5">
+      {/* Price Display */}
+      <div className="flex items-baseline gap-3 flex-wrap whitespace-nowrap">
+        <motion.span
+          key={finalPrice}
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="font-heading text-3xl xl:text-4xl font-extrabold text-[#0F2440] tracking-tight"
+        >
+          ₹{Number(finalPrice).toLocaleString('en-IN')}
+        </motion.span>
 
-          {hasDiscount && (
-            <span className="font-sans text-xs min-[360px]:text-sm sm:text-base xl:text-lg text-stone-400 line-through font-normal">
-              ₹{Number(price).toLocaleString('en-IN')}
-            </span>
-          )}
-        </div>
+        {hasDiscount && (
+          <span className="font-sans text-base lg:text-lg text-stone-400 line-through font-normal">
+            ₹{Number(price).toLocaleString('en-IN')}
+          </span>
+        )}
 
-        {/* Savings Badge */}
         {savings && (
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1 text-[10px] min-[360px]:text-[11px] sm:text-xs xl:text-sm font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 sm:px-3 py-1 rounded-xl shadow-2xs font-display whitespace-nowrap">
-              <FiPercent className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 shrink-0" />
+          <div className="flex items-center gap-2 flex-wrap ml-auto">
+            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-md shadow-2xs font-display whitespace-nowrap">
+              <FiPercent className="h-3 w-3 text-emerald-600 shrink-0" />
               Save ₹{savings.amount.toLocaleString('en-IN')}
             </span>
-            <span className="text-[10px] min-[360px]:text-[11px] sm:text-xs font-bold text-deep-navy bg-deep-navy/10 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-deep-navy/20 font-display whitespace-nowrap">
+            <span className="text-xs font-bold text-[#C99A3B] bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 font-display whitespace-nowrap">
               {savings.percentage}% OFF
             </span>
           </div>
         )}
+      </div>
 
-        {/* Tax & Shipping Notes */}
-        <div className="flex items-center gap-2 sm:gap-3 text-[10px] min-[360px]:text-[11px] sm:text-xs xl:text-sm text-stone-600 font-medium pt-0.5 flex-wrap font-body">
-          <span className="text-emerald-800 font-bold flex items-center gap-1 whitespace-nowrap">
-            <FiCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" /> Inclusive of all taxes
-          </span>
-          <span className="text-amber-900/30 hidden min-[360px]:inline">•</span>
-          <span className="text-amber-950 font-bold flex items-center gap-1 whitespace-nowrap">
-            <FiTruck className="h-3.5 w-3.5 text-amber-800 shrink-0" /> Free Nationwide Shipping
-          </span>
-        </div>
+      {/* Tax & Shipping Notes */}
+      <div className="flex items-center gap-3 text-xs text-stone-500 font-medium pt-1 flex-wrap font-body border-t border-slate-200/60">
+        <span className="text-emerald-700 font-bold flex items-center gap-1 whitespace-nowrap">
+          <FiCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" /> Inclusive of all taxes
+        </span>
+        <span className="text-stone-300">•</span>
+        <span className="text-stone-700 font-bold flex items-center gap-1 whitespace-nowrap">
+          <FiTruck className="h-3.5 w-3.5 text-[#C99A3B] shrink-0" /> Free Nationwide Shipping
+        </span>
       </div>
     </div>
   );

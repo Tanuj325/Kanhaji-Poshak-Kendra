@@ -236,16 +236,16 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="container-page section-padding px-3 sm:px-6 lg:px-8 pb-32 lg:pb-16 font-display">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 font-display">
         {/* Breadcrumb */}
-        <div className="py-3 sm:py-6">
+        <div className="pb-4">
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
         {/* ══════════════════════════════════════════════════════════════
             STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
            ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 xl:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-start">
           {/* LEFT: Image Gallery (7 columns on desktop) */}
           <div className="lg:col-span-7 w-full">
             <ImageGallery images={product.images} productName={product.name} />
@@ -253,7 +253,7 @@ export default function ProductDetailPage() {
 
           {/* RIGHT: Purchase Panel (5 columns on desktop, sticky) */}
           <div className="lg:col-span-5 w-full">
-            <div className="lg:sticky lg:top-24 rounded-2xl sm:rounded-3xl bg-white p-3.5 sm:p-6 lg:p-6 xl:p-7 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.04)] space-y-4 sm:space-y-5">
+            <div className="lg:sticky lg:top-24 rounded-2xl bg-white p-5 xl:p-6 border border-slate-200/80 shadow-[0_2px_16px_rgba(15,23,42,0.04)] space-y-4">
               {/* Product Info: Title, Category, Rating, Material */}
               <ProductInfo
                 product={product}
@@ -285,7 +285,7 @@ export default function ProductDetailPage() {
               <TrustBadges />
 
               {/* Social Share */}
-              <div className="pt-4 border-t border-amber-900/10 flex items-center justify-between flex-wrap gap-3">
+              <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between flex-wrap gap-3">
                 <SocialShareButtons
                   url={canonicalUrl}
                   title={`Handcrafted ${product.name} - ${siteConfig.name}`}
@@ -298,7 +298,7 @@ export default function ProductDetailPage() {
         {/* ══════════════════════════════════════════════════════════════
             STAGE 2: Full-Width Content Sections
            ══════════════════════════════════════════════════════════════ */}
-        <div className="space-y-8 sm:space-y-14 mt-8 sm:mt-14 w-full">
+        <div className="space-y-10 mt-10 w-full">
           <ProductTabs product={product} />
           <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
           <RelatedProductsSection

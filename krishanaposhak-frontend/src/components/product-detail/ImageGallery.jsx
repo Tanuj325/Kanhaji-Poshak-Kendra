@@ -88,7 +88,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
       {/* Desktop Vertical Thumbnails (Left Side) */}
       {sorted.length > 1 && (
         <div
-          className="hidden lg:flex flex-col gap-2.5 w-20 xl:w-[5.5rem] overflow-y-auto max-h-[600px] xl:max-h-[700px] scrollbar-thin scrollbar-thumb-amber-200 pr-1"
+          className="hidden lg:flex flex-col gap-2.5 w-16 xl:w-20 shrink-0 max-h-[520px] xl:max-h-[580px] overflow-y-auto scrollbar-none pr-1"
           role="tablist"
           aria-label="Product image thumbnails"
         >
@@ -103,16 +103,16 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
                 aria-label={`View image ${index + 1}`}
                 onClick={() => setSelectedIndex(index)}
                 className={cn(
-                  'relative flex-shrink-0 aspect-[4/5] w-full overflow-hidden rounded-xl border-2 transition-all duration-200 bg-stone-100/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/40',
+                  'relative flex-shrink-0 aspect-square w-full overflow-hidden rounded-xl border-2 transition-all duration-200 bg-stone-50 focus:outline-none',
                   isSelected
-                    ? 'border-amber-800 ring-2 ring-amber-700/30 shadow-gold scale-[1.03]'
-                    : 'border-transparent hover:border-amber-600/40 opacity-60 hover:opacity-100',
+                    ? 'border-[#C99A3B] ring-2 ring-[#C99A3B]/20 shadow-xs scale-[1.02]'
+                    : 'border-slate-200/80 hover:border-slate-300 opacity-70 hover:opacity-100',
                 )}
               >
                 <img
                   src={img.imageUrl}
                   alt={img.altText || `Thumbnail ${index + 1}`}
-                  className="h-full w-full object-cover object-top"
+                  className="h-full w-full object-cover object-center"
                   loading="lazy"
                 />
               </button>
@@ -124,7 +124,7 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
       {/* Main Image Stage */}
       <div className="flex-1 flex flex-col gap-3 w-full min-w-0">
         <div
-          className="group relative aspect-[4/5] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-3xl bg-gradient-to-b from-amber-50/50 via-stone-50/40 to-amber-50/20 border border-amber-900/10 shadow-[0_4px_24px_rgba(44,40,36,0.06)]"
+          className="group relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-stone-50 border border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => {
@@ -150,16 +150,16 @@ const ImageGallery = memo(function ImageGallery({ images, productName }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="h-full w-full"
+              transition={{ duration: 0.2 }}
+              className="h-full w-full flex items-center justify-center p-2"
             >
               <OptimizedImage
                 src={current?.imageUrl}
                 alt={alt}
-                aspectRatio="aspect-[4/5]"
+                aspectRatio="aspect-square"
                 className="h-full w-full object-contain object-center transition-transform duration-500 ease-out"
                 style={{
-                  transform: isHovering ? 'scale(1.6)' : 'scale(1)',
+                  transform: isHovering ? 'scale(1.5)' : 'scale(1)',
                   transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
                 }}
                 loading="eager"

@@ -9,26 +9,26 @@ const VariantSelector = memo(function VariantSelector({ variants, selectedVarian
   const activeVariants = variants.filter((v) => v.active !== false);
 
   return (
-    <div className="space-y-3 font-display">
+    <div className="space-y-2.5 font-display">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+        <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
           <span>Select Poshak Size</span>
           {selectedVariant && (
-            <span className="text-deep-navy font-extrabold normal-case">
+            <span className="text-[#C99A3B] font-extrabold normal-case">
               — Size {selectedVariant.size}
             </span>
           )}
         </label>
         <button
           type="button"
-          className="text-[11px] sm:text-xs text-deep-navy hover:text-royal-blue font-bold underline cursor-pointer transition-colors uppercase tracking-wide"
+          className="text-xs text-[#0F2440] hover:text-[#C99A3B] font-bold underline cursor-pointer transition-colors uppercase tracking-wide"
         >
           Size Guide
         </button>
       </div>
 
       {/* Variant Pills Grid */}
-      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-amber-200 sm:flex-wrap" role="radiogroup" aria-label="Select poshak size variant">
+      <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none flex-wrap" role="radiogroup" aria-label="Select poshak size variant">
         {activeVariants.map((variant) => {
           const isSelected = selectedVariant?.id === variant.id;
           const isOutOfStock = variant.stock <= 0;
@@ -43,25 +43,25 @@ const VariantSelector = memo(function VariantSelector({ variants, selectedVarian
               aria-label={`Size ${variant.size}${isOutOfStock ? ' - Out of stock' : ''}`}
               disabled={isOutOfStock}
               onClick={() => onSelect(variant)}
-              whileHover={!isOutOfStock ? { scale: 1.04 } : undefined}
+              whileHover={!isOutOfStock ? { scale: 1.02 } : undefined}
               whileTap={!isOutOfStock ? { scale: 0.97 } : undefined}
               className={cn(
-                'relative flex-shrink-0 flex flex-col items-center justify-center min-w-[3.25rem] sm:min-w-[4rem] min-h-[48px] px-3 sm:px-4 py-2 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-700/50 font-display',
+                'relative flex-shrink-0 flex flex-col items-center justify-center min-w-[3.5rem] min-h-[44px] px-3.5 py-1.5 rounded-xl border-2 transition-all duration-150 focus:outline-none font-display cursor-pointer',
                 isSelected
-                  ? 'border-amber-800 bg-amber-900 text-amber-50 font-bold shadow-md ring-2 ring-amber-800/20'
-                  : 'border-amber-900/15 bg-white text-stone-800 hover:border-amber-700/50 hover:bg-amber-50/50',
+                  ? 'border-[#C99A3B] bg-amber-50/70 text-[#0F2440] font-bold shadow-2xs ring-2 ring-[#C99A3B]/20'
+                  : 'border-slate-200/90 bg-white text-stone-700 hover:border-slate-300 font-medium',
                 isOutOfStock && 'opacity-35 cursor-not-allowed bg-stone-100 border-stone-200 text-stone-400',
               )}
             >
               <div className="flex items-center gap-1 whitespace-nowrap">
-                <span className="text-xs sm:text-sm font-bold uppercase">{variant.size}</span>
-                {isSelected && <FiCheck className="h-3.5 w-3.5 text-amber-200 shrink-0" />}
+                <span className="text-xs font-bold uppercase">{variant.size}</span>
+                {isSelected && <FiCheck className="h-3.5 w-3.5 text-[#C99A3B] shrink-0" />}
               </div>
 
               {variantPrice && (
                 <span className={cn(
-                  'text-[9px] min-[360px]:text-[10px] sm:text-[11px] font-semibold font-mono whitespace-nowrap',
-                  isSelected ? 'text-amber-200/80' : 'text-stone-500',
+                  'text-[10px] font-semibold font-mono whitespace-nowrap',
+                  isSelected ? 'text-[#C99A3B]' : 'text-stone-500',
                 )}>
                   ₹{Number(variantPrice).toFixed(0)}
                 </span>
@@ -82,16 +82,16 @@ const VariantSelector = memo(function VariantSelector({ variants, selectedVarian
         <motion.div
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-100/70 px-3 py-1.5 rounded-lg border border-amber-800/20 w-fit"
+          className="flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200/80 w-fit"
         >
-          <FiAlertCircle className="h-3.5 w-3.5 text-amber-800" /> Only {selectedVariant.stock} left in stock!
+          <FiAlertCircle className="h-3.5 w-3.5 text-[#C99A3B]" /> Only {selectedVariant.stock} left in stock!
         </motion.div>
       )}
 
       {/* SKU Display */}
       {selectedVariant?.sku && (
-        <span className="text-stone-500 font-mono text-[11px] block">
-          SKU: <strong className="text-amber-950">{selectedVariant.sku}</strong>
+        <span className="text-stone-500 font-mono text-xs block">
+          SKU: <strong className="text-[#0F2440]">{selectedVariant.sku}</strong>
         </span>
       )}
     </div>

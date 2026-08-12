@@ -134,11 +134,11 @@ function ActionsBar({ selectedVariant, selectedColor, product }) {
   }
 
   return (
-    <div className="space-y-4 font-display pt-5 border-t border-amber-900/10 w-full">
+    <div className="space-y-3 font-display pt-4 border-t border-slate-200/80 w-full">
       {/* Quantity Stepper Row */}
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50/60 border border-amber-900/10 w-fit min-h-[48px]">
-        <label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-950 pl-1">
-          Qty
+      <div className="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-stone-50 border border-slate-200/80 w-full">
+        <label className="text-xs font-bold uppercase tracking-wider text-stone-700 pl-1">
+          Quantity
         </label>
         <QuantitySelector
           value={quantity}
@@ -149,32 +149,32 @@ function ActionsBar({ selectedVariant, selectedColor, product }) {
         />
       </div>
 
-      {/* CTA Buttons */}
-      <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full">
+      {/* Primary CTA Buttons Row */}
+      <div className="grid grid-cols-2 gap-3 w-full">
         {/* Add to Cart */}
-        <motion.div className="flex-1" whileTap={{ scale: 0.98 }}>
+        <motion.div whileTap={{ scale: 0.98 }}>
           <Button
             variant="primary"
             size="lg"
             isFullWidth
             isLoading={isAddingItem}
             onClick={handleAddToCart}
-            className="rounded-2xl bg-gradient-to-r from-amber-900 via-amber-800 to-stone-900 hover:from-amber-950 hover:to-stone-950 text-white font-bold py-4 text-sm sm:text-base shadow-lg shadow-amber-950/15 border border-amber-500/20 transition-all min-h-[52px]"
-            leftIcon={<FiShoppingBag className="h-5 w-5 text-amber-200" />}
+            className="rounded-xl bg-[#0F2440] hover:bg-[#1b3a5c] text-white font-bold py-3.5 text-xs sm:text-sm uppercase tracking-wider shadow-md border border-[#0F2440] transition-all min-h-[48px] h-12"
+            leftIcon={<FiShoppingBag className="h-4 w-4 text-[#C99A3B]" />}
           >
             Add to Cart
           </Button>
         </motion.div>
 
         {/* Buy Now */}
-        <motion.div className="flex-1" whileTap={{ scale: 0.98 }}>
+        <motion.div whileTap={{ scale: 0.98 }}>
           <Button
             variant="secondary"
             size="lg"
             isFullWidth
             onClick={handleBuyNow}
-            className="rounded-2xl bg-amber-100/50 border-2 border-amber-800/80 text-amber-950 font-bold hover:bg-amber-100/80 py-4 text-sm sm:text-base transition-all min-h-[52px]"
-            leftIcon={<FiZap className="h-5 w-5 text-amber-800" />}
+            className="rounded-xl bg-[#C99A3B] hover:bg-[#b58931] text-stone-950 font-bold py-3.5 text-xs sm:text-sm uppercase tracking-wider shadow-md border border-[#C99A3B] transition-all min-h-[48px] h-12"
+            leftIcon={<FiZap className="h-4 w-4 text-stone-950" />}
           >
             Buy Now
           </Button>
@@ -186,32 +186,32 @@ function ActionsBar({ selectedVariant, selectedColor, product }) {
         <button
           type="button"
           onClick={handleWishlist}
-          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-xs sm:text-sm font-bold transition-all shadow-2xs min-h-[48px] ${
+          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all shadow-2xs min-h-[42px] cursor-pointer ${
             wishlisted
               ? 'border-rose-300 bg-rose-50 text-rose-700'
-              : 'border-amber-900/15 bg-white text-stone-800 hover:border-amber-700/40 hover:bg-amber-50/50'
+              : 'border-slate-200/90 bg-white text-stone-700 hover:border-slate-300 hover:bg-stone-50'
           }`}
           title="Add to Wishlist"
         >
-          <FiHeart className={`h-4 w-4 shrink-0 ${wishlisted ? 'fill-current text-rose-600' : 'text-amber-800'}`} />
-          <span>{wishlisted ? 'Wishlisted' : 'Wishlist'}</span>
+          <FiHeart className={`h-4 w-4 shrink-0 ${wishlisted ? 'fill-current text-rose-600' : 'text-[#C99A3B]'}`} />
+          <span>{wishlisted ? 'Wishlisted' : 'Save to Wishlist'}</span>
         </button>
 
         <button
           type="button"
           onClick={handleShare}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-amber-900/15 bg-white text-xs sm:text-sm font-bold text-stone-800 hover:border-amber-700/40 hover:bg-amber-50/50 transition-all shadow-2xs min-h-[48px]"
+          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs font-bold text-stone-700 hover:border-slate-300 hover:bg-stone-50 transition-all shadow-2xs min-h-[42px] cursor-pointer"
           title="Share Product"
         >
-          <FiShare2 className="h-4 w-4 shrink-0 text-amber-800" />
-          <span>Share</span>
+          <FiShare2 className="h-4 w-4 shrink-0 text-[#C99A3B]" />
+          <span>Share Product</span>
         </button>
       </div>
 
       {/* Bulk Order Note */}
-      <div className="flex items-center gap-1.5 text-[11px] text-amber-950/70 font-medium font-body pt-0.5">
-        <FiInfo className="h-3 w-3 shrink-0 text-amber-800/60" />
-        <span>Type quantity directly for wholesale bulk orders. Free express shipping applied automatically.</span>
+      <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium font-body pt-1">
+        <FiInfo className="h-3.5 w-3.5 shrink-0 text-[#C99A3B]" />
+        <span>Type quantity directly for wholesale bulk orders. Free shipping applied.</span>
       </div>
     </div>
   );
