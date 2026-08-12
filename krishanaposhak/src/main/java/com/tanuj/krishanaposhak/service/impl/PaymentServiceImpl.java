@@ -68,6 +68,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Cannot create Razorpay order for Cash on Delivery payment method.");
         }
 
+        if (order.getTotalAmount() == null || order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            log.warn("[RAZORPAY_ZERO_AMOUNT] Order total amount is zero or negative for order {}. Total: {}", order.getId(), order.getTotalAmount());
+            throw new BadRequestException("Order total amount must be greater than zero for online payment.");
+        }
+
         // Create Razorpay order request
         CreateRazorpayOrderRequest razorpayRequest = new CreateRazorpayOrderRequest();
         razorpayRequest.setAmount(order.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue()); // Convert to paise

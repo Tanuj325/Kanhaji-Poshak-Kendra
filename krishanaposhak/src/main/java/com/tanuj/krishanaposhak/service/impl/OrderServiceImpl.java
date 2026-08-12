@@ -238,23 +238,43 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+        if (subtotal.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException("Order subtotal must be greater than zero.");
+        }
+
         Coupon coupon = null;
         BigDecimal discount = BigDecimal.ZERO;
         if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            String couponCodeReq = request.getCouponCode().trim().toUpperCase();
             ApplyCouponRequest applyCouponRequest = new ApplyCouponRequest();
-            applyCouponRequest.setCouponCode(request.getCouponCode());
+            applyCouponRequest.setCouponCode(couponCodeReq);
             CouponValidationResponse validation = couponService.validateCoupon(userId, applyCouponRequest, subtotal.doubleValue());
             if (!validation.isValid()) {
+                log.warn("[COUPON_VALIDATION] Rejected coupon {} for user {} during order creation: {}",
+                        couponCodeReq, userId, validation.getMessage());
                 throw new BadRequestException(validation.getMessage());
             }
-            coupon = couponRepository.findByCode(request.getCouponCode())
-                    .orElseThrow(() -> new ResourceNotFoundException("Coupon not found"));
-            discount = BigDecimal.valueOf(validation.getDiscount());
+            coupon = couponRepository.findByCode(couponCodeReq)
+                    .orElseThrow(() -> new ResourceNotFoundException("Coupon not found: " + couponCodeReq));
+            discount = BigDecimal.valueOf(validation.getDiscount()).setScale(2, java.math.RoundingMode.HALF_UP);
         }
 
-        BigDecimal amountAfterDiscount = subtotal.subtract(discount);
+        // Defensive check: discount cannot exceed subtotal
+        if (discount.compareTo(subtotal) > 0) {
+            log.error("[ORDER_TOTAL_VALIDATION] Rejected order for user {}: calculated discount ({}) exceeds subtotal ({})",
+                    userId, discount, subtotal);
+            throw new BadRequestException("Coupon discount cannot exceed the eligible order amount.");
+        }
+
+        BigDecimal amountAfterDiscount = subtotal.subtract(discount).max(BigDecimal.ZERO);
         BigDecimal shippingCharge = ShippingCalculator.calculateShippingCharge(amountAfterDiscount);
         BigDecimal totalAmount = amountAfterDiscount.add(shippingCharge);
+
+        // Defensive check: order total cannot be negative
+        if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
+            log.error("[ORDER_TOTAL_VALIDATION] Rejected order for user {}: calculated total ({}) was negative", userId, totalAmount);
+            throw new BadRequestException("Order total amount cannot be negative.");
+        }
 
         // Generate order number
         String orderNumber = generateOrderNumber();

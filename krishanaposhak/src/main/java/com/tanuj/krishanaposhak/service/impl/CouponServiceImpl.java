@@ -23,11 +23,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+import java.math.RoundingMode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -93,16 +96,34 @@ public class CouponServiceImpl implements CouponService {
             ApplyCouponRequest request,
             Double orderAmount) {
 
-        Coupon coupon = couponRepository.findByCode(request.getCouponCode())
+        if (orderAmount == null || orderAmount <= 0.0) {
+            log.warn("[COUPON_VALIDATION] Rejected coupon application for zero/invalid order amount: {}", orderAmount);
+            return CouponValidationResponse.builder()
+                    .valid(false)
+                    .message("Cart is empty or order amount is invalid")
+                    .discount(0.0)
+                    .build();
+        }
+
+        if (request == null || StringUtils.isBlank(request.getCouponCode())) {
+            return CouponValidationResponse.builder()
+                    .valid(false)
+                    .message("Coupon code is required")
+                    .discount(0.0)
+                    .build();
+        }
+
+        String searchCode = request.getCouponCode().trim();
+        Coupon coupon = couponRepository.findByCode(searchCode)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Coupon not found with code: " + request.getCouponCode()
+                                "Coupon not found with code: " + searchCode
                         )
                 );
 
-
         // Check active
         if (!Boolean.TRUE.equals(coupon.getActive())) {
+            log.warn("[COUPON_VALIDATION] Coupon {} rejected: inactive", coupon.getCode());
             return CouponValidationResponse.builder()
                     .valid(false)
                     .message("Coupon is inactive")
@@ -110,13 +131,11 @@ public class CouponServiceImpl implements CouponService {
                     .build();
         }
 
-
         // Check expiry
         LocalDateTime now = LocalDateTime.now();
-
-        if (coupon.getValidFrom().isAfter(now)
-                || coupon.getValidUntil().isBefore(now)) {
-
+        if ((coupon.getValidFrom() != null && coupon.getValidFrom().isAfter(now))
+                || (coupon.getValidUntil() != null && coupon.getValidUntil().isBefore(now))) {
+            log.warn("[COUPON_VALIDATION] Coupon {} rejected: expired or not started", coupon.getCode());
             return CouponValidationResponse.builder()
                     .valid(false)
                     .message("Coupon is expired or not started yet")
@@ -124,18 +143,16 @@ public class CouponServiceImpl implements CouponService {
                     .build();
         }
 
+        BigDecimal eligibleSubtotal = BigDecimal.valueOf(orderAmount).setScale(2, RoundingMode.HALF_UP);
 
         // Minimum order amount check
         if (coupon.getMinimumOrderAmount() != null
-                && BigDecimal.valueOf(orderAmount)
-                .compareTo(coupon.getMinimumOrderAmount()) < 0) {
-
+                && eligibleSubtotal.compareTo(coupon.getMinimumOrderAmount()) < 0) {
+            log.warn("[COUPON_VALIDATION] Coupon {} rejected: eligible subtotal {} is less than minimum order amount {}",
+                    coupon.getCode(), eligibleSubtotal, coupon.getMinimumOrderAmount());
             return CouponValidationResponse.builder()
                     .valid(false)
-                    .message(
-                            "Minimum order amount should be "
-                                    + coupon.getMinimumOrderAmount()
-                    )
+                    .message("Minimum order amount should be " + coupon.getMinimumOrderAmount())
                     .discount(0.0)
                     .build();
         }
@@ -143,6 +160,7 @@ public class CouponServiceImpl implements CouponService {
         // Check total usage limit
         int currentTotalUsed = coupon.getUsedCount() != null ? coupon.getUsedCount() : (int) couponUsageRepository.countByCouponId(coupon.getId());
         if (coupon.getUsageLimit() != null && currentTotalUsed >= coupon.getUsageLimit()) {
+            log.warn("[COUPON_VALIDATION] Coupon {} rejected: total usage limit {} reached", coupon.getCode(), coupon.getUsageLimit());
             return CouponValidationResponse.builder()
                     .valid(false)
                     .message("Coupon usage limit has been reached")
@@ -154,6 +172,8 @@ public class CouponServiceImpl implements CouponService {
         if (userId != null && coupon.getPerUserLimit() != null) {
             long userUsages = couponUsageRepository.countByCouponIdAndUserId(coupon.getId(), userId);
             if (userUsages >= coupon.getPerUserLimit()) {
+                log.warn("[COUPON_VALIDATION] Coupon {} rejected for user {}: per-user limit {} reached",
+                        coupon.getCode(), userId, coupon.getPerUserLimit());
                 return CouponValidationResponse.builder()
                         .valid(false)
                         .message("You have reached the maximum allowed usage limit for this coupon")
@@ -162,41 +182,48 @@ public class CouponServiceImpl implements CouponService {
             }
         }
 
-
-        double discount;
-
+        BigDecimal calculatedDiscount;
 
         if (coupon.getDiscountType() == DiscountType.PERCENTAGE) {
-
-            discount = orderAmount *
-                    coupon.getDiscountValue().doubleValue() / 100;
-
+            BigDecimal percentage = coupon.getDiscountValue();
+            calculatedDiscount = eligibleSubtotal.multiply(percentage).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
             // Maximum discount limit
             if (coupon.getMaximumDiscountAmount() != null) {
-
-                discount = Math.min(
-                        discount,
-                        coupon.getMaximumDiscountAmount().doubleValue()
-                );
+                calculatedDiscount = calculatedDiscount.min(coupon.getMaximumDiscountAmount());
             }
-
+            // Percentage discount cannot exceed eligible subtotal
+            calculatedDiscount = calculatedDiscount.min(eligibleSubtotal);
         } else {
-
-            // FIXED amount discount
-            discount = coupon.getDiscountValue().doubleValue();
-
+            // FIXED / FLAT amount discount
+            BigDecimal fixedDiscount = coupon.getDiscountValue();
+            if (fixedDiscount.compareTo(eligibleSubtotal) > 0) {
+                log.warn("[COUPON_VALIDATION] Coupon {} rejected: eligible subtotal {} is less than fixed discount {}",
+                        coupon.getCode(), eligibleSubtotal, fixedDiscount);
+                return CouponValidationResponse.builder()
+                        .valid(false)
+                        .message("Coupon discount cannot exceed the eligible order amount.")
+                        .discount(0.0)
+                        .build();
+            }
+            calculatedDiscount = fixedDiscount;
         }
 
+        // Defensive checks: discount cannot be negative or exceed eligibleSubtotal
+        if (calculatedDiscount.compareTo(BigDecimal.ZERO) < 0) {
+            calculatedDiscount = BigDecimal.ZERO;
+        }
+        if (calculatedDiscount.compareTo(eligibleSubtotal) > 0) {
+            calculatedDiscount = eligibleSubtotal;
+        }
 
-        // Discount cannot exceed order amount
-        discount = Math.min(discount, orderAmount);
-
+        log.info("[COUPON_APPLIED] Coupon {} applied successfully. Eligible subtotal: {}, Discount: {}",
+                coupon.getCode(), eligibleSubtotal, calculatedDiscount);
 
         return CouponValidationResponse.builder()
                 .valid(true)
                 .message("Coupon applied successfully")
-                .discount(discount)
+                .discount(calculatedDiscount.doubleValue())
                 .build();
     }
 
