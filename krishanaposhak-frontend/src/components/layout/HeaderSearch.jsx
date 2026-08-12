@@ -84,19 +84,19 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
 
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
-      {/* Luxury Pill Search Container */}
+      {/* Luxury Pill Search Container (Height 44px, 120-130px Button) */}
       <form
         onSubmit={handleSubmit}
         role="search"
-        className="group relative flex h-[44px] w-full items-center overflow-hidden rounded-full border border-slate-200/90 bg-slate-50/80 pl-3.5 pr-1 shadow-2xs transition-all duration-200 hover:border-slate-300 hover:shadow-xs focus-within:bg-white focus-within:border-[#C99A3B] focus-within:ring-2 focus-within:ring-[#C99A3B]/20"
+        className="group relative flex h-[46px] w-full items-center rounded-full border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.03)] transition-all duration-300 focus-within:border-[#C99A3B] focus-within:shadow-[0_2px_8px_rgba(201,154,59,0.15),0_0_0_4px_rgba(201,154,59,0.1)] hover:border-slate-300 hover:shadow-[0_2px_8px_rgba(15,23,42,0.06)]"
       >
-        {/* Left Search Icon */}
-        <div className="flex shrink-0 items-center text-slate-400 transition-colors group-focus-within:text-[#C99A3B]">
+        {/* Search Icon — absolutely positioned inside input's padding zone */}
+        <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 z-10 text-slate-400 transition-colors duration-200 group-focus-within:text-[#C99A3B]">
           <FiSearch className="h-4 w-4" />
         </div>
 
-        {/* Input & Clear Button Area */}
-        <div className="relative flex h-full flex-1 min-w-0 items-center px-2.5">
+        {/* Input wrapper */}
+        <div className="relative h-full min-w-0 flex-1">
           <input
             ref={inputRef}
             type="text"
@@ -107,7 +107,7 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
             }}
             onFocus={() => setIsOpen(true)}
             placeholder="Search for Poshak, Mukut, Jewellery..."
-            className="h-full w-full border-0 bg-transparent py-2.5 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400/90 focus:outline-none focus:ring-0 pr-7"
+            className="h-full w-full border-0 bg-transparent py-2.5 pl-10 pr-8 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:ring-0"
           />
           {query && (
             <button
@@ -116,7 +116,7 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
                 setQuery('');
                 inputRef.current?.focus();
               }}
-              className="absolute right-1 flex items-center justify-center p-1 text-slate-400 hover:bg-slate-200/60 hover:text-slate-700 rounded-full transition-colors"
+              className="absolute right-1 top-1/2 -translate-y-1/2 z-10 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
               aria-label="Clear input"
             >
               <FiX className="h-3.5 w-3.5" />
@@ -124,16 +124,14 @@ export default function HeaderSearch({ isMobileDrawer = false, mobileRow = false
           )}
         </div>
 
-        {/* Floating Temple Gold Search Button */}
+        {/* Submit Button — guaranteed width, never squeezed */}
         <button
           type="submit"
-          className="flex h-[36px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#C99A3B] to-[#B8860B] px-4 sm:px-5 text-slate-950 shadow-2xs transition-all duration-150 hover:brightness-105 hover:shadow-xs active:scale-[0.97]"
+          className="relative z-10 flex h-[calc(100%-6px)] mr-[3px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-gradient-to-b from-[#E8C158] via-[#C99A3B] to-[#B8860B] px-4 sm:px-5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_2px_4px_rgba(184,134,11,0.3)] transition-all duration-150 hover:brightness-[1.08] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_8px_rgba(184,134,11,0.4)] active:scale-[0.97] active:brightness-95"
           aria-label="Submit search"
         >
-          <FiSearch className="h-3.5 w-3.5 shrink-0 stroke-[2.5]" />
-          <span className="font-extrabold text-[11px] sm:text-xs tracking-wider uppercase whitespace-nowrap">
-            Search
-          </span>
+          <FiSearch className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Search</span>
         </button>
       </form>
 
