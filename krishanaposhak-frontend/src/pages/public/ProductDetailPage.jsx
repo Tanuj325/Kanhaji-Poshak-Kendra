@@ -236,40 +236,30 @@ export default function ProductDetailPage() {
         jsonLd={productSchemas}
       />
 
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 font-display">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 font-display">
         {/* Breadcrumb */}
-        <div className="pb-5">
+        <div className="pb-6">
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
         {/* ══════════════════════════════════════════════════════════════
-            STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
+            STAGE 1: Side-by-Side Luxury Hero Layout (Gallery + Purchase Card)
            ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-stretch">
-          {/* LEFT: Image Gallery + Trust Badges (stretches to match right panel height) */}
-          <div className="lg:col-span-7 w-full flex flex-col gap-5">
-            <div className="lg:sticky lg:top-24 overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_2px_20px_rgba(15,23,42,0.05)]">
-              <ImageGallery images={product.images} productName={product.name} />
-            </div>
-
-            {/* Trust Badges — flex-1 so it naturally fills any remaining height
-                to match the right panel, instead of leaving blank grid space */}
-            <div className="flex-1 flex items-center rounded-3xl bg-white p-5 lg:p-6 border border-slate-200/70 shadow-[0_2px_20px_rgba(15,23,42,0.05)]">
-              <TrustBadges />
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-start">
+          {/* LEFT: Image Gallery (7 columns on desktop, sticky pinned to top) */}
+          <div className="lg:col-span-7 w-full lg:sticky lg:top-24 self-start">
+            <ImageGallery images={product.images} productName={product.name} />
           </div>
 
-          {/* RIGHT: Purchase Panel */}
+          {/* RIGHT: Purchase & Info Panel (5 columns on desktop) */}
           <div className="lg:col-span-5 w-full">
-            <div className="rounded-3xl bg-white p-5 lg:p-6 border border-slate-200/70 shadow-[0_2px_20px_rgba(15,23,42,0.05)] space-y-5">
+            <div className="rounded-3xl bg-white p-5 lg:p-7 border border-stone-200/70 shadow-[0_4px_25px_rgba(15,23,42,0.04)] space-y-4 font-display">
               {/* Product Info: Title, Category, Rating, Material */}
               <ProductInfo
                 product={product}
                 averageRating={product.averageRating || 0}
                 reviewCount={product.reviewCount || 0}
               />
-
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
               {/* Pricing */}
               <PricingSection variant={selectedVariant} product={product} />
@@ -291,11 +281,12 @@ export default function ProductDetailPage() {
               {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
               <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
 
+              {/* Trust Badges */}
+              <TrustBadges />
+
               {/* Social Share */}
-              <div className="pt-4 border-t border-slate-200/70 flex items-center justify-between flex-wrap gap-3">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                  Share this piece
-                </span>
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-between flex-wrap gap-3 text-xs">
+                <span className="font-bold uppercase tracking-wider text-stone-400">Share this piece</span>
                 <SocialShareButtons
                   url={canonicalUrl}
                   title={`Handcrafted ${product.name} - ${siteConfig.name}`}
@@ -308,7 +299,7 @@ export default function ProductDetailPage() {
         {/* ══════════════════════════════════════════════════════════════
             STAGE 2: Full-Width Content Sections
            ══════════════════════════════════════════════════════════════ */}
-        <div className="space-y-14 mt-14 w-full">
+        <div className="space-y-12 mt-12 w-full">
           <ProductTabs product={product} />
           <ProductReviewsSection productId={product.id} productAverageRating={product.averageRating} />
           <RelatedProductsSection
