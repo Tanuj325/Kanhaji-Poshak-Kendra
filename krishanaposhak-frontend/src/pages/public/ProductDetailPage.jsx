@@ -245,13 +245,17 @@ export default function ProductDetailPage() {
         {/* ══════════════════════════════════════════════════════════════
             STAGE 1: Side-by-Side Hero Layout (Gallery + Purchase Card)
            ══════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-start">
-          {/* LEFT: Image Gallery — wrapped in its own premium frame so it never
-              looks like it has trailing whitespace; the card border ends exactly
-              where the gallery content ends. */}
-          <div className="lg:col-span-7 w-full lg:sticky lg:top-24 self-start">
-            <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_2px_20px_rgba(15,23,42,0.05)]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-stretch">
+          {/* LEFT: Image Gallery + Trust Badges (stretches to match right panel height) */}
+          <div className="lg:col-span-7 w-full flex flex-col gap-5">
+            <div className="lg:sticky lg:top-24 overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_2px_20px_rgba(15,23,42,0.05)]">
               <ImageGallery images={product.images} productName={product.name} />
+            </div>
+
+            {/* Trust Badges — flex-1 so it naturally fills any remaining height
+                to match the right panel, instead of leaving blank grid space */}
+            <div className="flex-1 flex items-center rounded-3xl bg-white p-5 lg:p-6 border border-slate-200/70 shadow-[0_2px_20px_rgba(15,23,42,0.05)]">
+              <TrustBadges />
             </div>
           </div>
 
@@ -286,11 +290,6 @@ export default function ProductDetailPage() {
 
               {/* Actions: Quantity + Add to Cart + Buy Now + Wishlist + Share */}
               <ActionsBar selectedVariant={selectedVariant} selectedColor={selectedColor} product={product} />
-
-              {/* Trust Badges */}
-              <div className="pt-1">
-                <TrustBadges />
-              </div>
 
               {/* Social Share */}
               <div className="pt-4 border-t border-slate-200/70 flex items-center justify-between flex-wrap gap-3">
