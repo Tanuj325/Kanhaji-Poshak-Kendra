@@ -3,6 +3,7 @@ package com.tanuj.krishanaposhak.service.impl;
 import com.tanuj.krishanaposhak.dto.common.PaginationResponse;
 import com.tanuj.krishanaposhak.dto.coupon.ApplyCouponRequest;
 import com.tanuj.krishanaposhak.dto.coupon.CouponValidationResponse;
+import com.tanuj.krishanaposhak.dto.order.CancelOrderRequest;
 import com.tanuj.krishanaposhak.dto.order.OrderResponse;
 import com.tanuj.krishanaposhak.dto.order.OrderSummaryResponse;
 import com.tanuj.krishanaposhak.dto.order.PlaceOrderRequest;
@@ -394,6 +395,8 @@ public class OrderServiceImpl implements OrderService {
                         .orderStatus(order.getOrderStatus())
                         .paymentStatus(order.getPaymentStatus())
                         .orderDate(order.getCreatedAt())
+                        .cancellationReason(order.getCancellationReason())
+                        .cancelledBy(order.getCancelledBy())
                         .build())
                 .toList();
 
@@ -430,12 +433,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse cancelOrder(Long userId, Long orderId) {
+    @Transactional
+    public OrderResponse cancelOrder(Long userId, Long orderId, CancelOrderRequest cancelRequest) {
 
         Order order = findOwnedOrderOrThrow(userId, orderId);
 
+        if (order.getOrderStatus() == OrderStatus.CANCELLED) {
+            throw new BadRequestException("Order is already cancelled");
+        }
+
         if (!CANCELLABLE_STATUSES.contains(order.getOrderStatus())) {
             throw new BadRequestException("Order cannot be cancelled at this stage: " + order.getOrderStatus());
+        }
+
+        String reason = (cancelRequest != null && StringUtils.isNotBlank(cancelRequest.getReason()))
+                ? cancelRequest.getReason().trim()
+                : null;
+
+        if (StringUtils.isBlank(reason)) {
+            throw new BadRequestException("Cancellation reason is required");
+        }
+
+        if (reason.length() > 500) {
+            throw new BadRequestException("Cancellation reason cannot exceed 500 characters");
         }
 
         for (OrderItem item : order.getOrderItems()) {
@@ -447,20 +467,21 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setOrderStatus(OrderStatus.CANCELLED);
+        order.setCancellationReason(reason);
+        order.setCancelledBy("USER");
         order = orderRepository.save(order);
 
-        notificationService.createNotification(
-                order.getUser(),
-                "Order Cancelled",
-                "Your order #" + order.getOrderNumber() + " has been cancelled.",
+        // CASE 2 — USER CANCELS ORDER: Create notification for ADMIN
+        notificationService.createAdminNotifications(
+                "Order Cancelled by Customer",
+                "Order #" + order.getOrderNumber() + " was cancelled by the customer (" + order.getCustomerName() + "). Reason: " + reason,
                 NotificationType.ORDER
         );
 
         // Process automatic Razorpay refund if eligible
         if (refundService.isEligibleForRefund(order)) {
             try {
-                refundService.processAutomaticRefund(order, "Order cancelled by customer");
-                // Update payment and order status to REFUNDED after successful refund
+                refundService.processAutomaticRefund(order, "Order cancelled by customer: " + reason);
                 if (order.getPayment() != null) {
                     order.getPayment().setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
                     order.setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
@@ -475,11 +496,72 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse updateOrderStatus(Long orderId, OrderStatus status) {
+    @Transactional
+    public OrderResponse updateOrderStatus(Long orderId, OrderStatus status, String reasonParam) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
 
         OrderStatus previousStatus = order.getOrderStatus();
+
+        if (status == OrderStatus.CANCELLED) {
+            if (previousStatus == OrderStatus.CANCELLED) {
+                throw new BadRequestException("Order is already cancelled");
+            }
+
+            if (!CANCELLABLE_STATUSES.contains(previousStatus)) {
+                throw new BadRequestException("Order cannot be cancelled at this stage: " + previousStatus);
+            }
+
+            String reason = StringUtils.isNotBlank(reasonParam) ? reasonParam.trim() : null;
+
+            if (StringUtils.isBlank(reason)) {
+                throw new BadRequestException("Cancellation reason is required when cancelling an order");
+            }
+
+            if (reason.length() > 500) {
+                throw new BadRequestException("Cancellation reason cannot exceed 500 characters");
+            }
+
+            // Restore variant stock when Admin cancels order
+            for (OrderItem item : order.getOrderItems()) {
+                if (item.getProductVariant() != null) {
+                    ProductVariant variant = item.getProductVariant();
+                    variant.setStock(variant.getStock() + item.getQuantity());
+                    productVariantRepository.save(variant);
+                }
+            }
+
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            order.setCancellationReason(reason);
+            order.setCancelledBy("ADMIN");
+            order = orderRepository.save(order);
+
+            // CASE 1 — ADMIN CANCELS ORDER: Create notification for the CUSTOMER
+            notificationService.createNotification(
+                    order.getUser(),
+                    "Order Cancelled by Admin",
+                    "Order #" + order.getOrderNumber() + " has been cancelled by the admin. Reason: " + reason,
+                    NotificationType.ORDER
+            );
+
+            // Process automatic Razorpay refund if eligible
+            if (refundService.isEligibleForRefund(order)) {
+                try {
+                    refundService.processAutomaticRefund(order, "Order cancelled by admin: " + reason);
+                    if (order.getPayment() != null) {
+                        order.getPayment().setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
+                        order.setPaymentStatus(com.tanuj.krishanaposhak.enums.PaymentStatus.REFUNDED);
+                        orderRepository.save(order);
+                    }
+                } catch (Exception e) {
+                    log.error("Automatic Razorpay refund failed for admin cancelled Order ID {}: {}", orderId, e.getMessage());
+                }
+            }
+
+            return orderMapper.toResponse(order);
+        }
+
+        // Non-cancellation status update
         order.setOrderStatus(status);
 
         // COD Payment Lifecycle: When admin marks a COD order as DELIVERED, automatically mark payment status as PAID

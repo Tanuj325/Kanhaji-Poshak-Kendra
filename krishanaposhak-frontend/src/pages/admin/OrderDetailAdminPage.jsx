@@ -55,9 +55,14 @@ export default function OrderDetailAdminPage() {
   const { data: order, isLoading, isError, error } = useOrder(orderId);
   const updateStatusMutation = useUpdateOrderStatus();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const handleStatusChange = useCallback((newStatus) => {
     if (!orderId) return;
+    if (newStatus === 'CANCELLED') {
+      setIsCancelModalOpen(true);
+      return;
+    }
     updateStatusMutation.mutate(
       { orderId, status: newStatus },
       {
@@ -66,6 +71,22 @@ export default function OrderDetailAdminPage() {
         },
         onError: (err) => {
           toast.error(getErrorMessage(err, 'Failed to update order status'));
+        },
+      },
+    );
+  }, [orderId, updateStatusMutation]);
+
+  const handleAdminCancelOrder = useCallback((reason) => {
+    if (!orderId) return;
+    updateStatusMutation.mutate(
+      { orderId, status: 'CANCELLED', reason },
+      {
+        onSuccess: () => {
+          toast.success('Order cancelled by admin successfully');
+          setIsCancelModalOpen(false);
+        },
+        onError: (err) => {
+          toast.error(getErrorMessage(err, 'Failed to cancel order'));
         },
       },
     );
@@ -188,6 +209,25 @@ export default function OrderDetailAdminPage() {
             ))}
           </select>
         </div>
+
+        {order?.orderStatus === 'CANCELLED' && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 font-display space-y-1 shadow-2xs">
+            <div className="flex items-center gap-2 font-bold text-red-800 text-sm">
+              <FiXCircle className="w-4 h-4 text-red-600 shrink-0" />
+              <span>Order Cancelled</span>
+              {order?.cancelledBy && (
+                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold ml-1">
+                  By {order.cancelledBy}
+                </span>
+              )}
+            </div>
+            {order?.cancellationReason && (
+              <p className="text-xs text-red-700 font-body">
+                <span className="font-semibold text-red-800">Reason:</span> {order.cancellationReason}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Main Grid Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 sm:gap-6">
@@ -529,6 +569,17 @@ export default function OrderDetailAdminPage() {
           </div>
         </div>
       )}
+
+      {/* Admin Cancel Order Modal */}
+      <CancelOrderModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={handleAdminCancelOrder}
+        orderNumber={order?.orderNumber}
+        isLoading={updateStatusMutation.isPending}
+        title="Admin Order Cancellation"
+        isAdmin
+      />
 
       {/* Hidden PDF Printable Invoice Document */}
       <PrintableInvoice order={order} />

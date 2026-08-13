@@ -44,9 +44,10 @@ export function usePlaceOrder() {
 export function useCancelOrder() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (orderId) => orderService.cancelOrder(orderId),
+    mutationFn: ({ orderId, reason }) => orderService.cancelOrder(orderId, { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDER] });
       toast.success('Order cancelled');
     },
     onError: (err) => {
@@ -66,7 +67,7 @@ export function useAllOrders(params) {
 export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ orderId, status }) => orderService.updateStatus(orderId, status),
+    mutationFn: ({ orderId, status, reason }) => orderService.updateStatus(orderId, status, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_ORDERS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDER] });

@@ -55,6 +55,10 @@ public class OrderResponse {
 
     private String notes;
 
+    private String cancellationReason;
+
+    private String cancelledBy;
+
     private AddressResponse shippingAddress;
 
     private LocalDateTime orderDate;

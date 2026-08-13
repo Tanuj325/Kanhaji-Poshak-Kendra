@@ -46,9 +46,9 @@ export default function OrderDetailPage() {
   const [selectedReviewProduct, setSelectedReviewProduct] = useState(null);
   const [isBuyingAgain, setIsBuyingAgain] = useState(false);
 
-  const handleCancelOrder = async () => {
+  const handleCancelOrder = async (reason) => {
     try {
-      await cancelOrder.mutateAsync(orderId);
+      await cancelOrder.mutateAsync({ orderId, reason });
       toast.success('Order cancelled successfully');
       setIsCancelModalOpen(false);
     } catch (err) {
@@ -121,14 +121,11 @@ export default function OrderDetailPage() {
         />
 
         {/* Cancel Order Confirmation Modal */}
-        <ConfirmDialog
+        <CancelOrderModal
           isOpen={isCancelModalOpen}
           onClose={() => setIsCancelModalOpen(false)}
           onConfirm={handleCancelOrder}
-          title="Cancel Order Confirmation"
-          message={`Are you sure you want to cancel Order #${order?.orderNumber}? This action cannot be undone.`}
-          confirmText="Yes, Cancel Order"
-          type="danger"
+          orderNumber={order?.orderNumber}
           isLoading={cancelOrder.isPending}
         />
 
@@ -258,6 +255,25 @@ export default function OrderDetailPage() {
             )}
           </div>
         </div>
+
+        {order?.orderStatus === 'CANCELLED' && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-red-900 font-display space-y-1.5 shadow-sm">
+            <div className="flex items-center gap-2 font-bold text-red-800 text-base">
+              <FiXCircle className="w-5 h-5 text-red-600 shrink-0" />
+              <span>Order Cancelled</span>
+              {order?.cancelledBy && (
+                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold ml-1">
+                  By {order.cancelledBy}
+                </span>
+              )}
+            </div>
+            {order?.cancellationReason && (
+              <p className="text-sm text-red-700 font-body">
+                <span className="font-semibold text-red-800">Reason:</span> {order.cancellationReason}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Status Tracking Timeline Card */}
         <div className="rounded-3xl bg-white p-6 sm:p-7 shadow-md border border-temple-gold/20 print:hidden">

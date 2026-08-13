@@ -10,6 +10,8 @@ import com.tanuj.krishanaposhak.enums.PaymentStatus;
 
 import java.util.List;
 
+import com.tanuj.krishanaposhak.dto.order.CancelOrderRequest;
+
 public interface OrderService {
 
     OrderResponse placeOrder(Long userId, PlaceOrderRequest request);
@@ -22,9 +24,9 @@ public interface OrderService {
 
     PaginationResponse<OrderResponse> getAllOrders(OrderStatus orderStatus, PaymentStatus paymentStatus, String sort, int page, int size);
 
-    OrderResponse cancelOrder(Long userId, Long orderId);
+    OrderResponse cancelOrder(Long userId, Long orderId, CancelOrderRequest request);
 
-    OrderResponse updateOrderStatus(Long orderId, OrderStatus status);
+    OrderResponse updateOrderStatus(Long orderId, OrderStatus status, String reason);
 
     Order createPendingOrder(Long userId, PlaceOrderRequest request);
 

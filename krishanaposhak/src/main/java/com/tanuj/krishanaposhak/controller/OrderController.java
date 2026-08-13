@@ -247,12 +247,15 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "Order not found")
     })
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long orderId, HttpServletRequest request) {
+    public ResponseEntity<OrderResponse> cancelOrder(
+            @PathVariable Long orderId,
+            @RequestBody(required = false) com.tanuj.krishanaposhak.dto.order.CancelOrderRequest cancelRequest,
+            HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
         if (userId == null) {
             return ResponseEntity.status(401).build();
         }
-        OrderResponse response = orderService.cancelOrder(userId, orderId);
+        OrderResponse response = orderService.cancelOrder(userId, orderId, cancelRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -290,8 +293,11 @@ public class OrderController {
     })
     @PutMapping("/admin/{orderId}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long orderId, @RequestParam OrderStatus status) {
-        OrderResponse response = orderService.updateOrderStatus(orderId, status);
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestParam OrderStatus status,
+            @RequestParam(required = false) String reason) {
+        OrderResponse response = orderService.updateOrderStatus(orderId, status, reason);
         return ResponseEntity.ok(response);
     }
 }

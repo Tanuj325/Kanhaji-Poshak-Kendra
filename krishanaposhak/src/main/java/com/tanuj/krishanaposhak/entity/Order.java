@@ -95,6 +95,12 @@ public class Order extends BaseEntity {
     @Column(name = "is_buy_now")
     private Boolean isBuyNow = false;
 
+    @Column(name = "cancellation_reason", length = 500)
+    private String cancellationReason;
+
+    @Column(name = "cancelled_by", length = 20)
+    private String cancelledBy;
+
     @Builder.Default
     @OneToMany(
             mappedBy = "order",

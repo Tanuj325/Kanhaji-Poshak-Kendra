@@ -27,6 +27,7 @@ import { formatPrice } from '@/utils/formatPrice';
 import { getErrorMessage } from '@/utils/apiErrorParser';
 import { siteConfig } from '@/config/siteConfig';
 import ConfirmDialog from '@/components/overlay/ConfirmDialog';
+import CancelOrderModal from '@/components/orders/CancelOrderModal';
 
 /* ═══════════════════════════════════════════════════════════════════════
    FALLBACK IMAGE — Inline SVG Data URL, zero external network dependency
@@ -809,14 +810,11 @@ export default memo(function MobileOrderDetail({
 
       {/* Cancel Order Confirmation Modal */}
       {canCancel && handleCancelOrder && (
-        <ConfirmDialog
+        <CancelOrderModal
           isOpen={isCancelModalOpen}
           onClose={() => setIsCancelModalOpen?.(false)}
           onConfirm={handleCancelOrder}
-          title="Cancel Order Confirmation"
-          message={`Are you sure you want to cancel Order #${orderNum}? This action cannot be undone.`}
-          confirmText="Yes, Cancel Order"
-          type="danger"
+          orderNumber={orderNum}
           isLoading={cancelOrder?.isPending}
         />
       )}

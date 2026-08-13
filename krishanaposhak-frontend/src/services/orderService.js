@@ -14,15 +14,18 @@ const orderService = {
 
   getUserOrders: (params) => api.get(API_ENDPOINTS.ORDERS.BASE, { params }),
 
-  cancelOrder: (orderId) =>
-    api.post(API_ENDPOINTS.ORDERS.CANCEL(orderId)),
+  cancelOrder: (orderId, data) =>
+    api.post(API_ENDPOINTS.ORDERS.CANCEL(orderId), data),
 
   /** Admin endpoints */
   getAllOrders: (params) =>
     api.get(API_ENDPOINTS.ORDERS.ADMIN_LIST, { params }),
 
-updateStatus: (orderId, status) =>
-    api.put(API_ENDPOINTS.ORDERS.ADMIN_UPDATE_STATUS(orderId), null, { params: { status } }),
+  updateStatus: (orderId, status, reason) => {
+    const params = { status };
+    if (reason) params.reason = reason;
+    return api.put(API_ENDPOINTS.ORDERS.ADMIN_UPDATE_STATUS(orderId), null, { params });
+  },
 };
 
 export default orderService;

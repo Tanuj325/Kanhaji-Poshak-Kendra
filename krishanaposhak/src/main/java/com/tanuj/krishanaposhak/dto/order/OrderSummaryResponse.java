@@ -27,4 +27,8 @@ public class OrderSummaryResponse {
 
     private LocalDateTime orderDate;
 
+    private String cancellationReason;
+
+    private String cancelledBy;
+
 }
