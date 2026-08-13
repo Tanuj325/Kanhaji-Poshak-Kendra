@@ -11,6 +11,7 @@ import ErrorState from '@/components/ui/ErrorState';
 import Badge from '@/components/ui/Badge';
 import Divider from '@/components/ui/Divider';
 import ConfirmDialog from '@/components/overlay/ConfirmDialog';
+import CancelOrderModal from '@/components/orders/CancelOrderModal';
 import { formatDate } from '@/utils/formatDate';
 import { formatPrice } from '@/utils/formatPrice';
 import { getErrorMessage } from '@/utils/apiErrorParser';

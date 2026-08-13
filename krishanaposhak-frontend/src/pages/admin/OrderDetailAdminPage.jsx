@@ -26,6 +26,7 @@ import {
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { cn } from '@/utils/cn';
+import CancelOrderModal from '@/components/orders/CancelOrderModal';
 
 const ORDER_STATUSES = [
   'PENDING',
