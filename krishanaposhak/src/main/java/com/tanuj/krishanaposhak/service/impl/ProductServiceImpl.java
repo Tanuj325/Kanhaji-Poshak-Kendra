@@ -8,6 +8,7 @@ import com.tanuj.krishanaposhak.dto.product.ProductResponse;
 import com.tanuj.krishanaposhak.entity.Category;
 import com.tanuj.krishanaposhak.entity.Product;
 import com.tanuj.krishanaposhak.entity.ProductVariant;
+import com.tanuj.krishanaposhak.entity.Review;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.ProductMapper;
@@ -50,10 +51,11 @@ public class ProductServiceImpl implements ProductService {
                                                                   BigDecimal minPrice,
                                                                   BigDecimal maxPrice,
                                                                   Boolean inStock,
+                                                                  Double minRating,
                                                                   String sort,
                                                                   int page,
                                                                   int size) {
-        Specification<Product> spec = buildSpecification(categoryParam, search, featured, active, minPrice, maxPrice, inStock);
+        Specification<Product> spec = buildSpecification(categoryParam, search, featured, active, minPrice, maxPrice, inStock, minRating);
         Pageable pageable = buildPageable(sort, page, size);
         Page<Product> productPage = productRepository.findAll(spec, pageable);
         return toPaginationResponse(productPage, productMapper.toCardResponseList(productPage.getContent()));
@@ -94,10 +96,11 @@ public class ProductServiceImpl implements ProductService {
                                                                       BigDecimal minPrice,
                                                                       BigDecimal maxPrice,
                                                                       Boolean inStock,
+                                                                      Double minRating,
                                                                       String sort,
                                                                       int page,
                                                                       int size) {
-        Specification<Product> spec = buildSpecification(categoryId != null ? String.valueOf(categoryId) : null, search, featured, active, minPrice, maxPrice, inStock);
+        Specification<Product> spec = buildSpecification(categoryId != null ? String.valueOf(categoryId) : null, search, featured, active, minPrice, maxPrice, inStock, minRating);
         Pageable pageable = buildPageable(sort, page, size);
         Page<Product> productPage = productRepository.findAll(spec, pageable);
         return toPaginationResponse(productPage, productMapper.toResponseList(productPage.getContent()));
@@ -165,7 +168,8 @@ public class ProductServiceImpl implements ProductService {
             Boolean active,
             BigDecimal minPrice,
             BigDecimal maxPrice,
-            Boolean inStock) {
+            Boolean inStock,
+            Double minRating) {
 
         return (root, query, cb) -> {
 
@@ -219,7 +223,6 @@ public class ProductServiceImpl implements ProductService {
                         )
                 );
             }
-
 
             // Price filter using ProductVariant effective selling price
             if (minPrice != null || maxPrice != null) {
@@ -308,6 +311,18 @@ public class ProductServiceImpl implements ProductService {
                 predicates.add(
                         cb.exists(subquery)
                 );
+            }
+
+            // Rating filter
+            if (minRating != null && minRating > 0) {
+                Subquery<Double> subquery = query.subquery(Double.class);
+                Root<Review> reviewRoot = subquery.from(Review.class);
+
+                subquery.select(cb.avg(reviewRoot.get("rating")))
+                        .where(cb.equal(reviewRoot.get("product"), root))
+                        .groupBy(reviewRoot.get("product"));
+
+                predicates.add(cb.greaterThanOrEqualTo(subquery, minRating));
             }
 
             return cb.and(

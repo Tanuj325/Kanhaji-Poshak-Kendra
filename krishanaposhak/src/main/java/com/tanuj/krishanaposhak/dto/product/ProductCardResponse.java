@@ -29,4 +29,8 @@ public class ProductCardResponse {
 
     private boolean newArrival;
 
+    private Double averageRating;
+
+    private Integer reviewCount;
+
 }

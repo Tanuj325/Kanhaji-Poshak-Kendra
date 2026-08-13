@@ -7,6 +7,7 @@ import com.tanuj.krishanaposhak.dto.product.ProductResponse;
 import com.tanuj.krishanaposhak.entity.Product;
 import com.tanuj.krishanaposhak.entity.ProductImage;
 import com.tanuj.krishanaposhak.entity.ProductVariant;
+import com.tanuj.krishanaposhak.entity.Review;
 import com.tanuj.krishanaposhak.util.UrlUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -74,6 +75,18 @@ public interface ProductMapper {
                     .price(variant.getPrice() != null ? variant.getPrice().doubleValue() : null)
                     .discountPrice(variant.getDiscountPrice() != null ? variant.getDiscountPrice().doubleValue() : null)
                     .size(variant.getSize());
+        }
+
+        if (product.getReviews() != null && !product.getReviews().isEmpty()) {
+            double avg = product.getReviews().stream()
+                    .mapToInt(Review::getRating)
+                    .average()
+                    .orElse(0.0);
+            builder.averageRating(Math.round(avg * 10.0) / 10.0)
+                    .reviewCount(product.getReviews().size());
+        } else {
+            builder.averageRating(0.0)
+                    .reviewCount(0);
         }
 
         return builder.build();

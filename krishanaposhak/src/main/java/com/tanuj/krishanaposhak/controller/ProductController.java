@@ -48,10 +48,11 @@ public class ProductController {
             @Parameter(description = "Minimum price") @RequestParam(required = false) BigDecimal minPrice,
             @Parameter(description = "Maximum price") @RequestParam(required = false) BigDecimal maxPrice,
             @Parameter(description = "Filter by in-stock status") @RequestParam(required = false) Boolean inStock,
+            @Parameter(description = "Minimum rating (1-5)") @RequestParam(required = false) Double minRating,
             @Parameter(description = "Sort field and direction (e.g., 'price,asc')") @RequestParam(required = false) String sort,
             @Parameter(description = "Page number (0-indexed)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size) {
-        PaginationResponse<ProductCardResponse> response = productService.getAllProducts(categoryId, search, featured, active, minPrice, maxPrice, inStock, sort, page, size);
+        PaginationResponse<ProductCardResponse> response = productService.getAllProducts(categoryId, search, featured, active, minPrice, maxPrice, inStock, minRating, sort, page, size);
         return ResponseEntity.ok(response);
     }
 
@@ -126,10 +127,11 @@ public class ProductController {
             @Parameter(description = "Minimum price") @RequestParam(required = false) BigDecimal minPrice,
             @Parameter(description = "Maximum price") @RequestParam(required = false) BigDecimal maxPrice,
             @Parameter(description = "Filter by in-stock status") @RequestParam(required = false) Boolean inStock,
+            @Parameter(description = "Minimum rating (1-5)") @RequestParam(required = false) Double minRating,
             @Parameter(description = "Sort field and direction (e.g., 'price,asc')") @RequestParam(required = false) String sort,
             @Parameter(description = "Page number (0-indexed)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size) {
-        PaginationResponse<ProductResponse> response = productService.getAllProductsForAdmin(categoryId, search, featured, active, minPrice, maxPrice, inStock, sort, page, size);
+        PaginationResponse<ProductResponse> response = productService.getAllProductsForAdmin(categoryId, search, featured, active, minPrice, maxPrice, inStock, minRating, sort, page, size);
         return ResponseEntity.ok(response);
     }
 

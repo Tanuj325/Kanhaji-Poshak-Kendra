@@ -18,6 +18,7 @@ public interface ProductService {
                                                            BigDecimal minPrice,
                                                            BigDecimal maxPrice,
                                                            Boolean inStock,
+                                                           Double minRating,
                                                            String sort,
                                                            int page,
                                                            int size);
@@ -37,6 +38,7 @@ public interface ProductService {
                                                                BigDecimal minPrice,
                                                                BigDecimal maxPrice,
                                                                Boolean inStock,
+                                                               Double minRating,
                                                                String sort,
                                                                int page,
                                                                int size);
