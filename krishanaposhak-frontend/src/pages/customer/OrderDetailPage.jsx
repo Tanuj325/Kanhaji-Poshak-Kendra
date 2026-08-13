@@ -425,14 +425,11 @@ export default function OrderDetailPage() {
       </motion.div>
 
       {/* Cancel Order Confirmation Modal */}
-      <ConfirmDialog
+      <CancelOrderModal
         isOpen={isCancelModalOpen}
         onClose={() => setIsCancelModalOpen(false)}
         onConfirm={handleCancelOrder}
-        title="Cancel Order Confirmation"
-        message={`Are you sure you want to cancel Order #${order?.orderNumber}? This action cannot be undone.`}
-        confirmText="Yes, Cancel Order"
-        type="danger"
+        orderNumber={order?.orderNumber}
         isLoading={cancelOrder.isPending}
       />
 
