@@ -23,6 +23,7 @@ import {
   FiShoppingBag,
   FiClock,
   FiPackage,
+  FiXCircle,
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { cn } from '@/utils/cn';
