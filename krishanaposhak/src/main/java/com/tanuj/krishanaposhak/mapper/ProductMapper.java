@@ -13,7 +13,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Mapper(
@@ -92,7 +94,12 @@ public interface ProductMapper {
         }
         return variants.stream()
                 .filter(v -> Boolean.TRUE.equals(v.getActive()))
-                .findFirst()
+                .min(Comparator.comparing(v -> {
+                    BigDecimal eff = (v.getDiscountPrice() != null && v.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0)
+                            ? v.getDiscountPrice()
+                            : v.getPrice();
+                    return eff != null ? eff : BigDecimal.valueOf(Double.MAX_VALUE);
+                }))
                 .orElse(variants.getFirst());
     }
 

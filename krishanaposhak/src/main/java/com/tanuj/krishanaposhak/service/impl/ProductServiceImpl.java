@@ -7,22 +7,26 @@ import com.tanuj.krishanaposhak.dto.product.ProductRequest;
 import com.tanuj.krishanaposhak.dto.product.ProductResponse;
 import com.tanuj.krishanaposhak.entity.Category;
 import com.tanuj.krishanaposhak.entity.Product;
+import com.tanuj.krishanaposhak.entity.ProductVariant;
 import com.tanuj.krishanaposhak.exception.DuplicateResourceException;
 import com.tanuj.krishanaposhak.exception.ResourceNotFoundException;
 import com.tanuj.krishanaposhak.mapper.ProductMapper;
 import com.tanuj.krishanaposhak.repository.CategoryRepository;
 import com.tanuj.krishanaposhak.repository.ProductRepository;
 import com.tanuj.krishanaposhak.service.ProductService;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.tanuj.krishanaposhak.entity.ProductVariant;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -217,14 +221,10 @@ public class ProductServiceImpl implements ProductService {
             }
 
 
-            // Price filter using ProductVariant
+            // Price filter using ProductVariant effective selling price
             if (minPrice != null || maxPrice != null) {
-
                 Subquery<Long> subquery = query.subquery(Long.class);
-
-                Root<ProductVariant> variantRoot =
-                        subquery.from(ProductVariant.class);
-
+                Root<ProductVariant> variantRoot = subquery.from(ProductVariant.class);
 
                 List<Predicate> pricePredicates = new ArrayList<>();
 
@@ -235,26 +235,40 @@ public class ProductServiceImpl implements ProductService {
                         )
                 );
 
+                pricePredicates.add(
+                        cb.equal(
+                                variantRoot.get("active"),
+                                true
+                        )
+                );
+
+                Expression<BigDecimal> effectivePrice = cb.<BigDecimal>selectCase()
+                        .when(
+                                cb.and(
+                                        cb.isNotNull(variantRoot.get("discountPrice")),
+                                        cb.greaterThan(variantRoot.<BigDecimal>get("discountPrice"), BigDecimal.ZERO)
+                                ),
+                                variantRoot.<BigDecimal>get("discountPrice")
+                        )
+                        .otherwise(variantRoot.<BigDecimal>get("price"));
 
                 if (minPrice != null) {
                     pricePredicates.add(
                             cb.greaterThanOrEqualTo(
-                                    variantRoot.get("price"),
+                                    effectivePrice,
                                     minPrice
                             )
                     );
                 }
 
-
                 if (maxPrice != null) {
                     pricePredicates.add(
                             cb.lessThanOrEqualTo(
-                                    variantRoot.get("price"),
+                                    effectivePrice,
                                     maxPrice
                             )
                     );
                 }
-
 
                 subquery.select(variantRoot.get("id"))
                         .where(
@@ -263,21 +277,15 @@ public class ProductServiceImpl implements ProductService {
                                 )
                         );
 
-
                 predicates.add(
                         cb.exists(subquery)
                 );
             }
 
-
             // Stock filter
             if (Boolean.TRUE.equals(inStock)) {
-
                 Subquery<Long> subquery = query.subquery(Long.class);
-
-                Root<ProductVariant> variantRoot =
-                        subquery.from(ProductVariant.class);
-
+                Root<ProductVariant> variantRoot = subquery.from(ProductVariant.class);
 
                 subquery.select(variantRoot.get("id"))
                         .where(
@@ -286,6 +294,10 @@ public class ProductServiceImpl implements ProductService {
                                                 variantRoot.get("product"),
                                                 root
                                         ),
+                                        cb.equal(
+                                                variantRoot.get("active"),
+                                                true
+                                        ),
                                         cb.greaterThan(
                                                 variantRoot.get("stock"),
                                                 0
@@ -293,12 +305,10 @@ public class ProductServiceImpl implements ProductService {
                                 )
                         );
 
-
                 predicates.add(
                         cb.exists(subquery)
                 );
             }
-
 
             return cb.and(
                     predicates.toArray(new Predicate[0])
@@ -313,6 +323,9 @@ public class ProductServiceImpl implements ProductService {
                 String property = parts[0].trim();
                 String direction = parts[1].trim().toUpperCase();
                 Sort.Direction sortDirection = "DESC".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+                if ("price".equalsIgnoreCase(property)) {
+                    return PageRequest.of(page, size, Sort.by(sortDirection, "variants.price"));
+                }
                 return PageRequest.of(page, size, Sort.by(sortDirection, property));
             }
         }
