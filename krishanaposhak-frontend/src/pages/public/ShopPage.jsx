@@ -167,16 +167,28 @@ export default function ShopPage() {
     return raw.map(mapProductToCard);
   }, [productsData]);
 
-  // Client-side fallback filter for special discounts if selected
+  // Client-side fallback filter for ratings & special discounts
   const productList = useMemo(() => {
-    if (!discount) return rawProductList;
-    const minDiscPct = parseFloat(discount);
-    return rawProductList.filter((p) => {
-      if (!p.price || !p.discountPrice) return false;
-      const pct = Math.round(((p.price - p.discountPrice) / p.price) * 100);
-      return pct >= minDiscPct;
-    });
-  }, [rawProductList, discount]);
+    let list = rawProductList;
+
+    if (rating) {
+      const minRatingVal = parseFloat(rating);
+      list = list.filter((p) => (p.averageRating || 0) >= minRatingVal);
+    }
+
+    if (discount) {
+      const minDiscPct = parseFloat(discount);
+      list = list.filter((p) => {
+        const origPrice = p.price || 0;
+        const discPrice = p.discountPrice;
+        if (!origPrice || !discPrice || discPrice >= origPrice) return false;
+        const pct = Math.round(((origPrice - discPrice) / origPrice) * 100);
+        return pct >= minDiscPct;
+      });
+    }
+
+    return list;
+  }, [rawProductList, rating, discount]);
 
   const totalPages = productsData?.totalPages || 1;
   const totalElements = productsData?.totalElements || 0;
@@ -234,6 +246,18 @@ export default function ShopPage() {
   const handleMaxPriceChange = useCallback((value) => {
     updateSearchParam('maxPrice', value);
   }, [updateSearchParam]);
+
+  const handlePriceRangeChange = useCallback((minVal, maxVal) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (minVal) next.set('minPrice', minVal);
+      else next.delete('minPrice');
+      if (maxVal) next.set('maxPrice', maxVal);
+      else next.delete('maxPrice');
+      next.set('page', '1');
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
 
   const handlePriceReset = useCallback(() => {
     setSearchParams((prev) => {
@@ -303,7 +327,7 @@ export default function ShopPage() {
   );
 
   const categoryName = useMemo(() => {
-    return categoryId ? categories.find((c) => String(c.id) === categoryId)?.name : null;
+    return categoryId ? categories.find((c) => String(c.id) === categoryId || c.slug === categoryId)?.name : null;
   }, [categoryId, categories]);
 
   const breadcrumbItems = useMemo(() => {
@@ -343,6 +367,7 @@ export default function ShopPage() {
     maxPrice,
     onMinPriceChange: handleMinPriceChange,
     onMaxPriceChange: handleMaxPriceChange,
+    onPriceRangeChange: handlePriceRangeChange,
     onPriceReset: handlePriceReset,
     inStockOnly,
     onInStockChange: handleInStockChange,

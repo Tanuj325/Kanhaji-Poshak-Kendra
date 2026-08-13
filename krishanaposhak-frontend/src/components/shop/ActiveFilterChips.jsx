@@ -20,7 +20,7 @@ const ActiveFilterChips = memo(function ActiveFilterChips({
   onClearAll,
 }) {
   const categoryName = categoryId
-    ? categories.find((c) => String(c.id) === categoryId)?.name
+    ? (categories.find((c) => String(c.id) === categoryId || c.slug === categoryId)?.name || categoryId)
     : null;
 
   const filters = [

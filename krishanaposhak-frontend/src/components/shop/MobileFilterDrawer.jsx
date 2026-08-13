@@ -23,6 +23,7 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
   maxPrice = '',
   onMinPriceChange,
   onMaxPriceChange,
+  onPriceRangeChange,
   onPriceReset,
   inStockOnly = false,
   onInStockChange,
@@ -40,8 +41,22 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
   // Apply price handler
   const handleApplyPrice = (e) => {
     e?.preventDefault();
-    if (onMinPriceChange) onMinPriceChange(localMin);
-    if (onMaxPriceChange) onMaxPriceChange(localMax);
+    if (onPriceRangeChange) {
+      onPriceRangeChange(localMin, localMax);
+    } else {
+      if (onMinPriceChange) onMinPriceChange(localMin);
+      if (onMaxPriceChange) onMaxPriceChange(localMax);
+    }
+  };
+
+  const handleApplyAllAndClose = () => {
+    if (onPriceRangeChange) {
+      onPriceRangeChange(localMin, localMax);
+    } else {
+      if (onMinPriceChange) onMinPriceChange(localMin);
+      if (onMaxPriceChange) onMaxPriceChange(localMax);
+    }
+    onClose();
   };
 
   // Derive dynamic brand items (strictly from props/categories, NO hardcoded preset strings)
@@ -143,13 +158,13 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
                       All Collections
                     </motion.button>
                     {categories.map((cat) => {
-                      const isActive = selectedCategoryId === String(cat.id);
+                      const isActive = selectedCategoryId === String(cat.id) || selectedCategoryId === cat.slug;
                       return (
                         <motion.button
                           whileTap={{ scale: 0.95 }}
                           key={cat.id}
                           type="button"
-                          onClick={() => onCategoryChange && onCategoryChange(String(cat.id))}
+                          onClick={() => onCategoryChange && onCategoryChange(isActive ? '' : String(cat.id))}
                           className={cn(
                             'h-[36px] px-4 rounded-full text-xs transition-all duration-200 flex items-center justify-center gap-1 whitespace-nowrap',
                             isActive
@@ -371,7 +386,7 @@ const MobileFilterDrawer = memo(function MobileFilterDrawer({
               {/* Right: Apply Filters Temple Gold Button */}
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleApplyAllAndClose}
                 className="flex-[2] flex h-[48px] items-center justify-center gap-1.5 rounded-[16px] bg-temple-gold hover:bg-temple-gold-dark text-xs font-extrabold text-stone-950 shadow-md active:scale-95 transition-all"
               >
                 <FiCheck className="w-4 h-4 stroke-[3]" />

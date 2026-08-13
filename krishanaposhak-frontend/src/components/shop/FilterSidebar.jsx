@@ -18,6 +18,7 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
   maxPrice,
   onMinPriceChange,
   onMaxPriceChange,
+  onPriceRangeChange,
   onPriceReset,
   inStockOnly,
   onInStockChange,
@@ -41,8 +42,12 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
 
   const handleApplyPrice = (e) => {
     e?.preventDefault();
-    onMinPriceChange(localMin);
-    onMaxPriceChange(localMax);
+    if (onPriceRangeChange) {
+      onPriceRangeChange(localMin, localMax);
+    } else {
+      if (onMinPriceChange) onMinPriceChange(localMin);
+      if (onMaxPriceChange) onMaxPriceChange(localMax);
+    }
   };
 
   return (
@@ -71,24 +76,27 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
             onChange={() => onCategoryChange('')}
             size="sm"
           />
-          {categories.map((cat) => (
-            <Checkbox
-              key={cat.id}
-              label={
-                <span className="flex items-center justify-between gap-2 text-xs font-medium text-stone-700 w-full">
-                  <span className="truncate">{cat.name}</span>
-                  {cat.productCount !== undefined && (
-                    <span className="text-[10px] text-stone-500 font-mono font-semibold bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200/60 shrink-0">
-                      {cat.productCount}
-                    </span>
-                  )}
-                </span>
-              }
-              checked={selectedCategoryId === String(cat.id)}
-              onChange={() => onCategoryChange(String(cat.id))}
-              size="sm"
-            />
-          ))}
+          {categories.map((cat) => {
+            const isSelected = selectedCategoryId === String(cat.id) || selectedCategoryId === cat.slug;
+            return (
+              <Checkbox
+                key={cat.id}
+                label={
+                  <span className="flex items-center justify-between gap-2 text-xs font-medium text-stone-700 w-full">
+                    <span className="truncate">{cat.name}</span>
+                    {cat.productCount !== undefined && (
+                      <span className="text-[10px] text-stone-500 font-mono font-semibold bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200/60 shrink-0">
+                        {cat.productCount}
+                      </span>
+                    )}
+                  </span>
+                }
+                checked={isSelected}
+                onChange={() => onCategoryChange(isSelected ? '' : String(cat.id))}
+                size="sm"
+              />
+            );
+          })}
         </div>
       </div>
 
@@ -195,7 +203,7 @@ const FilterSidebarContent = memo(function FilterSidebarContent({
                 </span>
               }
               checked={selectedRating === String(stars)}
-              onChange={() => onRatingChange(String(stars))}
+              onChange={() => onRatingChange(selectedRating === String(stars) ? '' : String(stars))}
               size="sm"
             />
           ))}
